@@ -39,7 +39,7 @@
                         <option value="excel">{{__('Data added from excel')}}</option>
                         <option value="panel">{{__('Data added from panel')}}</option>
                         <option value="veg">{{__('Veg menu')}}</option>
-                        <option value="non_veg">{{__('Non veg menu')}}</option>
+                        <option value="non-veg">{{__('Non veg menu')}}</option>
                     </select>
                 </div>
                 <div class="dropdown d-inline mr-2 w-100">
@@ -134,7 +134,7 @@
                         <select name="type" class="form-control">
                             <option value="none">{{__('none')}}</option>
                             <option value="veg">{{__('Veg')}}</option>
-                            <option value="non_veg">{{__('Non Veg')}}</option>
+                            <option value="non-veg">{{__('Non Veg')}}</option>
                         </select>
 
                         @error('price')
@@ -162,7 +162,7 @@
 
                     <div class="form-group">
                         <label class="form-control-label">{{__('Total Item reset ?')}}<span class="text-danger">&nbsp;*</span></label>
-                        <input class="form-control @error('item_reset_value') is-invalid @enderror" name="item_reset_value" type="number" min=1 placeholder="{{__('Item Reset Value')}}" required value="0" disabled>
+                        <input class="form-control @error('item_reset_value') is-invalid @enderror" name="item_reset_value" type="number" min=1 placeholder="{{__('Item Reset Value')}}" required value="0" readonly="readonly">
                         @error('item_reset_value')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -260,7 +260,7 @@
                         <select name="type" id="type" class="form-control">
                             <option value="none">{{__('none')}}</option>
                             <option value="veg">{{__('Veg')}}</option>
-                            <option value="non_veg">{{__('Non Veg')}}</option>
+                            <option value="non-veg">{{__('Non Veg')}}</option>
                         </select>
 
                         @error('price')
@@ -288,7 +288,7 @@
 
                     <div class="form-group">
                         <label class="form-control-label">{{__('Total Item reset ?')}}<span class="text-danger">&nbsp;*</span></label>
-                        <input class="form-control @error('item_reset_value') is-invalid @enderror" name="item_reset_value" type="number" min=1 placeholder="{{__('Item Reset Value')}}" required disabled>
+                        <input class="form-control @error('item_reset_value') is-invalid @enderror" name="item_reset_value" type="number" min=1 placeholder="{{__('Item Reset Value')}}" required readonly="readonly">
                         @error('item_reset_value')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
