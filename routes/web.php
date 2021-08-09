@@ -53,7 +53,7 @@ Route::get('/clear-cache', function() {
 
 Auth::routes();
 
-Route::get('/', [AdminController::class, 'showLogin']);
+Route::get('/admin', [AdminController::class, 'showLogin']);
 Route::get('/import', [AdminController::class, 'import'])->name('import');
 
 Route::get('FlutterWavepayment/{id}',[UserApiController::class,'FlutterWavepayment']);
@@ -358,3 +358,88 @@ Route::middleware(['auth'])->prefix('vendor')->group(function ()
 
 Route::post('saveEnvData',[AdminController::class,'saveEnvData']);
 Route::post('saveAdminData',[AdminController::class,'saveAdminData']);
+
+
+
+
+
+
+
+
+
+
+
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
+                ->name('home.index');
+
+    Route::get('/restaurants', [App\Http\Controllers\Frontend\RestaurantController::class , 'index'])
+                    ->name('restaurant.index');
+
+    Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Frontend\RestaurantController::class , 'get'])
+                    ->name('get');
+
+        Route::prefix('order')->name('order.')->group(function () {
+            Route::post('/book', [App\Http\Controllers\Frontend\OrderController::class , 'book'])
+                            ->name('book');
+            Route::get('/1', [App\Http\Controllers\Frontend\OrderController::class , 'first_index'])
+                            ->name('first.index');
+            Route::get('/2', [App\Http\Controllers\Frontend\OrderController::class , 'second_index'])
+                            ->name('second.index');
+            Route::get('/3', [App\Http\Controllers\Frontend\OrderController::class , 'third_index'])
+                        ->name('third.index');
+        });
+
+        Route::prefix('cart')->name('cart.')->group(function () {
+            Route::post('/add', [App\Http\Controllers\Frontend\CartController::class , 'add'])
+                            ->name('add');
+            Route::post('/remove', [App\Http\Controllers\Frontend\CartController::class , 'remove'])
+                        ->name('remove');
+        });
+
+        Route::prefix('setting')->name('setting.')->group(function () {
+            Route::post('/delivery_type', [App\Http\Controllers\Frontend\CustomerController::class , 'delivery_type'])
+                            ->name('delivery_type');
+            Route::post('/user_address', [App\Http\Controllers\Frontend\CustomerController::class , 'user_address'])
+                            ->name('user_address');
+            Route::post('/user_address/add', [App\Http\Controllers\Frontend\CustomerController::class , 'add_user_address'])
+                            ->name('user_address.add');
+        });
+
+    });
+
+
+
+    Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
+                    ->name('confirm_login');
+});
+
+Route::prefix('restaurant/{id}')->group(function () {
+    Route::get('/', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'index'])
+                    ->name('single.restaurant.index');
+
+    // Route::post('/order', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'book'])
+    //                 ->name('single.order.book');
+    // Route::get('/order/1', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'first_index'])
+    //                 ->name('single.order.first.index');
+    // Route::get('/order/2', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'second_index'])
+    //                 ->name('single.order.second.index');
+    // Route::get('/order/3', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'third_index'])
+    //                 ->name('single.order.third.index');
+
+    // Route::post('/cart/add', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'add'])
+    //                 ->name('single.cart.add');
+    // Route::post('/cart/remove', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'remove'])
+    //                 ->name('single.cart.remove');
+
+    // Route::post('/setting/delivery_type', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'delivery_type'])
+    //                 ->name('single.setting.delivery_type');
+    // Route::post('/setting/user_address', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'user_address'])
+    //                 ->name('single.setting.user_address');
+    // Route::post('/setting/user_address/add', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'add_user_address'])
+    //                 ->name('single.setting.user_address.add');
+
+    // Route::post('/login', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'customer_confirm_login'])
+    //                 ->name('single.confirm.login');
+});
