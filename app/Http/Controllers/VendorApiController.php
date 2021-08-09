@@ -1345,6 +1345,15 @@ class VendorApiController extends Controller
         $status = strtoupper($request->status);
         $order = Order::find($request->id);
         if ($order) {
+            
+
+            /* Start - Abdullah */
+            if ($request->status == 'PRINT' || $request->status == 'print')
+                return $this->print_thermal($order->id);
+            /* End - Abdullah */
+            
+
+
             $vendor = Vendor::where('id',$order->vendor_id)->first();
             $order->order_status = $status;
             $order->save();
@@ -1566,4 +1575,92 @@ class VendorApiController extends Controller
         $setting = GeneralSetting::first(['vendor_app_id','vendor_auth_key','vendor_api_key','currency','currency_symbol'])->makeHidden(['whitelogo','blacklogo']);
         return response(['success' => true , 'data' => $setting]);
     }
+
+
+
+
+
+    /* Start - Abdullah */
+    public function print_thermal($order_id)
+    {
+        $order = Order::find($order_id);
+        $vendor = Vendor::find($order->vendor_id);
+        $currency_code = GeneralSetting::first()->currency_code;
+        $tax = 0;
+        foreach (json_decode($order->tax) as $value) {
+            $tax += $value->tax;
+        }
+        $store_name = $vendor->name;
+        $store_address = $vendor->map_address;
+        $store_phone = $vendor->contact;
+        $store_email = $vendor->email_id;
+        $tax_percentage = $tax;
+        $transaction_id = $order->order_id;
+        $currency = $currency_code;
+
+        $items = [];
+        foreach ($order->orderItems as $item) {
+            $temp['name'] = $item['itemName'];
+            $temp['qty'] = $item['qty'];
+            if(isset($item['custimization']))
+            {
+                foreach ($item['custimization'] as $value) {
+                    $temp['custimization'] = $value->data->name;
+                }
+            }
+            else
+            {
+                $temp['custimization'] = "Doesn't Apply";
+            }
+            $temp['price'] = $item['price'];
+            array_push($items,$temp);
+        }
+        // Init printer
+        try {
+            $printer = new ReceiptPrinter;
+            $printer->init(
+                config($vendor->connector_type),
+                config($vendor->connector_descriptor)
+            );
+
+            // Set store info
+            $printer->setStore($store_name, $store_address, $store_phone, $store_email);
+
+            // Set currency
+            $printer->setCurrency($currency);
+
+            // Add items
+            foreach ($items as $item)
+            {
+                $printer->addItem(
+                    $item['name'],
+                    $item['qty'],
+                    $item['custimization'],
+                    $item['price']
+                );
+            }
+            // Set tax
+            $printer->setTax($tax_percentage);
+
+            // Calculate total
+            $printer->calculateSubTotal();
+            $printer->calculateGrandTotal();
+
+            // Set transaction ID
+            $printer->setTransactionID($transaction_id);
+
+            // Set qr code
+            $printer->setQRcode([
+                'tid' => $transaction_id,
+            ]);
+
+            // Print receipt
+            $printer->printReceipt();
+        }
+        catch (\Throwable $th) {
+            //throw $th;
+        }
+        return response(['success' => true, 'data' => 'print forwarded to printer.']);
+    }
+    /* End - Abdullah */
 }
