@@ -178,6 +178,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        /* Start - Abdullah */
+        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+        /* End - Abdullah */
     ],
 
     /*
@@ -230,6 +234,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        /* Start - Abdullah */
+        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        /* End - Abdullah */
     ],
 
 ];
