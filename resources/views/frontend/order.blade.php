@@ -56,7 +56,7 @@
     </div><!-- Position -->
 
     <div class="collapse" id="collapseMap">
-		<input type="text" id="pac-input" class="col-6 col-md-8 form-control" placeholder="Enter your location or drag marker" style="margin-top: 10px;" />
+		<input type="text" id="pac-input" class="col-11 form-control" placeholder="Enter your location or drag marker" style="margin: 10px 4%;" />
 		<div id="map" class="map"></div>
 		<div class="container margin_60">
 		    <div class="main_title margin_mobile">
