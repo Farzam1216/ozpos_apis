@@ -212,7 +212,7 @@
                                 <span class="custom-switch-description">{{__('veg')}}</span>
                             </label>
                             <label class="custom-switch">
-                                <input type="radio" name="type" value="non_veg" class="custom-switch-input">
+                                <input type="radio" name="type" value="non-veg" class="custom-switch-input">
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">{{__('Non veg')}}</span>
                             </label>
@@ -279,7 +279,7 @@
                                 <span class="custom-switch-description">{{__('veg')}}</span>
                             </label>
                             <label class="custom-switch">
-                                <input type="radio" name="type" id="non_veg" value="non_veg" class="custom-switch-input">
+                                <input type="radio" name="type" id="non_veg" value="non-veg" class="custom-switch-input">
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">{{__('Non veg')}}</span>
                             </label>

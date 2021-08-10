@@ -28,7 +28,7 @@
                 <td>
                     @if ($submenu->type == 'veg')
                         <img src="{{ url('images/veg.png') }}" alt="">
-                    @elseif($submenu->type == 'non_veg')
+                    @elseif($submenu->type == 'non-veg')
                         <img src="{{ url('images/non-veg.png') }}" alt="">
                     @else
                         <img src="{{ url('images/non-veg.png') }}" alt="">&nbsp;<img src="{{ url('images/veg.png') }}" alt="">
