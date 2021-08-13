@@ -379,6 +379,12 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
         Route::get('/', [App\Http\Controllers\Frontend\RestaurantController::class , 'get'])
                     ->name('get');
+        Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
+                    ->name('login');
+        Route::post('/register', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_register'])
+                    ->name('register');
+
+
 
         Route::prefix('order')->name('order.')->group(function () {
             Route::post('/book', [App\Http\Controllers\Frontend\OrderController::class , 'book'])
@@ -413,6 +419,9 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
                     ->name('confirm_login');
+
+    Route::post('/register', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_register'])
+                    ->name('confirm_register');
 });
 
 Route::prefix('restaurant/{id}')->group(function () {
