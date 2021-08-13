@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\Role;
+use App\Models\GeneralSetting;
 
 class CustomerController extends Controller
 {
@@ -104,6 +107,42 @@ class CustomerController extends Controller
         return redirect()->back()->withErrors('this credential does not match our record')->withInput();
     }
 
+    public function customer_confirm_register(Request $request)
+    {
+        $request->validate([
+            'name' => 'bail|required',
+            'email_id' => 'bail|required|email|unique:users',
+            'password' => 'bail|required|min:6',
+            'phone' => 'bail|required|numeric|digits_between:6,12',
+            'phone_code' => 'required'
+        ]);
+
+
+        $admin_verify_user = GeneralSetting::find(1)->verification;
+        $veri = $admin_verify_user == 1 ? 0 : 1;
+
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        $data['status'] = 1;
+        $data['image'] = 'noimage.png';
+        $data['is_verified'] = $veri;
+        $data['phone_code'] = '+'.$request->phone_code;
+        $data['language'] = 'english';
+        $user = User::create($data);
+        $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+        $user->roles()->sync($role_id);
+
+        if ($user['is_verified'] == 1) {
+            // $user['token'] = $user->createToken('mealUp')->accessToken;
+            return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
+        } else {
+            $admin_verify_user = GeneralSetting::find(1)->verification;
+            if ($admin_verify_user == 1) {
+                // $this->sendNotification($user);
+                return redirect()->back()->with('success', 'Your account created successfully please verify your account.')->withInput();
+            }
+        }
+    }
 
     public function delivery_type(Request $request)
     {

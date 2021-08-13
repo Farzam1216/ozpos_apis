@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app',['activePage' => 'order'])
+@extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'frontend.layouts.app_restaurant' : 'frontend.layouts.app', ['activePage' => 'order'] )
 
 @section('title','Order')
 @section('content')
@@ -46,10 +46,17 @@
     <div id="position">
         <div class="container">
             <ul>
-                <li><a href="{{ route('customer.home.index')}}">Home</a></li>
-                <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
-                <li><a href="{{ route('customer.restaurant.get', session()->get('cart_vendor_id'))}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
-                <li>Order</li>
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+	                <li><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
+	                <li>Order</li>
+                    <li>Details</li>
+                @else
+	                <li><a href="{{ route('customer.home.index')}}">Home</a></li>
+	                <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
+	                <li><a href="{{ route('customer.restaurant.get', session()->get('cart_vendor_id'))}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
+	                <li>Order</li>
+                    <li>Details</li>
+                @endif
             </ul>
             <!-- <a href="#0" class="search-overlay-menu-btn"><i class="icon-search-6"></i> Search</a> -->
         </div>
@@ -67,7 +74,13 @@
 		    </div>
 		    <div class="row justify-content-center">
 		        <div class="col-md-8">
-		            <form method="post" action="{{ route('customer.restaurant.setting.user_address.add', request()->route('id')) }}">
+
+		            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+		            	<form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/setting/user_address/add">
+		            @else
+		                <form method="post" action="{{ route('customer.restaurant.setting.user_address.add', request()->route('id')) }}">
+		            @endif
+
                 		@csrf <!-- {{ csrf_field() }} -->
 		            	<input type="hidden" id="lang" name="lang" readonly="readonly">
 		            	<input type="hidden" id="lat" name="lat" readonly="readonly">
@@ -120,12 +133,12 @@
 	                    Lorem ipsum dolor sit amet, in pri partem essent. Qui debitis meliore ex, tollit debitis conclusionemque te eos.
 	                </p>
 	            </div><!-- End box_style_1 -->
-	            <div class="box_style_2 d-none d-sm-block" id="help">
+	            <!-- <div class="box_style_2 d-none d-sm-block" id="help">
 	                <i class="icon_lifesaver"></i>
 	                <h4>Need <span>Help?</span></h4>
 	                <a href="tel://004542344599" class="phone">+45 423 445 99</a>
 	                <small>Monday to Friday 9.00am - 7.30pm</small>
-	            </div>
+	            </div> -->
 	        </div><!-- End col -->
 	        <div class="col-lg-6">
 	            <div class="box_style_2" id="order_process">
@@ -156,7 +169,7 @@
 	        <div class="col-lg-3" id="sidebar">
                 <div class="theiaStickySidebar">
                     
-                    @include('frontend.layouts.cart', ['page' => route('customer.restaurant.order.second.index', request()->route('id'))])
+                    @include('frontend.layouts.cart')
 
                 </div><!-- End theiaStickySidebar -->
             </div><!-- End col -->
@@ -208,7 +221,11 @@
 
                 $.ajax({
                     type:'POST',
-                    url:"{{ route('customer.restaurant.setting.user_address', request()->route('id')) }}",
+                    @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/setting/user_address",
+                    @else
+                        url:"{{ route('customer.restaurant.setting.user_address', request()->route('id')) }}",
+                    @endif
                     data:{user_address:user_address},
                     success:function(data){
                         user_address_radio.prop("checked", true);
@@ -229,7 +246,11 @@
 
                 $.ajax({
                     type:'POST',
-                    url:"{{ route('customer.restaurant.setting.user_address.add', request()->route('id')) }}",
+                    @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/setting/user_address/add",
+                    @else
+                        url:"{{ route('customer.restaurant.setting.user_address.add', request()->route('id')) }}",
+                    @endif
                     data:{address:address,lang:lang,lat:lat,type:type},
                     success:function(data){
                         user_address_radio.prop("checked", true);

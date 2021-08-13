@@ -2714,3 +2714,72 @@ ul.plan-features {
 .plan-tall + .plan {
 	border-left: 0;
 }
+
+
+
+
+
+
+
+
+
+#preloader {
+	background-color: rgb(0 0 0 / 90%);
+	z-index: 10000000;
+}
+
+.c-row:nth-child(even){
+  background-color: #f5f5f5;
+}
+.c-row .thumb_menu_list {
+	width: 90px;
+	height: 90px;
+}
+.c-row .thumb_menu_list img {
+	width: 90px;
+	height: 90px;
+}
+.c-row .icon_plus_alt2 {
+	font-size: 24pt;
+	line-height: 2.3;
+}
+
+.c-btn-cart {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	font-size: 1.5rem;
+}
+
+.c-icon-cart {
+	background-color: #4ca7a7;
+}
+
+#cart_modal .cart-icon {
+    color: #fff;
+    font-size: 40px;
+    opacity: 0.5;
+}
+/*@media only screen and (max-width: 767px) {
+	#cart_modal .cart-icon {
+		font-size: 40px;
+	}
+}*/
+
+#cart_modal .c-body {
+	text-align: left;
+}
+
+#cart_modal .c-white {
+	color: #fff;
+}
+
+#cart_modal .c-icon {
+	font-size: 1rem;
+	color: #ec008c;
+}
+
+#cart_modal .c-label {
+	color: #fff;
+	font-size: 1rem;
+}

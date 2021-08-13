@@ -30,7 +30,8 @@ class RestaurantController extends Controller
     {
         $rest = $this->getRest($id);
         $singleVendor = $this->singleVendor($id);
-        return view('frontend/restaurant',compact('rest', 'singleVendor'));
+        $page = 1;
+        return view('frontend/restaurant',compact('rest', 'singleVendor', 'page'));
     }
     
 

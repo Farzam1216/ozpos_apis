@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app',['activePage' => 'order'])
+@extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'frontend.layouts.app_restaurant' : 'frontend.layouts.app', ['activePage' => 'order'] )
 
 @section('title','Receipt')
 @section('content')
@@ -39,11 +39,17 @@
 <div id="position">
     <div class="container">
         <ul>
-            <li><a href="{{ route('customer.home.index')}}">Home</a></li>
-            <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
-            <li><a href="{{ route('customer.restaurant.get', session()->get('cart_vendor_id'))}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
-            <li>Order</li>
-            <li>Completed</li>
+            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                <li><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
+                <li>Payment</li>
+                <li>Receipt</li>
+            @else
+                <li><a href="{{ route('customer.home.index')}}">Home</a></li>
+                <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
+                <li><a href="{{ route('customer.restaurant.get', session()->get('cart_vendor_id'))}}">{{ App\Models\Vendor::where('id', session()->get('cart_vendor_id'))->first()->name }}</a></li>
+                <li>Order</li>
+                <li>Receipt</li>
+            @endif
         </ul>
         <!-- <a href="#0" class="search-overlay-menu-btn"><i class="icon-search-6"></i> Search</a> -->
     </div>
@@ -72,7 +78,7 @@
 		                        	<strong>{{$row->qty}}x</strong> {{$row->name}}
 		                        </td>
 		                        <td>
-		                            <strong class="float-right">{{$row->price}} AD</strong>
+		                            <strong class="float-right">{{$row->price}} {{ App\Models\GeneralSetting::first()->currency }}</strong>
 		                        </td>
 		                    </tr>
 		                @endforeach
@@ -90,7 +96,7 @@
                                 TOTAL
                             </td>
                             <td class="total_confirm">
-                                <span class="float-right">{{$cartSubTotal}} AD</span>
+                                <span class="float-right">{{$cartSubTotal}} {{ App\Models\GeneralSetting::first()->currency }}</span>
                             </td>
                         </tr>
                     </tbody>

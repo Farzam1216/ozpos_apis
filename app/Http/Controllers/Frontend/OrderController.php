@@ -20,44 +20,94 @@ class OrderController extends Controller
 {
 	public function first_index()
     {
-        // if (!Session::has('cart_vendor_id'))
-        //     return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
-        if (Cart::content()->isEmpty() && !Session::has('cart_vendor_id'))
-            return redirect()->back()->withErrors('Your cart is empty, add at least 1 item.');
-        if (Cart::content()->isEmpty())
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
-        if (!Session::has('delivery_type'))
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
-        if (Session::get('delivery_type') == 'SHOP')
-            return redirect()->route('customer.restaurant.order.second.index', request()->route('id'));
+         if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+         {
+            $url = ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http').'://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            if (Cart::content()->isEmpty())
+                return redirect($url)->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect($url)->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'SHOP')
+                return redirect($url.'/order/2');
+         }
+         else
+         {
+            if (!Session::has('cart_vendor_id'))
+                return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
+            if (Cart::content()->isEmpty() && !Session::has('cart_vendor_id'))
+                return redirect()->back()->withErrors('Your cart is empty, add at least 1 item.');
+            if (Cart::content()->isEmpty())
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'SHOP')
+                return redirect()->route('customer.restaurant.order.second.index', request()->route('id'));
+         }
+
+
 
         $userAddresses = $this->customerUserAddress();
-        return view('frontend/order',compact('userAddresses'));
+        $page = 2;
+        return view('frontend/order',compact('userAddresses', 'page'));
     }
     public function second_index()
     {
-        if (!Session::has('cart_vendor_id'))
-            return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
-        if (Cart::content()->isEmpty())
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
-        if (!Session::has('delivery_type'))
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
-        if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-            return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+         if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+         {
+            $url = ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http').'://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            if (Cart::content()->isEmpty())
+                return redirect($url)->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect($url)->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect($url.'/order/1')->withErrors('Pick delivery address.');
+         }
+         else
+         {
+            if (!Session::has('cart_vendor_id'))
+                return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
+            if (Cart::content()->isEmpty() && !Session::has('cart_vendor_id'))
+                return redirect()->back()->withErrors('Your cart is empty, add at least 1 item.');
+            if (Cart::content()->isEmpty())
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+         }
 
         $userAddresses = $this->customerUserAddress();
-        return view('frontend/payment',compact('userAddresses'));
+        $page = 3;
+        return view('frontend/payment',compact('userAddresses', 'page'));
     }
     public function third_index()
     {
-        if (!Session::has('cart_vendor_id'))
-            return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
-        if (Cart::content()->isEmpty())
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
-        if (!Session::has('delivery_type'))
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
-        if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-            return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+         if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+         {
+            $url = ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http').'://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            if (Cart::content()->isEmpty())
+                return redirect($url)->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect($url)->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect($url.'/order/1')->withErrors('Pick delivery address.');
+         }
+         else
+         {
+            if (!Session::has('cart_vendor_id'))
+                return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
+            if (Cart::content()->isEmpty() && !Session::has('cart_vendor_id'))
+                return redirect()->back()->withErrors('Your cart is empty, add at least 1 item.');
+            if (Cart::content()->isEmpty())
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+         }
 
         $cartContent = Cart::content();
         $cartSubTotal = Cart::subtotal();
@@ -67,14 +117,30 @@ class OrderController extends Controller
     }
     public function book(Request $request)
     {
-        if (!Session::has('cart_vendor_id'))
-            return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
-        if (Cart::content()->isEmpty())
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
-        if (!Session::has('delivery_type'))
-            return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
-        if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-            return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+        if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+        {
+            $url = ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http').'://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            if (Cart::content()->isEmpty())
+                return redirect($url)->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect($url)->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect($url.'/order/1')->withErrors('Pick delivery address.');
+        }
+        else
+        {
+            if (!Session::has('cart_vendor_id'))
+                return redirect()->route('customer.home.index')->withErrors('You have not selected any restaurant yet.');
+            if (Cart::content()->isEmpty() && !Session::has('cart_vendor_id'))
+                return redirect()->back()->withErrors('Your cart is empty, add at least 1 item.');
+            if (Cart::content()->isEmpty())
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Your cart is empty, add at least 1 item.');
+            if (!Session::has('delivery_type'))
+                return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
+            if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
+                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+        }
         
         $request->validate([
             'payment_method' => 'bail|required',
@@ -195,7 +261,7 @@ class OrderController extends Controller
             "amount" => $payment,
             "currency" => $currency,
             "source" => $stripeToken,
-            "description" => "This payment is testing purpose of websolutionstuff.com",
+            "description" => "This payment is testing purpose of",
         ]);
         return $charge;
     }

@@ -81,6 +81,8 @@
 
         <div class="layer"></div><!-- Mobile menu overlay mask -->
 
+        @include('frontend.layouts.extras')
+        
         @include('frontend.layouts.modals')
          
         <!-- COMMON SCRIPTS -->
