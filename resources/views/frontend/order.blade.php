@@ -180,7 +180,7 @@
 @endsection
 
 @section('script')
-    <script src="http://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
 	<!-- <script src="{{ url('/frontend/js/map_single.js')}}"></script> -->
 	<script src="{{ url('/frontend/js/map_select.js')}}"></script>
 	<script src="{{ url('/frontend/js/infobox.js')}}"></script>
