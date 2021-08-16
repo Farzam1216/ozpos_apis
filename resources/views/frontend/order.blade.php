@@ -180,6 +180,11 @@
 @endsection
 
 @section('script')
+	<script type="text/javascript">
+		const vendor_country = '{{ App\Models\GeneralSetting::first()->country }}';
+		
+		// const vendor_country = temp_vendor_country;
+	</script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
 	<!-- <script src="{{ url('/frontend/js/map_single.js')}}"></script> -->
 	<script src="{{ url('/frontend/js/map_select.js')}}"></script>

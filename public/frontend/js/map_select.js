@@ -38,10 +38,30 @@ google.maps.event.addListener(map, "dragend", function (argMarker) {
       }, function(results, status) {
         if (status === 'OK') {
           if (results[0]) {
-            input.value = results[0].formatted_address;
-            inputAddress.value = results[0].formatted_address;
-            inputLang.value = currentLongitude;
-            inputLat.value = currentLatitude;
+
+            var restricted = true;
+            for (var i = 0; i < results[0].address_components.length; i++) {
+              if (results[0].address_components[i].types[0] == "country" && results[0].address_components[i].long_name.toLowerCase() == vendor_country.toLowerCase()) {
+                restricted = false;
+
+              }
+              if (results[0].address_components[i].types.length == 2) {
+                if (results[0].address_components[i].types[0] != "political" && results[0].address_components[i].long_name.toLowerCase() == vendor_country.toLowerCase()) {
+                  restricted = false;
+                }
+              }
+            }
+            if (!restricted) {
+              input.value = results[0].formatted_address;
+              inputAddress.value = results[0].formatted_address;
+              inputLang.value = currentLongitude;
+              inputLat.value = currentLatitude;
+            }
+            else {
+              input.value = '';
+              inputAddress.value = '';
+              window.alert('Pick a location within country '+vendor_country);
+            }
           } else {
             window.alert('No results found');
           }
@@ -52,15 +72,23 @@ google.maps.event.addListener(map, "dragend", function (argMarker) {
     });
 });
 
+fetch("https://restcountries.eu/rest/v2/name/"+vendor_country).then(resp=>{
+  return resp.json();
+}).then(json=>{
+  autocomplete.setComponentRestrictions({
+    country: [json[0].alpha2Code],
+  });
+});
+
 autocomplete.addListener('place_changed', function() {
 	var place = autocomplete.getPlace();
 	if (!place.geometry) {
-	return;
+	 return;
 	}
 	if (place.geometry.viewport) {
-	map.fitBounds(place.geometry.viewport);
+	 map.fitBounds(place.geometry.viewport);
 	} else {
-	map.setCenter(place.geometry.location);
+	 map.setCenter(place.geometry.location);
 	}
 
 	currentLatitude = place.geometry.location.lat();
