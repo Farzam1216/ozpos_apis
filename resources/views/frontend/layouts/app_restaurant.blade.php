@@ -80,6 +80,14 @@
         
         @include('frontend.layouts.modals')
          
+        <!-- PRE SCRIPTS -->
+        <script type="text/javascript">
+            const vendor_country = '{{ App\Models\GeneralSetting::first()->country }}';
+            /* .update_delivery_type */
+
+            var inProgress = false;
+        </script>
+
         <!-- COMMON SCRIPTS -->
         <script src="{{ url('/frontend/js/jquery-3.5.1.min.js')}}"></script>
         <script src="{{ url('/frontend/js/common_scripts_min.js')}}"></script>
@@ -132,11 +140,37 @@
             @endif
         </script>
 
+        <!-- GOOGLE MAP SCRIPTS -->
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
+        <script src="{{ url('/frontend/js/map_select.js')}}"></script>
+        <script src="{{ url('/frontend/js/infobox.js')}}"></script>
+        <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}"></script>
+        <script>
+            $(function () {
+                 'use strict';
+                $("#range").ionRangeSlider({
+                    hide_min_max: true,
+                    keyboard: true,
+                    min: 0,
+                    max: 15,
+                    from: 0,
+                    to:5,
+                    type: 'double',
+                    step: 1,
+                    prefix: "Km ",
+                    grid: true
+                });
+            });
+        </script>
+
         <!-- SPECIFIC SCRIPTS CUSTOM -->
         @yield('script')
         
         <!-- SPECIFIC SCRIPTS CUSTOM -->
         @yield('cart_script')
+
+        <!-- CUSTOM SCRIPTS CUSTOM -->
+        @include('frontend.layouts.scripts')
 
     </body>
 

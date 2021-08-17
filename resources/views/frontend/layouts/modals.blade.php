@@ -18,8 +18,8 @@
                 </div>
 
                 <hr>
-                <div id="cart_modal_autoload">
-                    <div id="cart_modal_autoload_box">
+                <div id="modal-cart-items-autoload">
+                    <div id="modal-cart-items">
                         @foreach(Cart::content() as $row)
                             <div class="row">
                                 <div class="col-2" style="top:7px;">
@@ -45,40 +45,44 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                </div>
 
-                        @isset($page)
-                            @if($page == 1)
-                                <hr>
-                                <div class="row" id="options_2">
-                                    <div class="col-6">
-                                        <label class="c-label">
-                                            
-                                            @if(session()->has('delivery_type') && session()->get('delivery_type') == 'HOME')
-                                                <input type="radio" name="delivery_type" value="HOME" checked class="update_delivery_type"/>
-                                            @else
-                                                <input type="radio" name="delivery_type" value="HOME" class="update_delivery_type"/>
-                                            @endif
-
-                                            Delivery
-                                        </label>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="c-label">
-                                            
-                                            @if(session()->has('delivery_type') && session()->get('delivery_type') == 'SHOP')
-                                                <input type="radio" name="delivery_type" value="SHOP" checked class="update_delivery_type"/>
-                                            @else
-                                                <input type="radio" name="delivery_type" value="SHOP" class="update_delivery_type"/>
-                                            @endif
-
-                                            Take Away
-                                        </label>
-                                    </div>
-                                </div><!-- Edn options 2 -->
-                            @endif
-                        @endisset
-
+                @isset($page)
+                    @if($page == 1)
                         <hr>
+                        <div class="row" id="options_2">
+                            <div class="col-6">
+                                <label class="c-label">
+                                    
+                                    @if(session()->has('delivery_type') && session()->get('delivery_type') == 'HOME')
+                                        <input type="checkbox" name="delivery_type_home" value="HOME" checked class="icheck update_delivery_type"/>
+                                    @else
+                                        <input type="checkbox" name="delivery_type_home" value="HOME" class="icheck update_delivery_type"/>
+                                    @endif
+
+                                    Delivery
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label class="c-label">
+                                    
+                                    @if(session()->has('delivery_type') && session()->get('delivery_type') == 'SHOP')
+                                        <input type="checkbox" name="delivery_type_shop" value="SHOP" checked class="icheck update_delivery_type"/>
+                                    @else
+                                        <input type="checkbox" name="delivery_type_shop" value="SHOP" class="icheck update_delivery_type"/>
+                                    @endif
+
+                                    Take Away
+                                </label>
+                            </div>
+                        </div><!-- Edn options 2 -->
+                    @endif
+                @endisset
+
+                <hr>
+                <div id="modal-cart-receipt-autoload">
+                    <div id="modal-cart-receipt">
                         <div class="row">
                             <div class="col-8">
                                 <h6 class="c-white">
@@ -91,10 +95,10 @@
                                 </h6>
                             </div>
                         </div>
-
-                    
                     </div>
                 </div>
+
+                    
 
                 <hr>
 
@@ -413,4 +417,93 @@
             </form>
         </div>
     </div>
-</div><!-- End Register modal
+</div><!-- End Register modal -->
+
+
+<!-- Delivery Type modal -->
+<div class="modal fade" id="delivery_type_modal" tabindex="-1" role="dialog" aria-labelledby="myDeliveryType" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-popup">
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                    <form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/setting/delivery_type/guest" class="popup-form" id="myDeliveryType">
+                @else
+                    <form method="post" action="{{route('customer.setting.delivery_type.guest')}}" class="popup-form" id="myDeliveryType">
+                @endif
+
+                @csrf <!-- {{ csrf_field() }} -->
+                <div class="login_icon"><i class="icon-bicycle"></i></div>
+                <div class="row" id="options_2">
+                    <div class="col-6">
+                        <label class="c-label">
+                            <input type="radio" name="delivery_type" value="HOME" checked class="icheck"/>
+                            Delivery
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <label class="c-label">
+                            <input type="radio" name="delivery_type" value="SHOP" class="icheck"/>
+                            Take Away
+                        </label>
+                    </div>
+                </div><!-- Edn options 2 -->
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div><!-- End modal -->
+
+
+<!-- Delivery Location modal -->
+<div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog" aria-labelledby="myDeliveryLocation" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-popup" style="margin-top: 30px;margin-bottom: 30px;padding: unset;">
+                
+
+
+            <div>
+                <input type="text" id="pac-input" class="col-11 form-control" placeholder="Enter your location or drag marker" style="margin: 10px 4%;" />
+                <div id="map" class="map"></div>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+
+                            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                <form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/setting/delivery_location/guest" class="popup-form" id="myDeliveryLocation">
+                            @else
+                                <form method="post" action="{{route('customer.setting.delivery_location.guest')}}" class="popup-form" id="myDeliveryLocation">
+                            @endif
+
+                                @csrf <!-- {{ csrf_field() }} -->
+                                <input type="hidden" id="lang" name="lang" readonly="readonly">
+                                <input type="hidden" id="lat" name="lat" readonly="readonly">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-white" id="address" name="address" placeholder="Selected address" readonly="readonly">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="hidden" id="type" name="type" class="form-control form-white" placeholder="Add Label For Selected Location">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="pass-info" class="clearfix"></div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label><input name="mobile" type="checkbox" value="" class="icheck" checked>Accept <a href="#0">terms and conditions</a>.</label>
+                                    </div>
+                                </div><!-- End row  -->
+                                <hr style="border-color:#ddd;">
+                                <button type="submit" class="btn btn-submit">Submit</button>
+                            </form>
+                        </div><!-- End col  -->
+                    </div><!-- End row  -->
+                </div><!-- End container  -->
+                <!-- End Content =============================================== -->
+            </div><!-- End Map -->
+        </div>
+    </div>
+</div><!-- End modal -->

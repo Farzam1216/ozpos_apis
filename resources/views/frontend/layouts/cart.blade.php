@@ -1,40 +1,42 @@
 
-<div id="cart_autoload">
     <div id="cart_box">
         <h3>Your order <i class="icon_cart_alt float-right"></i></h3>
-        <table class="table table_summary">
-            <tbody>
-                
-                @foreach(Cart::content() as $row)
-                    <tr>
-                        <td>
-                            <a class="item_remove_from_cart" data-item-id="{{$row->id}}" class="remove_item"><i class="icon_minus_alt"></i></a> <strong>{{$row->qty}}x</strong> {{$row->name}}
-                            @if($row->options->has('custimization'))
-                                <br>
-                                <a href="javascript: void(0)" style="margin-left:15px;">
-                                    Customizable
-                                </a>
-                            @endif
-                        </td>
-                        <td>
-                            <strong class="float-right">{{$row->price}} {{ App\Models\GeneralSetting::first()->currency }}</strong>
-                        </td>
-                    </tr>
-                @endforeach
+        <div id="cart-items-autoload">
+            <div id="cart-items">
+                <table class="table table_summary">
+                    <tbody>
+                        
+                        @foreach(Cart::content() as $row)
+                            <tr>
+                                <td>
+                                    <a class="item_remove_from_cart" data-item-id="{{$row->id}}" class="remove_item"><i class="icon_minus_alt"></i></a> <strong>{{$row->qty}}x</strong> {{$row->name}}
+                                    @if($row->options->has('custimization'))
+                                        <br>
+                                        <a href="javascript: void(0)" style="margin-left:15px;">
+                                            Customizable
+                                        </a>
+                                    @endif
+                                </td>
+                                <td>
+                                    <strong class="float-right">{{$row->price}} {{ App\Models\GeneralSetting::first()->currency }}</strong>
+                                </td>
+                            </tr>
+                        @endforeach
 
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @if($page == 1)
             <hr>
             <div class="row" id="options_2">
                 <div class="col-xl-6 col-md-12 col-sm-12 col-6">
-                    <!-- <label><input type="radio" name="delivery_type" value="1" checked class="icheck update_delivery_type"/> Delivery</label> -->
                     <label>
                         
                         @if(session()->has('delivery_type') && session()->get('delivery_type') == 'HOME')
-                            <input type="radio" name="delivery_type" value="HOME" checked class="update_delivery_type"/>
+                            <input type="checkbox" name="delivery_type_home" value="HOME" checked class="icheck update_delivery_type"/>
                         @else
-                            <input type="radio" name="delivery_type" value="HOME" class="update_delivery_type"/>
+                            <input type="checkbox" name="delivery_type_home" value="HOME" class="icheck update_delivery_type"/>
                         @endif
 
                         Delivery
@@ -44,9 +46,9 @@
                     <label>
                         
                         @if(session()->has('delivery_type') && session()->get('delivery_type') == 'SHOP')
-                            <input type="radio" name="delivery_type" value="SHOP" checked class="update_delivery_type"/>
+                            <input type="checkbox" name="delivery_type_shop" value="SHOP" checked class="icheck update_delivery_type"/>
                         @else
-                            <input type="radio" name="delivery_type" value="SHOP" class="update_delivery_type"/>
+                            <input type="checkbox" name="delivery_type_shop" value="SHOP" class="icheck update_delivery_type"/>
                         @endif
 
                         Take Away
@@ -55,25 +57,29 @@
             </div><!-- Edn options 2 -->
         @endif
         <hr>
-        <table class="table table_summary">
-            <tbody>
-                <!-- <tr>
-                    <td>
-                        Subtotal <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Tax applied <span class="float-right">{{Cart::tax()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
-                    </td>
-                </tr> -->
-                <tr>
-                    <td class="total">
-                        TOTAL <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="cart-receipt-autoload">
+            <div id="cart-receipt">
+                <table class="table table_summary">
+                    <tbody>
+                        <!-- <tr>
+                            <td>
+                                Subtotal <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tax applied <span class="float-right">{{Cart::tax()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td class="total">
+                                TOTAL <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <hr>
 
         @if(Auth::user() && Auth::user()->load('roles')->roles->contains('title', 'user'))
@@ -94,7 +100,6 @@
             <a class="btn_full" href="#0" data-toggle="modal" data-target="#login_2">Login</a>
         @endif
     </div><!-- End cart_box -->
-</div><!-- End cart_box -->
 
 
 
@@ -129,9 +134,11 @@
                         data:{vendor_id:vendor_id,extra_status:extra_status,item_id:item_id},
                         success:function(data){
                             $('.c-btn-cart').show();
-                            $('#cart_modal_autoload').load(document.URL +  ' #cart_modal_autoload_box');
+                            $('#modal-cart-items-autoload').load(document.URL +  ' #modal-cart-items');
+                            $('#modal-cart-receipt-autoload').load(document.URL +  ' #modal-cart-receipt');
+                            $('#cart-receipt-autoload').load(document.URL +  ' #cart-receipt');
                             $('#cart_btn_autoload').load(document.URL +  ' #cart_btn_count');
-                            $('#cart_autoload').load(document.URL +  ' #cart_box', function() {
+                            $('#cart-items-autoload').load(document.URL +  ' #cart-items', function() {
                                 $('#preloader').hide();
                                 $('#preloader #status').hide();
                             });
@@ -159,9 +166,11 @@
                         data:{vendor_id:vendor_id,extra_status:extra_status,item_id:item_id,extra_data:extra_data},
                         success:function(data){
                             $('.c-btn-cart').show();
-                            $('#cart_modal_autoload').load(document.URL +  ' #cart_modal_autoload_box');
+                            $('#modal-cart-items-autoload').load(document.URL +  ' #modal-cart-items');
+                            $('#modal-cart-receipt-autoload').load(document.URL +  ' #modal-cart-receipt');
+                            $('#cart-receipt-autoload').load(document.URL +  ' #cart-receipt');
                             $('#cart_btn_autoload').load(document.URL +  ' #cart_btn_count');
-                            $('#cart_autoload').load(document.URL +  ' #cart_box', function() {
+                            $('#cart-items-autoload').load(document.URL +  ' #cart-items', function() {
                                 $('#preloader').hide();
                                 $('#preloader #status').hide();
                             });
@@ -191,9 +200,12 @@
                     success:function(data){
                         if($('#cart_btn_counter').text() == 1)
                             $('.c-btn-cart').hide();
-                        $('#cart_modal_autoload').load(document.URL +  ' #cart_modal_autoload_box');
+
+                        $('#modal-cart-items-autoload').load(document.URL +  ' #modal-cart-items');
+                        $('#modal-cart-receipt-autoload').load(document.URL +  ' #modal-cart-receipt');
+                        $('#cart-receipt-autoload').load(document.URL +  ' #cart-receipt');
                         $('#cart_btn_autoload').load(document.URL +  ' #cart_btn_count');
-                        $('#cart_autoload').load(document.URL +  ' #cart_box', function() {
+                        $('#cart-items-autoload').load(document.URL +  ' #cart-items', function() {
                             $('#preloader').hide();
                             $('#preloader #status').hide();
                         });
@@ -202,10 +214,12 @@
 
             });
             
-            $(document).on('click', '.update_delivery_type', function(e){
-
+            $(document).on('ifChecked ifUnchecked', '.update_delivery_type', function(e){
                 e.preventDefault();
+                if (inProgress)
+                    return;
                 
+                inProgress = true;
                 $('#preloader').show();
                 $('#preloader #status').show();
 
@@ -222,10 +236,20 @@
                     @endif
                     data:{delivery_type:delivery_type},
                     success:function(data){
-                        delivery_type_radio.prop("checked", true);
+                        // delivery_type_radio.prop("checked", true);
+
+                        if (delivery_type_radio.attr('name') == 'delivery_type_home') {
+                            $("input[name=delivery_type_home]").iCheck('check');
+                            $("input[name=delivery_type_shop]").iCheck('uncheck');
+                        }
+                        if (delivery_type_radio.attr('name') == 'delivery_type_shop') {
+                            $("input[name=delivery_type_home]").iCheck('uncheck');
+                            $("input[name=delivery_type_shop]").iCheck('check');
+                        }
                             
                         $('#preloader').hide();
                         $('#preloader #status').hide();
+                        inProgress = false;
                         // console.log(data.success);
                     }
                 });

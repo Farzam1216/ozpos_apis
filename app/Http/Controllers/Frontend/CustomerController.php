@@ -153,6 +153,24 @@ class CustomerController extends Controller
         return response()->json(['success'=>$input['delivery_type']]);
     }
 
+    public function guest_delivery_type(Request $request)
+    {
+        $input = $request->all();
+        
+        session(['delivery_type' => $input['delivery_type']]);
+
+        return redirect()->back()->with('success', 'Picked delivery type.');
+    }
+
+    public function guest_delivery_location(Request $request)
+    {
+        $input = $request->all();
+        
+        session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
+
+        return redirect()->back()->with('success', 'Picked delivery location.');
+    }
+
     public function user_address(Request $request)
     {
         $input = $request->all();
