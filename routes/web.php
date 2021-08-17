@@ -407,6 +407,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::prefix('setting')->name('setting.')->group(function () {
             Route::post('/delivery_type', [App\Http\Controllers\Frontend\CustomerController::class , 'delivery_type'])
                             ->name('delivery_type');
+            Route::post('/delivery_type/guest', [App\Http\Controllers\Frontend\CustomerController::class , 'guest_delivery_type'])
+                            ->name('delivery_type.guest');
+            Route::post('/delivery_location/guest', [App\Http\Controllers\Frontend\CustomerController::class , 'guest_delivery_location'])
+                            ->name('delivery_location.guest');
             Route::post('/user_address', [App\Http\Controllers\Frontend\CustomerController::class , 'user_address'])
                             ->name('user_address');
             Route::post('/user_address/add', [App\Http\Controllers\Frontend\CustomerController::class , 'add_user_address'])
@@ -422,6 +426,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::post('/register', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_register'])
                     ->name('confirm_register');
+    Route::post('/delivery_type/guest', [App\Http\Controllers\Frontend\CustomerController::class , 'guest_delivery_type'])
+                            ->name('setting.delivery_type.guest');
+    Route::post('/delivery_location/guest', [App\Http\Controllers\Frontend\CustomerController::class , 'guest_delivery_location'])
+                            ->name('setting.delivery_location.guest');
 });
 
 Route::prefix('restaurant/{id}')->group(function () {
