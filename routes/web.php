@@ -379,10 +379,12 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
         Route::get('/', [App\Http\Controllers\Frontend\RestaurantController::class , 'get'])
                     ->name('get');
-        Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
-                    ->name('login');
         Route::post('/register', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_register'])
                     ->name('register');
+        Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
+                    ->name('login');
+        Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class , 'logout'])
+                    ->name('logout');
 
 
 

@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+/* Start - Abdullah */
+use Illuminate\Http\Request;
+/* End - Abdullah */
+
 class LoginController extends Controller
 {
 
@@ -20,7 +24,11 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    /* Start - Abdullah */
+    use AuthenticatesUsers {
+        logout as performLogout;
+    }
+    /* End - Abdullah */
 
     /**
      * Where to redirect users after login.
@@ -38,4 +46,22 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /* Start - Abdullah */
+    public function logout(Request $request)
+    {
+        if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+        {
+            $url = ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http').'://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            $this->performLogout($request);
+            return redirect($url);
+        }
+        else
+        {
+            $this->performLogout($request);
+            return redirect()->route('customer.home.index');
+        }
+    }
+    /* End - Abdullah */
 }
