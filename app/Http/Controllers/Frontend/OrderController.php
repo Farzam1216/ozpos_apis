@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\GeneralSetting;
+use App\Models\Notification;
+use App\Models\NotificationTemplate;
 use App\Models\PaymentSetting;
 // use App\Models\Vendor;
+use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Vendor;
 use App\Models\Order;
 use App\Models\OrderChild;
+use Config;
 use Log;
 use Cart;
+use OneSignal;
+use Mail;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -225,7 +231,7 @@ class OrderController extends Controller
             }
             OrderChild::create($order_child);
         }
-        // $this->sendVendorOrderNotification($vendor, $bookData['order_id']);
+        $this->sendVendorOrderNotification($vendor, $order->id);
         // $this->sendUserNotification($bookData['user_id'], $bookData['order_id']);
         $amount = $order->amount;
         $tax = array();
@@ -267,6 +273,97 @@ class OrderController extends Controller
             "description" => "This payment is testing purpose of",
         ]);
         return $charge;
+    }
+
+
+
+
+
+
+
+    
+
+    public function sendVendorOrderNotification($vendor, $order_id)
+    {
+        $vendor_notification = GeneralSetting::first()->vendor_notification;
+        $vendor_mail = GeneralSetting::first()->vendor_mail;
+        $content = NotificationTemplate::where('title', 'vendor order')->first();
+        $vendor_user = User::where('id', $vendor->user_id)->first();
+        if ($vendor->vendor_language == 'spanish') {
+            $detail['Vendor_name'] = $vendor->name;
+            $detail['Order_id'] = $order_id;
+            $detail['User_name'] = auth()->user()->name;
+            $v = ["{Vendor_name}", "{Order_id}", "{User_name}"];
+            $notification_content = str_replace($v, $detail, $content->spanish_notification_content);
+            if ($vendor_notification == 1) {
+                try {
+                    Config::set('onesignal.app_id', env('vendor_app_id'));
+                    Config::set('onesignal.rest_api_key', env('vendor_api_key'));
+                    Config::set('onesignal.user_auth_key', env('vendor_auth_key'));
+                    OneSignal::sendNotificationToUser(
+                        $notification_content,
+                        $vendor_user->device_token,
+                        $url = null,
+                        $data = null,
+                        $buttons = null,
+                        $schedule = null,
+                        GeneralSetting::find(1)->business_name
+                    );
+                } catch (\Throwable $th) {
+                }
+            }
+            $p_notification = array();
+            $p_notification['title'] = 'create order';
+            $p_notification['user_type'] = 'vendor';
+            $p_notification['user_id'] = $vendor->id;
+            $p_notification['message'] = $notification_content;
+            Notification::create($p_notification);
+            $mail = str_replace($v, $detail, $content->spanish_mail_content);
+            if ($vendor_mail == 1) {
+                try {
+                    Mail::to($vendor->email_id)->send(new VendorOrder($mail));
+                } catch (\Throwable $th) {
+                }
+            }
+            return true;
+        } else {
+            $detail['Vendor_name'] = $vendor->name;
+            $detail['Order_id'] = $order_id;
+            $detail['User_name'] = auth()->user()->name;
+            $v = ["{Vendor_name}", "{Order_id}", "{User_name}"];
+            $notification_content = str_replace($v, $detail, $content->notification_content);
+            if ($vendor_notification == 1) {
+                try {
+                    Config::set('onesignal.app_id', env('vendor_app_id'));
+                    Config::set('onesignal.rest_api_key', env('vendor_api_key'));
+                    Config::set('onesignal.user_auth_key', env('vendor_auth_key'));
+                    OneSignal::sendNotificationToUser(
+                        $notification_content,
+                        $vendor_user->device_token,
+                        $url = null,
+                        $data = null,
+                        $buttons = null,
+                        $schedule = null,
+                        GeneralSetting::find(1)->business_name
+                    );
+                } catch (\Throwable $th) {
+                }
+            }
+            $p_notification = array();
+            $p_notification['title'] = 'create order';
+            $p_notification['user_type'] = 'vendor';
+            $p_notification['user_id'] = $vendor->id;
+            $p_notification['message'] = $notification_content;
+            Notification::create($p_notification);
+            $mail = str_replace($v, $detail, $content->mail_content);
+            if ($vendor_mail == 1) {
+                try {
+                    Mail::to($vendor->email_id)->send(new VendorOrder($mail));
+                } catch (\Throwable $th) {
+                }
+            }
+            return true;
+        }
     }
 
 }
