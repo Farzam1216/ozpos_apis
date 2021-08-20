@@ -15,7 +15,7 @@
             $favicon = App\Models\GeneralSetting::find(1)->favicon;
         @endphp
 
-        <title>{{ $title }} | @yield('title')</title>
+        <title>@yield('title') | @yield('subtitle')</title>
 
         <link rel="icon" href="{{ url('images/upload/'.$favicon) }}" type="image/png">
 
@@ -70,14 +70,20 @@
             </div>
         </div><!-- End Preload -->
         
+
+        @include('frontend.layouts.header_restaurant')
+        
         @include('frontend.layouts.forms')
         
         @yield('content')
+        
+        @include('frontend.layouts.footer_restaurant')
 
         <div class="layer"></div><!-- Mobile menu overlay mask -->
 
         @include('frontend.layouts.extras')
         
+        @include('frontend.layouts.modals')
         @include('frontend.layouts.modals')
          
         <!-- PRE SCRIPTS -->

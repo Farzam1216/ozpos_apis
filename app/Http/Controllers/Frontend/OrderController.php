@@ -42,14 +42,15 @@ class OrderController extends Controller
             if (!Session::has('delivery_type'))
                 return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
             if (Session::get('delivery_type') == 'SHOP')
-                return redirect()->route('customer.restaurant.order.second.index', request()->route('id'));
+                return redirect()->route('customer.restaurant.order.second.index', Session::get('cart_vendor_id'));
          }
 
 
 
         $userAddresses = $this->customerUserAddress();
         $page = 2;
-        return view('frontend/order',compact('userAddresses', 'page'));
+        $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest(Session::get('cart_vendor_id'));
+        return view('frontend/order',compact('rest', 'userAddresses', 'page'));
     }
     public function second_index()
     {
@@ -75,12 +76,13 @@ class OrderController extends Controller
             if (!Session::has('delivery_type'))
                 return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
             if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+                return redirect()->route('customer.restaurant.order.first.index', Session::get('cart_vendor_id'))->withErrors('Pick delivery address.');
          }
 
         $userAddresses = $this->customerUserAddress();
         $page = 3;
-        return view('frontend/payment',compact('userAddresses', 'page'));
+        $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest(Session::get('cart_vendor_id'));
+        return view('frontend/payment',compact('rest', 'userAddresses', 'page'));
     }
     public function third_index()
     {
@@ -106,14 +108,15 @@ class OrderController extends Controller
             if (!Session::has('delivery_type'))
                 return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
             if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+                return redirect()->route('customer.restaurant.order.first.index', Session::get('cart_vendor_id'))->withErrors('Pick delivery address.');
          }
 
         $cartContent = Cart::content();
         $cartSubTotal = Cart::subtotal();
         Cart::destroy();
 
-        return view('frontend/receipt',compact('cartContent', 'cartSubTotal'));
+        $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest(Session::get('cart_vendor_id'));
+        return view('frontend/receipt',compact('rest', 'cartContent', 'cartSubTotal'));
     }
     public function book(Request $request)
     {
@@ -139,7 +142,7 @@ class OrderController extends Controller
             if (!Session::has('delivery_type'))
                 return redirect()->route('customer.restaurant.get', Session::get('cart_vendor_id'))->withErrors('Pick delivery type.');
             if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
-                return redirect()->route('customer.restaurant.order.first.index')->withErrors('Pick delivery address.');
+                return redirect()->route('customer.restaurant.order.first.index', Session::get('cart_vendor_id'))->withErrors('Pick delivery address.');
         }
         
         $request->validate([

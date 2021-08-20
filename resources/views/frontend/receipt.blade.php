@@ -1,6 +1,11 @@
 @extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'frontend.layouts.app_restaurant' : 'frontend.layouts.app', ['activePage' => 'order'] )
 
-@section('title','Receipt')
+@if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+    @section('logo',$rest->vendor_logo)
+    @section('subtitle','Receipt')
+@endif
+
+@section('title',$rest->name)
 @section('content')
 
 <!-- SubHeader =============================================== -->

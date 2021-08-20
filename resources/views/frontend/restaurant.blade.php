@@ -1,8 +1,12 @@
 @extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'frontend.layouts.app_restaurant' : 'frontend.layouts.app', ['activePage' => 'restaurant'] )
 
+@if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+    @section('logo',$rest->vendor_logo)
+    @section('subtitle','Menu')
+@endif
+
 @section('title',$rest->name)
 @section('content')
-
     <!-- SubHeader =============================================== -->
     <section class="parallax-window" data-parallax="scroll" data-image-src="{{ url('/images/restaurant_cover_blur_10.jpg')}}" data-natural-width="1400" data-natural-height="470">
         <div id="subheader">

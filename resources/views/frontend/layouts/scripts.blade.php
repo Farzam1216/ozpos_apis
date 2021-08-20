@@ -4,7 +4,7 @@
             $('#delivery_type_modal').modal('show');
         }); 
     </script>
-@elseif(session()->has('delivery_location') == null || session()->get('delivery_location') == null)
+@elseif(session()->get('delivery_type') == 'HOME' && (session()->has('delivery_location') == null || session()->get('delivery_location') == null))
     <script type="text/javascript">
         $(document).ready(function() {       
             $('#delivery_location_modal').modal('show');

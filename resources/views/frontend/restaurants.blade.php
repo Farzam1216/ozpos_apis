@@ -139,6 +139,7 @@
                                     </div>
                                     <div class="location">
                                         {{$rest->address}}. <!-- <span class="opening">Opens at 17:00.</span> Minimum order: $15 -->
+                                        <span class="opening">{{$rest->distance}}km far away</span>
                                     </div>
                                     <!-- <ul>
                                         <li>Take away<i class="icon_check_alt2 ok"></i></li>
