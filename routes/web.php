@@ -309,6 +309,8 @@ Route::middleware(['auth'])->prefix('vendor')->group(function ()
     Route::post('add_vendor_bank_details',[App\Http\Controllers\Vendor\VendorController::class,'add_vendor_bank_details']);
     Route::post('edit_vendor_bank_details/{id}',[App\Http\Controllers\Vendor\VendorController::class,'edit_vendor_bank_details']);
 
+    Route::get('twillo',[App\Http\Controllers\Vendor\VendorController::class,'twillo']);
+
     Route::post('cart',[App\Http\Controllers\Vendor\OrderController::class,'cart']);
     Route::get('DispCustimization/{submenu_id}',[App\Http\Controllers\Vendor\OrderController::class,'custimization']);
     Route::post('update_custimization',[App\Http\Controllers\Vendor\OrderController::class,'update_custimization']);

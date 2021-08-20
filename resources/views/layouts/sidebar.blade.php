@@ -308,6 +308,15 @@
                 </li>
             @endcan
 
+            @can('vendor_twillo')
+                <li class="{{ $activePage == 'twillo' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('vendor/twillo/') }}">
+                        <i class="fas fa-money-check-alt text-warning"></i>
+                        <span>{{__('SMS')}}</span>
+                    </a>
+                </li>
+            @endcan
+
             @if(Gate::check('vendor_deliveryTimeslots') || Gate::check('vendor_pickupTimeslots') || Gate::check('vendor_sellingTimeslots'))
                 <li class="dropdown {{ $activePage == 'delivery_timeslot' ? 'active' : ''}} || {{ $activePage == 'pickup_timeslot' ? 'active' : ''}} || {{ $activePage == 'selling_timeslot' ? 'active' : ''}}">
                     <a href="javascript:void(0);" class="nav-link has-dropdown">
