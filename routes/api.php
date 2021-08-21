@@ -33,6 +33,12 @@ Route::get('vendor/vendor_setting','VendorApiController@apiVendorSetting');
 Route::middleware('auth:api')->prefix('vendor')->group(function ()
 {
     /* ---- Vendor ---- */
+    
+
+    Route::get('drivers','VendorApiController@apiDrivers');
+    Route::post('driver_assign','VendorApiController@apiDriverAssign');
+
+
     //Menu
     Route::get('menu','VendorApiController@apiMenu');
     Route::post('create_menu','VendorApiController@apiCreateMenu');

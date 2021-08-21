@@ -36,6 +36,7 @@ use App\Models\DeliveryZoneArea;
 use App\Models\Notification;
 use DB;
 use Config;
+use Log;
 
 class VendorApiController extends Controller
 {
@@ -63,6 +64,10 @@ class VendorApiController extends Controller
                 if($user['is_verified'] == 1)
                 {
                     $user['token'] =  $user->createToken('mealup')->accessToken;
+
+                    $vendor = Vendor::where('user_id',$user->id)->first();
+                    $user['vendor_own_driver'] = $vendor->vendor_own_driver;
+
                     return response()->json(['success' => true , 'data' => $user], 200);
                 }
                 else
@@ -120,6 +125,11 @@ class VendorApiController extends Controller
                             }
                             catch (\Throwable $th) {}
                         }
+
+
+                        $vendor = Vendor::where('user_id',$user->id)->first();
+                        $user['vendor_own_driver'] = $vendor->vendor_own_driver;
+
                         return response(['success' => true ,'data' => $user, 'msg' => 'Otp send in your account']);
                     }
                 }
@@ -1581,6 +1591,72 @@ class VendorApiController extends Controller
 
 
     /* Start - Abdullah */
+
+    /* Drivers */
+    public function apiDrivers()
+    {
+        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+        $delivery_persons = DeliveryPerson::where('vendor_id',$vendor->id)->orderBy('id','DESC')->get(['id', 'first_name', 'last_name', 'is_online'])->makeHidden(['image', 'deliveryzone']);;
+        Log::info("Debug Mode: ".$delivery_persons);
+        return response(['success' => true , 'data' => $delivery_persons]);
+    }
+
+    public function apiDriverAssign(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $order->delivery_person_id = $request->driver_id;
+        $order->save();
+        $driver = DeliveryPerson::find($request->driver_id);
+        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+        $driver_notification = GeneralSetting::first()->driver_notification;
+        $driver_mail = GeneralSetting::first()->driver_mail;
+        $content = NotificationTemplate::where('title', 'delivery person order')->first();
+        $detail['drive_name'] = $driver->first_name . ' ' . $driver->last_name;
+        $detail['vendor_name'] = $vendor->name;
+        if (UserAddress::find($request->address_id))
+        {
+            $detail['address'] = UserAddress::find($request->address_id)->address;
+        }
+        $h = ["{driver_name}", "{vendor_name}", "{address}"];
+        $notification_content = str_replace($h, $detail, $content->notification_content);
+        if ($driver_notification == 1)
+        {
+            Config::set('onesignal.app_id', env('driver_app_id'));
+            Config::set('onesignal.rest_api_key', env('driver_api_key'));
+            Config::set('onesignal.user_auth_key', env('driver_auth_key'));
+            try
+            {
+                OneSignal::sendNotificationToUser(
+                    $notification_content,
+                    $driver->device_token,
+                    $url = null,
+                    $data = null,
+                    $buttons = null,
+                    $schedule = null,
+                    GeneralSetting::find(1)->business_name
+                );
+            } catch (\Throwable $th)
+            {
+            }
+        }
+        $p_notification = array();
+        $p_notification['title'] = 'create order';
+        $p_notification['user_type'] = 'driver';
+        $p_notification['user_id'] = $driver->id;
+        $p_notification['message'] = $notification_content;
+        Notification::create($p_notification);
+
+        if ($driver_mail == 1) {
+            $mail_content = str_replace($h, $detail, $content->mail_content);
+            try
+            {
+                Mail::to($driver->email_id)->send(new DriverOrder($mail_content));
+            } catch (\Throwable $th) {
+            }
+        }
+        return response(['success' => true]);
+    }
+
     public function print_thermal($order_id)
     {
         $order = Order::find($order_id);
