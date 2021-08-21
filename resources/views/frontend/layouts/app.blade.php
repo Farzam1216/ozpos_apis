@@ -87,7 +87,8 @@
          
         <!-- PRE SCRIPTS -->
         <script type="text/javascript">
-            const vendor_country = '{{ App\Models\GeneralSetting::first()->country }}';
+            const vendor_lat = 33.64915;
+            const vendor_lang = 73.08332;
             /* .update_delivery_type */
 
             var inProgress = false;

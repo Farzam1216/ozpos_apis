@@ -88,7 +88,8 @@
          
         <!-- PRE SCRIPTS -->
         <script type="text/javascript">
-            const vendor_country = '{{ App\Models\GeneralSetting::first()->country }}';
+            const vendor_lat = "@yield('vendor_lat')";
+            const vendor_lang = "@yield('vendor_lang')";
             /* .update_delivery_type */
 
             var inProgress = false;
