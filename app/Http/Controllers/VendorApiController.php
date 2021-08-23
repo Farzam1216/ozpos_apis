@@ -1355,13 +1355,13 @@ class VendorApiController extends Controller
         $status = strtoupper($request->status);
         $order = Order::find($request->id);
         if ($order) {
-            
+
 
             /* Start - Abdullah */
             if ($request->status == 'PRINT' || $request->status == 'print')
                 return $this->print_thermal($order->id);
             /* End - Abdullah */
-            
+
 
 
             $vendor = Vendor::where('id',$order->vendor_id)->first();
@@ -1596,9 +1596,22 @@ class VendorApiController extends Controller
     public function apiDrivers()
     {
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
-        $delivery_persons = DeliveryPerson::where('vendor_id',$vendor->id)->orderBy('id','DESC')->get(['id', 'first_name', 'last_name', 'is_online'])->makeHidden(['image', 'deliveryzone']);;
+        $delivery_persons = DeliveryPerson::where('vendor_id',$vendor->id)->orderBy('id','DESC')->get(['id', 'first_name', 'last_name', 'is_online'])->makeHidden(['image', 'deliveryzone']);
         Log::info("Debug Mode: ".$delivery_persons);
         return response(['success' => true , 'data' => $delivery_persons]);
+    }
+
+    public function apiDriverGet(Request $request)
+    {
+        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+        $delivery_person = DeliveryPerson::where([['id',$request->driver_id], ['vendor_id',$vendor->id]])->orderBy('id','DESC')->get(['id', 'first_name', 'last_name', 'is_online'])->makeHidden(['image', 'deliveryzone']);
+
+        if($delivery_person->isEmpty())
+            $delivery_person = NULL;
+        else
+            $delivery_person = $delivery_person[0];
+
+        return response(['success' => true , 'data' => $delivery_person]);
     }
 
     public function apiDriverAssign(Request $request)
