@@ -15,7 +15,7 @@
             <div id="sub_content">
                 <div id="thumb"><img src="{{$rest->image}}" alt="" style="height: calc(100% - 6px);"></div>
                 <div class="rating">
-                    
+
                     @for ($i = 0; $i < $rest->rate; $i++)
                         <i class="icon_star voted"></i>
                     @endfor
@@ -60,7 +60,7 @@
                     <ul id="cat_nav">
 
                         @foreach($singleVendor['menu'] as $idx=>$menu)
-                            
+
                             <li>
                                 <a href="#{{str_replace(' ', '_', $menu->name)}}" class="active">
                                     {{ucwords($menu->name)}}
@@ -88,7 +88,7 @@
 
 
 
-                            
+
                         @foreach($menu->submenu as $idx2=>$submenu)
                             <div class="row c-row">
                                 <div class="col-4">
@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="col-6">
                                     <h5>{{$idx2 + 1}}. {{ucwords($submenu->name)}}</h5>
-                                            
+
                                     @if(count($submenu->custimization) > 0)
                                         <p>Customizable</p>
                                     @endif
@@ -144,7 +144,7 @@
             </div><!-- End col -->
             <div class="col-lg-3" id="sidebar">
                 <div class="theiaStickySidebar">
-                    
+
                     @include('frontend.layouts.cart')
 
                 </div><!-- End theiaStickySidebar -->
