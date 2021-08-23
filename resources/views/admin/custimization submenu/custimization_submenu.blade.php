@@ -109,7 +109,7 @@
                                                                         </td>
                                                                         @if ($loop->iteration == 1)
                                                                             <td>
-                                                                                <button type="button" class="btn btn-primary update_custimization" onclick="update_custimization({{$custimization_type->id}},'{{$custimization_type->name}}')">+</button>
+                                                                                <button type="button" class="btn btn-primary update_custimization" onclick="update_custimization({{$custimization_type->id}},'{{strtolower($custimization_type->name)}}')">+</button>
                                                                             </td>
                                                                         @else
                                                                             <td>
@@ -135,7 +135,7 @@
                                                                         <label for="chkbox">{{__('Status')}}</label>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" class="btn btn-primary" onclick="update_custimization({{$custimization_type->id}},'{{$custimization_type->name}}')">+</button>
+                                                                        <button type="button" class="btn btn-primary" onclick="update_custimization({{$custimization_type->id}},'{{strtolower($custimization_type->name)}}')">+</button>
                                                                     </td>
                                                                 </tr>
                                                             @endif
