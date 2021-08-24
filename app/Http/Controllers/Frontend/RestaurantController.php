@@ -33,7 +33,7 @@ class RestaurantController extends Controller
         $page = 1;
         return view('frontend/restaurant',compact('rest', 'singleVendor', 'page'));
     }
-    
+
 
     /* -------------------------------------------------------------------------------------------------------- */
 
@@ -128,7 +128,7 @@ class RestaurantController extends Controller
         $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
         $tax = GeneralSetting::first()->isItemTax;
         foreach ($menus as $menu) {
-            $menu['submenu'] = Submenu::where('menu_id', $menu->id)->get(['id', 'qty_reset', 'item_reset_value','type', 'name', 'image', 'price']);
+            $menu['submenu'] = Submenu::where([['menu_id', $menu->id], ['status', 1]])->get(['id', 'qty_reset', 'item_reset_value','type', 'name', 'image', 'price']);
             foreach ($menu['submenu'] as $value) {
                 $value['custimization'] = SubmenuCusomizationType::where('submenu_id', $value->id)->get(['id', 'name', 'custimazation_item', 'type']);
                 if ($tax == 0) {
