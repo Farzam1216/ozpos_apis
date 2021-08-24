@@ -692,12 +692,13 @@ class VendorApiController extends Controller
             'menu_id' => 'required',
             'submenu_id' => 'required',
             'name' => 'required',
-            'custimazation_item' => 'required',
+            // 'custimazation_item' => 'required',
             'type' => 'required',
             'min_item_selection' => 'required',
             'max_item_selection' => 'required',
         ]);
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+        $request['custimazation_item'] = NULL;
         $data = $request->all();
         $data['vendor_id'] = $vendor->id;
         SubmenuCusomizationType::create($data);
