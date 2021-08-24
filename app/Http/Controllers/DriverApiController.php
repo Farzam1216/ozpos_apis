@@ -867,6 +867,6 @@ class DriverApiController extends Controller
                 $LoginDriver = auth('driverApi')->user();
             }
         }
-        return $LoginDriver->vendor_id == null ? 1 : 0;
+        return $LoginDriver->vendor_id == null ? 0 : 1;
     }
 }
