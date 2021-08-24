@@ -468,6 +468,8 @@ class DriverApiController extends Controller
                 }
                 if($reqData['order_status'] == 'COMPLETE')
                 {
+                    $order->payment_status = 1;
+                    $order->save();
                     $vendor = Vendor::find($order->vendor_id);
                     $distance = $this->distance($vendor->lat,$vendor->lang,$order->user_address['lat'],$order->user_address['lang'],'K');
                     $earnings = json_decode(GeneralSetting::first()->driver_earning);

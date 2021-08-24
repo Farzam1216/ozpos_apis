@@ -272,7 +272,7 @@ class OrderController extends Controller
         $status = strtoupper($request->status);
         $order = Order::find($request->id);
         $vendor = Vendor::where('id',$order->vendor_id)->first();
-        $order->order_status = $status;
+        $order->order_status = $request->status;
         $order->save();
         $user = User::find($order->user_id);
         if ($request->status == 'APPROVE' || $request->status == 'approve')
@@ -284,6 +284,7 @@ class OrderController extends Controller
         if ($request->status == 'COMPLETE' || $request->status == 'complete')
         {
             $order->order_end_time = Carbon::now(env('timezone'))->format('h:i a');
+            $order->payment_status = 1;
             $order->save();
         }
         if (Session::get('vendor_driver') == 0)
@@ -313,9 +314,9 @@ class OrderController extends Controller
                     $content = NotificationTemplate::where('title', 'delivery person order')->first();
                     $detail['drive_name'] = $near_driver->first_name . ' - ' . $near_driver->last_name;
                     $detail['vendor_name'] = $vendor->name;
-                    if (UserAddress::find($request->address_id))
+                    if (UserAddress::find($order->address_id))
                     {
-                        $detail['address'] = UserAddress::find($request->address_id)->address;
+                        $detail['address'] = UserAddress::find($order->address_id)->address;
                     }
                     $h = ["{driver_name}", "{vendor_name}", "{address}"];
                     $notification_content = str_replace($h, $detail, $content->notification_content);
