@@ -738,10 +738,15 @@ class VendorApiController extends Controller
         }
     }
 
-    public function apiDeleteCustimization($custimization_id)
+    public function apiDeleteCustimization(Request $request)
     {
+        $request->validate([
+            'custimization_id' => 'required',
+        ]);
+
         // $vendor = Vendor::where('user_id',auth()->user()->id)->first();
-        $custimization = SubmenuCusomizationType::find($custimization_id);
+        $data = $request->all();
+        $custimization = SubmenuCusomizationType::find($data['custimization_id']);
         if($custimization)
         {
             $custimization->delete();

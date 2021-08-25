@@ -60,7 +60,7 @@ Route::middleware('auth:api')->prefix('vendor')->group(function ()
     Route::post('create_custimization','VendorApiController@apiCreateCustimization');
     Route::get('edit_custimization/{custimization_id}','VendorApiController@apiEditCustimization');
     Route::post('update_custimization','VendorApiController@apiUpdateCustimization');
-    Route::get('delete_custimization/{custimization_id}','VendorApiController@apiDeleteCustimization');
+    Route::post('delete_custimization','VendorApiController@apiDeleteCustimization');
 
     //Delivery timeslot
     Route::get('edit_deliveryTimeslot','VendorApiController@apiEditDeliveryTimeslot');
