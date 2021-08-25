@@ -1047,7 +1047,7 @@ class VendorApiController extends Controller
     public function apiOrder()
     {
         $vendor = Vendor::where('user_id', auth()->user()->id)->first();
-        $orders = Order::where('vendor_id', $vendor->id)->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        $orders = Order::where('vendor_id', $vendor->id)->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
         foreach ($orders as $order) {
             $order->user_name = User::find($order->user_id)->name;
             $order->user_phone = User::find($order->user_id)->phone;
