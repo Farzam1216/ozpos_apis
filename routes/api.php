@@ -58,7 +58,7 @@ Route::middleware('auth:api')->prefix('vendor')->group(function ()
     //Custimization
     Route::get('custimization/{submenu_id}','VendorApiController@apiCustimization');
     Route::post('create_custimization','VendorApiController@apiCreateCustimization');
-    Route::get('edit_custimization/{custimization_id}','VendorApiController@apiEditCustimization');
+    Route::post('edit_custimization','VendorApiController@apiEditCustimization');
     Route::post('update_custimization','VendorApiController@apiUpdateCustimization');
     Route::post('delete_custimization','VendorApiController@apiDeleteCustimization');
 

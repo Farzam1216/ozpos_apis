@@ -692,7 +692,6 @@ class VendorApiController extends Controller
             'menu_id' => 'required',
             'submenu_id' => 'required',
             'name' => 'required',
-//            'custimazation_item' => 'required',
             'type' => 'required',
             'min_item_selection' => 'required',
             'max_item_selection' => 'required',
@@ -705,13 +704,27 @@ class VendorApiController extends Controller
         return response(['success' => true , 'data' => 'Custimization Cretaed successfully...!!']);
     }
 
-    public function apiEditCustimization($custimization_id)
+    public function apiEditCustimization(Request $request)
     {
+        $request->validate([
+            'custimization_id' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'min_item_selection' => 'required',
+            'max_item_selection' => 'required',
+        ]);
+
+        $data = $request->all();
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
-        $custimization_id = SubmenuCusomizationType::where([['vendor_id',$vendor->id],['id',$custimization_id]])->first()->makeHidden(['created_at','updated_at']);
-        if($custimization_id)
+        $custimization = SubmenuCusomizationType::where([['vendor_id',$vendor->id],['id',$data['custimization_id']]])->first()->makeHidden(['created_at','updated_at']);
+        if($custimization)
         {
-            return response(['success' => true , 'data' => $custimization_id]);
+            $custimization->name = $data['name'];
+            $custimization->type = $data['type'];
+            $custimization->min_item_selection = $data['min_item_selection'];
+            $custimization->max_item_selection = $data['max_item_selection'];
+            @$custimization->save();
+            return response(['success' => true , 'data' => 'Custimization edit successfully...!!']);
         }
         return response(['success' => false , 'data' => 'oops no Custimization found']);
     }
