@@ -105,7 +105,7 @@
                                         class="form-control"></td>
                                 <td><input type="number" min=1 required value="{{$charge->max_value}}" name="max_value[]"
                                         class="form-control"></td>
-                                <td><input type="number" min=1 required value="{{$charge->charges}}" name="charges[]"
+                                <td><input type="number" min=0 required value="{{$charge->charges}}" name="charges[]"
                                         class="form-control"></td>
                                 <td><button type="button" class="btn btn-danger removebtn"><i
                                             class="fas fa-times"></i></button></td>

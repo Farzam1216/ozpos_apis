@@ -148,7 +148,7 @@
                                         <input type="number" min=1 name="max_km[]" value="{{ $driver_earning->max_km }}" class="form-control" required>
                                     </td>
                                     <td>
-                                        <input type="number" min=1 name="charge[]" value="{{ $driver_earning->charge }}" class="form-control" required>
+                                        <input type="number" min=0 name="charge[]" value="{{ $driver_earning->charge }}" class="form-control" required>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger removebtn"><i class="fas fa-times"></i></button>
@@ -164,7 +164,7 @@
                                         <input type="number" name="max_km[]" min=1 class="form-control" required>
                                     </td>
                                     <td>
-                                        <input type="number" name="charge[]" min=1 class="form-control" required>
+                                        <input type="number" name="charge[]" min=0 class="form-control" required>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger removebtn"><i class="fas fa-times"></i></button>

@@ -97,7 +97,7 @@
                                                                             <input type="text" name="{{str_replace(' ', '_', strtolower('name'.$custimization_type->name.'[]'))}}" placeholder="{{__('Item name')}}" value="{{ $item->name }}" class="form-control" style="text-transform: none;">
                                                                         </td>
                                                                         <td>
-                                                                            <input type="number" name="price[]" value="{{ $item->price }}" placeholder="{{__('Price')}}" class="form-control">
+                                                                            <input type="number" step="0.01" min="0" name="price[]" value="{{ $item->price }}" placeholder="{{__('Price')}}" class="form-control">
                                                                         </td>
                                                                         <td>
                                                                             <input type="radio" id="{{ 'radio'.$custimization_type->id.'_'.$loop->index }}" value="{{ $loop->index }}" name="{{str_replace(' ', '_', strtolower('isDefault_'.$custimization_type->name))}}" {{ $item->isDefault == 1 ? 'checked' : '' }}>
@@ -124,7 +124,7 @@
                                                                         <input type="text" required name="{{str_replace(' ', '_', strtolower('name'.$custimization_type->name.'[]'))}}" placeholder="{{__('Item name')}}" class="form-control" style="text-transform: none;">
                                                                     </td>
                                                                     <td>
-                                                                        <input type="number" required name="price[]" placeholder="{{__('Price')}}" class="form-control">
+                                                                        <input type="number" step="0.01" min="0" required name="price[]" placeholder="{{__('Price')}}" class="form-control">
                                                                     </td>
                                                                     <td>
                                                                         <input type="radio" id="1" value="0" name="{{str_replace(' ', '_', strtolower('isDefault_'.$custimization_type->name))}}" checked>

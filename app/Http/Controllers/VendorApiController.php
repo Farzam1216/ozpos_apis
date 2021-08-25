@@ -725,10 +725,10 @@ class VendorApiController extends Controller
 
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
         $data = $request->all();
-        $custimization = SubmenuCusomizationType::find($custimization_id);
+        $custimization = SubmenuCusomizationType::find($data['custimization_id']);
         if($custimization)
         {
-            $data['custimization_item'] = $custimization_item;
+            $custimization->custimazation_item = $data['custimization_item'];
             $custimization->save();
             return response(['success' => true , 'data' => 'Custimization updated successfully...!!']);
         }

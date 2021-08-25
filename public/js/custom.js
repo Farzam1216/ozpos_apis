@@ -272,10 +272,10 @@ $(document).ready(function ()
     $('input[type=number]').bind('keypress', function(evt)
     {
         // if(evt.keyCode === 8 || evt.keyCode === 46 ? true : !isNaN(Number(evt.key)))
-        if(evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57)
-        {
-            evt.preventDefault();
-        }
+        // if( (evt.which != 190 && evt.which != 110 ) && ( evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57 ) )
+        // {
+        //     evt.preventDefault();
+        // }
     });
 
     var today = new Date();
@@ -1582,11 +1582,11 @@ function update_custimization(i, name)
     // var name = name.replace(' ', '_');
     var name = name.split(' ').join('_');
     var tds = parseInt($("input[name='name" + name + "[]']").length);
-    $('#custom' + i).append('<tr id="custom' + i + '"><td><input type="text" name="name' + name + '[]" class="form-control" required placeholder="item" style="text-transform: none;"></td><td><input type="number" name="price[]" class="form-control" required placeholder="price"></td><td><input type="radio" name="isdefault_' + name + '" value="' + tds + '" id="' + i + '_' + tds + '"><label for="' + i + '_' + tds + '">&nbsp;Default</label></td><td><input type="checkbox" id="status' + i + '_' + tds + '" name="status' + tds + '"><label for="status' + i + '_' + tds + '">Status</label></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
+    $('#custom' + i).append('<tr id="custom' + i + '"><td><input type="text" name="name' + name + '[]" class="form-control" required placeholder="item" style="text-transform: none;"></td><td><input type="number" step="0.01" min="0.01" name="price[]" class="form-control" required placeholder="price"></td><td><input type="radio" name="isdefault_' + name + '" value="' + tds + '" id="' + i + '_' + tds + '"><label for="' + i + '_' + tds + '">&nbsp;Default</label></td><td><input type="checkbox" id="status' + i + '_' + tds + '" name="status' + tds + '"><label for="status' + i + '_' + tds + '">Status</label></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
 }
 
 function add_field() {
-    $('.delivery_table').append('<tr><td><input type="number" required name="min_value[]" class="form-control"></td><td><input type="number" required name="max_value[]" class="form-control"></td><td><input type="number" required name="charges[]" class="form-control"></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
+    $('.delivery_table').append('<tr><td><input type="number" required min="1" name="min_value[]" class="form-control"></td><td><input type="number" required min="1" name="max_value[]" class="form-control"></td><td><input type="number" required min="0" name="charges[]" class="form-control"></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
 }
 
 function add_cancel_reason() {
@@ -1598,7 +1598,7 @@ function add_drivervehical_field() {
 }
 
 function add_driverearning_field() {
-    $('.driver_earning_table').append('<tr><td><input type="number" name="min_km[]" class="form-control" required></td><td><input type="number" name="max_km[]" class="form-control" required></td><td><input type="number" name="charge[]" class="form-control" required></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
+    $('.driver_earning_table').append('<tr><td><input type="number" min="1" name="min_km[]" class="form-control" required></td><td><input type="number" min="1" name="max_km[]" class="form-control" required></td><td><input type="number" min="0" name="charge[]" class="form-control" required></td><td><button type="button" class="btn btn-primary removebtn"><i class="fas fa-times"></i></button></td></tr>');
 }
 
 function addhours(i) {
