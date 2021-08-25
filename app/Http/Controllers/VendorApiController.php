@@ -692,7 +692,7 @@ class VendorApiController extends Controller
             'menu_id' => 'required',
             'submenu_id' => 'required',
             'name' => 'required',
-            // 'custimazation_item' => 'required',
+//            'custimazation_item' => 'required',
             'type' => 'required',
             'min_item_selection' => 'required',
             'max_item_selection' => 'required',
@@ -716,16 +716,11 @@ class VendorApiController extends Controller
         return response(['success' => false , 'data' => 'oops no Custimization found']);
     }
 
-    public function apiUpdateCustimization(Request $request,$custimization_id)
+    public function apiUpdateCustimization(Request $request)
     {
         $request->validate([
-            'menu_id' => 'required',
-            'submenu_id' => 'required',
-            'name' => 'required',
-            'custimazation_item' => 'required',
-            'type' => 'required',
-            'min_item_selection' => 'required',
-            'max_item_selection' => 'required',
+            'custimization_id' => 'required',
+            'custimization_item' => 'required',
         ]);
 
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
@@ -733,8 +728,8 @@ class VendorApiController extends Controller
         $custimization = SubmenuCusomizationType::find($custimization_id);
         if($custimization)
         {
-            $data['vendor_id'] = $vendor->id;
-            $custimization->update($data);
+            $data['custimization_item'] = $custimization_item;
+            $custimization->save();
             return response(['success' => true , 'data' => 'Custimization updated successfully...!!']);
         }
         else
