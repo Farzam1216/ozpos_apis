@@ -54,7 +54,7 @@
                         <div class="row" id="options_2">
                             <div class="col-6">
                                 <label class="c-label">
-                                    
+
                                     @if(session()->has('delivery_type') && session()->get('delivery_type') == 'HOME')
                                         <input type="checkbox" name="delivery_type_home" value="HOME" checked class="icheck update_delivery_type"/>
                                     @else
@@ -66,7 +66,7 @@
                             </div>
                             <div class="col-6">
                                 <label class="c-label">
-                                    
+
                                     @if(session()->has('delivery_type') && session()->get('delivery_type') == 'SHOP')
                                         <input type="checkbox" name="delivery_type_shop" value="SHOP" checked class="icheck update_delivery_type"/>
                                     @else
@@ -85,20 +85,44 @@
                     <div id="modal-cart-receipt">
                         <div class="row">
                             <div class="col-8">
+                                <h5 class="c-white">
+                                    Subtotal
+                                </h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="c-white">
+                                    {{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <h5 class="c-white">
+                                    Tax
+                                </h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="c-white">
+                                    {{Cart::tax()}} {{ App\Models\GeneralSetting::first()->currency }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
                                 <h6 class="c-white">
                                     Total
                                 </h6>
                             </div>
                             <div class="col-4">
                                 <h6 class="c-white">
-                                    {{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}
+                                    {{Cart::total()}} {{ App\Models\GeneralSetting::first()->currency }}
                                 </h6>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                    
+
 
                 <hr>
 
@@ -179,7 +203,7 @@
                 <input type="text" name="name" class="form-control form-white" placeholder="Name" required>
                 <input type="email" name="email_id" class="form-control form-white" placeholder="Email" required>
                 <input type="text" name="password" class="form-control form-white" placeholder="Password" required>
-                
+
                 <select name="phone_code" class="form-control form-white phone_code" >
                   <!-- Countries often selected by users can be moved to the top of the list. -->
                   <!-- Countries known to be subject to general US embargo are commented out by default. -->
@@ -457,7 +481,7 @@
 <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog" aria-labelledby="myDeliveryLocation" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content modal-popup" style="margin-top: 30px;margin-bottom: 30px;padding: unset;">
-                
+
 
 
             <div>

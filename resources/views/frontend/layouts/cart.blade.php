@@ -5,7 +5,7 @@
             <div id="cart-items">
                 <table class="table table_summary">
                     <tbody>
-                        
+
                         @foreach(Cart::content() as $row)
                             <tr>
                                 <td>
@@ -32,7 +32,7 @@
             <div class="row" id="options_2">
                 <div class="col-xl-6 col-md-12 col-sm-12 col-6">
                     <label>
-                        
+
                         @if(session()->has('delivery_type') && session()->get('delivery_type') == 'HOME')
                             <input type="checkbox" name="delivery_type_home" value="HOME" checked class="icheck update_delivery_type"/>
                         @else
@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-xl-6 col-md-12 col-sm-12 col-6">
                     <label>
-                        
+
                         @if(session()->has('delivery_type') && session()->get('delivery_type') == 'SHOP')
                             <input type="checkbox" name="delivery_type_shop" value="SHOP" checked class="icheck update_delivery_type"/>
                         @else
@@ -61,19 +61,24 @@
             <div id="cart-receipt">
                 <table class="table table_summary">
                     <tbody>
-                        <!-- <tr>
+                        <tr>
                             <td>
                                 Subtotal <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Tax applied <span class="float-right">{{Cart::tax()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                                Delivery Charges <span class="float-right">{{session()->get('cart_delivery_charges')}} {{ App\Models\GeneralSetting::first()->currency }}</span>
                             </td>
-                        </tr> -->
+                        </tr>
+                        <tr>
+                            <td>
+                                Tax <span class="float-right">{{Cart::tax()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                            </td>
+                        </tr>
                         <tr>
                             <td class="total">
-                                TOTAL <span class="float-right">{{Cart::subtotal()}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                                TOTAL <span class="float-right">{{Cart::total()+session()->get('cart_delivery_charges')}} {{ App\Models\GeneralSetting::first()->currency }}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -115,7 +120,7 @@
             $(".item_add_to_cart").click(function(e){
 
                 e.preventDefault();
-                
+
                 $('#preloader').show();
                 $('#preloader #status').show();
 
@@ -143,7 +148,7 @@
                                 $('#preloader #status').hide();
                             });
                         }
-                    });                    
+                    });
                 }
                 else {
                     var extra_items = $(this).attr("data-extra-items");
@@ -175,7 +180,7 @@
                                 $('#preloader #status').hide();
                             });
                         }
-                    });    
+                    });
                 }
 
             });
@@ -183,7 +188,7 @@
             $(document).on('click', '.item_remove_from_cart', function(e){
 
                 e.preventDefault();
-                
+
                 $('#preloader').show();
                 $('#preloader #status').show();
 
@@ -213,12 +218,12 @@
                 });
 
             });
-            
+
             $(document).on('ifChecked ifUnchecked', '.update_delivery_type', function(e){
                 e.preventDefault();
                 if (inProgress)
                     return;
-                
+
                 inProgress = true;
                 $('#preloader').show();
                 $('#preloader #status').show();
@@ -246,7 +251,7 @@
                             $("input[name=delivery_type_home]").iCheck('uncheck');
                             $("input[name=delivery_type_shop]").iCheck('check');
                         }
-                            
+
                         $('#preloader').hide();
                         $('#preloader #status').hide();
                         inProgress = false;
@@ -255,7 +260,7 @@
                 });
 
             });
-            
+
             $(document).on('click', '#submit_final_order', function(e){
 
                 e.preventDefault();

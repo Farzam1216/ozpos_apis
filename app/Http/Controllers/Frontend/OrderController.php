@@ -150,7 +150,7 @@ class OrderController extends Controller
             if (Session::get('delivery_type') == 'HOME' && !Session::has('user_address'))
                 return redirect()->route('customer.restaurant.order.first.index', Session::get('cart_vendor_id'))->withErrors('Pick delivery address.');
         }
-        
+
         $request->validate([
             'payment_method' => 'bail|required',
         ]);
@@ -174,7 +174,7 @@ class OrderController extends Controller
             $bookData = array(
                 'date' => $dateTime->format('Y-m-d'),
                 'time' => $dateTime->format('H:i a'),
-                'amount' => intval(Cart::subtotal(2, '.', '')),
+                'amount' => intval(Cart::subtotal(2, '.', '')+Session::get('cart_delivery_charges')),
                 'vendor_id' => Session::get('cart_vendor_id'),
                 'delivery_type' => Session::get('delivery_type'),
                 'order_status' => 'PENDING',
@@ -196,7 +196,7 @@ class OrderController extends Controller
             case 'COD':
                 $bookData['payment_status'] = 0;
                 break;
-            
+
             default:
                 // code...
                 break;
@@ -253,7 +253,7 @@ class OrderController extends Controller
             return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
         // }
     }
-    
+
     public function customerUserAddress()
     {
         $user_address = UserAddress::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->get();
@@ -281,7 +281,7 @@ class OrderController extends Controller
 
 
 
-    
+
 
     public function sendVendorOrderNotification($vendor, $order_id)
     {
