@@ -99,11 +99,35 @@
                             </td>
                         </tr> -->
                         <tr>
+                            <td class="calculate_total">
+                                Subtotal
+                            </td>
+                            <td class="calculate_total">
+                                <strong class="float-right">{{$cartSubTotal}} {{ App\Models\GeneralSetting::first()->currency }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="calculate_total">
+                                Delivery Charges
+                            </td>
+                            <td class="calculate_total">
+                                <strong class="float-right">{{session()->get('cart_delivery_charges')}} {{ App\Models\GeneralSetting::first()->currency }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="calculate_total">
+                                Tax
+                            </td>
+                            <td class="calculate_total">
+                                <strong class="float-right">{{$cartTax}}  {{ App\Models\GeneralSetting::first()->currency }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="total_confirm">
                                 TOTAL
                             </td>
                             <td class="total_confirm">
-                                <span class="float-right">{{$cartSubTotal}} {{ App\Models\GeneralSetting::first()->currency }}</span>
+                                <span class="float-right">{{$cartTotal}} {{ App\Models\GeneralSetting::first()->currency }}</span>
                             </td>
                         </tr>
                     </tbody>

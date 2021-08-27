@@ -9,7 +9,7 @@
         <meta name="keywords" content="pizza, delivery food, fast food, sushi, take away, chinese, italian food">
         <meta name="description" content="">
         <meta name="author" content="Ansonika">
-        
+
         @php
             $title = App\Models\GeneralSetting::find(1)->business_name;
             $favicon = App\Models\GeneralSetting::find(1)->favicon;
@@ -53,9 +53,22 @@
 
     	<!-- YOUR CUSTOM CSS -->
     	<link href="{{ url('/frontend/css/custom.css')}}" rel="stylesheet">
-        
+
         <!-- Modernizr -->
-    	<script src="{{ url('/frontend/js/modernizr.js')}}"></script> 
+    	<script src="{{ url('/frontend/js/modernizr.js')}}"></script>
+
+
+        <!-- DYNAMIC COLOR SCHEME -->
+        @php
+            $color = App\Models\GeneralSetting::find(1)->site_color;
+        @endphp
+        <style>
+            :root
+            {
+                --site_color: <?php echo $color; ?>;
+                --hover_color: <?php echo $color.'c7'; ?>;
+            }
+        </style>
     </head>
 
     <body>
@@ -69,23 +82,23 @@
                 <div class="sk-rect5"></div>
             </div>
         </div><!-- End Preload -->
-        
+
 
         @include('frontend.layouts.header_restaurant')
-        
+
         @include('frontend.layouts.forms')
-        
+
         @yield('content')
-        
+
         @include('frontend.layouts.footer_restaurant')
 
         <div class="layer"></div><!-- Mobile menu overlay mask -->
 
         @include('frontend.layouts.extras')
-        
+
         @include('frontend.layouts.modals')
         @include('frontend.layouts.modals')
-         
+
         <!-- PRE SCRIPTS -->
         <script type="text/javascript">
             const vendor_lat = "@yield('vendor_lat')";
@@ -109,7 +122,7 @@
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://www.paypal.com/sdk/js?client-id={{ App\Models\PaymentSetting::first()->paypal_sendbox }}&currency={{ App\Models\GeneralSetting::first()->currency }}" data-namespace="paypal_sdk"></script>
         */ ?>
-        
+
         <!-- SPECIFIC SCRIPTS -->
         <!-- Restaurants -->
         <script  src="{{ url('/frontend/js/cat_nav_mobile.js')}}"></script>
@@ -124,7 +137,7 @@
         <!-- SMOOTH SCROLL -->
         <script>
             $('#cat_nav a[href^="#"]').click(function() {
-                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') 
+                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
                     || location.hostname == this.hostname) {
                     var target = $(this.hash);
                     target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
@@ -172,7 +185,7 @@
 
         <!-- SPECIFIC SCRIPTS CUSTOM -->
         @yield('script')
-        
+
         <!-- SPECIFIC SCRIPTS CUSTOM -->
         @yield('cart_script')
 

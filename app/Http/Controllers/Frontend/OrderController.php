@@ -119,10 +119,12 @@ class OrderController extends Controller
 
         $cartContent = Cart::content();
         $cartSubTotal = Cart::subtotal();
+        $cartTotal = Cart::total();
+        $cartTax = Cart::tax();
         Cart::destroy();
 
         $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest(Session::get('cart_vendor_id'));
-        return view('frontend/receipt',compact('rest', 'cartContent', 'cartSubTotal'));
+        return view('frontend/receipt',compact('rest', 'cartContent', 'cartSubTotal', 'cartTax', 'cartTotal'));
     }
     public function book(Request $request)
     {

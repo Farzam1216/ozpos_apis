@@ -98,6 +98,18 @@
                         <div class="row">
                             <div class="col-8">
                                 <h5 class="c-white">
+                                    Delivery Charges
+                                </h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="c-white">
+                                    {{session()->get('cart_delivery_charges')}} {{ App\Models\GeneralSetting::first()->currency }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <h5 class="c-white">
                                     Tax
                                 </h5>
                             </div>
@@ -110,12 +122,12 @@
                         <div class="row">
                             <div class="col-8">
                                 <h6 class="c-white">
-                                    Total
+                                    <b>Total</b>
                                 </h6>
                             </div>
                             <div class="col-4">
                                 <h6 class="c-white">
-                                    {{Cart::total()}} {{ App\Models\GeneralSetting::first()->currency }}
+                                    <b>{{Cart::total()+session()->get('cart_delivery_charges')}} {{ App\Models\GeneralSetting::first()->currency }}</b>
                                 </h6>
                             </div>
                         </div>
