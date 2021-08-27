@@ -1049,11 +1049,18 @@ class VendorApiController extends Controller
         $vendor = Vendor::where('user_id', auth()->user()->id)->first();
         $orders = NULL;
 
-        if ($order_status == 'PENDING') {
-            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'PENDING']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
-        }
-        else if ($order_status == 'APPROVE') {
-            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'APPROVE']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+//        if ($order_status == 'PENDING') {
+//            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'PENDING']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+//        }
+//        else if ($order_status == 'APPROVE') {
+//            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'APPROVE']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+//        }
+        if($order_status == 'NewOrders') {
+            $orders = Order::where('vendor_id', $vendor->id)->where(function ($query) {
+                $query->where('order_status', 'PENDING')
+                    ->orWhere('order_status', 'APPROVE');
+            })->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+            //            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', $vendor->id]])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
         }
         else if ($order_status == 'PICKUP') {
             $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'PICKUP']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
