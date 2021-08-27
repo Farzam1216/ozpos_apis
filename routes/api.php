@@ -95,7 +95,7 @@ Route::middleware('auth:api')->prefix('vendor')->group(function ()
     Route::get('insights','VendorApiController@apiInsights');
 
     //Order
-    Route::get('order','VendorApiController@apiOrder');
+    Route::get('order/{order_status}','VendorApiController@apiOrder');
     Route::post('create_order','VendorApiController@apiCreateOrder');
 
     // change status

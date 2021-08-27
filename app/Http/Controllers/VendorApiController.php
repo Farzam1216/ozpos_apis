@@ -1044,10 +1044,32 @@ class VendorApiController extends Controller
 
 
     //Order
-    public function apiOrder()
+    public function apiOrder($order_status)
     {
         $vendor = Vendor::where('user_id', auth()->user()->id)->first();
-        $orders = Order::where('vendor_id', $vendor->id)->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        $orders = NULL;
+
+        if ($order_status == 'PENDING') {
+            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'PENDING']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        }
+        else if ($order_status == 'APPROVE') {
+            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'APPROVE']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        }
+        else if ($order_status == 'PICKUP') {
+            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'PICKUP']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        }
+        else if ($order_status == 'DELIVERED') {
+            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', 'DELIVERED']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        }
+        else if($order_status == 'PastOrders') {
+            $orders = Order::where('vendor_id', $vendor->id)->where(function ($query) {
+                $query->where('order_status', 'COMPLETE')
+                    ->orWhere('order_status', 'CANCEL')
+                    ->orWhere('order_status', 'REJECT');
+            })->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+//            $orders = Order::where([['vendor_id', $vendor->id], ['order_status', $vendor->id]])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+        }
+
         foreach ($orders as $order) {
             $order->user_name = User::find($order->user_id)->name;
             $order->user_phone = User::find($order->user_id)->phone;
