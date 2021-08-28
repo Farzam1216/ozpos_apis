@@ -52,7 +52,15 @@
                 </li> -->
                 <li>
                     @if(Auth::user() && Auth::user()->load('roles')->roles->contains('title', 'user'))
-                        <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">My Account<i class="icon-down-open-mini"></i></a>
+                            <ul>
+                                <li><a href="{{ route('customer.orders.index')}}">Orders</a></li>
+                                <li>
+                                    <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
                     @else
                         <a href="#0" data-toggle="modal" data-target="#login_2">Login</a>
                     @endif

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryPerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\GeneralSetting;
@@ -24,6 +25,43 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
+    public function showOrder()
+    {
+        app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+        // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+        $orders = Order::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get(['id', 'amount', 'vendor_id', 'order_status', 'delivery_person_id', 'delivery_charge', 'date', 'time', 'address_id']);
+        foreach ($orders as $order) {
+            if ($order->delivery_person_id != null) {
+                $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+                $order->delivery_person = [
+                    'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+                    'image' => $delivery_person->image,
+                    'contact' => $delivery_person->contact,
+                ];
+            }
+        }
+
+        return view('frontend/orders',compact('orders'));
+    }
+    public function getOrder()
+    {
+        app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+        // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+        $orders = Order::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get(['id', 'amount', 'vendor_id', 'order_status', 'delivery_person_id', 'delivery_charge', 'date', 'time', 'address_id']);
+        foreach ($orders as $order) {
+            if ($order->delivery_person_id != null) {
+                $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+                $order->delivery_person = [
+                    'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+                    'image' => $delivery_person->image,
+                    'contact' => $delivery_person->contact,
+                ];
+            }
+        }
+
+        return json_encode($orders);
+    }
+
 	public function first_index()
     {
          if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))

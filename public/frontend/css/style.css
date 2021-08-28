@@ -2819,3 +2819,134 @@ ul.plan-features {
 #cart_btn_autoload .c-icon-cart {
     background-color: var(--site_color);
 }
+
+/*******************************
+* Does not work properly if "in" is added after "collapse".
+* Get free snippets on bootpen.com
+*******************************/
+.panel-group .panel {
+    border-radius: 0;
+    box-shadow: none;
+    border-color: #EEEEEE;
+}
+
+.panel-default > .panel-heading {
+    padding: 0;
+    margin-bottom: 3px;
+    border-radius: 0;
+    color: #212121;
+    background-color: #FAFAFA;
+    border-color: #EEEEEE;
+}
+
+.panel-title {
+    font-size: 14px;
+}
+
+.panel-title > a {
+    display: block;
+    color: var(--site_color);
+    padding: 15px 15px 0 15px;
+    text-decoration: none;
+}
+
+.panel-title > p {
+    font-size: .7rem;
+    color: #666;
+    display: block;
+    padding: 0 15px 0 15px;
+    text-decoration: none;
+    margin: unset;
+}
+
+.more-less {
+    float: right;
+    color: var(--site_color);
+}
+
+.panel-default > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #EEEEEE;
+}
+
+
+
+.track {
+    position: relative;
+    background-color: #ddd;
+    height: 7px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 30px 0 50px 0;
+}
+
+.track .step {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    width: 25%;
+    margin-top: -18px;
+    text-align: center;
+    position: relative
+}
+
+.track .step.active:before {
+    background: var(--site_color)
+}
+
+.track .step::before {
+    height: 7px;
+    position: absolute;
+    content: "";
+    width: 100%;
+    left: 0;
+    top: 18px
+}
+
+.track .step.active .icon {
+    background: var(--site_color);
+    color: #fff
+}
+
+.track .icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    border-radius: 100%;
+    background: #ddd
+}
+
+.track .step.active .text {
+    font-weight: 400;
+    color: #000
+}
+
+.track .text {
+    display: block;
+    margin-top: 7px
+}
+
+
+.customOrders .right {
+    text-align: right;
+}
+.customOrders .heading {
+    color: var(--site_color);
+    /*font-family: sans-serif;*/
+    font-weight: 700;
+}
+.customOrders .price {
+    color: var(--site_color);
+    /*font-family: sans-serif;*/
+    font-weight: 900;
+}
+.customOrders p {
+    font-size: 0.75rem;
+    margin: unset;
+}
+.customOrders img {
+    width: 100%;
+    max-height: 80px;
+}

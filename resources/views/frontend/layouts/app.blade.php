@@ -51,6 +51,9 @@
     	<!-- Radio and check inputs -->
         <link href="{{ url('/frontend/css/skins/square/grey.css')}}" rel="stylesheet">
 
+    	<!-- Font Awesome -->
+        <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+
     	<!-- YOUR CUSTOM CSS -->
     	<link href="{{ url('/frontend/css/custom.css')}}" rel="stylesheet">
 
