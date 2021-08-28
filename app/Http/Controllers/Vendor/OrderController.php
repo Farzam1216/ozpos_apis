@@ -954,8 +954,8 @@ class OrderController extends Controller
         try {
             $printer = new ReceiptPrinter;
             $printer->init(
-                config($vendor->connector_type),
-                config($vendor->connector_descriptor)
+                config(parent::$vendor->connector_type),
+                config(parent::$vendor->connector_descriptor)
             );
 
             // Set store info
