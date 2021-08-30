@@ -292,7 +292,7 @@
                     <h1>Welcome to MealUp</h1>
                     <p>Thank you for purchasing mealUp<br />get your installation key and install database</p>
                 </header>
-                <a href="{{ url('license/install') }}" class="button big scrolly">Installer</a>
+                <a href="{{ url('customer') }}" class="button big scrolly">Installer</a>
             </div>
         </section>
 	</body>

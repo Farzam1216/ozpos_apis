@@ -15,7 +15,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
-use LicenseBoxAPI;
 
 class SettingController extends Controller
 {
@@ -416,35 +415,6 @@ class SettingController extends Controller
         $id = GeneralSetting::first();
         $id->update($request->all());
         return response(['success' => true]);
-    }
-
-    public function license_setting()
-    {
-        $general_setting = GeneralSetting::first();
-        return view('admin.setting.license_setting',compact('general_setting'));
-    }
-
-    public function update_license(Request $request)
-    {
-        $request->validate([
-            'license_code' => 'required',
-            'client_name' => 'required'
-        ]);
-        $api = new LicenseBoxAPI();
-        $result = $api->activate_license($request->license_code, $request->client_name);
-        if ($result['status'] == true)
-        {
-            $id = GeneralSetting::find(1);
-            $data = $request->all();
-            $data['license_verify'] = 1;
-            $id->update($data);
-            return redirect('/');
-        }
-        else
-        {
-            return redirect()->back()->with('error_msg', $result['message']);
-        }
-        return redirect('admin/setting');
     }
 
     public function updateENV($data)

@@ -50,7 +50,6 @@
     "autoload":
     {
         "files": [
-            "license/includes/lb_helper.php"
         ],
         "psr-4":
         {

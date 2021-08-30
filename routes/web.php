@@ -203,8 +203,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function ()
     Route::get('vendor_bank_details/{id}',[VendorBankDetailController::class,'vendor_bank_details']);
     Route::post('add_bank_details',[VendorBankDetailController::class,'add_bank_details']);
     Route::post('update_bank_details/{id}',[VendorBankDetailController::class,'update_bank_details']);
-    Route::get('license_setting',[SettingController::class,'license_setting']);
-    Route::post('update_license',[SettingController::class,'update_license']);
 
     //change status
     Route::post('delivery_zone/change_status',[DeliveryZoneController::class, 'change_status']);
@@ -359,7 +357,6 @@ Route::middleware(['auth'])->prefix('vendor')->group(function ()
 });
 
 Route::post('saveEnvData',[AdminController::class,'saveEnvData']);
-Route::post('saveAdminData',[AdminController::class,'saveAdminData']);
 
 
 

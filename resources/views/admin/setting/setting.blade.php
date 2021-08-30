@@ -130,18 +130,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card card-large-icons">
-                    <div class="card-icon bg-primary text-white">
-                        <i class="fab fa-elementor"></i>
-                    </div>
-                    <div class="card-body">
-                        <h4>{{__('License Code')}}</h4>
-                        <p>{{__('Bussiness License name and code.')}}</p>
-                        <a href="{{ url('admin/license_setting')}}" class="card-cta">{{__('Change Setting')}} <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>

@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
-use LicenseBoxAPI;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\HttpFoundation\Response;
 use DB;
@@ -57,21 +56,6 @@ class AdminController extends Controller
             }
             if ($user->roles->contains('title', 'admin'))
             {
-                $data = GeneralSetting::find(1);
-                $data->license_verify = 1;
-                $data->save();
-                $api = new LicenseBoxAPI();
-                $res = $api->verify_license();
-                if ($res['status'] != true)
-                {
-                    $data->license_verify = 0;
-                    $data->save();
-                }
-                else
-                {
-                    $data->license_verify = 1;
-                    $data->save();
-                }
                 return redirect('admin/home');
             }
         }
@@ -211,12 +195,6 @@ class AdminController extends Controller
         }
     }
 
-    public function saveAdminData(Request $request)
-    {
-        GeneralSetting::find(1)->update(['license_code' => $request->license_code , 'client_name' => $request->client_name , 'license_verify' => 1]);
-        return response()->json(['data' => url('/'), 'success' => true], 200);
-    }
-
     public function download_pdf($file_name)
     {
         $pathToFile = public_path(). "/sample_excel"."/".$file_name;
@@ -228,7 +206,7 @@ class AdminController extends Controller
 
     public function import()
     {
-        DB::unprepared(file_get_contents(base_path().'/license/includes/db_mealup.sql'));
+        DB::unprepared(file_get_contents(base_path().'/import/includes/db_mealup.sql'));
         return redirect('/');
     }
 }

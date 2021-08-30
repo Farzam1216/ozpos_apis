@@ -86,21 +86,6 @@ class CustomerController extends Controller
             }
             if ($user->roles->contains('title', 'admin'))
             {
-                $data = GeneralSetting::find(1);
-                $data->license_verify = 1;
-                $data->save();
-                $api = new LicenseBoxAPI();
-                $res = $api->verify_license();
-                if ($res['status'] != true)
-                {
-                    $data->license_verify = 0;
-                    $data->save();
-                }
-                else
-                {
-                    $data->license_verify = 1;
-                    $data->save();
-                }
                 return redirect('admin/home');
             }
         }
@@ -147,7 +132,7 @@ class CustomerController extends Controller
     public function delivery_type(Request $request)
     {
         $input = $request->all();
-        
+
         session(['delivery_type' => $input['delivery_type']]);
 
         return response()->json(['success'=>$input['delivery_type']]);
@@ -156,7 +141,7 @@ class CustomerController extends Controller
     public function guest_delivery_type(Request $request)
     {
         $input = $request->all();
-        
+
         session(['delivery_type' => $input['delivery_type']]);
 
         return redirect()->back()->with('success', 'Picked delivery type.');
@@ -165,7 +150,7 @@ class CustomerController extends Controller
     public function guest_delivery_location(Request $request)
     {
         $input = $request->all();
-        
+
         session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
 
         return redirect()->back()->with('success', 'Picked delivery location.');
@@ -174,7 +159,7 @@ class CustomerController extends Controller
     public function user_address(Request $request)
     {
         $input = $request->all();
-        
+
         session(['user_address' => $input['user_address']]);
 
         return response()->json(['success'=>1]);

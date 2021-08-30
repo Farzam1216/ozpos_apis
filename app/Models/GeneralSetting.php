@@ -27,7 +27,7 @@ class GeneralSetting extends Model
     'driver_mail','ios_customer_version','ios_vendor_version','ios_driver_version',
     'ios_customer_app_url','ios_vendor_app_url','ios_driver_app_url','android_customer_version',
     'android_vendor_version','android_driver_version','android_customer_app_url','android_vendor_app_url'
-    ,'android_driver_app_url','map_key','license_code','client_name','license_verify'];
+    ,'android_driver_app_url','map_key','client_name'];
 
     protected $appends = ['whitelogo','blacklogo'];
 

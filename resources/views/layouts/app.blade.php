@@ -97,33 +97,8 @@
 
             <div class="main-content">
 
-                @if (App\Models\GeneralSetting::find(1)->license_verify == 1)
-                    @yield('content')
-                    @yield('setting')
-                @else
-                    <script>
-                        var a = $('#mainurl').val()+'/admin/license_setting';
-                        if (window.location.origin + window.location.pathname != $('#mainurl').val() + '/admin/license_setting')
-                        {
-                            setTimeout(() =>
-                            {
-                                Swal.fire({
-                                title: 'Your License is deactivated!',
-                                icon: 'info',
-                                html: 'to get benifit of mealUp please activate your license<br><br>'+
-                                '<a href="'+a+'" style="background:#3085d6;color:#fff;padding:8px 10px;border-radius:5px;">Activate License</a>',
-                                showCloseButton: false,
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                focusConfirm: false,
-                                onClose: () => {
-                                window.location.replace(a);
-                            }
-                        })}, 500);
-                        }
-                    </script>
-                    @yield('setting')
-                @endif
+                @yield('content')
+                @yield('setting')
             </div>
         </div>
     </div>
