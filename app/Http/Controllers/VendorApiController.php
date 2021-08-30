@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ForgotPassword;
 use App\Mail\Verification;
+use App\Mail\ForgotPassword;
+use App\Mail\StatusChange;
+use App\Mail\VendorOrder;
+use App\Mail\DriverOrder;
 use App\Models\Cuisine;
 use App\Models\Faq;
 use App\Models\GeneralSetting;
@@ -31,7 +34,6 @@ use Illuminate\Support\Facades\Hash;
 use Mail;
 use Twilio\Rest\Client;
 use OneSignal;
-use App\Mail\StatusChange;
 use App\Models\DeliveryZoneArea;
 use App\Models\Notification;
 use DB;

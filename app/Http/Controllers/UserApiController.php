@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\DriverOrder;
-use App\Mail\VendorOrder;
 use App\Mail\Verification;
+use App\Mail\ForgotPassword;
+use App\Mail\StatusChange;
+use App\Mail\VendorOrder;
+use App\Mail\DriverOrder;
 use App\Models\Banner;
 use App\Models\Cuisine;
 use App\Models\DeliveryPerson;
@@ -44,7 +46,6 @@ use Stripe\Stripe;
 use Twilio\Rest\Client;
 use Bavix\Wallet\Models\Transaction;
 use Arr;
-use App\Mail\ForgotPassword;
 
 class UserApiController extends Controller
 {

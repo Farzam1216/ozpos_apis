@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Verification;
+use App\Mail\ForgotPassword;
 use App\Mail\StatusChange;
+use App\Mail\VendorOrder;
+use App\Mail\DriverOrder;
 use App\Models\DeliveryPerson;
 use App\Models\GeneralSetting;
 use App\Models\NotificationTemplate;
@@ -12,7 +16,6 @@ use DB;
 use Hash;
 use Mail;
 use Twilio\Rest\Client;
-use App\Mail\Verification;
 use App\Models\DeliveryZone;
 use App\Models\DeliveryZoneArea;
 use App\Models\Faq;
