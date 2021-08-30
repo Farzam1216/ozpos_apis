@@ -1,19 +1,75 @@
-// const trackDataVendor = {
-//     lat: parseFloat(vendorLat),
-//     lng: parseFloat(vendorLang),
-// };
+const iconBase =
+    "http://maps.google.com/mapfiles/kml/shapes/";
+const icons = {
+    user: {
+        icon: iconBase + "man.png",
+    },
+    library: {
+        icon: iconBase + "library_maps.png",
+    },
+    info: {
+        icon: iconBase + "info-i_maps.png",
+    },
+};
 
 var map = new google.maps.Map(document.getElementById('track-map'), {
     center: {
         lat: parseFloat(vendorLat),
         lng: parseFloat(vendorLang),
     },
-    zoom: 7,
+    zoom: 2,
     mapTypeId: 'roadmap',
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
     gestureHandling: 'greedy'
+});
+
+var vendorMarker = new google.maps.Marker({
+    position: {
+        lat: parseFloat(vendorLat),
+        lng: parseFloat(vendorLang),
+    },
+    map: map,
+    draggable: false
+});
+
+var userMarker = new google.maps.Marker({
+    position: {
+        lat: parseFloat(userLat),
+        lng: parseFloat(userLang),
+    },
+    icon: icons['user'].icon,
+    map: map,
+    draggable: false
+});
+
+
+var start = new google.maps.LatLng(parseFloat(userLat), parseFloat(userLang));
+var end = new google.maps.LatLng(parseFloat(vendorLat), parseFloat(vendorLang));
+
+var directionsDisplay = new google.maps.DirectionsRenderer();
+directionsDisplay.setMap(map);
+
+var directionsService = new google.maps.DirectionsService();
+
+var bounds = new google.maps.LatLngBounds();
+bounds.extend(start);
+bounds.extend(end);
+map.fitBounds(bounds);
+var request = {
+    origin: start,
+    destination: end,
+    travelMode: google.maps.TravelMode.DRIVING
+};
+directionsService.route(request, function (response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+        directionsDisplay.setMap(map);
+        console.log(response);
+    } else {
+        alert("Directions Request from " + userMarker.toUrlValue(6) + " to " + vendorMarker.toUrlValue(6) + " failed: " + status);
+    }
 });
 
 function mapLocation() {

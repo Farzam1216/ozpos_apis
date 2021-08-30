@@ -22,19 +22,10 @@
         </div>
     </div><!-- Position -->
 
-    <!-- <div class="collapse" id="collapseMap">
-        <div id="map" class="map"></div>
-    </div> --><!-- End Map -->
+    <div class="" id="collapseMap">
+        <div id="track-map" class="map"></div>
+    </div><!-- End Map -->
 
-    <!-- Content ================================================== -->
-    <div class="container margin_60_35 customOrders">
-        <div class="row">
-            <div class="col-12">
-                <div id="track-map" class="map"></div>
-            </div>
-        </div>
-    </div><!-- End container -->
-    <!-- End Content =============================================== -->
 
 @endsection
 
@@ -43,5 +34,12 @@
     <script type="text/javascript">
         const vendorLat = '{{$trackData["vendorLat"]}}';
         const vendorLang = '{{$trackData["vendorLang"]}}';
+        const userLat = '{{$trackData["userLat"]}}';
+        const userLang = '{{$trackData["userLang"]}}';
     </script>
+@endsection
+
+
+@section('script')
+    <script src="{{ url('/frontend/js/map_track.js')}}"></script>
 @endsection

@@ -70,8 +70,8 @@ class OrderController extends Controller
         $trackData['userLang'] = UserAddress::find($order->address_id)->lang;
         $trackData['vendorLat'] = Vendor::find($order->vendor_id)->lat;
         $trackData['vendorLang'] = Vendor::find($order->vendor_id)->lang;
-        $trackData['driverLat'] = DeliveryPerson::find($order->delivery_person_id)->lat;
-        $trackData['driverLang'] = DeliveryPerson::find($order->delivery_person_id)->lang;
+//        $trackData['driverLat'] = DeliveryPerson::find($order->delivery_person_id)->lat;
+//        $trackData['driverLang'] = DeliveryPerson::find($order->delivery_person_id)->lang;
 
         return view('frontend/track',compact('order', 'trackData'));
     }

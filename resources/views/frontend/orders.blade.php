@@ -64,7 +64,7 @@
                                 <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
                                 <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
                                 <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'APPROVE')
+                            @elseif($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT')
                                 <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
                                 <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
                                 <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
 
-                    @if($order->order_status == 'APPROVE' || $order->order_status == 'PICKUP')
+                    @if($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT' || $order->order_status == 'PICKUP')
                         <div>
                             <a href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
                         </div>
