@@ -434,10 +434,12 @@ Route::prefix('customer')->name('customer.')->group(function () {
                             ->name('setting.delivery_type.guest');
     Route::post('/delivery_location/guest', [App\Http\Controllers\Frontend\CustomerController::class , 'guest_delivery_location'])
                             ->name('setting.delivery_location.guest');
-    Route::get('/orders', [App\Http\Controllers\Frontend\OrderController::class , 'showOrder'])
+    Route::get('/orders', [App\Http\Controllers\Frontend\OrderController::class , 'showOrders'])
         ->name('orders.index');
     Route::get('/orders/get', [App\Http\Controllers\Frontend\OrderController::class , 'getOrder'])
         ->name('orders.get');
+    Route::get('/order/{order_id}/track', [App\Http\Controllers\Frontend\OrderController::class , 'trackOrder'])
+        ->name('order.track');
 });
 
 Route::prefix('restaurant/{id}')->group(function () {

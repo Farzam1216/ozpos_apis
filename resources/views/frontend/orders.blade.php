@@ -91,6 +91,13 @@
                             @endif
                         </div>
                     </div>
+
+                    @if($order->order_status == 'APPROVE' || $order->order_status == 'PICKUP')
+                        <div>
+                            <a href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
+                        </div>
+                    @endif
+
                 </div>
             </div>
             <hr>

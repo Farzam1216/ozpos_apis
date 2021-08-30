@@ -25,7 +25,7 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    public function showOrder()
+    public function showOrders()
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
@@ -60,6 +60,20 @@ class OrderController extends Controller
         }
 
         return json_encode($orders);
+    }
+    public function trackOrder($order_id)
+    {
+        $order = Order::select('id', 'amount', 'vendor_id', 'order_status', 'delivery_person_id', 'delivery_charge', 'date', 'time', 'address_id')->where([['id', $order_id], ['user_id', auth()->user()->id]])->first();
+
+        $trackData = array();
+        $trackData['userLat'] = UserAddress::find($order->address_id)->lat;
+        $trackData['userLang'] = UserAddress::find($order->address_id)->lang;
+        $trackData['vendorLat'] = Vendor::find($order->vendor_id)->lat;
+        $trackData['vendorLang'] = Vendor::find($order->vendor_id)->lang;
+        $trackData['driverLat'] = DeliveryPerson::find($order->delivery_person_id)->lat;
+        $trackData['driverLang'] = DeliveryPerson::find($order->delivery_person_id)->lang;
+
+        return view('frontend/track',compact('order', 'trackData'));
     }
 
 	public function first_index()

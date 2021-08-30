@@ -101,6 +101,10 @@
 
         @include('frontend.layouts.modals')
 
+
+        <!-- SPECIFIC PRE SCRIPTS CUSTOM -->
+        @yield('preScript')
+
         <!-- PRE SCRIPTS -->
         <script type="text/javascript">
             const vendor_lat = 33.64915;
@@ -120,6 +124,7 @@
         <!-- GOOGLE MAP SCRIPTS -->
         <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
         <script src="{{ url('/frontend/js/map_select.js')}}"></script>
+        <script src="{{ url('/frontend/js/map_track.js')}}"></script>
         <script src="{{ url('/frontend/js/infobox.js')}}"></script>
         <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}"></script>
         <script>
