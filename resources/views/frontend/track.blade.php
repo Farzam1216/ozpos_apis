@@ -36,10 +36,11 @@
         const vendorLang = '{{$trackData["vendorLang"]}}';
         const userLat = '{{$trackData["userLat"]}}';
         const userLang = '{{$trackData["userLang"]}}';
+        const driverID = '{{$order->delivery_person_id}}';
     </script>
 @endsection
 
 
 @section('script')
-    <script src="{{ url('/frontend/js/map_track.js')}}"></script>
+    <script type="module"  src="{{ url('/frontend/js/map_track.js')}}"></script>
 @endsection

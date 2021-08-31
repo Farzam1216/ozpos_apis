@@ -1,14 +1,38 @@
-const iconBase =
-    "http://maps.google.com/mapfiles/kml/shapes/";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js';
+import { getDatabase, ref, child, get, onChildChanged } from 'https://www.gstatic.com/firebasejs/9.0.1/firebase-database.js';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCr8iiALRjdxKxk8CGdM10C8L4Q8yS7Ed4",
+    authDomain: "mealup-af29b.firebaseapp.com",
+    databaseURL: "https://mealup-af29b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "mealup-af29b",
+    storageBucket: "mealup-af29b.appspot.com",
+    messagingSenderId: "502253922422",
+    appId: "1:502253922422:web:80f34da78b18bce5701757",
+    measurementId: "G-77FRR1X6L3"
+};
+const app = initializeApp(firebaseConfig);
+
+var processTrack = false;
+var driverLat = 0;
+var driverLang = 0;
+
+var database = getDatabase(app);
+const driverDataRef = ref(database);
+const driverDataRefLang = ref(database, driverID+'/driverLang');
+const driverDataRefLat = ref(database, driverID+'/driverLat');
+
+var driverMarker, start, end, directionsDisplay, directionsService, bounds;
+
 const icons = {
     user: {
-        icon: iconBase + "man.png",
+        icon: "http://maps.google.com/mapfiles/kml/shapes/" + "man.png",
     },
-    library: {
-        icon: iconBase + "library_maps.png",
+    vendor: {
+        icon: "http://maps.google.com/mapfiles/kml/paddle/" + "V.png",
     },
-    info: {
-        icon: iconBase + "info-i_maps.png",
+    driver: {
+        icon: "http://maps.google.com/mapfiles/kml/shapes/" + "motorcycling.png",
     },
 };
 
@@ -19,7 +43,7 @@ var map = new google.maps.Map(document.getElementById('track-map'), {
     },
     zoom: 2,
     mapTypeId: 'roadmap',
-    fullscreenControl: false,
+    // fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
     gestureHandling: 'greedy'
@@ -30,6 +54,7 @@ var vendorMarker = new google.maps.Marker({
         lat: parseFloat(vendorLat),
         lng: parseFloat(vendorLang),
     },
+    icon: {url:icons['vendor'].icon, scaledSize: new google.maps.Size(30, 30)},
     map: map,
     draggable: false
 });
@@ -39,90 +64,92 @@ var userMarker = new google.maps.Marker({
         lat: parseFloat(userLat),
         lng: parseFloat(userLang),
     },
-    icon: icons['user'].icon,
+    icon: {url:icons['user'].icon, scaledSize: new google.maps.Size(30, 30)},
     map: map,
     draggable: false
 });
 
+get(child(driverDataRef, `${driverID}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        driverLat = snapshot.val().driverLat;
+        driverLang = snapshot.val().driverLang;
 
-var start = new google.maps.LatLng(parseFloat(userLat), parseFloat(userLang));
-var end = new google.maps.LatLng(parseFloat(vendorLat), parseFloat(vendorLang));
+        driverMarker = new google.maps.Marker({
+            position: {
+                lat: parseFloat(driverLat),
+                lng: parseFloat(driverLang),
+            },
+            icon: {url:icons['driver'].icon, scaledSize: new google.maps.Size(30, 30)},
+            map: map,
+            draggable: false
+        });
 
-var directionsDisplay = new google.maps.DirectionsRenderer();
-directionsDisplay.setMap(map);
+        start = new google.maps.LatLng(parseFloat(userLat), parseFloat(userLang));
+        end = new google.maps.LatLng(parseFloat(driverLat), parseFloat(driverLang));
 
-var directionsService = new google.maps.DirectionsService();
-
-var bounds = new google.maps.LatLngBounds();
-bounds.extend(start);
-bounds.extend(end);
-map.fitBounds(bounds);
-var request = {
-    origin: start,
-    destination: end,
-    travelMode: google.maps.TravelMode.DRIVING
-};
-directionsService.route(request, function (response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
-        directionsDisplay.setMap(map);
-        console.log(response);
-    } else {
-        alert("Directions Request from " + userMarker.toUrlValue(6) + " to " + vendorMarker.toUrlValue(6) + " failed: " + status);
-    }
-});
-
-function mapLocation() {
-    var directionsDisplay;
-    var directionsService = new google.maps.DirectionsService();
-    var map;
-
-    function initialize() {
         directionsDisplay = new google.maps.DirectionsRenderer();
-        var chicago = new google.maps.LatLng(33.628289, 73.070952);
-        var mapOptions = {
-            zoom: 7,
-            center: chicago
-        };
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         directionsDisplay.setMap(map);
-        google.maps.event.addDomListener(document.getElementById('routebtn'), 'click', calcRoute);
-    }
+        directionsDisplay.setOptions( { suppressMarkers: true } );
+        directionsDisplay.setOptions( { preserveViewport: true } );
 
-    function calcRoute() {
-        var start = new google.maps.LatLng(33.699226, 73.068145);
-        //var end = new google.maps.LatLng(38.334818, -181.884886);
-        var end = new google.maps.LatLng(33.628289, 73.070952);
-        /*
-var startMarker = new google.maps.Marker({
-            position: start,
-            map: map,
-            draggable: true
-        });
-        var endMarker = new google.maps.Marker({
-            position: end,
-            map: map,
-            draggable: true
-        });
-*/
-        var bounds = new google.maps.LatLngBounds();
+        directionsService = new google.maps.DirectionsService();
+
+        bounds = new google.maps.LatLngBounds();
         bounds.extend(start);
         bounds.extend(end);
         map.fitBounds(bounds);
-        var request = {
-            origin: start,
-            destination: end,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-        directionsService.route(request, function (response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-                directionsDisplay.setMap(map);
+
+        calcRoute();
+    } else {
+        console.log("No data available");
+    }
+}).catch((error) => {
+    console.error(error);
+});
+
+onChildChanged(driverDataRef, (data) => {
+    if(!processTrack) {
+        processTrack = true;
+        get(child(driverDataRef, `${driverID}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                driverLat = snapshot.val().driverLat;
+                driverLang = snapshot.val().driverLang;
+
+                start = new google.maps.LatLng(parseFloat(userLat), parseFloat(userLang));
+                end = new google.maps.LatLng(parseFloat(driverLat), parseFloat(driverLang));
+                driverMarker.setPosition(end);
+                calcRoute();
+
+                bounds = new google.maps.LatLngBounds();
+                bounds.extend(start);
+                bounds.extend(end);
+                map.fitBounds(bounds);
             } else {
-                alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+                console.log("No data available");
             }
+
+            processTrack = false;
+        }).catch((error) => {
+            console.error(error);
         });
     }
+});
 
-    google.maps.event.addDomListener(window, 'load', initialize);
+function calcRoute() {
+    var request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.DRIVING
+    };
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+            directionsDisplay.setMap(map);
+            // console.log(response);
+        } else {
+            console.log("Directions Request from " + userMarker.toUrlValue(6) + " to " + vendorMarker.toUrlValue(6) + " failed: " + status);
+        }
+    });
+
+    // console.log('Calculated');
 }

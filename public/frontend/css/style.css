@@ -2924,6 +2924,7 @@ ul.plan-features {
 }
 
 .track .text {
+    font-size: 0.70rem;
     display: block;
     margin-top: 7px
 }
@@ -2947,8 +2948,12 @@ ul.plan-features {
     margin: unset;
 }
 .customOrders img {
-    width: 100%;
+    /*float: left;*/
+    /*position: absolute;*/
+    /* width: 100%; */
     max-height: 80px;
+    /*top: calc(50% - 27px);*/
+    max-width: 100%;
 }
 
 
@@ -2956,4 +2961,15 @@ ul.plan-features {
     width: 100%;
     height: 450px;
     border-bottom: 1px solid #ddd;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+.btn_track {
+    background: var(--site_color)!important;
+}
+a.btn_track:hover, .btn_track:hover {
+    background: #333!important;
 }

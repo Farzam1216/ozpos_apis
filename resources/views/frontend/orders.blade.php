@@ -29,79 +29,83 @@
 
     <!-- Content ================================================== -->
     <div class="container margin_60_35 customOrders">
-        @foreach($orders as $order)
-            <div class="row">
-                <div class="col-4">
-                    <img src="{{$order->vendor['vendor_logo']}}" />
-                </div>
-                <div class="col-8">
+        <div class="row">
+            @foreach($orders as $order)
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <img src="{{$order->vendor['vendor_logo']}}" />
+                        </div>
                         <div class="col-12 col-sm-8">
-                            <h5 class="heading">{{$order->vendor['name']}}</h5>
-                        </div>
-                        <div class="col-4 col-sm-4 right">
-                            <h5 class="price">{{$order->amount}} {{ App\Models\GeneralSetting::first()->currency }}</h5>
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5 class="heading">{{$order->vendor['name']}}</h5>
+                                </div>
+                                <div class="col-4 right">
+                                    <h5 class="price">{{$order->amount}} {{ App\Models\GeneralSetting::first()->currency }}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>{{$order->vendor['address']}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>{{$order->date}}, {{$order->time}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <p>{{$order->vendor['address']}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <p>{{$order->date}}, {{$order->time}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="autoload-{{$order->id}}" data-status="{{$order->order_status}}">
-                <div class="row" id="orderStatus-{{$order->id}}">
-                    <div class="col-12">
-                        <div class="track">
-                            @if($order->order_status == 'PENDING')
-                                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'PICKUP')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'DELIVERED')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'COMPLETE')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                            @elseif($order->order_status == 'CANCEL')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text">Order canceled</span> </div>
-                            @elseif($order->order_status == 'REJECT')
-                                <div class="step active"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text">Order rejected</span> </div>
+                    <div id="autoload-{{$order->id}}" data-status="{{$order->order_status}}">
+                        <div class="row" id="orderStatus-{{$order->id}}">
+                            <div class="col-12">
+                                <div class="track">
+                                    @if($order->order_status == 'PENDING')
+                                        <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                    @elseif($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                    @elseif($order->order_status == 'PICKUP')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                    @elseif($order->order_status == 'DELIVERED')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                    @elseif($order->order_status == 'COMPLETE')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                    @elseif($order->order_status == 'CANCEL')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text">Order canceled</span> </div>
+                                    @elseif($order->order_status == 'REJECT')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text">Order rejected</span> </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if($order->order_status == 'ACCEPT' || $order->order_status == 'PICKUP')
+                                <div class="col-12">
+                                    <a class="btn_full btn_track" href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
+                                </div>
                             @endif
+
                         </div>
                     </div>
-
-                    @if($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT' || $order->order_status == 'PICKUP')
-                        <div>
-                            <a href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
-                        </div>
-                    @endif
-
+                    <hr>
                 </div>
-            </div>
-            <hr>
-        @endforeach
+            @endforeach
+        </div>
     </div><!-- End container -->
     <!-- End Content =============================================== -->
 
@@ -144,7 +148,7 @@
                 });
             }
 
-            setInterval( trackStatus, 1000 );
+            setInterval( trackStatus, 3000 );
         });
     </script>
 @endsection
