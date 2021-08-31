@@ -436,12 +436,24 @@ class DriverApiController extends Controller
                     }
                 }
             }
-            $orders = Order::whereIn('user_id',$users)->whereIn('vendor_id',$vendors)->where('delivery_type','HOME')->where('order_status','APPROVE')->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
+            $orders = Order::whereIn('user_id',$users)->whereIn('vendor_id',$vendors)->where('delivery_type','HOME')->where(function($query) {
+                return $query
+                    ->where('order_status','APPROVE')
+                    ->orWhere('order_status','ACCEPT')
+                    ->orWhere('order_status','PICKUP')
+                    ->orWhere('order_status','DELIVERED');
+            })->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
             return response(['success' => true , 'data' => $orders]);
         }
-        else
+    else
         {
-            $orders = Order::where([['delivery_person_id',$driver->id],['order_status','APPROVE']])->get(['id','address_id','order_id','user_id','payment_status','address_id','order_status','vendor_id','amount','payment_type']);
+            $orders = Order::where('delivery_person_id',$driver->id)->where(function($query) {
+                return $query
+                    ->where('order_status','APPROVE')
+                    ->orWhere('order_status','ACCEPT')
+                    ->orWhere('order_status','PICKUP')
+                    ->orWhere('order_status','DELIVERED');
+            })->get(['id','address_id','order_id','user_id','payment_status','address_id','order_status','vendor_id','amount','payment_type']);
             return response(['success' => true , 'data' => $orders]);
         }
     }
