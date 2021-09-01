@@ -440,8 +440,7 @@ class DriverApiController extends Controller
                 return $query
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
-                    ->orWhere('order_status','PICKUP')
-                    ->orWhere('order_status','DELIVERED');
+                    ->orWhere('order_status','PICKUP');
             })->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
             return response(['success' => true , 'data' => $orders]);
         }
@@ -451,8 +450,7 @@ class DriverApiController extends Controller
                 return $query
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
-                    ->orWhere('order_status','PICKUP')
-                    ->orWhere('order_status','DELIVERED');
+                    ->orWhere('order_status','PICKUP');
             })->get(['id','address_id','order_id','user_id','payment_status','address_id','order_status','vendor_id','amount','payment_type']);
             return response(['success' => true , 'data' => $orders]);
         }
@@ -637,7 +635,7 @@ class DriverApiController extends Controller
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         $this->driver_cancel_max_order();
         $orders['complete'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','COMPLETE']])->get(['id','address_id','amount','order_id','user_id','vendor_id','payment_status','order_status']);
-        $orders['cancel'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','CANCEL']])->get(['id','address_id','amount','order_id','cancel_reason','user_id','vendor_id','payment_status','order_status']);
+        $orders['cancel'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','DELIVERED']])->get(['id','address_id','amount','order_id','cancel_reason','user_id','vendor_id','payment_status','order_status']);
         return response(['success' => true , 'data' => $orders]);
     }
 
@@ -821,7 +819,7 @@ class DriverApiController extends Controller
 
     public function apiDriverSetting()
     {
-        $setting = GeneralSetting::where('id',1)->first(['driver_vehical_type','is_driver_accept_multipleorder','driver_app_id','driver_auth_key','driver_api_key','driver_accept_multiple_order_count','company_white_logo','company_black_logo','driver_auto_refrese','cancel_reason']);
+        $setting = GeneralSetting::where('id',1)->first(['driver_notification', 'driver_vehical_type','is_driver_accept_multipleorder','driver_app_id','driver_auth_key','driver_api_key','driver_accept_multiple_order_count','company_white_logo','company_black_logo','driver_auto_refrese','cancel_reason']);
         if (auth('driverApi')->user() != null)
         {
             $vendor_driver = $this->checkVendorDriver();
