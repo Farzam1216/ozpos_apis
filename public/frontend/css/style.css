@@ -2402,22 +2402,24 @@ a.btn_filter#search_bt:before{
   font-weight: normal;
   text-shadow:none;
   text-transform:none !important;
-  border-top: 2px solid var(--site_color);
+  border: unset!important;
+  border-right: 2px solid var(--site_color)!important;
   margin-left:-86px;
 }
 
  .dropdown-options .dropdown-menu:before{
-	bottom: 100%;
-	left: 50%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-	border-bottom-color: var(--site_color);
-	border-width: 7px;
-	margin-left: -7px;
+     bottom: 86%;
+     left: 100%;
+     border: solid transparent;
+     content: " ";
+     height: 0;
+     width: 0;
+     position: absolute;
+     pointer-events: none;
+     border-left-color: var(--site_color);
+     border-width: 7px;
+     margin-left: 0;
+     border:unset!important;
 }
  .dropdown-options .dropdown-menu{
 	margin-top:10px;
@@ -2474,12 +2476,11 @@ a.btn_filter#search_bt:before{
 	 margin-bottom: 10px;
 }
  .dropdown-options.dropup .dropdown-menu:before{
-	top: 100%;
-	left: 50%;
-	border-color: #ec008c transparent transparent transparent;
-	border-bottom-color: #ec008c;
-	border-width: 7px 7px 0 7px;
-	margin-left: -7px;
+     top: 86%;
+     left: 100%;
+	/*border-color: #ec008c transparent transparent transparent;*/
+     border-left-color: var(--site_color);
+	/*border-width: 7px 7px 0 7px;*/
 }
 /*4.7 Work with us section  */
 a.box_work{

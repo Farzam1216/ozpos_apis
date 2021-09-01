@@ -25,7 +25,7 @@ $(window).on('load', function() { // makes sure the whole site is loaded
 =============================================== */
 $(window).on('scroll', function () {
     'use strict';
-    if ($(this).scrollTop() > 1){  
+    if ($(this).scrollTop() > 1){
         $('header').addClass("sticky");
     }
     else{
@@ -65,13 +65,13 @@ $('.video_pop').magnificPopup({type:'iframe'});	/* video modal*/
 /* Gallery images modal*/
 $('.magnific-gallery').each(function() {
     $(this).magnificPopup({
-        delegate: 'a', 
+        delegate: 'a',
         type: 'image',
         gallery:{enabled:true},
 		removalDelay: 500, //delay removal by X to allow out-animation
   callbacks: {
     beforeOpen: function() {
-      // just a hack that adds mfp-anim class to markup 
+      // just a hack that adds mfp-anim class to markup
        this.st.image.markup = this.st.image.markup.replace('mfp-figure', 'mfp-figure mfp-with-anim');
        this.st.mainClass = this.st.el.attr('data-effect');
     }
@@ -79,15 +79,15 @@ $('.magnific-gallery').each(function() {
   closeOnContentClick: true,
   midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
     });
-}); 
-}); 
+});
+});
 
 // Radio and checkbox styles
 $('input.icheck').iCheck({
    checkboxClass: 'icheckbox_square-grey',
    radioClass: 'iradio_square-grey'
  });
- 
+
 // Collapse filters close on mobile
 if( $(this).width() < 991 )
 {
@@ -100,7 +100,7 @@ $('.collapse#collapseFilters').removeClass('out');
 $('.collapse#collapseFilters').addClass('in');
 };
 
-// Tooltip	
+// Tooltip
 $('.tooltip-1').tooltip({html:true});
 
 /* Button show/hide map */
@@ -131,7 +131,7 @@ $('ul#cat_nav li a').on('click', function(){
     $(this).addClass('active');
 });
 
-// Drop down menu options	
+// Drop down menu options
 $('.dropdown-menu').on("click",function(e) {e.stopPropagation();});  /* top drodown prevent close*/
 function determineDropDirection(){
   $(".dropdown-menu").each( function(){

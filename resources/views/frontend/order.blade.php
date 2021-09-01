@@ -154,11 +154,11 @@
 		                @foreach($userAddresses as $idx=>$userAddress)
 		                	<div class="payment_select">
 		                        <label>
-				                    
+
 				                    @if(session()->has('user_address') && session()->get('user_address') == $userAddress->id)
-		                        		<input type="radio" value="{{$userAddress->id}}" checked name="user_address" class="update_user_address">
+		                        		<input type="radio" value="{{$userAddress->id}}" checked name="user_address" class="icheck update_user_address">
 				                    @else
-		                        		<input type="radio" value="{{$userAddress->id}}" name="user_address" class="update_user_address">
+		                        		<input type="radio" value="{{$userAddress->id}}" name="user_address" class="icheck update_user_address">
 				                    @endif
 
 	                        		{{$userAddress->type}}
@@ -175,7 +175,7 @@
 	        </div><!-- End col -->
 	        <div class="col-lg-3" id="sidebar">
                 <div class="theiaStickySidebar">
-                    
+
                     @include('frontend.layouts.cart')
 
                 </div><!-- End theiaStickySidebar -->
@@ -189,7 +189,7 @@
 @section('script')
 	<!-- <script type="text/javascript">
 		const vendor_country = '{{ App\Models\GeneralSetting::first()->country }}';
-		
+
 		// const vendor_country = temp_vendor_country;
 	</script> -->
 	<!-- <script src="{{ url('/frontend/js/map_single.js')}}"></script> -->
@@ -213,7 +213,7 @@
 	        });
 	    });
 	</script> -->
-	
+
     <script type="text/javascript">
         $(document).ready(function() {
             $.ajaxSetup({
@@ -221,8 +221,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            
-            $(document).on('click', '.update_user_address', function(e){
+
+            $(document).on('ifClicked', '.update_user_address', function(e){
 
                 e.preventDefault();
 
@@ -239,12 +239,12 @@
                     @endif
                     data:{user_address:user_address},
                     success:function(data){
-                        user_address_radio.prop("checked", true);
+                        user_address_radio.iCheck('check');
                     }
                 });
 
             });
-            
+
             $(document).on('click', '.add_usera_address', function(e){
 
                 e.preventDefault();
@@ -264,7 +264,7 @@
                     @endif
                     data:{address:address,lang:lang,lat:lat,type:type},
                     success:function(data){
-                        user_address_radio.prop("checked", true);
+                        user_address_radio.iCheck('check');
                     }
                 });
 
