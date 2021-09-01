@@ -386,6 +386,14 @@ Route::prefix('customer')->name('customer.')->group(function () {
                     ->name('logout');
 
 
+        Route::get('/orders', [App\Http\Controllers\Frontend\OrderController::class , 'showOrders'])
+            ->name('orders.index');
+        Route::get('/orders/get', [App\Http\Controllers\Frontend\OrderController::class , 'getOrder'])
+            ->name('orders.get');
+        Route::get('/order/{order_id}/track', [App\Http\Controllers\Frontend\OrderController::class , 'trackOrder'])
+            ->name('order.track');
+
+
 
         Route::prefix('order')->name('order.')->group(function () {
             Route::post('/book', [App\Http\Controllers\Frontend\OrderController::class , 'book'])

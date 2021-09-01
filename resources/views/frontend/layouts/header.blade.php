@@ -18,38 +18,8 @@
             <ul>
                 <li><a href="{{ route('customer.home.index')}}">Home</a></li>
                 <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
-                <!-- <li class="submenu">
-                <a href="javascript:void(0);" class="show-submenu">Restaurants<i class="icon-down-open-mini"></i></a>
-                <ul>
-                    <li><a href="list_page.html">Row listing</a></li>
-                    <li><a href="grid_list.html">Grid listing</a></li>
-                    <li><a href="map_listing.html">Map listing</a></li>
-                    <li><a href="detail_page.html">Restaurant Menu</a></li>
-                    <li><a href="submit_restaurant.html">Submit Restaurant</a></li>
-                    <li><a href="cart.html">Order step 1</a></li>
-                    <li><a href="cart_2.html">Order step 2</a></li>
-                    <li><a href="cart_3.html">Order step 3</a></li>
-                    <li><a href="cart_datepicker.html">Order Date/Time picker</a></li>
-                </ul>
-                </li> -->
                 <li><a href="about.html">About us</a></li>
                 <li><a href="faq.html">Faq</a></li>
-                <!-- <li class="submenu">
-                <a href="javascript:void(0);" class="show-submenu">Pages<i class="icon-down-open-mini"></i></a>
-                <ul>
-                    <li><a href="RTL_version/index.html">RTL version</a></li>
-                    <li><a href="admin.html">Admin section</a></li>
-                    <li><a href="submit_driver.html">Submit Driver</a></li>
-                    <li><a href="#0" data-toggle="modal" data-target="#login_2">User Login</a></li>
-                    <li><a href="#0" data-toggle="modal" data-target="#register">User Register</a></li>
-                    <li><a href="detail_page_2.html">Restaurant detail page</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contacts.html">Contacts</a></li>
-                    <li><a href="coming_soon/index.html">Coming soon page</a></li>
-                    <li><a href="icon_pack_1.html">Icon pack 1</a></li>
-                    <li><a href="icon_pack_2.html">Icon pack 2</a></li>
-                </ul>
-                </li> -->
                 <li>
                     @if(Auth::user() && Auth::user()->load('roles')->roles->contains('title', 'user'))
                         <li class="submenu">

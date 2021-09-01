@@ -51,6 +51,9 @@
     	<!-- Radio and check inputs -->
         <link href="{{ url('/frontend/css/skins/square/grey.css')}}" rel="stylesheet">
 
+        <!-- Font Awesome -->
+        <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+
     	<!-- YOUR CUSTOM CSS -->
     	<link href="{{ url('/frontend/css/custom.css')}}" rel="stylesheet">
 
@@ -97,13 +100,15 @@
         @include('frontend.layouts.extras')
 
         @include('frontend.layouts.modals')
-        @include('frontend.layouts.modals')
+
+
+        <!-- SPECIFIC PRE SCRIPTS CUSTOM -->
+        @yield('preScript')
 
         <!-- PRE SCRIPTS -->
         <script type="text/javascript">
             const vendor_lat = "@yield('vendor_lat')";
             const vendor_lang = "@yield('vendor_lang')";
-            /* .update_delivery_type */
 
             var inProgress = false;
         </script>
@@ -123,6 +128,29 @@
         <script src="https://www.paypal.com/sdk/js?client-id={{ App\Models\PaymentSetting::first()->paypal_sendbox }}&currency={{ App\Models\GeneralSetting::first()->currency }}" data-namespace="paypal_sdk"></script>
         */ ?>
 
+        <!-- GOOGLE MAP SCRIPTS -->
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
+        <script src="{{ url('/frontend/js/map_select.js')}}"></script>
+        <script src="{{ url('/frontend/js/infobox.js')}}"></script>
+        <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}"></script>
+        <script>
+            $(function () {
+                'use strict';
+                $("#range").ionRangeSlider({
+                    hide_min_max: true,
+                    keyboard: true,
+                    min: 0,
+                    max: 15,
+                    from: 0,
+                    to:5,
+                    type: 'double',
+                    step: 1,
+                    prefix: "Km ",
+                    grid: true
+                });
+            });
+        </script>
+
         <!-- SPECIFIC SCRIPTS -->
         <!-- Restaurants -->
         <script  src="{{ url('/frontend/js/cat_nav_mobile.js')}}"></script>
@@ -134,6 +162,7 @@
               additionalMarginTop: 80
             });
         </script>
+
         <!-- SMOOTH SCROLL -->
         <script>
             $('#cat_nav a[href^="#"]').click(function() {
@@ -158,29 +187,6 @@
             @if(Session::has('success'))
                 toastr.success("{{Session::get('success')}}");
             @endif
-        </script>
-
-        <!-- GOOGLE MAP SCRIPTS -->
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
-        <script src="{{ url('/frontend/js/map_select.js')}}"></script>
-        <script src="{{ url('/frontend/js/infobox.js')}}"></script>
-        <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}"></script>
-        <script>
-            $(function () {
-                 'use strict';
-                $("#range").ionRangeSlider({
-                    hide_min_max: true,
-                    keyboard: true,
-                    min: 0,
-                    max: 15,
-                    from: 0,
-                    to:5,
-                    type: 'double',
-                    step: 1,
-                    prefix: "Km ",
-                    grid: true
-                });
-            });
         </script>
 
         <!-- SPECIFIC SCRIPTS CUSTOM -->

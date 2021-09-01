@@ -25,7 +25,7 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    public function showOrders()
+    public function showOrders($id = NULL)
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
@@ -41,7 +41,8 @@ class OrderController extends Controller
             }
         }
 
-        return view('frontend/orders',compact('orders'));
+        $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest($id);
+        return view('frontend/orders',compact('rest', 'orders'));
     }
     public function getOrder()
     {

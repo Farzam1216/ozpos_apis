@@ -1,6 +1,15 @@
-@extends('frontend.layouts.app',['activePage' => 'orders'])
+@extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'frontend.layouts.app_restaurant' : 'frontend.layouts.app', ['activePage' => 'orders'] )
 
-@section('title','Orders')
+@if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+    @section('logo',$rest->vendor_logo)
+    @section('subtitle','Orders')
+    @section('vendor_lat',$rest->lat)
+    @section('vendor_lang',$rest->lang)
+    @section('title',$rest->name)
+@else
+    @section('title','Orders')
+@endif
+
 @section('content')
 {{--{!!$orders!!}--}}
     <!-- SubHeader =============================================== -->
@@ -16,8 +25,13 @@
     <div id="position">
         <div class="container">
             <ul>
-                <li><a href="{{ route('customer.home.index')}}">Home</a></li>
-                <li>Orders</li>
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                    <li><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}">{{ $rest->name }}</a></li>
+                    <li>Orders</li>
+                @else
+                    <li><a href="{{ route('customer.home.index')}}">Home</a></li>
+                    <li>Orders</li>
+                @endif
             </ul>
             <!-- <a href="#0" class="search-overlay-menu-btn"><i class="icon-search-6"></i> Search</a> -->
         </div>
@@ -96,7 +110,12 @@
 
                             @if($order->order_status == 'ACCEPT' || $order->order_status == 'PICKUP')
                                 <div class="col-12">
-                                    <a class="btn_full btn_track" href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
+
+                                    @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                        <a class="btn_full btn_track" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/{{$order->id}}/track">Live Tracking</a>
+                                    @else
+                                        <a class="btn_full btn_track" href="{{route('customer.order.track', $order->id)}}">Live Tracking</a>
+                                    @endif
                                 </div>
                             @endif
 
@@ -126,7 +145,11 @@
 
                     $.ajax({
                         type:'GET',
-                        url:"{{ route('customer.orders.get') }}",
+                        @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                            url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/orders/get",
+                        @else
+                            url:"{{ route('customer.orders.get') }}",
+                        @endif
                         data:{},
                         success:function(orders){
                             // console.log(orders);

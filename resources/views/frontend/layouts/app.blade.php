@@ -109,7 +109,6 @@
         <script type="text/javascript">
             const vendor_lat = 33.64915;
             const vendor_lang = 73.08332;
-            /* .update_delivery_type */
 
             var inProgress = false;
         </script>
@@ -120,6 +119,14 @@
         <script src="{{ url('/frontend/js/functions.js')}}"></script>
         <script src="{{ url('/frontend/assets/validate.js')}}"></script>
         <script src="{{ url('/frontend/js/toastr/toastr.min.js')}}"></script>
+
+        <!-- PAYMENT SCRIPTS -->
+        <script src="{{ url('/frontend/js/payment.js')}}"></script>
+        <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+        <?php /*
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id={{ App\Models\PaymentSetting::first()->paypal_sendbox }}&currency={{ App\Models\GeneralSetting::first()->currency }}" data-namespace="paypal_sdk"></script>
+        */ ?>
 
         <!-- GOOGLE MAP SCRIPTS -->
         <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
@@ -144,14 +151,6 @@
             });
         </script>
 
-        <!-- PAYMENT SCRIPTS -->
-        <script src="{{ url('/frontend/js/payment.js')}}"></script>
-        <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-        <?php /*
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script src="https://www.paypal.com/sdk/js?client-id={{ App\Models\PaymentSetting::first()->paypal_sendbox }}&currency={{ App\Models\GeneralSetting::first()->currency }}" data-namespace="paypal_sdk"></script>
-        */ ?>
-
         <!-- SPECIFIC SCRIPTS -->
         <!-- Restaurants -->
         <script  src="{{ url('/frontend/js/cat_nav_mobile.js')}}"></script>
@@ -163,6 +162,7 @@
               additionalMarginTop: 80
             });
         </script>
+
         <!-- SMOOTH SCROLL -->
         <script>
             $('#cat_nav a[href^="#"]').click(function() {
