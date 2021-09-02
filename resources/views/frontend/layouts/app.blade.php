@@ -1,3 +1,7 @@
+@php
+    $appVersion = 1.1;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,29 +40,29 @@
         <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 
         <!-- BASE CSS -->
-        <link href="{{ url('/frontend/css/animate.min.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/bootstrap.min.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/menu.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/style.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/responsive.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/elegant_font/elegant_font.min.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/fontello/css/fontello.min.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/magnific-popup.css')}}" rel="stylesheet">
-    	<link href="{{ url('/frontend/css/pop_up.css')}}" rel="stylesheet">
-        <link href="{{ url('/frontend/css/toastr/toastr.min.css')}}" rel="stylesheet">
-        <link href="{{ url('/frontend/css/map_select.css')}}" rel="stylesheet">
+        <link href="{{ url('/frontend/css/animate.min.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/bootstrap.min.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/menu.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/style.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/responsive.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/elegant_font/elegant_font.min.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/fontello/css/fontello.min.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/magnific-popup.css')}}?v={{$appVersion}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/pop_up.css')}}?v={{$appVersion}}" rel="stylesheet">
+        <link href="{{ url('/frontend/css/toastr/toastr.min.css')}}?v={{$appVersion}}" rel="stylesheet">
+        <link href="{{ url('/frontend/css/map_select.css')}}?v={{$appVersion}}" rel="stylesheet">
 
     	<!-- Radio and check inputs -->
-        <link href="{{ url('/frontend/css/skins/square/grey.css')}}" rel="stylesheet">
+        <link href="{{ url('/frontend/css/skins/square/grey.css')}}?v={{$appVersion}}" rel="stylesheet">
 
     	<!-- Font Awesome -->
         <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
 
     	<!-- YOUR CUSTOM CSS -->
-    	<link href="{{ url('/frontend/css/custom.css')}}" rel="stylesheet">
+    	<link href="{{ url('/frontend/css/custom.css')}}?v={{$appVersion}}" rel="stylesheet">
 
         <!-- Modernizr -->
-    	<script src="{{ url('/frontend/js/modernizr.js')}}"></script>
+    	<script src="{{ url('/frontend/js/modernizr.js')}}?v={{$appVersion}}"></script>
 
 
         <!-- DYNAMIC COLOR SCHEME -->
@@ -114,14 +118,14 @@
         </script>
 
         <!-- COMMON SCRIPTS -->
-        <script src="{{ url('/frontend/js/jquery-3.5.1.min.js')}}"></script>
-        <script src="{{ url('/frontend/js/common_scripts_min.js')}}"></script>
-        <script src="{{ url('/frontend/js/functions.js')}}"></script>
-        <script src="{{ url('/frontend/assets/validate.js')}}"></script>
-        <script src="{{ url('/frontend/js/toastr/toastr.min.js')}}"></script>
+        <script src="{{ url('/frontend/js/jquery-3.5.1.min.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/common_scripts_min.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/functions.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/assets/validate.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/toastr/toastr.min.js')}}?v={{$appVersion}}"></script>
 
         <!-- PAYMENT SCRIPTS -->
-        <script src="{{ url('/frontend/js/payment.js')}}"></script>
+        <script src="{{ url('/frontend/js/payment.js')}}?v={{$appVersion}}"></script>
         <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
         <?php /*
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -130,9 +134,9 @@
 
         <!-- GOOGLE MAP SCRIPTS -->
         <script src="https://maps.googleapis.com/maps/api/js?key={{ App\Models\GeneralSetting::first()->map_key }}&libraries=geometry,places&ext=.js"></script>
-        <script src="{{ url('/frontend/js/map_select.js')}}"></script>
-        <script src="{{ url('/frontend/js/infobox.js')}}"></script>
-        <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}"></script>
+        <script src="{{ url('/frontend/js/map_select.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/infobox.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/ion.rangeSlider.js')}}?v={{$appVersion}}"></script>
         <script>
             $(function () {
                  'use strict';
@@ -153,10 +157,10 @@
 
         <!-- SPECIFIC SCRIPTS -->
         <!-- Restaurants -->
-        <script  src="{{ url('/frontend/js/cat_nav_mobile.js')}}"></script>
+        <script  src="{{ url('/frontend/js/cat_nav_mobile.js')}}?v={{$appVersion}}"></script>
         <script>$('#cat_nav').mobileMenu();</script>
-        <script src="{{ url('/frontend/js/ResizeSensor.min.js')}}"></script>
-        <script src="{{ url('/frontend/js/theia-sticky-sidebar.min.js')}}"></script>
+        <script src="{{ url('/frontend/js/ResizeSensor.min.js')}}?v={{$appVersion}}"></script>
+        <script src="{{ url('/frontend/js/theia-sticky-sidebar.min.js')}}?v={{$appVersion}}"></script>
         <script>
             jQuery('#sidebar').theiaStickySidebar({
               additionalMarginTop: 80
@@ -187,6 +191,25 @@
             @if(Session::has('success'))
                 toastr.success("{{Session::get('success')}}");
             @endif
+        </script>
+
+        <!-- CART MODULE -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $(".c-btn-cart").click(function(e){
+                    $(".customCart").show();
+                    $('#cart_box').find($(".fa")).removeClass('fa-shopping-cart').addClass('fa-times-circle').css({color: 'var(--site_color)', cursor: 'pointer'});
+                });
+                $('#cart_box').find($(".fa")).click(function(e){
+                    $(".customCart").hide();
+                    $('#cart_box').find($(".fa")).removeClass('fa-times-circle').addClass('fa-shopping-cart').css({color: '#333', cursor: 'unset'});
+                });
+                $('.customCart').click(function(e){
+                    if(e.target !== e.currentTarget) return;
+                    $(".customCart").hide();
+                    $('#cart_box').find($(".fa")).removeClass('fa-times-circle').addClass('fa-shopping-cart').css({color: '#333', cursor: 'unset'});
+                });
+            });
         </script>
 
         <!-- SPECIFIC SCRIPTS CUSTOM -->

@@ -142,13 +142,10 @@
 
                 </div><!-- End box_style_1 -->
             </div><!-- End col -->
-            <div class="col-lg-3" id="sidebar">
-                <div class="theiaStickySidebar">
 
-                    @include('frontend.layouts.cart')
+            {{-- Cart Module --}}
+            @include('frontend.layouts.cart')
 
-                </div><!-- End theiaStickySidebar -->
-            </div><!-- End col -->
         </div><!-- End row -->
     </div><!-- End container -->
     <!-- End Content =============================================== -->

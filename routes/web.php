@@ -409,8 +409,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::prefix('cart')->name('cart.')->group(function () {
             Route::post('/add', [App\Http\Controllers\Frontend\CartController::class , 'add'])
                             ->name('add');
-            Route::post('/remove', [App\Http\Controllers\Frontend\CartController::class , 'remove'])
-                        ->name('remove');
+            Route::post('/inc', [App\Http\Controllers\Frontend\CartController::class , 'inc'])
+                        ->name('inc');
+            Route::post('/dec', [App\Http\Controllers\Frontend\CartController::class , 'dec'])
+                        ->name('dec');
         });
 
         Route::prefix('setting')->name('setting.')->group(function () {

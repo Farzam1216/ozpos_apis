@@ -76,30 +76,30 @@
                             <div class="col-12">
                                 <div class="track">
                                     @if($order->order_status == 'PENDING')
-                                        <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                                    @elseif($order->order_status == 'APPROVE' || $order->order_status == 'ACCEPT')
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Approved</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text">Driver assigned</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Delivered </span> </div>
+                                    @elseif($order->order_status == 'APPROVE')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Approved</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text">Driver assigned</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Delivered </span> </div>
+                                    @elseif($order->order_status == 'ACCEPT')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text">Driver assigned</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Delivered </span> </div>
                                     @elseif($order->order_status == 'PICKUP')
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                                    @elseif($order->order_status == 'DELIVERED')
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
-                                    @elseif($order->order_status == 'COMPLETE')
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order approved</span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
-                                        <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text">Driver assigned</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                        <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Delivered </span> </div>
+                                    @elseif($order->order_status == 'DELIVERED' || $order->order_status == 'COMPLETE')
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Approved</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text">Driver assigned</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                        <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Delivered </span> </div>
                                     @elseif($order->order_status == 'CANCEL')
                                         <div class="step active"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text">Order canceled</span> </div>
                                     @elseif($order->order_status == 'REJECT')

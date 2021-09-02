@@ -86,7 +86,7 @@
             </div><!-- End col -->
             <div class="col-lg-6">
                 <div class="box_style_2">
-                    
+
                     <form method="post" action="" id="customerPaymentForm" data-cc-on-file="false" data-stripe-publishable-key="{{App\Models\PaymentSetting::find(1)->stripe_publish_key}}">
                         @csrf
                     </form>
@@ -146,13 +146,10 @@
                     </div>
                 </div><!-- End box_style_1 -->
             </div><!-- End col -->
-            <div class="col-lg-3" id="sidebar">
-                <div class="theiaStickySidebar">
-                    
-                    @include('frontend.layouts.cart')
 
-                </div><!-- End theiaStickySidebar -->
-            </div><!-- End col -->
+            {{-- Cart Module --}}
+            @include('frontend.layouts.cart')
+
         </div><!-- End row -->
     </div><!-- End container -->
     <!-- End Content =============================================== -->

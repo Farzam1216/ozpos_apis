@@ -72,7 +72,38 @@ class CartController extends Controller
         return response()->json(['success'=>'Added to cart.']);
     }
 
-    public function remove(Request $request)
+    public function inc(Request $request)
+    {
+        $input = $request->all();
+        $rows  = Cart::content();
+        $row = $rows->where('id', $input['item_id'])->first();
+        $qty = $row->rowId;
+
+        Cart::update($row->rowId, $row->qty+1);
+
+        $this->sessionCartDeliverCharges();
+
+        return response()->json(['itemID'=>$input['item_id']]);
+    }
+
+    public function dec(Request $request)
+    {
+        $input = $request->all();
+        $rows  = Cart::content();
+        $row = $rows->where('id', $input['item_id'])->first();
+        $qty = $row->rowId;
+
+        if($row->qty == 1)
+            Cart::remove($row->rowId);
+        else
+            Cart::update($row->rowId, $row->qty-1);
+
+        $this->sessionCartDeliverCharges();
+
+        return response()->json(['itemID'=>$input['item_id']]);
+    }
+
+    public function delete(Request $request)
     {
         $input = $request->all();
         $rows  = Cart::content();
