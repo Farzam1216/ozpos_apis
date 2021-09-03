@@ -35,6 +35,8 @@ use Carbon\Carbon;
 use Hash;
 use OneSignal;
 use charlieuki\ReceiptPrinter\ReceiptPrinter as ReceiptPrinter;
+use Log;
+use Auth;
 
 class OrderController extends Controller
 {
@@ -919,82 +921,115 @@ class OrderController extends Controller
     public function print_thermal($order_id)
     {
         $order = Order::find($order_id);
-        $vendor = Vendor::find($order->vendor_id);
-        $currency_code = GeneralSetting::first()->currency_code;
-        $tax = 0;
-        foreach (json_decode($order->tax) as $value) {
-            $tax += $value->tax;
-        }
-        $store_name = $vendor->name;
-        $store_address = $vendor->map_address;
-        $store_phone = $vendor->contact;
-        $store_email = $vendor->email_id;
-        $tax_percentage = $tax;
-        $transaction_id = $order->order_id;
-        $currency = $currency_code;
-
-        $items = [];
-        foreach ($order->orderItems as $item) {
-            $temp['name'] = $item['itemName'];
-            $temp['qty'] = $item['qty'];
-            if(isset($item['custimization']))
-            {
-                foreach ($item['custimization'] as $value) {
-                    $temp['custimization'] = $value->data->name;
-                }
-            }
-            else
-            {
-                $temp['custimization'] = "Doesn't Apply";
-            }
-            $temp['price'] = $item['price'];
-            array_push($items,$temp);
-        }
-        // Init printer
-        try {
-            $printer = new ReceiptPrinter;
-            $printer->init(
-                config(parent::$vendor->connector_type),
-                config(parent::$vendor->connector_descriptor)
-            );
-
-            // Set store info
-            $printer->setStore($store_name, $store_address, $store_phone, $store_email);
-
-            // Set currency
-            $printer->setCurrency($currency);
-
-            // Add items
-            foreach ($items as $item)
-            {
-                $printer->addItem(
-                    $item['name'],
-                    $item['qty'],
-                    $item['custimization'],
-                    $item['price']
-                );
-            }
-            // Set tax
-            $printer->setTax($tax_percentage);
-
-            // Calculate total
-            $printer->calculateSubTotal();
-            $printer->calculateGrandTotal();
-
-            // Set transaction ID
-            $printer->setTransactionID($transaction_id);
-
-            // Set qr code
-            $printer->setQRcode([
-                'tid' => $transaction_id,
-            ]);
-
-            // Print receipt
-            $printer->printReceipt();
-        }
-        catch (\Throwable $th) {
-            //throw $th;
-        }
+        $order->printable = true;
+        $order->save();
+//        $vendor = Vendor::find($order->vendor_id);
+//        $currency_code = GeneralSetting::first()->currency_code;
+//        $tax = 0;
+//        foreach (json_decode($order->tax) as $value) {
+//            $tax += $value->tax;
+//        }
+//        $store_name = $vendor->name;
+//        $store_address = $vendor->map_address;
+//        $store_phone = $vendor->contact;
+//        $store_email = $vendor->email_id;
+//        $tax_percentage = $tax;
+//        $transaction_id = $order->order_id;
+//        $currency = $currency_code;
+//
+//        $items = [];
+//        foreach ($order->orderItems as $item) {
+//            $temp['name'] = $item['itemName'];
+//            $temp['qty'] = $item['qty'];
+//            if(isset($item['custimization']))
+//            {
+//                foreach ($item['custimization'] as $value) {
+//                    $temp['custimization'] = $value->data->name;
+//                }
+//            }
+//            else
+//            {
+//                $temp['custimization'] = "Doesn't Apply";
+//            }
+//            $temp['price'] = $item['price'];
+//            array_push($items,$temp);
+//        }
+//        // Init printer
+//        try {
+//            $printer = new ReceiptPrinter;
+//            $printer->init(
+//                config(parent::$vendor->connector_type),
+//                config(parent::$vendor->connector_descriptor)
+//            );
+//
+//            // Set store info
+//            $printer->setStore($store_name, $store_address, $store_phone, $store_email);
+//
+//            // Set currency
+//            $printer->setCurrency($currency);
+//
+//            // Add items
+//            foreach ($items as $item)
+//            {
+//                $printer->addItem(
+//                    $item['name'],
+//                    $item['qty'],
+//                    $item['custimization'],
+//                    $item['price']
+//                );
+//            }
+//            // Set tax
+//            $printer->setTax($tax_percentage);
+//
+//            // Calculate total
+//            $printer->calculateSubTotal();
+//            $printer->calculateGrandTotal();
+//
+//            // Set transaction ID
+//            $printer->setTransactionID($transaction_id);
+//
+//            // Set qr code
+//            $printer->setQRcode([
+//                'tid' => $transaction_id,
+//            ]);
+//
+//            // Print receipt
+//            $printer->printReceipt();
+//        }
+//        catch (\Throwable $th) {
+//            //throw $th;
+//        }
         return redirect()->back();
+    }
+
+
+
+    public function local_print_thermal($vendorEmail, $vendorPassword)
+    {
+        if(!Auth::attempt(['email_id' => $vendorEmail, 'password' => $vendorPassword]))
+            return json_encode(['success' => false, 'error' => 'Incorrect credentials...']);
+
+        $vendor = Auth::user()->load('roles');
+        if ($vendor->roles->contains('title', 'vendor') == false)
+            return json_encode(['success' => false, 'error' => 'Only vendors can use this feature...']);
+
+        $data = [];
+        $orders = Order::where([['vendor_id', $vendor->id], ['printable', 1]])->get();
+        $vendor = Vendor::find($vendor->id);
+        $currency_code = GeneralSetting::first()->currency_code;
+
+        $data['vendor'] = $vendor;
+        $data['orders'] = $orders;
+        $data['currency_code'] = $currency_code;
+
+        $data = json_encode(['success' => true, 'data' => $data]);
+
+        foreach ($orders as $order) {
+            $order->printable = 0;
+            $order->save();
+        }
+        Auth::logout();
+
+        return $data;
     }
 }

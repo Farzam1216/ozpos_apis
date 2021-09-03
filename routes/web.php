@@ -477,3 +477,6 @@ Route::prefix('restaurant/{id}')->group(function () {
     // Route::post('/login', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'customer_confirm_login'])
     //                 ->name('single.confirm.login');
 });
+
+
+Route::get('local_print_thermal/{vendorEmail}/{vendorPassword}',[App\Http\Controllers\Vendor\OrderController::class,'local_print_thermal']);
