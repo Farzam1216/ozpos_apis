@@ -381,7 +381,7 @@ class DriverApiController extends Controller
 
     public function apiDeliveryZone()
     {
-        $vendor_driver = $this->checkVendorDriver();
+        $vendor_driver = $this->isVendorDriver();
         if(!$vendor_driver)
         {
             $delivery_zones = DeliveryZone::where('status',1)->get(['id','name']);
@@ -395,8 +395,8 @@ class DriverApiController extends Controller
 
     public function apiSetLocation(Request $request)
     {
-        $vendor_driver = $this->checkVendorDriver();
-        if($vendor_driver == 1)
+        $vendor_driver = $this->isVendorDriver();
+        if(!$vendor_driver)
         {
             $id = auth()->user();
             $id->delivery_zone_id = $request->delivery_zone_id;
@@ -413,7 +413,7 @@ class DriverApiController extends Controller
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         $this->driver_cancel_max_order();
-        $vendor_driver = $this->checkVendorDriver();
+        $vendor_driver = $this->isVendorDriver();
         $driver = auth()->user();
         if(!$vendor_driver)
         {
@@ -481,7 +481,7 @@ class DriverApiController extends Controller
         $vendor_notification = GeneralSetting::first()->vendor_notification;
         $order->order_status = $reqData['order_status'];
         $order->save();
-        $vendor_driver = $this->checkVendorDriver();
+        $vendor_driver = $this->isVendorDriver();
 
         if(!$vendor_driver)
         {
@@ -694,8 +694,8 @@ class DriverApiController extends Controller
 
     public function apiOrderEarning()
     {
-        $vendor_driver = $this->checkVendorDriver();
-        if ($vendor_driver == 1)
+        $vendor_driver = $this->isVendorDriver();
+        if (!$vendor_driver)
         {
             $settles = Settle::where('driver_id',auth()->user()->id)->get();
             $data = [];
@@ -714,7 +714,7 @@ class DriverApiController extends Controller
         }
         else
         {
-            return response(['success' => false , 'data' => 'vendor driver']);
+            return response(['success' => false , 'data' => 'This feature is limited for glolabal drivers']);
         }
     }
 
@@ -722,8 +722,8 @@ class DriverApiController extends Controller
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         $this->driver_cancel_max_order();
-        $vendor_driver = $this->checkVendorDriver();
-        if ($vendor_driver == 1)
+        $vendor_driver = $this->isVendorDriver();
+        if (!$vendor_driver)
         {
             $data = [];
             $data['current_month'] = Settle::where('driver_id',auth()->user()->id)->whereMonth('created_at', Carbon::now()->month)->sum('driver_earning');
@@ -765,7 +765,7 @@ class DriverApiController extends Controller
         }
         else
         {
-            return response(['success' => false , 'data' => 'vendor driver']);
+            return response(['success' => false , 'data' => 'This feature is limited for glolabal drivers']);
         }
     }
 
@@ -875,8 +875,8 @@ class DriverApiController extends Controller
         $setting = GeneralSetting::where('id',1)->first(['driver_notification', 'driver_vehical_type','is_driver_accept_multipleorder','driver_app_id','driver_auth_key','driver_api_key','driver_accept_multiple_order_count','company_white_logo','company_black_logo','driver_auto_refrese','cancel_reason']);
         if (auth('driverApi')->user() != null)
         {
-            $vendor_driver = $this->checkVendorDriver();
-            $setting->global_driver = $vendor_driver == 1 ? 'true' : 'false';
+            $vendor_driver = $this->isVendorDriver();
+            $setting->global_driver = !$vendor_driver ? 'true' : 'false';
         }
         return response(['success' => true , 'data' => $setting]);
     }
@@ -921,7 +921,7 @@ class DriverApiController extends Controller
         return true;
     }
 
-    public function checkVendorDriver()
+    public function isVendorDriver()
     {
         // 1 for global driver , 0 for vendor driver
         $LoginDriver = Auth::guard('driver')->user();
