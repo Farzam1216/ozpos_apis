@@ -1014,9 +1014,9 @@ class OrderController extends Controller
             return json_encode(['success' => false, 'error' => 'Only vendors can use this feature...']);
 
         $data = [];
+        $vendor = Vendor::where('user_id', Auth::user()->id)->first();
         $orders = Order::where([['vendor_id', $vendor->id], ['printable', 1]])->get();
-        $vendor = Vendor::find($vendor->id);
-        $currency_code = GeneralSetting::first()->currency_code;
+        $currency_code = GeneralSetting::first()->currency_symbol;
 
         $data['vendor'] = $vendor;
         $data['orders'] = $orders;

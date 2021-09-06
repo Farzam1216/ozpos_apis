@@ -369,7 +369,7 @@ class VendorApiController extends Controller
             {
 
             }
-                return response(['success' => true ,'data' => $user ,'msg' => 'your password send into your email']);
+            return response(['success' => true ,'data' => $user ,'msg' => 'your password send into your email']);
         }
         else
         {
@@ -1306,8 +1306,8 @@ class VendorApiController extends Controller
                 array_push($masterYear, intval(Order::where('vendor_id',$vendor->id)->whereMonth('created_at',Carbon::now()->subMonths($i))->whereYear('created_at', Carbon::now()->subYears(1))->count()));
             } else {
                 array_push($masterYear, intval(Order::where('vendor_id',$vendor->id)->whereMonth('created_at', Carbon::now()->subMonths($i))
-                ->whereYear('created_at', Carbon::now()->year)
-                ->count()));
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->count()));
             }
         }
 
@@ -1330,14 +1330,14 @@ class VendorApiController extends Controller
             if ($i >= Carbon::now()->month)
             {
                 array_push($userYear, intval(Settle::where('vendor_id',$vendor->id)->whereMonth('created_at',Carbon::now()->subMonths($i))
-                ->whereYear('created_at', Carbon::now()->subYears(1))
-                ->sum('vendor_earning')));
+                    ->whereYear('created_at', Carbon::now()->subYears(1))
+                    ->sum('vendor_earning')));
             }
             else
             {
                 array_push($userYear, intval(Settle::where('vendor_id',$vendor->id)->whereMonth('created_at', Carbon::now()->subMonths($i))
-                ->whereYear('created_at', Carbon::now()->year)
-                ->sum('vendor_earning')));
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->sum('vendor_earning')));
             }
         }
 
@@ -1718,82 +1718,8 @@ class VendorApiController extends Controller
     public function print_thermal($order_id)
     {
         $order = Order::find($order_id);
-        $vendor = Vendor::find($order->vendor_id);
-        $currency_code = GeneralSetting::first()->currency_code;
-        $tax = 0;
-        foreach (json_decode($order->tax) as $value) {
-            $tax += $value->tax;
-        }
-        $store_name = $vendor->name;
-        $store_address = $vendor->map_address;
-        $store_phone = $vendor->contact;
-        $store_email = $vendor->email_id;
-        $tax_percentage = $tax;
-        $transaction_id = $order->order_id;
-        $currency = $currency_code;
-
-        $items = [];
-        foreach ($order->orderItems as $item) {
-            $temp['name'] = $item['itemName'];
-            $temp['qty'] = $item['qty'];
-            if(isset($item['custimization']))
-            {
-                foreach ($item['custimization'] as $value) {
-                    $temp['custimization'] = $value->data->name;
-                }
-            }
-            else
-            {
-                $temp['custimization'] = "Doesn't Apply";
-            }
-            $temp['price'] = $item['price'];
-            array_push($items,$temp);
-        }
-        // Init printer
-        try {
-            $printer = new ReceiptPrinter;
-            $printer->init(
-                config($vendor->connector_type),
-                config($vendor->connector_descriptor)
-            );
-
-            // Set store info
-            $printer->setStore($store_name, $store_address, $store_phone, $store_email);
-
-            // Set currency
-            $printer->setCurrency($currency);
-
-            // Add items
-            foreach ($items as $item)
-            {
-                $printer->addItem(
-                    $item['name'],
-                    $item['qty'],
-                    $item['custimization'],
-                    $item['price']
-                );
-            }
-            // Set tax
-            $printer->setTax($tax_percentage);
-
-            // Calculate total
-            $printer->calculateSubTotal();
-            $printer->calculateGrandTotal();
-
-            // Set transaction ID
-            $printer->setTransactionID($transaction_id);
-
-            // Set qr code
-            $printer->setQRcode([
-                'tid' => $transaction_id,
-            ]);
-
-            // Print receipt
-            $printer->printReceipt();
-        }
-        catch (\Throwable $th) {
-            //throw $th;
-        }
+        $order->printable = true;
+        $order->save();
         return response(['success' => true, 'data' => 'print forwarded to printer.']);
     }
     /* End - Abdullah */

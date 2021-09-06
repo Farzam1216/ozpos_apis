@@ -444,7 +444,7 @@ class DriverApiController extends Controller
             })->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
             return response(['success' => true , 'data' => $orders]);
         }
-    else
+        else
         {
             $orders = Order::where('delivery_person_id',$driver->id)->where(function($query) {
                 return $query
