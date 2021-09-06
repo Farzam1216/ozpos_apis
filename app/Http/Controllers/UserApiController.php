@@ -46,6 +46,7 @@ use Stripe\Stripe;
 use Twilio\Rest\Client;
 use Bavix\Wallet\Models\Transaction;
 use Arr;
+use Log;
 
 class UserApiController extends Controller
 {
@@ -1182,7 +1183,7 @@ class UserApiController extends Controller
                     try {
                         Mail::to($user->email_id)->send(new Verification($message1));
                     } catch (\Throwable $th) {
-                        //throw $th;
+                        Log::error($th);
                     }
                 }
                 if ($sms_verification == 1) {
@@ -1198,6 +1199,7 @@ class UserApiController extends Controller
                             )
                         );
                     } catch (\Throwable $th) {
+                        Log::error($th);
                     }
                 }
             } else {
@@ -1219,7 +1221,7 @@ class UserApiController extends Controller
                     try {
                         Mail::to($user->email_id)->send(new Verification($message1));
                     } catch (\Throwable $th) {
-                        //throw $th;
+                        Log::error($th);
                     }
                 }
                 if ($sms_verification == 1) {
@@ -1235,6 +1237,7 @@ class UserApiController extends Controller
                             )
                         );
                     } catch (\Throwable $th) {
+                        Log::error($th);
                     }
                 }
             }
@@ -1268,6 +1271,7 @@ class UserApiController extends Controller
                         GeneralSetting::find(1)->business_name
                     );
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
             $p_notification = array();
@@ -1281,6 +1285,7 @@ class UserApiController extends Controller
                 try {
                     Mail::to($vendor->email_id)->send(new VendorOrder($mail));
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
             return true;
@@ -1305,6 +1310,7 @@ class UserApiController extends Controller
                         GeneralSetting::find(1)->business_name
                     );
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
             $p_notification = array();
@@ -1318,6 +1324,7 @@ class UserApiController extends Controller
                 try {
                     Mail::to($vendor->email_id)->send(new VendorOrder($mail));
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
             return true;
@@ -1357,6 +1364,7 @@ class UserApiController extends Controller
                             GeneralSetting::find(1)->business_name
                         );
                     } catch (\Throwable $th) {
+                        Log::error($th);
                     }
                 }
             }
@@ -1371,6 +1379,7 @@ class UserApiController extends Controller
                 try {
                     Mail::to($user->email_id)->send(new StatusChange($mail));
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
         } else {
@@ -1399,6 +1408,7 @@ class UserApiController extends Controller
                             GeneralSetting::find(1)->business_name
                         );
                     } catch (\Throwable $th) {
+                        Log::error($th);
                     }
                 }
             }
@@ -1413,6 +1423,7 @@ class UserApiController extends Controller
                 try {
                     Mail::to($user->email_id)->send(new StatusChange($mail));
                 } catch (\Throwable $th) {
+                    Log::error($th);
                 }
             }
         }

@@ -107,7 +107,7 @@ class VendorApiController extends Controller
                             }
                             catch (\Throwable $th)
                             {
-                                //throw $th;
+                                Log::error($th);
                             }
                         }
                         if($sms_verification == 1)
@@ -125,7 +125,8 @@ class VendorApiController extends Controller
                                     )
                                 );
                             }
-                            catch (\Throwable $th) {}
+                            catch (\Throwable $th) {
+                                Log::error($th);}
                         }
 
 
@@ -287,7 +288,7 @@ class VendorApiController extends Controller
                     }
                     catch (\Throwable $th)
                     {
-                        //throw $th;
+                        Log::error($th);
                     }
                 }
                 if($sms_verification == 1)
@@ -305,7 +306,9 @@ class VendorApiController extends Controller
                             )
                         );
                     }
-                    catch (\Throwable $th) {}
+                    catch (\Throwable $th) {
+                        Log::error($th);
+                    }
                 }
                 return response(['success' => true ,'data' => $user, 'msg' => 'your account created successfully please verify your account']);
             }
@@ -367,7 +370,7 @@ class VendorApiController extends Controller
             }
             catch (\Throwable $th)
             {
-
+                Log::error($th);
             }
             return response(['success' => true ,'data' => $user ,'msg' => 'your password send into your email']);
         }
@@ -445,7 +448,7 @@ class VendorApiController extends Controller
                     }
                     catch (\Throwable $th)
                     {
-                        //throw $th;
+                        Log::error($th);
                     }
                 }
                 if($sms_verification == 1)
@@ -463,7 +466,9 @@ class VendorApiController extends Controller
                             )
                         );
                     }
-                    catch (\Throwable $th) {}
+                    catch (\Throwable $th) {
+                        Log::error($th);
+                    }
                 }
                 return response(['success' => true ,'data' => $user, 'msg' => 'Verification Code Sent.']);
             }
@@ -1475,7 +1480,7 @@ class VendorApiController extends Controller
                             }
                             catch (\Throwable $th)
                             {
-
+                                Log::error($th);
                             }
                         }
                         $p_notification = array();
@@ -1491,6 +1496,7 @@ class VendorApiController extends Controller
                                 Mail::to($near_driver->email_id)->send(new DriverOrder($mail_content));
                             }
                             catch (\Throwable $th) {
+                                Log::error($th);
                             }
                         }
                     }
@@ -1529,7 +1535,7 @@ class VendorApiController extends Controller
                                 GeneralSetting::find(1)->business_name
                             );
                         } catch (\Throwable $th) {
-
+                            Log::error($th);
                         }
                     }
                 }
@@ -1539,7 +1545,7 @@ class VendorApiController extends Controller
                     try {
                         Mail::to($user->email_id)->send(new StatusChange($mail));
                     } catch (\Throwable $th) {
-
+                        Log::error($th);
                     }
                 }
             }
@@ -1575,7 +1581,7 @@ class VendorApiController extends Controller
                                 GeneralSetting::find(1)->business_name
                             );
                         } catch (\Throwable $th) {
-
+                            Log::error($th);
                         }
                     }
                 }
@@ -1585,7 +1591,7 @@ class VendorApiController extends Controller
                     try {
                         Mail::to($user->email_id)->send(new StatusChange($mail));
                     } catch (\Throwable $th) {
-
+                        Log::error($th);
                     }
                 }
             }
@@ -1695,6 +1701,7 @@ class VendorApiController extends Controller
                 );
             } catch (\Throwable $th)
             {
+                Log::error($th);
             }
         }
         $p_notification = array();
@@ -1710,6 +1717,7 @@ class VendorApiController extends Controller
             {
                 Mail::to($driver->email_id)->send(new DriverOrder($mail_content));
             } catch (\Throwable $th) {
+                Log::error($th);
             }
         }
         return response(['success' => true]);
