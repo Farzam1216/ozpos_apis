@@ -208,4 +208,5 @@ Route::middleware('auth:driverApi')->prefix('driver')->group(function ()
     Route::post('delivery_person_change_password','DriverApiController@apiDeliveryPersonChangePassword');
 
     Route::get('delivery_zone','DriverApiController@apiDeliveryZone');
+    Route::get('payment_pending','DriverApiController@apiPaymentPending');
 });

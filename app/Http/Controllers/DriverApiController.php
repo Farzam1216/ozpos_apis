@@ -692,6 +692,12 @@ class DriverApiController extends Controller
         return response(['success' => true , 'data' => $orders]);
     }
 
+    public function apiPaymentPending()
+    {
+        $paymentPending = Order::where([['delivery_person_id',auth()->user()->id],['order_status','DELIVERED']])->sum('amount');
+        return response(['success' => true , 'data' => $paymentPending]);
+    }
+
     public function apiOrderEarning()
     {
         $vendor_driver = $this->isVendorDriver();
