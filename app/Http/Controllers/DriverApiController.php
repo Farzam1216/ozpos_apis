@@ -531,20 +531,26 @@ class DriverApiController extends Controller
 
         if($reqData['order_status'] == 'CANCEL')
         {
+            $request->validate([
+                'cancel_reason' => 'required',
+            ]);
+            $order->cancel_by = 'driver';
+            $order->cancel_reason = $request->cancel_reason;
             $order->delivery_person_id = NULL;
             $order->order_status = 'APPROVE';
             $order->save();
 
             $vendor = Vendor::find($order->vendor_id);
             $vendorUser = User::find($vendor->user_id);
-            $mail_content = "Dear {user_name} We Would Like To Inform You That The Order {order_id} On {date} Is {order_status}\n\nfrom : {company_name}\n\n, Kindly reassign delivery person";
-            $notification_content = "Dear {user_name} We Would Like To Inform You That The Order {order_id} On {date} {order_status} from {company_name}, Kindly reassign delivery person";
+            $mail_content = "Dear {user_name} The Order {order_id} On {date} Is {order_status}\n\nfrom : {company_name}\n\n reason {reason}\n\n, Kindly reassign delivery person";
+            $notification_content = "Dear {user_name} The Order {order_id} On {date} {order_status} from {company_name} reason {reason}, Kindly reassign delivery person";
             $detail['user_name'] = $vendor->name;
             $detail['order_id'] = $order->order_id;
             $detail['date'] = $order->date;
-            $detail['order_status'] = $order->order_status;
+            $detail['order_status'] = 'CANCELED';
             $detail['company_name'] = $driver->first_name.' '.$driver->last_name;
-            $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}"];
+            $detail['reason'] = $request->cancel_reason;
+            $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}","{reason}"];
 
             $message1 = str_replace($data, $detail, $notification_content);
             $mail = str_replace($data, $detail, $mail_content);
