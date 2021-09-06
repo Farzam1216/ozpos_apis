@@ -473,123 +473,159 @@ class DriverApiController extends Controller
         ]);
 
         $reqData = $request->all();
-        $driver = auth()->user();
         $order = Order::find($reqData['order_id']);
         if(!$order)
             return response(['success' => false , 'data' => 'Order not found']);
 
+        $vendor = Vendor::find($order->vendor_id);
+        if(!$order)
+            return response(['success' => false , 'data' => 'Vendor not found']);
+
+        $vendorUser = User::find($vendor->user_id);
+        if(!$order)
+            return response(['success' => false , 'data' => 'Vendor account not found']);
+
+        $driver = auth()->user();
+        $vendor_driver = $this->isVendorDriver();
         $vendor_notification = GeneralSetting::first()->vendor_notification;
+
         $order->order_status = $reqData['order_status'];
         $order->save();
-        $vendor_driver = $this->isVendorDriver();
 
-        if(!$vendor_driver)
+
+        switch ($reqData['order_status'])
         {
-            if($reqData['order_status'] == 'ACCEPT')
-            {
-                $order->delivery_person_id = $driver->id;
-                $order->save();
-            }
-            if($reqData['order_status'] == 'COMPLETE')
-            {
-                $order->payment_status = 1;
-                $order->save();
-                $vendor = Vendor::find($order->vendor_id);
-                $distance = $this->distance($vendor->lat,$vendor->lang,$order->user_address['lat'],$order->user_address['lang'],'K');
-                $earnings = json_decode(GeneralSetting::first()->driver_earning);
-                $earn = 0;
-                foreach ($earnings as $earning)
+            case 'ACCEPT':
+                if(!$vendor_driver)
                 {
-                    if(($distance < $earning->min_km) && ($distance <= $earning->max_km))
+                    $order->delivery_person_id = $driver->id;
+                    $order->save();
+                }
+                break;
+            case 'COMPLETE':
+                if(!$vendor_driver)
+                {
+                    $order->payment_status = 1;
+                    $order->save();
+                    $vendor = Vendor::find($order->vendor_id);
+                    $distance = $this->distance($vendor->lat,$vendor->lang,$order->user_address['lat'],$order->user_address['lang'],'K');
+                    $earnings = json_decode(GeneralSetting::first()->driver_earning);
+                    $earn = 0;
+                    foreach ($earnings as $earning)
                     {
-                        $earn = $earning->charge;
+                        if(($distance < $earning->min_km) && ($distance <= $earning->max_km))
+                        {
+                            $earn = $earning->charge;
+                        }
                     }
-                }
 
-                if($earn == 0)
+                    if($earn == 0)
+                    {
+                        $earn = max(array_column($earnings, 'charge'));
+                    }
+
+                    $settle = array();
+                    $settle['vendor_id'] = $vendor->id;
+                    $settle['order_id'] = $order->id;
+                    $settle['driver_id'] = $driver->id;
+                    if ($order->payment_type == 'COD') {
+                        $settle['payment'] = 0;
+                    } else {
+                        $settle['payment'] = 1;
+                    }
+                    $settle['vendor_status'] = 0;
+                    $settle['driver_status'] = 0;
+                    $settle['admin_earning'] = $order->admin_commission;
+                    $settle['vendor_earning'] = $order->vendor_amount;
+                    $settle['driver_earning'] = $earn;
+                    Settle::create($settle);
+                }
+                break;
+            case 'DELIVERED':
+                if($order->payment_type != 'COD')
                 {
-                    $earn = max(array_column($earnings, 'charge'));
-                }
-
-                $settle = array();
-                $settle['vendor_id'] = $vendor->id;
-                $settle['order_id'] = $order->id;
-                $settle['driver_id'] = $driver->id;
-                if ($order->payment_type == 'COD') {
+                    $settle = array();
+                    $settle['vendor_id'] = $vendor->id;
+                    $settle['order_id'] = $order->id;
+                    $settle['driver_id'] = $driver->id;
                     $settle['payment'] = 0;
-                } else {
-                    $settle['payment'] = 1;
+                    $settle['vendor_status'] = 0;
+                    $settle['driver_status'] = 0;
+                    $settle['admin_earning'] = $order->admin_commission;
+                    $settle['vendor_earning'] = $order->vendor_amount;
+                    $settle['driver_earning'] = 0;
+                    Settle::create($settle);
+
+                    $order->order_status = 'COMPLETE';
+                    $order->save();
                 }
-                $settle['vendor_status'] = 0;
-                $settle['driver_status'] = 0;
-                $settle['admin_earning'] = $order->admin_commission;
-                $settle['vendor_earning'] = $order->vendor_amount;
-                $settle['driver_earning'] = $earn;
-                Settle::create($settle);
-            }
-        }
+                break;
+            case 'CANCEL':
+                $request->validate([
+                    'cancel_reason' => 'required',
+                ]);
+                $order->cancel_by = 'driver';
+                $order->cancel_reason = $request->cancel_reason;
+                $order->delivery_person_id = NULL;
+                $order->order_status = 'APPROVE';
+                $order->save();
 
-        if($reqData['order_status'] == 'CANCEL')
-        {
-            $request->validate([
-                'cancel_reason' => 'required',
-            ]);
-            $order->cancel_by = 'driver';
-            $order->cancel_reason = $request->cancel_reason;
-            $order->delivery_person_id = NULL;
-            $order->order_status = 'APPROVE';
-            $order->save();
+                /* Notification Start */
+                $mail_content = "Dear {user_name} The Order {order_id} On {date} Is {order_status}\n\nfrom : {company_name}\n\n reason {reason}\n\n, Kindly reassign delivery person";
+                $notification_content = "Dear {user_name} The Order {order_id} On {date} {order_status} from {company_name} reason {reason}, Kindly reassign delivery person";
+                $detail['user_name'] = $vendor->name;
+                $detail['order_id'] = $order->order_id;
+                $detail['date'] = $order->date;
+                $detail['order_status'] = 'CANCELED';
+                $detail['company_name'] = $driver->first_name.' '.$driver->last_name;
+                $detail['reason'] = $request->cancel_reason;
+                $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}","{reason}"];
 
-            $vendor = Vendor::find($order->vendor_id);
-            $vendorUser = User::find($vendor->user_id);
-            $mail_content = "Dear {user_name} The Order {order_id} On {date} Is {order_status}\n\nfrom : {company_name}\n\n reason {reason}\n\n, Kindly reassign delivery person";
-            $notification_content = "Dear {user_name} The Order {order_id} On {date} {order_status} from {company_name} reason {reason}, Kindly reassign delivery person";
-            $detail['user_name'] = $vendor->name;
-            $detail['order_id'] = $order->order_id;
-            $detail['date'] = $order->date;
-            $detail['order_status'] = 'CANCELED';
-            $detail['company_name'] = $driver->first_name.' '.$driver->last_name;
-            $detail['reason'] = $request->cancel_reason;
-            $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}","{reason}"];
-
-            $message1 = str_replace($data, $detail, $notification_content);
-            $mail = str_replace($data, $detail, $mail_content);
-            if(GeneralSetting::find(1)->customer_notification == 1)
-            {
-                if($vendor_notification == 1 && $vendorUser->device_token != null)
+                $message1 = str_replace($data, $detail, $notification_content);
+                $mail = str_replace($data, $detail, $mail_content);
+                if(GeneralSetting::find(1)->customer_notification == 1)
                 {
+                    if($vendor_notification == 1 && $vendorUser->device_token != null)
+                    {
+                        try {
+                            Config::set('onesignal.app_id', env('vendor_app_id'));
+                            Config::set('onesignal.rest_api_key', env('vendor_auth_key'));
+                            Config::set('onesignal.user_auth_key', env('vendor_api_key'));
+                            OneSignal::sendNotificationToUser(
+                                $message1,
+                                $vendorUser->device_token,
+                                $url = null,
+                                $data = null,
+                                $buttons = null,
+                                $schedule = null,
+                                GeneralSetting::find(1)->business_name
+                            );
+                        } catch (\Throwable $th) {
+                            Log::error($th);
+                        }
+                    }
+
                     try {
-                        Config::set('onesignal.app_id', env('vendor_app_id'));
-                        Config::set('onesignal.rest_api_key', env('vendor_auth_key'));
-                        Config::set('onesignal.user_auth_key', env('vendor_api_key'));
-                        OneSignal::sendNotificationToUser(
-                            $message1,
-                            $vendorUser->device_token,
-                            $url = null,
-                            $data = null,
-                            $buttons = null,
-                            $schedule = null,
-                            GeneralSetting::find(1)->business_name
-                        );
+                        Mail::to($vendor->email_id)->send(new StatusChange($mail));
                     } catch (\Throwable $th) {
                         Log::error($th);
                     }
                 }
+                $notification = array();
+                $notification['user_id'] = $vendor->id;
+                $notification['user_type'] = 'vendor';
+                $notification['title'] = $reqData['order_status'];
+                $notification['message'] = $message1;
+                Notification::create($notification);
+                /* Notification End */
 
-                try {
-                    Mail::to($vendor->email_id)->send(new StatusChange($mail));
-                } catch (\Throwable $th) {
-                    Log::error($th);
-                }
-            }
-            $notification = array();
-            $notification['user_id'] = $vendor->id;
-            $notification['user_type'] = 'vendor';
-            $notification['title'] = $reqData['order_status'];
-            $notification['message'] = $message1;
-            Notification::create($notification);
+
+                break;
         }
-        else {
+
+        /* Notification Start */
+        if($reqData['order_status'] != 'CANCEL')
+        {
             $user = User::find($order->user_id);
             $status_change = NotificationTemplate::where('title','change status')->first();
             if ($user->language != 'spanish')
@@ -616,6 +652,9 @@ class DriverApiController extends Controller
                 if($user->device_token != null)
                 {
                     try {
+                        Config::set('onesignal.app_id', env('user_app_id'));
+                        Config::set('onesignal.rest_api_key', env('user_auth_key'));
+                        Config::set('onesignal.user_auth_key', env('user_api_key'));
                         OneSignal::sendNotificationToUser(
                             $message1,
                             $user->device_token,
@@ -643,6 +682,7 @@ class DriverApiController extends Controller
             $notification['message'] = $message1;
             Notification::create($notification);
         }
+        /* Notification End */
 
         $order = Order::find($reqData['order_id'])->id;
         return response(['success' => true , 'data' => $order ,'msg' => 'status changed']);
