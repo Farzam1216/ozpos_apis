@@ -1486,104 +1486,58 @@ class VendorApiController extends Controller
                 }
             }
 
-            if ($user->language == 'spanish')
-            {
-                $status_change = NotificationTemplate::where('title','change status')->first();
-                $mail_content = $status_change->spanish_mail_content;
-                $notification_content = $status_change->spanish_notification_content;
-                $detail['user_name'] = $user->name;
-                $detail['order_id'] = $order->order_id;
-                $detail['date'] = $order->date;
-                $detail['order_status'] = $order->order_status;
-                $detail['company_name'] = GeneralSetting::find(1)->business_name;
-                $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}"];
+            app('App\Http\Controllers\NotificationController')->process('customer', 'change_status', 'Order Status Updated', [ $user->id, $user->device_token, $user->email ], $user->name, $order->order_id, $order->time, $order->order_status);
 
-                $message1 = str_replace($data, $detail, $notification_content);
-                $mail = str_replace($data, $detail, $mail_content);
-                if(GeneralSetting::find(1)->customer_notification == 1)
-                {
-                    if($user->device_token != null)
-                    {
-                        try {
-                            Config::set('onesignal.app_id', env('customer_app_id'));
-                            Config::set('onesignal.rest_api_key', env('customer_auth_key'));
-                            Config::set('onesignal.user_auth_key', env('customer_api_key'));
-                            OneSignal::sendNotificationToUser(
-                                $message1,
-                                $user->device_token,
-                                $url = null,
-                                $data = null,
-                                $buttons = null,
-                                $schedule = null,
-                                GeneralSetting::find(1)->business_name
-                            );
-                        } catch (\Throwable $th) {
-                            Log::error($th);
-                        }
-                    }
-                }
-
-                if (GeneralSetting::find(1)->customer_mail == 1)
-                {
-                    try {
-                        Mail::to($user->email_id)->send(new StatusChange($mail));
-                    } catch (\Throwable $th) {
-                        Log::error($th);
-                    }
-                }
-            }
-            else
-            {
-                $status_change = NotificationTemplate::where('title','change status')->first();
-                $mail_content = $status_change->mail_content;
-                $notification_content = $status_change->notification_content;
-                $detail['user_name'] = $user->name;
-                $detail['order_id'] = $order->order_id;
-                $detail['date'] = $order->date;
-                $detail['order_status'] = $order->order_status;
-                $detail['company_name'] = GeneralSetting::find(1)->business_name;
-                $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}"];
-
-                $message1 = str_replace($data, $detail, $notification_content);
-                $mail = str_replace($data, $detail, $mail_content);
-                if(GeneralSetting::find(1)->customer_notification == 1)
-                {
-                    if($user->device_token != null)
-                    {
-                        try {
-                            Config::set('onesignal.app_id', env('customer_app_id'));
-                            Config::set('onesignal.rest_api_key', env('customer_auth_key'));
-                            Config::set('onesignal.user_auth_key', env('customer_api_key'));
-                            OneSignal::sendNotificationToUser(
-                                $message1,
-                                $user->device_token,
-                                $url = null,
-                                $data = null,
-                                $buttons = null,
-                                $schedule = null,
-                                GeneralSetting::find(1)->business_name
-                            );
-                        } catch (\Throwable $th) {
-                            Log::error($th);
-                        }
-                    }
-                }
-
-                if (GeneralSetting::find(1)->customer_mail == 1)
-                {
-                    try {
-                        Mail::to($user->email_id)->send(new StatusChange($mail));
-                    } catch (\Throwable $th) {
-                        Log::error($th);
-                    }
-                }
-            }
-            $notification = array();
-            $notification['user_id'] = $user->id;
-            $notification['user_type'] = 'user';
-            $notification['title'] = $status;
-            $notification['message'] = $message1;
-            Notification::create($notification);
+//            $status_change = NotificationTemplate::where('title','change status')->first();
+//            $mail_content = $status_change->mail_content;
+//            $notification_content = $status_change->notification_content;
+//            $detail['user_name'] = $user->name;
+//            $detail['order_id'] = $order->order_id;
+//            $detail['date'] = $order->date;
+//            $detail['order_status'] = $order->order_status;
+//            $detail['company_name'] = GeneralSetting::find(1)->business_name;
+//            $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}"];
+//
+//            $message1 = str_replace($data, $detail, $notification_content);
+//            $mail = str_replace($data, $detail, $mail_content);
+//            if(GeneralSetting::find(1)->customer_notification == 1)
+//            {
+//                if($user->device_token != null)
+//                {
+//                    try {
+//                        Config::set('onesignal.app_id', env('customer_app_id'));
+//                        Config::set('onesignal.rest_api_key', env('customer_auth_key'));
+//                        Config::set('onesignal.user_auth_key', env('customer_api_key'));
+//                        OneSignal::sendNotificationToUser(
+//                            $message1,
+//                            $user->device_token,
+//                            $url = null,
+//                            $data = null,
+//                            $buttons = null,
+//                            $schedule = null,
+//                            GeneralSetting::find(1)->business_name
+//                        );
+//                    } catch (\Throwable $th) {
+//                        Log::error($th);
+//                    }
+//                }
+//            }
+//
+//            if (GeneralSetting::find(1)->customer_mail == 1)
+//            {
+//                try {
+//                    Mail::to($user->email_id)->send(new StatusChange($mail));
+//                } catch (\Throwable $th) {
+//                    Log::error($th);
+//                }
+//            }
+//
+//            $notification = array();
+//            $notification['user_id'] = $user->id;
+//            $notification['user_type'] = 'user';
+//            $notification['title'] = $status;
+//            $notification['message'] = $message1;
+//            Notification::create($notification);
 
             if($order->delivery_type == 'SHOP')
             {
