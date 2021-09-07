@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CustomController;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
+use DB;
+use File;
 
 class LanguageController extends Controller
 {
@@ -158,7 +161,12 @@ class LanguageController extends Controller
      */
     public function destroy(Language $language)
     {
-        //
+        if(File::exists(resource_path('lang/'.$language->file))){
+            File::delete(resource_path('lang/'.$language->file));
+        }
+        (new CustomController)->deleteImage(DB::table('language')->where('id', $language->id)->value('image'));
+        $language->delete();
+        return response(['success' => true]);
     }
 
     public function change_status(Request $request)

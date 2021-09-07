@@ -204,9 +204,9 @@ class AdminController extends Controller
         // return redirect()->back();
     }
 
-    public function import()
-    {
-        DB::unprepared(file_get_contents(base_path().'/import/includes/db_mealup.sql'));
-        return redirect('/');
-    }
+//    public function import()
+//    {
+//        DB::unprepared(file_get_contents(base_path().'/import/includes/db_mealup.sql'));
+//        return redirect('/');
+//    }
 }

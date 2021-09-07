@@ -288,6 +288,19 @@ class OrderController extends Controller
             $order->order_end_time = Carbon::now(env('timezone'))->format('h:i a');
             $order->payment_status = 1;
             $order->save();
+            $settle = array();
+            $settle['vendor_id'] = $order->vendor_id;
+            $settle['order_id'] = $order->id;
+            if ($order->payment_type == 'COD')
+            {
+                $settle['payment'] = 0;
+            } else {
+                $settle['payment'] = 1;
+            }
+            $settle['vendor_status'] = 0;
+            $settle['admin_earning'] = $order->admin_commission;
+            $settle['vendor_earning'] = $order->vendor_amount;
+            Settle::create($settle);
         }
         if (Session::get('vendor_driver') == 0)
         {

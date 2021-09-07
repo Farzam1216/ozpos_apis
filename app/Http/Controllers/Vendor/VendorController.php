@@ -254,19 +254,19 @@ class VendorController extends Controller
         }
     }
 
-    public function twillo()
-    {
-        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
-        $bank_details = VendorBankDetail::where('vendor_id',$vendor->id)->first();
-        if($bank_details)
-        {
-            return view('vendor.vendor_bank_detail.update_bank_detail',compact('vendor','bank_details'));
-        }
-        else
-        {
-            return view('vendor.vendor_twillo.add_credit_twillo',compact('vendor'));
-        }
-    }
+//    public function twillo()
+//    {
+//        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+//        $bank_details = VendorBankDetail::where('vendor_id',$vendor->id)->first();
+//        if($bank_details)
+//        {
+//            return view('vendor.vendor_bank_detail.update_bank_detail',compact('vendor','bank_details'));
+//        }
+//        else
+//        {
+//            return view('vendor.vendor_twillo.add_credit_twillo',compact('vendor'));
+//        }
+//    }
 
     public function add_vendor_bank_details(Request $request)
     {

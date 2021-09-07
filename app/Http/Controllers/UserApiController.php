@@ -94,7 +94,7 @@ class UserApiController extends Controller
             $data['is_verified'] = 1;
             $filtered = Arr::except($data, ['provider_token']);
             if ($data['provider'] !== 'LOCAL') {
-                $user = User::where('email', $data['email'])->first();
+                $user = User::where('email', $data['email'])->first()->makeHidden('otp');
                 if ($user) {
                     $user->provider_token = $request->provider_token;
                     $token = $user->createToken('mealUp')->accessToken;
@@ -213,11 +213,20 @@ class UserApiController extends Controller
             'where' => 'bail|required'
         ]);
         $user = User::where('email_id', $request->email_id)->first();
-        if ($user) {
-            $this->sendNotification($user);
+        if ($user)
+        {
+            if ($request->where == 'register')
+            {
+                $this->sendNotification($user);
+            }
+            if($request->where == 'forgot_password')
+            {
+                $this->ForgotPassword($user);
+            }
+            $user->makeHidden('otp');
             return response(['success' => true, 'data' => $user]);
         } else {
-            return response(['success' => false, 'data' => __('User Not Found.')]);
+            return response(['success' => false, 'msg' => __('User Not Found.')]);
         }
     }
 
@@ -258,7 +267,7 @@ class UserApiController extends Controller
     public function apiSingleVendor($vendor_id)
     {
         $master = array();
-        $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
+        $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type','lat','lang', 'cuisine_id'])->makeHidden(['vendor_logo']);
         if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
         }
@@ -491,6 +500,13 @@ class UserApiController extends Controller
             ]);
             $bookData['payment_token'] = $charge->id;
         }
+        if ($bookData['payment_type'] == 'WALLET')
+        {
+            $user = auth()->user();
+            if ($bookData['amount'] > $user->balance) {
+                return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
+            }
+        }
         $bookData['user_id'] = auth()->user()->id;
 
         if (isset($bookData['promocode_id'])) {
@@ -504,6 +520,9 @@ class UserApiController extends Controller
         $bookData['order_id'] = '#' . rand(100000, 999999);
         $bookData['vendor_id'] = $vendor->id;
         $order = Order::create($bookData);
+        if ($bookData['payment_type'] == 'WALLET') {
+            $user->withdraw($bookData['amount'], [$order->id]);
+        }
         $bookData['item'] = json_decode($bookData['item'], true);
         foreach ($bookData['item'] as $child_item) {
             $order_child = array();
@@ -614,10 +633,10 @@ class UserApiController extends Controller
                     return response(['success' => true, 'data' => $user->id, 'msg' => 'SuccessFully verify your account...!!']);
                 }
             } else {
-                return response(['success' => false, 'data' => 'Something went wrong otp does not match..!']);
+                return response(['success' => false, 'msg' => 'Something went wrong otp does not match..!']);
             }
         } else {
-            return response(['success' => false, 'data' => 'Oops...user not found..!!']);
+            return response(['success' => false, 'msg' => 'Oops...user not found..!!']);
         }
     }
 
@@ -794,6 +813,18 @@ class UserApiController extends Controller
         }
 
         $data = $result->get(['id', 'name', 'image', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+
+        if(isset($request->sorting))
+        {
+            if($request->sorting == 'high_to_low')
+            {
+                $data = $data->sortByDesc('rate')->values()->all();
+            }
+            if($request->sorting == 'low_to_high')
+            {
+                $data = $data->sortBy('rate')->values()->all();
+            }
+        }
 
         foreach ($data as $vendor) {
             $lat1 = $vendor->lat;
@@ -1468,5 +1499,46 @@ class UserApiController extends Controller
         $transction['added_by'] = 'user';
         WalletPayment::create($transction);
         return response(['success' => true, 'data' => 'balance added']);
+    }
+
+    public function ForgotPassword($user)
+    {
+        $verification_content = NotificationTemplate::where('title','verification')->first();
+        $otp = mt_rand(1000, 9999);
+        $user->otp = $otp;
+        $user->save();
+        if ($user->language == 'spanish')
+        {
+            $msg_content = $verification_content->spanish_notification_content;
+            $mail_content = $verification_content->spanish_mail_content;
+
+            $sid = GeneralSetting::first()->twilio_acc_id;
+            $token = GeneralSetting::first()->twilio_auth_token;
+            $detail['otp'] = $otp;
+            $detail['user_name'] = $user->name;
+            $detail['app_name'] = GeneralSetting::first()->business_name;
+            $data = ["{otp}", "{user_name}", "{app_name}"];
+
+            $message1 = str_replace($data, $detail, $mail_content);
+            // try {
+                Mail::to($user->email_id)->send(new Verification($message1));
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
+        }
+        else
+        {
+            $mail_content = $verification_content->mail_content;
+            $detail['otp'] = $otp;
+            $detail['user_name'] = $user->name;
+            $detail['app_name'] = GeneralSetting::first()->business_name;
+            $data = ["{otp}", "{user_name}","{app_name}"];
+            $message1 = str_replace($data, $detail, $mail_content);
+            try {
+                Mail::to($user->email_id)->send(new Verification($message1));
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
     }
 }

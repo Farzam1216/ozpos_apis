@@ -189,6 +189,7 @@
                                             @else
                                                 @if ($order->order_status == 'PENDING')
                                                     <select class="form-control w-auto" onchange="order_status({{$order->id}})" id="status{{$order->id}}">
+                                                        <option value="PENDING" disabled {{ $order->order_status == 'PENDING' ? 'selected' : '' }}>{{__('PENDING')}}</option>
                                                         <option value="APPROVE" {{ $order->order_status == 'APPROVE' ? 'selected' : '' }}>{{__('Approve')}}</option>
                                                         <option value="REJECT" {{ $order->order_status == 'REJECT' ? 'selected' : '' }}>{{__('Reject')}}</option>
                                                     </select>
@@ -211,6 +212,7 @@
                                             @else
                                                 @if ($order->order_status == 'PENDING')
                                                     <select class="form-control w-auto" onchange="order_status({{$order->id}})" name="order_status_change" id="status{{$order->id}}">
+                                                        <option value="PENDING" disabled {{ $order->order_status == 'PENDING' ? 'selected' : '' }}>{{__('PENDING')}}</option>
                                                         <option value="APPROVE" {{ $order->order_status == 'APPROVE' ? 'selected' : '' }}>{{__('Approve')}}</option>
                                                         <option value="REJECT" {{ $order->order_status == 'REJECT' ? 'selected' : '' }}>{{__('Reject')}}</option>
                                                     </select>

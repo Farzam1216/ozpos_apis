@@ -180,8 +180,8 @@ function update_area()
         {
             radius : $('#edit_radius').val(),
             name : $('#edit_name').val(),
-            lat : $('#lat').val(),
-            lang : $('#lang').val(),
+            lat : $('#edit_lat').val(),
+            lang : $('#edit_lang').val(),
             location : $('#edit_pac-input').val(),
             delivery_zone_id : $('#delivery_zone_id').val(),
             vendor_id : $('#edit_vendor_id').val(),

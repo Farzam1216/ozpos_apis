@@ -60,6 +60,9 @@
                                     @can('language_edit')
                                         <a href="{{ url('admin/language/'.$language->id.'/edit') }}" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="" data-original-title="{{__('Edit Language')}}"><i class="fas fa-pencil-alt"></i></a>
                                     @endcan
+                                    <a href="javascript:void(0);" class="table-action ml-2 btn btn-danger btn-action" onclick="deleteData('admin/language',{{ $language->id }},'Language')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
                                 @endif
                             </tr>
