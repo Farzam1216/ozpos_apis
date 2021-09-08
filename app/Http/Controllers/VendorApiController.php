@@ -66,6 +66,10 @@ class VendorApiController extends Controller
                 if($user['is_verified'] == 1)
                 {
                     $user['token'] =  $user->createToken('mealup')->accessToken;
+
+                    $vendor = Vendor::where('user_id',$user->id)->first();
+                    $user['vendor_own_driver'] = $vendor->vendor_own_driver;
+
                     return response()->json(['success' => true , 'data' => $user], 200);
                 }
                 else
@@ -122,8 +126,13 @@ class VendorApiController extends Controller
                                 );
                             }
                             catch (\Throwable $th) {
-                                Log::error($th);}
+                                Log::error($th);
+                            }
                         }
+
+                        $vendor = Vendor::where('user_id',$user->id)->first();
+                        $user['vendor_own_driver'] = $vendor->vendor_own_driver;
+
                         return response(['success' => true ,'data' => $user, 'msg' => 'Otp send in your account']);
                     }
                 }
