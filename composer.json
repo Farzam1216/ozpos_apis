@@ -25,6 +25,7 @@
         "maatwebsite/excel": "~3.1.0",
         "paypal/rest-api-sdk-php": "*",
         "razorpay/razorpay": "2.*",
+        "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-http-logger": "^1.7",
         "stripe/stripe-php": "^7.66",
         "tanmuhittin/laravel-google-translate": "^2.0",

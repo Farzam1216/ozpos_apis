@@ -21,6 +21,8 @@
 
         <title>{{ $title }} | @yield('title')</title>
 
+        @laravelPWA
+
         <link rel="icon" href="{{ url('images/upload/'.$favicon) }}" type="image/png">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">

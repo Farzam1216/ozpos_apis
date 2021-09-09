@@ -53,6 +53,8 @@ Route::get('/clear-cache', function() {
 
 Auth::routes();
 
+Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index']);
+
 Route::get('/admin', [AdminController::class, 'showLogin']);
 Route::get('/import', [AdminController::class, 'import'])->name('import');
 
