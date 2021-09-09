@@ -444,8 +444,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
                             ->name('setting.delivery_location.guest');
     Route::get('/orders', [App\Http\Controllers\Frontend\OrderController::class , 'showOrders'])
         ->name('orders.index');
-    Route::get('/orders/get', [App\Http\Controllers\Frontend\OrderController::class , 'getOrder'])
+    Route::get('/orders/get', [App\Http\Controllers\Frontend\OrderController::class , 'getOrders'])
         ->name('orders.get');
+    Route::get('/order/{order_id}/get', [App\Http\Controllers\Frontend\OrderController::class , 'getOrder'])
+        ->name('order.get');
     Route::get('/order/{order_id}/track', [App\Http\Controllers\Frontend\OrderController::class , 'trackOrder'])
         ->name('order.track');
 });

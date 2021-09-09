@@ -57,4 +57,52 @@
 
 @section('script')
     <script type="module"  src="{{ url('/frontend/js/map_track.js')}}"></script>
+
+    <script>
+        $(document).ready(function(){
+            var alerted = false;
+            function trackSingleStatus()
+            {
+                $(function() {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('.content')
+                        }
+                    });
+
+                    $.ajax({
+                        type:'GET',
+                        @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/{$order->id}/get",
+                        @else
+                        url:"{{ route('customer.order.get', $order->id) }}",
+                        @endif
+                        data:{},
+                        success:function(order){
+                            order = JSON.parse(order);
+                            if(order.order_status != 'ACCEPT' && order.order_status != 'PICKUP')
+                            {
+                                toastr.success("Order#"+order.id+" Order has been "+order.order_status+", redirecting...");
+                                setTimeout(function() {
+                                    @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                    window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/orders");
+                                    @else
+                                    window.location.replace("{{ route('customer.orders.index') }}");
+                                    @endif
+                                }, 1000);
+                            }
+
+                            if(order.order_status == 'PICKUP' && !alerted)
+                            {
+                                toastr.success('Order#'+order.id+' status updated.', 'Status Update');
+                                alerted = true;
+                            }
+                        }
+                    });
+                });
+            }
+
+            setInterval( trackSingleStatus, 3000 );
+        });
+    </script>
 @endsection

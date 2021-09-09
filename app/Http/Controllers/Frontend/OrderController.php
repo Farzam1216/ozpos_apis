@@ -44,7 +44,7 @@ class OrderController extends Controller
         $rest = app('App\Http\Controllers\Frontend\RestaurantController')->getRest($id);
         return view('frontend/orders',compact('rest', 'orders'));
     }
-    public function getOrder()
+    public function getOrders()
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
@@ -61,6 +61,23 @@ class OrderController extends Controller
         }
 
         return json_encode($orders);
+    }
+    public function getOrder($order_id)
+    {
+        app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+        // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+        $order = Order::find($order_id);
+
+        if ($order->delivery_person_id != null) {
+            $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+            $order->delivery_person = [
+                'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+                'image' => $delivery_person->image,
+                'contact' => $delivery_person->contact,
+            ];
+        }
+
+        return json_encode($order);
     }
     public function trackOrder($order_id)
     {

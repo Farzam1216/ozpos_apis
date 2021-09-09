@@ -25,7 +25,7 @@
                         <li class="submenu">
                             <a href="javascript:void(0);" class="show-submenu">My Account<i class="icon-down-open-mini"></i></a>
                             <ul>
-                                <li><a href="{{ route('customer.orders.index')}}">Orders</a></li>
+                                <li><a href="{{ route('customer.orders.index') }}">Orders</a></li>
                                 <li>
                                     <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                 </li>
