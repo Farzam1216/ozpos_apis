@@ -181,6 +181,7 @@ return [
 
         /* Start - Abdullah */
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class
         /* End - Abdullah */
     ],
 

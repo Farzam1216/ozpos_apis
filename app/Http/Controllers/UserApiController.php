@@ -553,6 +553,9 @@ class UserApiController extends Controller
             $tax['admin_commission'] = $amount - $tax['vendor_amount'];
         }
         $order->update($tax);
+
+        $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->id, $order->order_status);
+
         if ($order->payment_type == 'FLUTTERWAVE')
         {
             return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);

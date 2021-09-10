@@ -166,6 +166,15 @@
       <path value="$PROJECT_DIR$/vendor/seld/phar-utils" />
       <path value="$PROJECT_DIR$/vendor/seld/jsonlint" />
       <path value="$PROJECT_DIR$/vendor/silviolleite/laravelpwa" />
+      <path value="$PROJECT_DIR$/vendor/google/crc32" />
+      <path value="$PROJECT_DIR$/vendor/google/cloud-storage" />
+      <path value="$PROJECT_DIR$/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/vendor/riverline/multipart-parser" />
+      <path value="$PROJECT_DIR$/vendor/kreait/laravel-firebase" />
+      <path value="$PROJECT_DIR$/vendor/kreait/firebase-php" />
+      <path value="$PROJECT_DIR$/vendor/kreait/firebase-tokens" />
+      <path value="$PROJECT_DIR$/vendor/kreait/clock" />
+      <path value="$PROJECT_DIR$/vendor/fig/http-message-util" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

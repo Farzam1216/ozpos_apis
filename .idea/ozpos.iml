@@ -174,6 +174,15 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/seld/phar-utils" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/seld/jsonlint" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/silviolleite/laravelpwa" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/google/crc32" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/google/cloud-storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mtdowling/jmespath.php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/riverline/multipart-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kreait/laravel-firebase" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kreait/firebase-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kreait/firebase-tokens" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kreait/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fig/http-message-util" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
