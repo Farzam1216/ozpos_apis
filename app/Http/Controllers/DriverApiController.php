@@ -684,7 +684,10 @@ class DriverApiController extends Controller
         }
         /* Notification End */
 
-        $order = Order::find($reqData['order_id'])->id;
+        $order = Order::find($reqData['order_id']);
+        $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+        $order = $order->id;
+
         return response(['success' => true , 'data' => $order ,'msg' => 'status changed']);
     }
 

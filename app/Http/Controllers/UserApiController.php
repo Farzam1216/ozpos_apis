@@ -554,7 +554,7 @@ class UserApiController extends Controller
         }
         $order->update($tax);
 
-        $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->id, $order->order_status);
+        $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
 
         if ($order->payment_type == 'FLUTTERWAVE')
         {

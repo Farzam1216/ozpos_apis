@@ -6,20 +6,18 @@ use Illuminate\Http\Request;
 
 class FirebaseController extends Controller
 {
-    protected mixed $database;
+    protected $database;
 
     public function __construct()
     {
         $this->database = app('firebase.database');
     }
 
-    public function setOrder($orderID)
+    public function setOrder($userID, $orderID, $orderStatus)
     {
-        $this->database->getReference('orders')
-            ->set($orderID);
-        $this->database->getReference('orders/111')
+        $this->database->getReference('orders/'.$userID.'/'.$orderID)
             ->set([
-                'status' => 'PENDING',
+                'status' => $orderStatus,
             ]);
     }
 

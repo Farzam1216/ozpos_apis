@@ -1570,6 +1570,10 @@ class VendorApiController extends Controller
                     Settle::create($settle);
                 }
             }
+
+
+            $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+
             return response(['success' => true, 'data' => 'status updated']);
         }
         else{

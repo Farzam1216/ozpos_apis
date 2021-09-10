@@ -47,7 +47,7 @@ return [
              *
              */
             'credentials' => [
-                'file' => storage_path('firebase/google-services.json'),
+                'file' => storage_path('firebase/mealup-af29b-firebase-adminsdk-jt1az-d977cc371b.json'),
 //                'file' => env('FIREBASE_CREDENTIALS', env('GOOGLE_APPLICATION_CREDENTIALS')),
 
                 /*
