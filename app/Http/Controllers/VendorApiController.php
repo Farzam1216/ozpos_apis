@@ -1283,11 +1283,13 @@ class VendorApiController extends Controller
         $master['today_order'] = intval(Order::where('vendor_id',$vendor->id)->whereBetween('created_at', [Carbon::now()->format('Y-m-d')." 00:00:00",  Carbon::now()->format('Y-m-d')." 23:59:59"])->count());
         $master['total_order'] = intval(Order::where('vendor_id',$vendor->id)->count());
         $master['total_earnings'] = intval(Settle::where('vendor_id',$vendor->id)->sum('vendor_earning'));
-        $master['today_earnings'] = intval(Settle::whereDate('created_at',Carbon::now())->where('vendor_id',$vendor->id)->sum('vendor_earning'));
+        $master['today_earnings'] = intval(Settle::whereDate('updated_at',Carbon::now()->format('Y-m-d'))->where('vendor_id',$vendor->id)->sum('vendor_earning'));
         $master['total_menu'] = intval(Menu::where('vendor_id',$vendor->id)->count());
         $master['total_submenu'] = intval(Submenu::where('vendor_id',$vendor->id)->count());
         $master['order_chart'] = $this->orderChart();
         $master['earning_chart'] = $this->earningChart();
+        $master['total_remainings'] = intval(Order::where([['vendor_id',$vendor->id], ['order_status','DELIVERED']])->sum('amount'));
+        $master['today_remainings'] = intval(Order::whereDate('created_at',Carbon::now()->format('Y-m-d'))->where([['vendor_id',$vendor->id], ['order_status','DELIVERED']])->sum('amount'));
         return response(['success' => true , 'data' => $master]);
     }
 
@@ -1598,8 +1600,54 @@ class VendorApiController extends Controller
     {
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
         $delivery_persons = DeliveryPerson::where('vendor_id',$vendor->id)->orderBy('id','DESC')->get(['id', 'first_name', 'last_name', 'is_online'])->makeHidden(['image', 'deliveryzone']);
-        Log::info("Debug Mode: ".$delivery_persons);
         return response(['success' => true , 'data' => $delivery_persons]);
+    }
+
+    public function apiDriversClearance()
+    {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+        $clearance_list = DeliveryPerson::where('delivery_person.vendor_id',$vendor->id)
+            ->join('order', 'delivery_person.id', '=', 'order.delivery_person_id')
+            ->where('order.order_status','DELIVERED')
+            ->orderBy('delivery_person.id','DESC')
+            ->get(['delivery_person.id', 'delivery_person.first_name', 'delivery_person.last_name', 'delivery_person.is_online', DB::raw('SUM(order.amount) AS remaining_amount')])
+            ->makeHidden(['image', 'deliveryzone']);
+        DB::statement("SET sql_mode=(SELECT CONCAT(@@sql_mode, ',ONLY_FULL_GROUP_BY'));");
+
+        if($clearance_list[0]->remaining_amount == null)
+            $clearance_list = [];
+
+        return response(['success' => true , 'data' => $clearance_list]);
+    }
+
+    public function apiDriverClearance(Request $request)
+    {
+        $delivery_person_id = $request->driver_id;
+        $orders = Order::where([['delivery_person_id',$delivery_person_id],['order_status','DELIVERED']])->update(['order_status' => 'COMPLETE']);
+        $orders->save();
+        return response(['success' => true]);
+    }
+
+    public function apiDriverClearanceOrders($driver_id)
+    {
+        $vendor = Vendor::where('user_id', auth()->user()->id)->first();
+        $orders = Order::where([['vendor_id', $vendor->id], ['delivery_person_id',$driver_id], ['order_status', 'DELIVERED']])->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
+
+
+        foreach ($orders as $order) {
+            $order->user_name = User::find($order->user_id)->name;
+            $order->user_phone = User::find($order->user_id)->phone;
+            if ($order->delivery_type == 'HOME') {
+                if (isset($order->delivery_person_id)) {
+                    $order->delivery_person = DeliveryPerson::find($order->delivery_person_id, ['first_name', 'last_name', 'contact'])->makeHidden(['image', 'deliveryzone']);
+                    $order->userAddress = UserAddress::find($order->address_id)->address;
+                }
+            }
+            $order->vendorAddress = Vendor::find($order->vendor_id)->map_address;
+        }
+
+        return response(['success' => true, 'data' => $orders]);
     }
 
     public function apiDriverGet(Request $request)

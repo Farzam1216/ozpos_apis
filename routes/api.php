@@ -36,8 +36,11 @@ Route::middleware('auth:api')->prefix('vendor')->group(function ()
 
 
     Route::get('drivers','VendorApiController@apiDrivers');
+    Route::get('drivers_clearance','VendorApiController@apiDriversClearance');
     Route::post('driver_get','VendorApiController@apiDriverGet');
     Route::post('driver_assign','VendorApiController@apiDriverAssign');
+    Route::post('driver_clearance','VendorApiController@apiDriverClearance');
+    Route::get('driver_clearance_orders/{driver_id}','VendorApiController@apiDriverClearanceOrders');
 
 
     //Menu
