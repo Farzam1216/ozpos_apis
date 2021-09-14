@@ -1399,3 +1399,10 @@ footer .text-muted {
         max-width: 100%;
     }
 }
+
+/* Custom By Abdullah Khan */
+.section-header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
