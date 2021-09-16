@@ -183,19 +183,13 @@
                     .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1)
                     .delay(10).fadeTo(50,0.5)
-                    .delay(10).fadeTo(50,1)
-                    .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1);
                 $cartIconPhone
                     .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1)
                     .delay(10).fadeTo(50,0.5)
-                    .delay(10).fadeTo(50,1)
-                    .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1);
                 $addTocartBtn
-                    .delay(10).fadeTo(50,0.5)
-                    .delay(10).fadeTo(50,1)
                     .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1)
                     .delay(10).fadeTo(50,0.5)
