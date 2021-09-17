@@ -142,7 +142,16 @@ class RestaurantController extends Controller
 //                ->get();
 //                ->get(['menu_category.id', 'menu_category.name', 'menu_category.type', 'single_menu.id', 'single_menu.menu_id', 'single_menu.item_category_id', 'single_menu.status']);
         $MenuCategory =
-            MenuCategory::with(['SingleMenu', 'HalfNHalfMenu', 'DealsMenu'])
+            MenuCategory::with([
+                    'SingleMenu.Menu.MenuSize.AddonCategory',
+                    'SingleMenu.Menu.MenuSize.AddonCategory.AddonCategory',
+                    'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
+                    'SingleMenu.Menu.MenuSize.ItemSize',
+                    'SingleMenu.Menu.MenuAddon',
+                    'SingleMenu.SingleMenuItemCategory.ItemCategory',
+                    'HalfNHalfMenu.ItemCategory',
+                    'DealsMenu.DealsItems.ItemCategory'
+                ])
                 ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                 ->get();
         $master['menu'] = $MenuCategory;

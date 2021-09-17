@@ -17,4 +17,8 @@ class DealsMenu extends Eloquent
     public function MenuCategory() {
         return $this->belongsTo('App\Models\MenuCategory');
     }
+
+    public function DealsItems() {
+        return $this->hasMany('App\Models\DealsItems');
+    }
 }

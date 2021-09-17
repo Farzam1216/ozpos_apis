@@ -17,4 +17,8 @@ class HalfNHalfMenu extends Eloquent
     public function MenuCategory() {
         return $this->belongsTo('App\Models\MenuCategory');
     }
+
+    public function ItemCategory() {
+        return $this->belongsTo('App\Models\ItemCategory');
+    }
 }

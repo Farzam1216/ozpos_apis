@@ -11,12 +11,20 @@ class Menu extends Model
 
     protected $table = 'menu';
 
-    protected $fillable = ['name','menu_category_id','vendor_id','image','status'];
+    protected $fillable = ['vendor_id','name','image','description','price'];
 
     protected $appends = ['image'];
 
     public function getImageAttribute()
     {
         return url('images/upload') . '/'.$this->attributes['image'];
+    }
+
+    public function MenuSize() {
+        return $this->hasMany('App\Models\MenuSize');
+    }
+
+    public function MenuAddon() {
+        return $this->hasMany('App\Models\MenuAddon');
     }
 }

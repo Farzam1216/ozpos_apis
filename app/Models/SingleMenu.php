@@ -12,9 +12,17 @@ class SingleMenu extends Eloquent
 
     protected $table = 'single_menu';
 
-    protected $fillable = ['vendor_id', 'menu_category_id', 'menu_id', 'item_category_id', 'status'];
+    protected $fillable = ['vendor_id', 'menu_category_id', 'menu_id', 'status'];
 
     public function MenuCategory() {
         return $this->belongsTo('App\Models\MenuCategory');
+    }
+
+    public function Menu() {
+        return $this->belongsTo('App\Models\Menu');
+    }
+
+    public function SingleMenuItemCategory() {
+        return $this->hasMany('App\Models\SingleMenuItemCategory');
     }
 }
