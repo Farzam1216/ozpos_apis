@@ -55,107 +55,312 @@
                         <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100">Menu</p>
                         <!-- <a class="small text-primary font-weight-bold ml-auto" href="#">View all <i class="feather-chevrons-right"></i></a> -->
                     </div>
-                    @foreach($singleVendor['menu'] as $idx=>$menu)
+                    @foreach($singleVendor['MenuCategory'] as $MenuCategoryIDX=>$MenuCategory)
                         <div class="row m-0">
-                            <h6 class="p-3 m-0 bg-light w-100">{{ ucwords($menu->name) }} <small class="text-black-50">{{ count($menu->submenu) }} ITEMS</small></h6>
+                            <h6 class="p-3 m-0 bg-light w-100">{{ ucwords($MenuCategory->name) }}
+
+                                @if($MenuCategory->type == 'SINGLE')
+                                    <small class="text-black-50">{{ $MenuCategory->SingleMenu()->count() }} ITEM(S)</small>
+                                @elseif($MenuCategory->type == 'HALF_N_HALF')
+                                    <small class="text-black-50">{{ $MenuCategory->HalfNHalfMenu()->count() }} ITEM(S)</small>
+                                @elseif($MenuCategory->type == 'DEALS')
+                                    <small class="text-black-50">{{ $MenuCategory->DealsMenu()->count() }} ITEM(S)</small>
+                                @endif
+                            </h6>
                             <div class="col-md-12 px-0 border-top">
                                 <div class="">
 
-                                    @foreach($menu->submenu as $idx2=>$submenu)
+                                    @if($MenuCategory->type == 'SINGLE')
+                                        @foreach($MenuCategory->SingleMenu()->get() as $SingleMenuIDX=>$SingleMenu)
+                                            @foreach($SingleMenu->Menu()->get() as $MenuIDX=>$Menu)
 
-                                        <div class="p-3 border-bottom menu-list">
-
-                                            @if(count($submenu->custimization) == 0)
-                                                <span class="float-right">
-                                                    <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $submenu->id }}" data-name="{{ ucwords($submenu->name) }}" data-summary="summary 2" data-price="{{ $submenu->price }}" data-quantity="1" data-image="{{ $submenu->image }}">ADD</button>
-                                                </span>
-                                            @else
-                                                <span class="float-right">
-                                                    <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $submenu->id }}">ADD</button>
-                                                </span>
+                                                <div class="p-3 border-bottom menu-list">
 
 
-                                                @section('custom_modals')
-                                                    <!-- extras modal -->
-                                                    <div class="modal fade" id="customization{{ $submenu->id }}" tabindex="-1" role="dialog" aria-labelledby="customizationModal{{ $submenu->id }}" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Extras</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <form>
-                                                                        <!-- extras body -->
-                                                                        <div class="recepie-body">
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio1f" name="location" class="custom-control-input" checked>
-                                                                                <label class="custom-control-label" for="customRadio1f">Tuna <span class="text-muted">+$35.00</span></label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio2f" name="location" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="customRadio2f">Salmon <span class="text-muted">+$20.00</span></label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio3f" name="location" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="customRadio3f">Wasabi <span class="text-muted">+$25.00</span></label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio4f" name="location" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="customRadio4f">Unagi  <span class="text-muted">+$10.00</span></label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio5f" name="location" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="customRadio5f">Vegetables  <span class="text-muted">+$5.00</span></label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-radio border-bottom py-2">
-                                                                                <input type="radio" id="customRadio6f" name="location" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="customRadio6f">Noodles  <span class="text-muted">+$30.00</span></label>
-                                                                            </div>
-                                                                            <h6 class="font-weight-bold mt-4">QUANTITY</h6>
-                                                                            <div class="d-flex align-items-center">
-                                                                                <p class="m-0">1 Item</p>
-                                                                                <div class="ml-auto">
-                                                                                    <span class="count-number"><button type="button" class="btn-sm left dec btn btn-outline-secondary"> <i class="feather-minus"></i> </button><input class="count-number-input" type="text" readonly="" value="1"><button type="button" class="btn-sm right inc btn btn-outline-secondary"> <i class="feather-plus"></i> </button></span>
+                                                    @if($Menu->MenuSize()->get()->count() == 0)
+                                                        <span class="float-right">
+                                                            <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">ADD</button>
+                                                        </span>
+                                                    @else
+                                                        <span class="float-right">
+                                                            <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $Menu->id }}">ADD</button>
+                                                        </span>
+
+
+
+
+                                                        @section('custom_modals')
+                                                            <!-- extras modal -->
+                                                            <div class="modal fade" id="customization{{ $Menu->id }}" tabindex="-1" role="dialog" aria-labelledby="customizationModal{{ $Menu->id }}" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">Extras</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+
+                                                                            <div class="container">
+                                                                                <h6 class="font-weight-bold mt-4">Pick Size</h6>
+                                                                                <ul class="nav nav-pills">
+                                                                                    @foreach($Menu->MenuSize()->get() as $MenuSizeIDX=>$MenuSize)
+                                                                                        <li>
+                                                                                            <a id="MenuSize{{ $MenuSize->id }}" class="btn btn-outline-primary btn-sm mr-3 @if( $MenuSizeIDX == 0 ) active @endif" data-toggle="pill" href="#size{{ $MenuSize->ItemSize()->get()->first()->id }}">
+                                                                                                {{ $MenuSize->ItemSize()->get()->first()->name }} {{ $MenuSize->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        @section('postScript')
+                                                                                            <script type="text/javascript">
+                                                                                                $( "#MenuSize{{ $MenuSize->id }}" ).click(function() {
+                                                                                                    var totalPrice = 0;
+                                                                                                    var data = JSON.parse(JSON.stringify(
+                                                                                                        $( "#Menu{{ $Menu->id }}" ).data('summary')
+                                                                                                    ));
+
+                                                                                                    data.Size.Name = "{{$MenuSize->ItemSize()->get()->first()->name}}";
+                                                                                                    data.Size.Price = "{{$MenuSize->price}}";
+                                                                                                    totalPrice += {{$MenuSize->price}};
+                                                                                                    data.Addons = []
+
+                                                                                                    $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
+                                                                                                        data.Addons.push({ "Name":$(this).data('name'), "Price":$(this).data('price') });
+                                                                                                        totalPrice += $(this).data('price');
+                                                                                                    });
+
+                                                                                                    data.TotalPrice = totalPrice;
+                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+
+                                                                                                    console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                });
+                                                                                                $( ".MenuSize{{ $MenuSize->id }}" ).change(function() {
+                                                                                                    if($('.MenuSize{{ $MenuSize->id }}:checked').length > $(this).data('max'))
+                                                                                                    {
+                                                                                                        $(this).prop('checked', false);
+                                                                                                        return;
+                                                                                                    }
+
+                                                                                                    var totalPrice = 0;
+                                                                                                    var data = JSON.parse(JSON.stringify(
+                                                                                                        $( "#Menu{{ $Menu->id }}" ).data('summary')
+                                                                                                    ));
+
+                                                                                                    totalPrice += {{$MenuSize->price}};
+                                                                                                    data.Addons = []
+
+                                                                                                    $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
+                                                                                                        data.Addons.push({ "Name":$(this).data('name'), "Price":$(this).data('price') });
+                                                                                                        totalPrice += $(this).data('price');
+                                                                                                    });
+
+                                                                                                    data.TotalPrice = totalPrice;
+                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+
+                                                                                                    console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                });
+                                                                                            </script>
+                                                                                        @append
+                                                                                    @endforeach
+                                                                                </ul>
+
+                                                                                <div class="tab-content">
+
+                                                                                    @foreach($Menu->MenuSize()->get() as $MenuSizeIDX=>$MenuSize)
+                                                                                        <div id="size{{ $MenuSize->ItemSize()->get()->first()->id }}" class="tab-pane fade @if( $MenuSizeIDX == 0 ) show in active @endif">
+                                                                                            <form>
+                                                                                                <!-- extras body -->
+                                                                                                <div class="recepie-body">
+
+                                                                                                    @foreach($MenuSize->AddonCategory()->get() as $AddonCategoryIDX=>$AddonCategory)
+                                                                                                        <h6 class="font-weight-bold mt-4">
+                                                                                                            {{ $AddonCategory->AddonCategory()->get()->first()->name }}
+                                                                                                            <span class="text-muted">
+                                                                                                                ({{ $AddonCategory->AddonCategory()->get()->first()->min }}-{{ $AddonCategory->AddonCategory()->get()->first()->max }})
+                                                                                                            </span>
+                                                                                                        </h6>
+
+                                                                                                        @foreach($MenuSize->MenuAddon()->get() as $MenuAddonIDX=>$MenuAddon)
+                                                                                                            <div class="custom-control custom-radio border-bottom py-2">
+                                                                                                                <input type="checkbox"
+                                                                                                                       id="customCheckbox{{$MenuAddon->id}}"
+                                                                                                                       name="customCheckbox{{$AddonCategory->id}}"
+                                                                                                                       class="custom-control-input Menu{{ $Menu->id }} MenuSize{{ $MenuSize->id }}"
+                                                                                                                       data-name="{{ $MenuAddon->Addon()->get()->first()->name }}"
+                                                                                                                       data-price="{{ $MenuAddon->price }}"
+                                                                                                                       data-min="{{ $AddonCategory->AddonCategory()->get()->first()->min }}"
+                                                                                                                       data-max="{{ $AddonCategory->AddonCategory()->get()->first()->max }}">
+                                                                                                                <label class="custom-control-label" for="customCheckbox{{$MenuAddon->id}}">
+                                                                                                                    {{ $MenuAddon->Addon()->get()->first()->name }}
+                                                                                                                    <span class="text-muted">
+                                                                                                                        +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                                                                                                    </span>
+                                                                                                                </label>
+                                                                                                            </div>
+                                                                                                        @endforeach
+                                                                                                    @endforeach
+                                                                                                </div>
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    @endforeach
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </form>
-                                                                </div>
-                                                                <div class="modal-footer p-0 border-0">
-                                                                    <div class="col-6 m-0 p-0">
-                                                                        <button type="button" class="btn border-top btn-lg btn-block" data-dismiss="modal">Close</button>
-                                                                    </div>
-                                                                    <div class="col-6 m-0 p-0">
-                                                                        <button type="button" class="btn btn-primary btn-lg btn-block">Apply</button>
+                                                                        <div class="modal-footer p-0 border-0">
+                                                                            <div class="col-6 m-0 p-0">
+                                                                                <button type="button" class="btn border-top btn-lg btn-block" data-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                            <div class="col-6 m-0 p-0">
+                                                                                <button id="Menu{{ $Menu->id }}"
+                                                                                        type="button"
+                                                                                        class="btn btn-primary btn-lg btn-block add-cart-btn"
+                                                                                        data-id="{{ $Menu->id }}"
+                                                                                        data-name="{{ ucwords($Menu->name) }}"
+                                                                                        data-summary='{
+                                                                                                        "Menu":"{{ ucwords($Menu->name) }}",
+                                                                                                        "TotalPrice":"{{ $MenuSize->price }}",
+                                                                                                        "Size":{ "Name":"", "Price":"" },
+                                                                                                        "Addons":[ { "Name":"", "Price":"" } ]
+                                                                                                      }'
+                                                                                        data-price="{{ $MenuSize->price }}"
+                                                                                        data-quantity="1"
+                                                                                        data-image="{{ $Menu->image }}">
+                                                                                    Apply
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        @append
+
+
+                                                    @endif
+
+                                                    <div class="media">
+                                                        <img src="{{ $Menu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">
+                                                        <div class="media-body">
+                                                            <h6 class="mb-1">{{ ucwords($Menu->name) }}
+                                                                @if($Menu->price == NULL)
+                                                                    <span class="badge badge-danger">Customizable</span>
+                                                                @endif
+                                                            </h6>
+
+                                                            @if($Menu->price != NULL)
+
+                                                                <p class="text-muted mb-0">{{ $Menu->price }} {{ App\Models\GeneralSetting::first()->currency }}</p>
+
+                                                            @endif
+
                                                         </div>
                                                     </div>
-                                                @endsection
-
-
-                                            @endif
-
-                                            <div class="media">
-                                                <img alt="#" src="{{ $submenu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">
-                                                <div class="media-body">
-                                                    <h6 class="mb-1">{{ ucwords($submenu->name) }}
-                                                        <span class="badge badge-success">Veg</span>
-                                                        <span class="badge badge-danger">Non Veg</span>
-                                                        @if(count($submenu->custimization) == 1)
-                                                            <span class="badge badge-danger">Customizable</span>
-                                                        @endif
-                                                    </h6>
-                                                    <p class="text-muted mb-0">{{ $submenu->price }} {{ App\Models\GeneralSetting::first()->currency }}</p>
                                                 </div>
-                                            </div>
-                                        </div>
 
-                                    @endforeach
+                                            @endforeach
+                                        @endforeach
+                                    @elseif($MenuCategory->type == 'HALF_N_HALF')
+                                    @elseif($MenuCategory->type == 'DEALS')
+                                    @endif
+
+
+
+
+
+{{--                                    @foreach($menu->submenu as $idx2=>$submenu)--}}
+
+{{--                                        <div class="p-3 border-bottom menu-list">--}}
+
+{{--                                            @if(count($submenu->custimization) == 0)--}}
+{{--                                                <span class="float-right">--}}
+{{--                                                    <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $submenu->id }}" data-name="{{ ucwords($submenu->name) }}" data-summary="summary 2" data-price="{{ $submenu->price }}" data-quantity="1" data-image="{{ $submenu->image }}">ADD</button>--}}
+{{--                                                </span>--}}
+{{--                                            @else--}}
+{{--                                                <span class="float-right">--}}
+{{--                                                    <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $submenu->id }}">ADD</button>--}}
+{{--                                                </span>--}}
+
+
+{{--                                                @section('custom_modals')--}}
+{{--                                                    <!-- extras modal -->--}}
+{{--                                                    <div class="modal fade" id="customization{{ $submenu->id }}" tabindex="-1" role="dialog" aria-labelledby="customizationModal{{ $submenu->id }}" aria-hidden="true">--}}
+{{--                                                        <div class="modal-dialog modal-dialog-centered">--}}
+{{--                                                            <div class="modal-content">--}}
+{{--                                                                <div class="modal-header">--}}
+{{--                                                                    <h5 class="modal-title">Extras</h5>--}}
+{{--                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                                                                        <span aria-hidden="true">&times;</span>--}}
+{{--                                                                    </button>--}}
+{{--                                                                </div>--}}
+{{--                                                                <div class="modal-body">--}}
+{{--                                                                    <form>--}}
+{{--                                                                        <!-- extras body -->--}}
+{{--                                                                        <div class="recepie-body">--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio1f" name="location" class="custom-control-input" checked>--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio1f">Tuna <span class="text-muted">+$35.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio2f" name="location" class="custom-control-input">--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio2f">Salmon <span class="text-muted">+$20.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio3f" name="location" class="custom-control-input">--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio3f">Wasabi <span class="text-muted">+$25.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio4f" name="location" class="custom-control-input">--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio4f">Unagi  <span class="text-muted">+$10.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio5f" name="location" class="custom-control-input">--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio5f">Vegetables  <span class="text-muted">+$5.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="custom-control custom-radio border-bottom py-2">--}}
+{{--                                                                                <input type="radio" id="customRadio6f" name="location" class="custom-control-input">--}}
+{{--                                                                                <label class="custom-control-label" for="customRadio6f">Noodles  <span class="text-muted">+$30.00</span></label>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <h6 class="font-weight-bold mt-4">QUANTITY</h6>--}}
+{{--                                                                            <div class="d-flex align-items-center">--}}
+{{--                                                                                <p class="m-0">1 Item</p>--}}
+{{--                                                                                <div class="ml-auto">--}}
+{{--                                                                                    <span class="count-number"><button type="button" class="btn-sm left dec btn btn-outline-secondary"> <i class="feather-minus"></i> </button><input class="count-number-input" type="text" readonly="" value="1"><button type="button" class="btn-sm right inc btn btn-outline-secondary"> <i class="feather-plus"></i> </button></span>--}}
+{{--                                                                                </div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                        </div>--}}
+{{--                                                                    </form>--}}
+{{--                                                                </div>--}}
+{{--                                                                <div class="modal-footer p-0 border-0">--}}
+{{--                                                                    <div class="col-6 m-0 p-0">--}}
+{{--                                                                        <button type="button" class="btn border-top btn-lg btn-block" data-dismiss="modal">Close</button>--}}
+{{--                                                                    </div>--}}
+{{--                                                                    <div class="col-6 m-0 p-0">--}}
+{{--                                                                        <button type="button" class="btn btn-primary btn-lg btn-block">Apply</button>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </div>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                @endsection--}}
+
+
+{{--                                            @endif--}}
+
+{{--                                            <div class="media">--}}
+{{--                                                <img alt="#" src="{{ $submenu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">--}}
+{{--                                                <div class="media-body">--}}
+{{--                                                    <h6 class="mb-1">{{ ucwords($submenu->name) }}--}}
+{{--                                                        <span class="badge badge-success">Veg</span>--}}
+{{--                                                        <span class="badge badge-danger">Non Veg</span>--}}
+{{--                                                        @if(count($submenu->custimization) == 1)--}}
+{{--                                                            <span class="badge badge-danger">Customizable</span>--}}
+{{--                                                        @endif--}}
+{{--                                                    </h6>--}}
+{{--                                                    <p class="text-muted mb-0">{{ $submenu->price }} {{ App\Models\GeneralSetting::first()->currency }}</p>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+
+{{--                                    @endforeach--}}
 
                                 </div>
                             </div>
@@ -255,4 +460,4 @@
         });
     </script>
 
-@endsection
+@append

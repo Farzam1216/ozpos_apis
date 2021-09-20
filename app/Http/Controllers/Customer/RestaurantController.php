@@ -23,8 +23,9 @@ class RestaurantController extends Controller
         $rest = $this->getRest($id);
         $singleVendor = $this->singleVendor($id);
         $page = 1;
-        echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>";
-//        return view('customer/restaurant',compact('rest', 'singleVendor', 'page'));
+//        echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
+//        dd($singleVendor);
+        return view('customer/restaurant',compact('rest', 'singleVendor', 'page'));
     }
 
 
@@ -154,7 +155,7 @@ class RestaurantController extends Controller
                 ])
                 ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                 ->get();
-        $master['menu'] = $MenuCategory;
+        $master['MenuCategory'] = $MenuCategory;
 //        $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
 //        $tax = GeneralSetting::first()->isItemTax;
 //        foreach ($menus as $menu) {

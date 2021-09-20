@@ -122,8 +122,8 @@
         <div class="container d-flex align-items-center">
             <p class="mb-0"> © 2020 Company All rights reserved </p>
             <p class="text-muted mb-0 ml-auto d-flex align-items-center">
-                <a href="#" class="d-block"><img alt="#" src="img/appstore.png" height="40"></a>
-                <a href="#" class="d-block ml-3"><img alt="#" src="img/playmarket.png" height="40"></a>
+                <a href="#" class="d-block"><img alt="#" src="{{ url('/customer/img/appstore.png')}}" height="40"></a>
+                <a href="#" class="d-block ml-3"><img alt="#" src="{{ url('/customer/img/playmarket.png')}}" height="40"></a>
             </p>
         </div>
     </section>

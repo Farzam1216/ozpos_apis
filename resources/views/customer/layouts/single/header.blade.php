@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-4">
                     <a href="home.html" class="brand-wrap mb-0">
-                        <img alt="#" class="img-fluid" src="img/logo_web.png">
+                        <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png')}}">
                     </a>
                     <!-- brand-wrap.// -->
                 </div>
@@ -87,7 +87,7 @@
                         <!-- my account -->
                         <div class="dropdown mr-4 m-none">
                             <a href="#" class="dropdown-toggle text-dark py-3 d-block" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img alt="#" src="img/user/1.jpg" class="img-fluid rounded-circle header-user mr-2 header-user"> Hi Osahan
+                                <img alt="#" src="{{ url('/customer/img/user/1.jpg')}}" class="img-fluid rounded-circle header-user mr-2 header-user"> Hi Osahan
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="profile.html">My account</a>

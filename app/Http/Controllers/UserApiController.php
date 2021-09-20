@@ -10,6 +10,7 @@ use App\Mail\DriverOrder;
 use App\Models\Banner;
 use App\Models\Cuisine;
 use App\Models\DeliveryPerson;
+use App\Models\MenuCategory;
 use App\Models\WalletPayment;
 use App\Models\DeliveryZoneArea;
 use App\Models\Faq;
@@ -271,23 +272,37 @@ class UserApiController extends Controller
         if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
         }
-        $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
-        $tax = GeneralSetting::first()->isItemTax;
-        foreach ($menus as $menu) {
-            $menu['submenu'] = Submenu::where([['menu_id', $menu->id], ['status', 1]])->get(['id', 'qty_reset', 'item_reset_value','type', 'name', 'image', 'price']);
-            foreach ($menu['submenu'] as $value) {
-                $value['custimization'] = SubmenuCusomizationType::where('submenu_id', $value->id)->get(['id', 'name', 'custimazation_item', 'type']);
-                if ($tax == 0) {
-                    $price_tax = GeneralSetting::first()->item_tax;
-                    $disc = $value->price * $price_tax;
-                    $discount = $disc / 100;
-                    $value->price = strval($value->price + $discount);
-                } else {
-                    $value->price = strval($value->price);
-                }
-            }
-        }
-        $master['menu'] = $menus;
+//        $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
+//        $tax = GeneralSetting::first()->isItemTax;
+//        foreach ($menus as $menu) {
+//            $menu['submenu'] = Submenu::where([['menu_id', $menu->id], ['status', 1]])->get(['id', 'qty_reset', 'item_reset_value','type', 'name', 'image', 'price']);
+//            foreach ($menu['submenu'] as $value) {
+//                $value['custimization'] = SubmenuCusomizationType::where('submenu_id', $value->id)->get(['id', 'name', 'custimazation_item', 'type']);
+//                if ($tax == 0) {
+//                    $price_tax = GeneralSetting::first()->item_tax;
+//                    $disc = $value->price * $price_tax;
+//                    $discount = $disc / 100;
+//                    $value->price = strval($value->price + $discount);
+//                } else {
+//                    $value->price = strval($value->price);
+//                }
+//            }
+//        }
+//        $master['menu'] = $menus;
+        $MenuCategory =
+            MenuCategory::with([
+                'SingleMenu.Menu.MenuSize.AddonCategory',
+                'SingleMenu.Menu.MenuSize.AddonCategory.AddonCategory',
+                'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
+                'SingleMenu.Menu.MenuSize.ItemSize',
+                'SingleMenu.Menu.MenuAddon',
+                'SingleMenu.SingleMenuItemCategory.ItemCategory',
+                'HalfNHalfMenu.ItemCategory',
+                'DealsMenu.DealsItems.ItemCategory'
+            ])
+                ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
+                ->get();
+        $master['MenuCategory'] = $MenuCategory;
         $master['vendor_discount'] = VendorDiscount::where('vendor_id', $vendor_id)->orderBy('id', 'desc')->first(['id', 'type', 'discount', 'min_item_amount', 'max_discount_amount', 'start_end_date']);
         $master['delivery_timeslot'] = WorkingHours::where([['type', 'delivery_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
         $master['pick_up_timeslot'] = WorkingHours::where([['type', 'pick_up_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
@@ -358,7 +373,7 @@ class UserApiController extends Controller
             }
             $pvalue['period_list'] = $parr;
         }
-
+        Log::info(response(['success' => true, 'data' => $master]));
         return response(['success' => true, 'data' => $master]);
     }
 
