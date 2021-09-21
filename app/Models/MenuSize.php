@@ -17,7 +17,7 @@ class MenuSize extends Model
         return $this->hasMany('App\Models\MenuAddon');
     }
 
-    public function AddonCategory() {
+    public function GroupMenuAddon() {
         return $this->hasMany('App\Models\MenuAddon')->groupBy('addon_category_id');
     }
 

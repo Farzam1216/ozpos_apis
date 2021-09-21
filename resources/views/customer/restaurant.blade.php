@@ -77,20 +77,13 @@
                                                 <div class="p-3 border-bottom menu-list">
 
 
-                                                    @if($Menu->MenuSize()->get()->count() == 0)
-                                                        <span class="float-right">
-                                                            <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">ADD</button>
-                                                        </span>
-                                                    @else
+                                                    @if($Menu->MenuSize()->get()->count() != 0)
                                                         <span class="float-right">
                                                             <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $Menu->id }}">ADD</button>
                                                         </span>
 
-
-
-
                                                         @section('custom_modals')
-                                                            <!-- extras modal -->
+                                                        <!-- extras modal -->
                                                             <div class="modal fade" id="customization{{ $Menu->id }}" tabindex="-1" role="dialog" aria-labelledby="customizationModal{{ $Menu->id }}" aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-centered">
                                                                     <div class="modal-content">
@@ -106,95 +99,112 @@
                                                                                 <h6 class="font-weight-bold mt-4">Pick Size</h6>
                                                                                 <ul class="nav nav-pills">
                                                                                     @foreach($Menu->MenuSize()->get() as $MenuSizeIDX=>$MenuSize)
+                                                                                        @if( $MenuSizeIDX == 0 )
+                                                                                            @php
+                                                                                                $defaultSize = array( "ID"=>$MenuSize->id, "Name"=>$MenuSize->ItemSize()->get()->first()->name, "Price"=>$MenuSize->price );
+                                                                                            @endphp
+                                                                                        @endif
                                                                                         <li>
-                                                                                            <a id="MenuSize{{ $MenuSize->id }}" class="btn btn-outline-primary btn-sm mr-3 @if( $MenuSizeIDX == 0 ) active @endif" data-toggle="pill" href="#size{{ $MenuSize->ItemSize()->get()->first()->id }}">
+                                                                                            <a id="MenuSize{{ $MenuSize->id }}" class="btn btn-outline-primary btn-sm mb-3 mr-3 @if( $MenuSizeIDX == 0 ) active @endif" data-toggle="pill" href="#size{{ $MenuSize->id }}">
                                                                                                 {{ $MenuSize->ItemSize()->get()->first()->name }} {{ $MenuSize->price }} {{ App\Models\GeneralSetting::first()->currency }}
                                                                                             </a>
                                                                                         </li>
-                                                                                        @section('postScript')
-                                                                                            <script type="text/javascript">
-                                                                                                $( "#MenuSize{{ $MenuSize->id }}" ).click(function() {
-                                                                                                    var totalPrice = 0;
-                                                                                                    var data = JSON.parse(JSON.stringify(
-                                                                                                        $( "#Menu{{ $Menu->id }}" ).data('summary')
-                                                                                                    ));
+                                                                                    @section('postScript')
+                                                                                        <script type="text/javascript">
+                                                                                            $( "#MenuSize{{ $MenuSize->id }}" ).click(function() {
+                                                                                                var totalPrice = 0;
+                                                                                                var data = JSON.parse(JSON.stringify(
+                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary')
+                                                                                                ));
+                                                                                                var dataID = "{{ $Menu->id }}-{{ $MenuSize->id }}";
+                                                                                                console.log(data);
 
-                                                                                                    data.Size.Name = "{{$MenuSize->ItemSize()->get()->first()->name}}";
-                                                                                                    data.Size.Price = "{{$MenuSize->price}}";
-                                                                                                    totalPrice += {{$MenuSize->price}};
-                                                                                                    data.Addons = []
+                                                                                                data.Size.ID = "{{ $MenuSize->id }}";
+                                                                                                data.Size.Name = "{{ $MenuSize->ItemSize()->get()->first()->name }}";
+                                                                                                data.Size.Price = "{{ $MenuSize->price }}";
+                                                                                                totalPrice += {{ $MenuSize->price }};
+                                                                                                data.Addons = []
 
-                                                                                                    $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
-                                                                                                        data.Addons.push({ "Name":$(this).data('name'), "Price":$(this).data('price') });
-                                                                                                        totalPrice += $(this).data('price');
-                                                                                                    });
-
-                                                                                                    data.TotalPrice = totalPrice;
-                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary', data);
-
-                                                                                                    console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
+                                                                                                    data.Addons.push({ "ID":$(this).data('id'), "Name":$(this).data('name'), "Price":$(this).data('price') });
+                                                                                                    dataID += "-"+$(this).data('id');
+                                                                                                    totalPrice += $(this).data('price');
                                                                                                 });
-                                                                                                $( ".MenuSize{{ $MenuSize->id }}" ).change(function() {
-                                                                                                    if($('.MenuSize{{ $MenuSize->id }}:checked').length > $(this).data('max'))
-                                                                                                    {
-                                                                                                        $(this).prop('checked', false);
-                                                                                                        return;
-                                                                                                    }
 
-                                                                                                    var totalPrice = 0;
-                                                                                                    var data = JSON.parse(JSON.stringify(
-                                                                                                        $( "#Menu{{ $Menu->id }}" ).data('summary')
-                                                                                                    ));
+                                                                                                data.TotalPrice = totalPrice;
+                                                                                                $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+                                                                                                $( "#Menu{{ $Menu->id }}" ).data('id', dataID);
 
-                                                                                                    totalPrice += {{$MenuSize->price}};
-                                                                                                    data.Addons = []
+                                                                                                console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                console.log($( "#Menu{{ $Menu->id }}" ).data('id'));
+                                                                                            });
 
-                                                                                                    $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
-                                                                                                        data.Addons.push({ "Name":$(this).data('name'), "Price":$(this).data('price') });
-                                                                                                        totalPrice += $(this).data('price');
-                                                                                                    });
+                                                                                            $( ".MenuSize{{ $MenuSize->id }}" ).change(function() {
+                                                                                                if($('.MenuSize{{ $MenuSize->id }}:checked').length > $(this).data('max'))
+                                                                                                {
+                                                                                                    $(this).prop('checked', false);
+                                                                                                    return;
+                                                                                                }
 
-                                                                                                    data.TotalPrice = totalPrice;
-                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+                                                                                                var totalPrice = 0;
+                                                                                                var data = JSON.parse(JSON.stringify(
+                                                                                                    $( "#Menu{{ $Menu->id }}" ).data('summary')
+                                                                                                ));
+                                                                                                var dataID = data.Menu.ID+"-"+data.Size.ID;
 
-                                                                                                    console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                totalPrice += {{$MenuSize->price}};
+                                                                                                data.Addons = []
+
+                                                                                                $('.MenuSize{{ $MenuSize->id }}:checked').each(function(i, obj) {
+                                                                                                    data.Addons.push({ "ID":$(this).data('id'), "Name":$(this).data('name'), "Price":$(this).data('price') });
+                                                                                                    dataID += "-"+$(this).data('id');
+                                                                                                    totalPrice += $(this).data('price');
                                                                                                 });
-                                                                                            </script>
-                                                                                        @append
+
+                                                                                                data.TotalPrice = totalPrice;
+                                                                                                $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+                                                                                                $( "#Menu{{ $Menu->id }}" ).data('id', dataID);
+
+                                                                                                console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                                console.log($( "#Menu{{ $Menu->id }}" ).data('id'));
+                                                                                            });
+                                                                                        </script>
+                                                                                    @append
                                                                                     @endforeach
                                                                                 </ul>
 
                                                                                 <div class="tab-content">
 
                                                                                     @foreach($Menu->MenuSize()->get() as $MenuSizeIDX=>$MenuSize)
-                                                                                        <div id="size{{ $MenuSize->ItemSize()->get()->first()->id }}" class="tab-pane fade @if( $MenuSizeIDX == 0 ) show in active @endif">
+                                                                                        <div id="size{{ $MenuSize->id }}" class="tab-pane fade @if( $MenuSizeIDX == 0 ) show in active @endif">
                                                                                             <form>
                                                                                                 <!-- extras body -->
                                                                                                 <div class="recepie-body">
 
-                                                                                                    @foreach($MenuSize->AddonCategory()->get() as $AddonCategoryIDX=>$AddonCategory)
+                                                                                                    @foreach($MenuSize->GroupMenuAddon()->get() as $GroupMenuAddonIDX=>$GroupMenuAddon)
                                                                                                         <h6 class="font-weight-bold mt-4">
-                                                                                                            {{ $AddonCategory->AddonCategory()->get()->first()->name }}
+                                                                                                            {{ $GroupMenuAddon->AddonCategory()->get()->first()->name }}
                                                                                                             <span class="text-muted">
-                                                                                                                ({{ $AddonCategory->AddonCategory()->get()->first()->min }}-{{ $AddonCategory->AddonCategory()->get()->first()->max }})
-                                                                                                            </span>
+                                                                                                                            ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }})
+                                                                                                                        </span>
                                                                                                         </h6>
 
-                                                                                                        @foreach($MenuSize->MenuAddon()->get() as $MenuAddonIDX=>$MenuAddon)
+                                                                                                        @foreach($MenuSize->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
                                                                                                             <div class="custom-control custom-radio border-bottom py-2">
                                                                                                                 <input type="checkbox"
-                                                                                                                       id="customCheckbox{{$MenuAddon->id}}"
-                                                                                                                       name="customCheckbox{{$AddonCategory->id}}"
+                                                                                                                       id="customCheckbox{{ $MenuAddon->id }}"
+                                                                                                                       name="customCheckbox{{ $GroupMenuAddon->id }}"
                                                                                                                        class="custom-control-input Menu{{ $Menu->id }} MenuSize{{ $MenuSize->id }}"
+                                                                                                                       data-id="{{ $MenuAddon->id }}"
                                                                                                                        data-name="{{ $MenuAddon->Addon()->get()->first()->name }}"
                                                                                                                        data-price="{{ $MenuAddon->price }}"
-                                                                                                                       data-min="{{ $AddonCategory->AddonCategory()->get()->first()->min }}"
-                                                                                                                       data-max="{{ $AddonCategory->AddonCategory()->get()->first()->max }}">
+                                                                                                                       data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}"
+                                                                                                                       data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
                                                                                                                 <label class="custom-control-label" for="customCheckbox{{$MenuAddon->id}}">
                                                                                                                     {{ $MenuAddon->Addon()->get()->first()->name }}
                                                                                                                     <span class="text-muted">
-                                                                                                                        +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
-                                                                                                                    </span>
+                                                                                                                                    +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                                                                                                                </span>
                                                                                                                 </label>
                                                                                                             </div>
                                                                                                         @endforeach
@@ -214,15 +224,15 @@
                                                                                 <button id="Menu{{ $Menu->id }}"
                                                                                         type="button"
                                                                                         class="btn btn-primary btn-lg btn-block add-cart-btn"
-                                                                                        data-id="{{ $Menu->id }}"
+                                                                                        data-id="{{ $Menu->id }}-{{ $defaultSize['ID'] }}"
                                                                                         data-name="{{ ucwords($Menu->name) }}"
                                                                                         data-summary='{
-                                                                                                        "Menu":"{{ ucwords($Menu->name) }}",
-                                                                                                        "TotalPrice":"{{ $MenuSize->price }}",
-                                                                                                        "Size":{ "Name":"", "Price":"" },
-                                                                                                        "Addons":[ { "Name":"", "Price":"" } ]
-                                                                                                      }'
-                                                                                        data-price="{{ $MenuSize->price }}"
+                                                                                                                    "Menu":{ "ID":"{{ $Menu->id }}-{{ $defaultSize['ID'] }}", "Name":"{{ ucwords($Menu->name) }}" },
+                                                                                                                    "TotalPrice":{{ $defaultSize['Price'] }},
+                                                                                                                    "Size":{ "ID":{{ $defaultSize['ID'] }}, "Name": "{{ $defaultSize['Name'] }}", "Price":{{ $defaultSize['Price'] }}},
+                                                                                                                    "Addons":[ ]
+                                                                                                                  }'
+                                                                                        data-price="{{ $defaultSize['Price'] }}"
                                                                                         data-quantity="1"
                                                                                         data-image="{{ $Menu->image }}">
                                                                                     Apply
@@ -233,8 +243,128 @@
                                                                 </div>
                                                             </div>
                                                         @append
+                                                    @elseif($Menu->MenuAddon()->get()->count() != 0)
+                                                        <span class="float-right">
+                                                            <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#addons{{ $Menu->id }}">ADD</button>
+                                                        </span>
 
+                                                        @section('custom_modals')
+                                                        <!-- extras modal -->
+                                                            <div class="modal fade" id="addons{{ $Menu->id }}" tabindex="-1" role="dialog" aria-labelledby="addonsModal{{ $Menu->id }}" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">Extras</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
 
+                                                                            <div class="container">
+                                                                                @section('postScript')
+                                                                                    <script type="text/javascript">
+                                                                                        $( ".Menu{{ $Menu->id }}" ).change(function() {
+                                                                                            if($('.MenuAddonCategory'+$(this).data('cat')+':checked').length > $(this).data('max'))
+                                                                                            {
+                                                                                                $(this).prop('checked', false);
+                                                                                                return;
+                                                                                            }
+
+                                                                                            var totalPrice = 0;
+                                                                                            var data = JSON.parse(JSON.stringify(
+                                                                                                $( "#Menu{{ $Menu->id }}" ).data('summary')
+                                                                                            ));
+                                                                                            var dataID = data.Menu.ID;
+
+                                                                                            totalPrice += {{ $Menu->price }};
+                                                                                            data.Addons = []
+
+                                                                                            $('.Menu{{ $Menu->id }}:checked').each(function(i, obj) {
+                                                                                                data.Addons.push({ "ID":$(this).data('id'), "Name":$(this).data('name'), "Price":$(this).data('price') });
+                                                                                                dataID += "-"+$(this).data('id');
+                                                                                                totalPrice += $(this).data('price');
+                                                                                            });
+
+                                                                                            data.TotalPrice = totalPrice;
+                                                                                            $( "#Menu{{ $Menu->id }}" ).data('summary', data);
+                                                                                            $( "#Menu{{ $Menu->id }}" ).data('id', dataID);
+
+                                                                                            console.log($( "#Menu{{ $Menu->id }}" ).data('summary'));
+                                                                                            console.log($( "#Menu{{ $Menu->id }}" ).data('id'));
+                                                                                        });
+                                                                                    </script>
+                                                                                @append
+                                                                                <div class="tab-content">
+                                                                                    <form>
+                                                                                        <!-- extras body -->
+                                                                                        <div class="recepie-body">
+
+                                                                                            @foreach($Menu->GroupMenuAddon()->get() as $GroupMenuAddonIDX=>$GroupMenuAddon)
+                                                                                                <h6 class="font-weight-bold mt-4">
+                                                                                                    {{ $GroupMenuAddon->AddonCategory()->get()->first()->name }}
+                                                                                                    <span class="text-muted">
+                                                                                                        ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }})
+                                                                                                    </span>
+                                                                                                </h6>
+
+                                                                                                @foreach($Menu->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
+                                                                                                    <div class="custom-control custom-radio border-bottom py-2">
+                                                                                                        <input type="checkbox"
+                                                                                                               id="customCheckbox{{ $MenuAddon->id }}"
+                                                                                                               name="customCheckbox{{ $GroupMenuAddon->id }}"
+                                                                                                               class="custom-control-input Menu{{ $Menu->id }} MenuAddonCategory{{ $GroupMenuAddon->id }}"
+                                                                                                               data-cat="{{ $GroupMenuAddon->id }}"
+                                                                                                               data-id="{{ $MenuAddon->id }}"
+                                                                                                               data-name="{{ $MenuAddon->Addon()->get()->first()->name }}"
+                                                                                                               data-price="{{ $MenuAddon->price }}"
+                                                                                                               data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}"
+                                                                                                               data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
+                                                                                                        <label class="custom-control-label" for="customCheckbox{{$MenuAddon->id}}">
+                                                                                                            {{ $MenuAddon->Addon()->get()->first()->name }}
+                                                                                                            <span class="text-muted">
+                                                                                                                                    +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                                                                                                                </span>
+                                                                                                        </label>
+                                                                                                    </div>
+                                                                                                @endforeach
+                                                                                            @endforeach
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer p-0 border-0">
+                                                                            <div class="col-6 m-0 p-0">
+                                                                                <button type="button" class="btn border-top btn-lg btn-block" data-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                            <div class="col-6 m-0 p-0">
+                                                                                <button id="Menu{{ $Menu->id }}"
+                                                                                        type="button"
+                                                                                        class="btn btn-primary btn-lg btn-block add-cart-btn"
+                                                                                        data-id="{{ $Menu->id }}"
+                                                                                        data-name="{{ ucwords($Menu->name) }}"
+                                                                                        data-summary='{
+                                                                                                        "Menu":{ "ID":"{{ $Menu->id }}", "Name":"{{ ucwords($Menu->name) }}" },
+                                                                                                        "TotalPrice":{{ $Menu->price }},
+                                                                                                        "Size":null,
+                                                                                                        "Addons":[ ]
+                                                                                                       }'
+                                                                                        data-price="{{ $Menu->price }}"
+                                                                                        data-quantity="1"
+                                                                                        data-image="{{ $Menu->image }}">
+                                                                                    Apply
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @append
+                                                    @else
+                                                        <span class="float-right">
+                                                            <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">ADD</button>
+                                                        </span>
                                                     @endif
 
                                                     <div class="media">
@@ -399,24 +529,6 @@
                     .delay(10).fadeTo(50,1)
                     .delay(10).fadeTo(50,0.5)
                     .delay(10).fadeTo(50,1);
-                // var $cartIcon = null;
-                //
-                // if ($(window).width() <= 661) {
-                //     $cartIcon = $(".my-cart-icon-phone");
-                // }
-                // else {
-                //     $cartIcon = $(".my-cart-icon-pc");
-                // }
-                //
-                // var $image = $('<img width="30px" height="30px" src="' + $addTocartBtn.data("image") + '"/>').css({"position": "fixed", "z-index": "999"});
-                // $addTocartBtn.prepend($image);
-                // var position = $cartIcon.position();
-                // $image.animate({
-                //     top: position.top,
-                //     left: position.left
-                // }, 500 , "linear", function() {
-                //     $image.remove();
-                // });
             }
 
             $('.add-cart-btn').myCart({

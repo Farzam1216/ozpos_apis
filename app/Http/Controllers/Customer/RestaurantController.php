@@ -12,6 +12,7 @@ use App\Models\GeneralSetting;
 use App\Models\VendorDiscount;
 use App\Models\WorkingHours;
 use Carbon\Carbon;
+use DB;
 
 class RestaurantController extends Controller
 {
@@ -142,19 +143,23 @@ class RestaurantController extends Controller
 //                ->orderBy('menu_category.id', 'DESC')
 //                ->get();
 //                ->get(['menu_category.id', 'menu_category.name', 'menu_category.type', 'single_menu.id', 'single_menu.menu_id', 'single_menu.item_category_id', 'single_menu.status']);
+//        DB::enableQueryLog();
         $MenuCategory =
             MenuCategory::with([
-                    'SingleMenu.Menu.MenuSize.AddonCategory',
-                    'SingleMenu.Menu.MenuSize.AddonCategory.AddonCategory',
+//                    'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
+                    'SingleMenu.Menu',
+                    'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
+                    'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
                     'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
                     'SingleMenu.Menu.MenuSize.ItemSize',
-                    'SingleMenu.Menu.MenuAddon',
                     'SingleMenu.SingleMenuItemCategory.ItemCategory',
+
                     'HalfNHalfMenu.ItemCategory',
                     'DealsMenu.DealsItems.ItemCategory'
                 ])
                 ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                 ->get();
+//        dd($MenuCategory);
         $master['MenuCategory'] = $MenuCategory;
 //        $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
 //        $tax = GeneralSetting::first()->isItemTax;

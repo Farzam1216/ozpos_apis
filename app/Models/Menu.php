@@ -27,4 +27,8 @@ class Menu extends Model
     public function MenuAddon() {
         return $this->hasMany('App\Models\MenuAddon');
     }
+
+    public function GroupMenuAddon() {
+        return $this->hasMany('App\Models\MenuAddon', 'menu_id', 'id')->groupBy('addon_category_id');
+    }
 }

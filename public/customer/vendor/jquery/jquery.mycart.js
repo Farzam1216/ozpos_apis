@@ -220,7 +220,7 @@
                     '<p title="Total" class="text-gray mb-0 float-right ml-2 text-muted small ' + classProductTotal + '">$' + total + '</p>'+
                     '</div>'+
                     '<div class="d-flex align-items-center">'+
-                    '<span class="count-number float-right '  + classProductInput + '">' +
+                    '<span class="count-number float-right '  + classProductInput + '" style="min-width: 88px;">' +
                     '<button title="Remove from Cart" type="button" class="btn-sm left dec btn btn-danger ' + classProductRemove + '"> <i class="feather-trash"></i> </button>' +
                     '<button title="Decrease an Item" type="button" class="btn-sm left dec btn btn-outline-secondary ' + classProductDec + '"> <i class="feather-minus"></i> </button>' +
                     '<input title="Quantity" class="count-number-input ' + classProductQuantity + '" type="text" readonly="" value="' + this.quantity + '">' +
