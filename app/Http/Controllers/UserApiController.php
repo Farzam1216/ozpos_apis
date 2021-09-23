@@ -289,19 +289,21 @@ class UserApiController extends Controller
 //            }
 //        }
 //        $master['menu'] = $menus;
-        $MenuCategory =
-            MenuCategory::with([
-                'SingleMenu.Menu.MenuSize.AddonCategory',
-                'SingleMenu.Menu.MenuSize.AddonCategory.AddonCategory',
-                'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
-                'SingleMenu.Menu.MenuSize.ItemSize',
-                'SingleMenu.Menu.MenuAddon',
-                'SingleMenu.SingleMenuItemCategory.ItemCategory',
-                'HalfNHalfMenu.ItemCategory',
-                'DealsMenu.DealsItems.ItemCategory'
-            ])
-                ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
-                ->get();
+       $MenuCategory =
+           MenuCategory::with([
+//                    'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
+               'SingleMenu.Menu',
+               'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
+               'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
+               'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
+               'SingleMenu.Menu.MenuSize.ItemSize',
+               'SingleMenu.SingleMenuItemCategory.ItemCategory',
+           
+               'HalfNHalfMenu.ItemCategory',
+               'DealsMenu.DealsItems.ItemCategory'
+           ])
+               ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
+               ->get();
         $master['MenuCategory'] = $MenuCategory;
         $master['vendor_discount'] = VendorDiscount::where('vendor_id', $vendor_id)->orderBy('id', 'desc')->first(['id', 'type', 'discount', 'min_item_amount', 'max_discount_amount', 'start_end_date']);
         $master['delivery_timeslot'] = WorkingHours::where([['type', 'delivery_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
