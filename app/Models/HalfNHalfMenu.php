@@ -12,7 +12,14 @@ class HalfNHalfMenu extends Eloquent
 
     protected $table = 'half_n_half_menu';
 
-    protected $fillable = ['vendor_id', 'menu_category_id', 'item_category_id', 'name', 'description', 'status'];
+    protected $fillable = ['vendor_id', 'menu_category_id', 'item_category_id', 'name', 'image', 'description', 'status'];
+
+    protected $appends = ['image'];
+
+    public function getImageAttribute()
+    {
+        return url('images/upload') . '/'.$this->attributes['image'];
+    }
 
     public function MenuCategory() {
         return $this->belongsTo('App\Models\MenuCategory');

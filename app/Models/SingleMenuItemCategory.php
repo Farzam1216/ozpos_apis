@@ -17,4 +17,8 @@ class SingleMenuItemCategory extends Eloquent
     public function ItemCategory() {
         return $this->belongsTo('App\Models\ItemCategory');
     }
+
+    public function SingleMenu() {
+        return $this->belongsTo('App\Models\SingleMenu');
+    }
 }
