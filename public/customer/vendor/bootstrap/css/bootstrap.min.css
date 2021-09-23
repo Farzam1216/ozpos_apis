@@ -9,7 +9,42 @@
 /*.modal:nth-of-type(even) {*/
 /*    z-index: 1062 !important;*/
 /*}*/
-.modal-backdrop.show:nth-of-type(odd) {
-    opacity: .7;
-    z-index: 1050 !important;
+/*.modal-backdrop.show:nth-of-type(even) {*/
+/*    opacity: .7;*/
+/*    z-index: 1050 !important;*/
+/*}*/
+/* Fullscreen Modal */
+.modal-dialog {
+    max-width: unset!important;
+    margin: unset!important;
+}
+.modal-dialog-centered {
+    height: 100vh;
+    min-height: -webkit-fill-available;
+    max-height: -webkit-fill-available;
+}
+.modal-header {
+      border-top-left-radius: unset;
+      border-top-right-radius: unset;
+     background: #d92662;
+     background: -moz-linear-gradient(45deg, #d92662 0%, #e23744 100%);
+     background: -webkit-linear-gradient( 45deg, #d92662 0%, #e23744 100%);
+     background: linear-gradient( 45deg, #d92662 0%, #e23744 100%);
+     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d92662', endColorstr='#e23744', GradientType=1);
+     border-color: #d92662;
+     color: white;
+ }
+.modal-header button.close {
+    color: white;
+}
+.modal-header .close:not(:disabled):not(.disabled):focus {
+    outline: none;
+}
+.modal-content {
+    height: 100vh;
+    min-height: -webkit-fill-available;
+    max-height: -webkit-fill-available;
+}
+.modal-body {
+    overflow: scroll;
 }
