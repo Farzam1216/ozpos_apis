@@ -294,6 +294,7 @@ class UserApiController extends Controller
 //                    'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
                'SingleMenu.Menu',
                'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
+               'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
                'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
                'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
                'SingleMenu.Menu.MenuSize.ItemSize',

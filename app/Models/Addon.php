@@ -12,7 +12,7 @@ class Addon extends Eloquent
 
     protected $table = 'addon';
 
-    protected $fillable = ['vendor_id', 'addon_category_id', 'name'];
+    protected $fillable = ['vendor_id', 'addon_category_id', 'name', 'is_checked'];
 
     public function AddonCategory() {
         return $this->belongsTo('App\Models\AddonCategory');

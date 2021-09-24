@@ -1,139 +1,124 @@
 <?php
-
-namespace App\Http\Controllers\Customer;
-
-use App\Http\Controllers\Controller;
-use App\Models\MenuCategory;
-use App\Models\Vendor;
-use App\Models\Menu;
-use App\Models\Submenu;
-use App\Models\SubmenuCusomizationType;
-use App\Models\GeneralSetting;
-use App\Models\VendorDiscount;
-use App\Models\WorkingHours;
-use Carbon\Carbon;
-use DB;
-
-class RestaurantController extends Controller
-{
-    /*
-        Single Restaurant Index
-    */
-    public function index($id)
-    {
-        $rest = $this->getRest($id);
-        $singleVendor = $this->singleVendor($id);
-        $page = 1;
+   
+   namespace App\Http\Controllers\Customer;
+   
+   use App\Http\Controllers\Controller;
+   use App\Models\MenuCategory;
+   use App\Models\Vendor;
+   use App\Models\Menu;
+   use App\Models\Submenu;
+   use App\Models\SubmenuCusomizationType;
+   use App\Models\GeneralSetting;
+   use App\Models\VendorDiscount;
+   use App\Models\WorkingHours;
+   use Carbon\Carbon;
+   use DB;
+   
+   class RestaurantController extends Controller
+   {
+      /*
+          Single Restaurant Index
+      */
+      public function index($id)
+      {
+         $rest = $this->getRest($id);
+         $singleVendor = $this->singleVendor($id);
+         $page = 1;
 //        echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
 //        dd($singleVendor);
-        return view('customer/restaurant',compact('rest', 'singleVendor', 'page'));
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /* -------------------------------------------------------------------------------------------------------- */
-
-    public function enabledRest(/* Request $request */)
-    {
-        $vendors = Vendor::where([['status', 1]])->orderBy('id', 'DESC')->get()->makeHidden(['vendor_logo']);
-        foreach ($vendors as $vendor) {
-            if(session()->has('delivery_location')) {
-                $lat1 = $vendor->lat;
-                $lon1 = $vendor->lang;
-                $lat2 = session()->get('delivery_location')['lat'];
-                $lon2 = session()->get('delivery_location')['lang'];
-                $unit = 'K';
-                if (($lat1 == $lat2) && ($lon1 == $lon2)) {
-                    $distance = 0;
-                } else {
-                    $theta = $lon1 - $lon2;
-                    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-                    $dist = acos($dist);
-                    $dist = rad2deg($dist);
-                    $miles = $dist * 60 * 1.1515;
-                    $unit = strtoupper($unit);
-                    if ($unit == "K") {
-                        $distance = $miles * 1.609344;
-                    } else if ($unit == "N") {
-                        $distance = $miles * 0.8684;
-                    } else {
-                        $distance = $miles;
-                    }
-                }
-                $vendor['distance'] = round($distance);
-            }
-            else {
-                $vendor['distance'] = '?';
-            }
-
-            if (auth('api')->user() != null) {
-                $user = auth('api')->user();
-                $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+         return view('customer/restaurant', compact('rest', 'singleVendor', 'page'));
+      }
+      
+      
+      /* -------------------------------------------------------------------------------------------------------- */
+      
+      public function enabledRest(/* Request $request */)
+      {
+         $vendors = Vendor::where([['status', 1]])->orderBy('id', 'DESC')->get()->makeHidden(['vendor_logo']);
+         foreach ($vendors as $vendor) {
+            if (session()->has('delivery_location')) {
+               $lat1 = $vendor->lat;
+               $lon1 = $vendor->lang;
+               $lat2 = session()->get('delivery_location')['lat'];
+               $lon2 = session()->get('delivery_location')['lang'];
+               $unit = 'K';
+               if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+                  $distance = 0;
+               } else {
+                  $theta = $lon1 - $lon2;
+                  $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+                  $dist = acos($dist);
+                  $dist = rad2deg($dist);
+                  $miles = $dist * 60 * 1.1515;
+                  $unit = strtoupper($unit);
+                  if ($unit == "K") {
+                     $distance = $miles * 1.609344;
+                  } else if ($unit == "N") {
+                     $distance = $miles * 0.8684;
+                  } else {
+                     $distance = $miles;
+                  }
+               }
+               $vendor['distance'] = round($distance);
             } else {
-                $vendor['like'] = false;
+               $vendor['distance'] = '?';
             }
-        }
-        return $vendors;
-    }
-
-    public function getRest($id)
-    {
-        $vendor = Vendor::where('id', $id)->first();
-        // foreach ($vendors as $vendor) {
-        //     $lat1 = $vendor->lat;
-        //     $lon1 = $vendor->lang;
-        //     $lat2 = $request->lat;
-        //     $lon2 = $request->lang;
-        //     $unit = 'K';
-        //     if (($lat1 == $lat2) && ($lon1 == $lon2)) {
-        //         $distance = 0;
-        //     } else {
-        //         $theta = $lon1 - $lon2;
-        //         $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        //         $dist = acos($dist);
-        //         $dist = rad2deg($dist);
-        //         $miles = $dist * 60 * 1.1515;
-        //         $unit = strtoupper($unit);
-        //         if ($unit == "K") {
-        //             $distance = $miles * 1.609344;
-        //         } else if ($unit == "N") {
-        //             $distance = $miles * 0.8684;
-        //         } else {
-        //             $distance = $miles;
-        //         }
-        //     }
-        //     $vendor['distance'] = round($distance);
-        //     if (auth('api')->user() != null) {
-        //         $user = auth('api')->user();
-        //         $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
-        //     } else {
-        //         $vendor['like'] = false;
-        //     }
-        // }
-        return $vendor;
-    }
-
-
-    public function singleVendor($vendor_id)
-    {
-        $master = array();
-        $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
-        if ($master['vendor']->tax == null) {
+            
+            if (auth('api')->user() != null) {
+               $user = auth('api')->user();
+               $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+            } else {
+               $vendor['like'] = false;
+            }
+         }
+         return $vendors;
+      }
+      
+      public function getRest($id)
+      {
+         $vendor = Vendor::where('id', $id)->first();
+         // foreach ($vendors as $vendor) {
+         //     $lat1 = $vendor->lat;
+         //     $lon1 = $vendor->lang;
+         //     $lat2 = $request->lat;
+         //     $lon2 = $request->lang;
+         //     $unit = 'K';
+         //     if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+         //         $distance = 0;
+         //     } else {
+         //         $theta = $lon1 - $lon2;
+         //         $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+         //         $dist = acos($dist);
+         //         $dist = rad2deg($dist);
+         //         $miles = $dist * 60 * 1.1515;
+         //         $unit = strtoupper($unit);
+         //         if ($unit == "K") {
+         //             $distance = $miles * 1.609344;
+         //         } else if ($unit == "N") {
+         //             $distance = $miles * 0.8684;
+         //         } else {
+         //             $distance = $miles;
+         //         }
+         //     }
+         //     $vendor['distance'] = round($distance);
+         //     if (auth('api')->user() != null) {
+         //         $user = auth('api')->user();
+         //         $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+         //     } else {
+         //         $vendor['like'] = false;
+         //     }
+         // }
+         return $vendor;
+      }
+      
+      
+      public function singleVendor($vendor_id)
+      {
+         $master = array();
+         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
+         if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
-        }
+         }
 
 //        $MenuCategory =
 //            MenuCategory::where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
@@ -144,23 +129,23 @@ class RestaurantController extends Controller
 //                ->get();
 //                ->get(['menu_category.id', 'menu_category.name', 'menu_category.type', 'single_menu.id', 'single_menu.menu_id', 'single_menu.item_category_id', 'single_menu.status']);
 //        DB::enableQueryLog();
-        $MenuCategory =
-            MenuCategory::with([
-//                    'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
-                    'SingleMenu.Menu',
-                    'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
-                    'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
-                    'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
-                    'SingleMenu.Menu.MenuSize.ItemSize',
-                    'SingleMenu.SingleMenuItemCategory.ItemCategory',
-
-                    'HalfNHalfMenu.ItemCategory',
-                    'DealsMenu.DealsItems.ItemCategory'
-                ])
-                ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
-                ->get();
+         $MenuCategory =
+             MenuCategory::with([
+                 'SingleMenu.Menu',
+                 'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
+                 'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
+                 'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
+                 'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
+                 'SingleMenu.Menu.MenuSize.ItemSize',
+                 'SingleMenu.SingleMenuItemCategory.ItemCategory',
+                 
+                 'HalfNHalfMenu.ItemCategory',
+                 'DealsMenu.DealsItems.ItemCategory'
+             ])
+                 ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
+                 ->get();
 //        dd($MenuCategory);
-        $master['MenuCategory'] = $MenuCategory;
+         $master['MenuCategory'] = $MenuCategory;
 //        $menus = Menu::where([['vendor_id', $vendor_id], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'name', 'image']);
 //        $tax = GeneralSetting::first()->isItemTax;
 //        foreach ($menus as $menu) {
@@ -248,7 +233,7 @@ class RestaurantController extends Controller
 //            }
 //            $pvalue['period_list'] = $parr;
 //        }
-
-        return $master;
-    }
-}
+         
+         return $master;
+      }
+   }
