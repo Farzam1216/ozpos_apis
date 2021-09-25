@@ -166,6 +166,7 @@ Route::get('menu_category/{vendor_id}','UserApiController@apiMenuCategory');
 Route::get('cuisine','UserApiController@apiCuisine');
 Route::post('vendor','UserApiController@apiVendor');
 Route::get('single_vendor/{vendor_id}','UserApiController@apiSingleVendor');
+Route::get('single_vendor_retrieve_sizes/{vendor_id}','UserApiController@apiSingleVendorRetrieveSizes');
 Route::get('menu/{vendor_id}','UserApiController@apiMenu');
 Route::get('promo_code/{vendor_id}','UserApiController@apiPromoCode');
 Route::get('faq','UserApiController@apiFaq');

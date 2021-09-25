@@ -131,16 +131,10 @@
 //        DB::enableQueryLog();
          $MenuCategory =
              MenuCategory::with([
-                 'SingleMenu.Menu',
-                 'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
-                 'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
-                 'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
-                 'SingleMenu.Menu.MenuSize.MenuAddon.Addon.AddonCategory',
-                 'SingleMenu.Menu.MenuSize.ItemSize',
-                 'SingleMenu.SingleMenuItemCategory.ItemCategory',
+                 'SingleMenu',
                  
-                 'HalfNHalfMenu.ItemCategory',
-                 'DealsMenu.DealsItems.ItemCategory'
+                 'HalfNHalfMenu',
+                 'DealsMenu'
              ])
                  ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                  ->get();

@@ -5,7 +5,7 @@
          <div class="p-3 border-bottom menu-list">
             @if($Menu->MenuSize()->get()->count() != 0)
                <span class="float-right">
-                  <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $Menu->id }}">ADD</button>
+                  <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $Menu->id }}">Edit</button>
                </span>
             
             @section('custom_modals')
@@ -144,7 +144,7 @@
                                                                                                                         "Size":{ "ID":{{ $defaultSize['ID'] }}, "Name": "{{ $defaultSize['Name'] }}", "Price":{{ $defaultSize['Price'] }}},
                                                                                                                         "Addons":[ ]
                                                                                                                       }' data-price="{{ $defaultSize['Price'] }}" data-quantity="1" data-image="{{ $Menu->image }}">
-                                 Apply
+                                 Add To Cart
                               </button>
                            </div>
                         </div>
@@ -154,7 +154,7 @@
             @append
             @elseif($Menu->MenuAddon()->get()->count() != 0)
                <span class="float-right">
-                  <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#addons{{ $Menu->id }}">ADD</button>
+                  <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#addons{{ $Menu->id }}">Edit</button>
                </span>
             
             @section('custom_modals')
@@ -242,7 +242,7 @@
                                                                                                             "Size":null,
                                                                                                             "Addons":[ ]
                                                                                                            }' data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">
-                                 Apply
+                                 Add To Cart
                               </button>
                            </div>
                         </div>
@@ -252,7 +252,7 @@
             @append
             @else
                <span class="float-right">
-                  <button class="btn btn-outline-secondary btn-sm add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">ADD</button>
+                  <button class="btn btn-primary btn-sm add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">Add</button>
                </span>
             @endif
             <div class="media">

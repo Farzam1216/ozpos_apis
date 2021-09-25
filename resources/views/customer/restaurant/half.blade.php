@@ -2,7 +2,7 @@
    @foreach($MenuCategory->HalfNHalfMenu()->get() as $HalfNHalfMenuIDX=>$HalfNHalfMenu)
       <div class="p-3 border-bottom menu-list">
          <span class="float-right">
-            <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#Half{{ $HalfNHalfMenu->id }}">ADD</button>
+            <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#Half{{ $HalfNHalfMenu->id }}">Edit</button>
          </span>
          @section('custom_modals')
             <div class="modal fade" id="Half{{ $HalfNHalfMenu->id }}" tabindex="-1" role="dialog" aria-labelledby="HalfModal{{ $HalfNHalfMenu->id }}" aria-hidden="true">
