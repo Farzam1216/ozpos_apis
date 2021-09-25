@@ -15173,6 +15173,16 @@
                     /**
          * 
          *
+         * @see \Barryvdh\Debugbar\ServiceProvider::register()
+         * @static 
+         */ 
+        public static function debug()
+        {
+                        return \Illuminate\Support\Collection::debug();
+        }
+                    /**
+         * 
+         *
          * @see \Maatwebsite\Excel\Mixins\DownloadCollection::downloadExcel()
          * @param string $fileName
          * @param string|null $writerType
@@ -15664,6 +15674,543 @@
         {
                         /** @var \Gloudemans\Shoppingcart\Cart $instance */
                         return $instance->deleteStoredCart($identifier);
+        }
+         
+    }
+     
+}
+
+    namespace Barryvdh\Debugbar { 
+            /**
+     * 
+     *
+     * @method static void alert(mixed $message)
+     * @method static void critical(mixed $message)
+     * @method static void debug(mixed $message)
+     * @method static void emergency(mixed $message)
+     * @method static void error(mixed $message)
+     * @method static void info(mixed $message)
+     * @method static void log(mixed $message)
+     * @method static void notice(mixed $message)
+     * @method static void warning(mixed $message)
+     * @see \Barryvdh\Debugbar\LaravelDebugbar
+     */ 
+        class Facade {
+                    /**
+         * Enable the Debugbar and boot, if not already booted.
+         *
+         * @static 
+         */ 
+        public static function enable()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->enable();
+        }
+                    /**
+         * Boot the debugbar (add collectors, renderer and listener)
+         *
+         * @static 
+         */ 
+        public static function boot()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->boot();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function shouldCollect($name, $default = false)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->shouldCollect($name, $default);
+        }
+                    /**
+         * Adds a data collector
+         *
+         * @param \DebugBar\DataCollector\DataCollectorInterface $collector
+         * @throws DebugBarException
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function addCollector($collector)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addCollector($collector);
+        }
+                    /**
+         * Handle silenced errors
+         *
+         * @param $level
+         * @param $message
+         * @param string $file
+         * @param int $line
+         * @param array $context
+         * @throws \ErrorException
+         * @static 
+         */ 
+        public static function handleError($level, $message, $file = '', $line = 0, $context = [])
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->handleError($level, $message, $file, $line, $context);
+        }
+                    /**
+         * Starts a measure
+         *
+         * @param string $name Internal name, used to stop the measure
+         * @param string $label Public name
+         * @static 
+         */ 
+        public static function startMeasure($name, $label = null)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->startMeasure($name, $label);
+        }
+                    /**
+         * Stops a measure
+         *
+         * @param string $name
+         * @static 
+         */ 
+        public static function stopMeasure($name)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->stopMeasure($name);
+        }
+                    /**
+         * Adds an exception to be profiled in the debug bar
+         *
+         * @param \Exception $e
+         * @deprecated in favor of addThrowable
+         * @static 
+         */ 
+        public static function addException($e)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addException($e);
+        }
+                    /**
+         * Adds an exception to be profiled in the debug bar
+         *
+         * @param \Exception $e
+         * @static 
+         */ 
+        public static function addThrowable($e)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addThrowable($e);
+        }
+                    /**
+         * Returns a JavascriptRenderer for this instance
+         *
+         * @param string $baseUrl
+         * @param string $basePathng
+         * @return \Barryvdh\Debugbar\JavascriptRenderer 
+         * @static 
+         */ 
+        public static function getJavascriptRenderer($baseUrl = null, $basePath = null)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getJavascriptRenderer($baseUrl, $basePath);
+        }
+                    /**
+         * Modify the response and inject the debugbar (or data in headers)
+         *
+         * @param \Symfony\Component\HttpFoundation\Request $request
+         * @param \Symfony\Component\HttpFoundation\Response $response
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */ 
+        public static function modifyResponse($request, $response)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->modifyResponse($request, $response);
+        }
+                    /**
+         * Check if the Debugbar is enabled
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isEnabled()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isEnabled();
+        }
+                    /**
+         * Collects the data from the collectors
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function collect()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->collect();
+        }
+                    /**
+         * Injects the web debug toolbar into the given Response.
+         *
+         * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
+         * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+         * @static 
+         */ 
+        public static function injectDebugbar($response)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->injectDebugbar($response);
+        }
+                    /**
+         * Disable the Debugbar
+         *
+         * @static 
+         */ 
+        public static function disable()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->disable();
+        }
+                    /**
+         * Adds a measure
+         *
+         * @param string $label
+         * @param float $start
+         * @param float $end
+         * @static 
+         */ 
+        public static function addMeasure($label, $start, $end)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addMeasure($label, $start, $end);
+        }
+                    /**
+         * Utility function to measure the execution of a Closure
+         *
+         * @param string $label
+         * @param \Closure $closure
+         * @return mixed 
+         * @static 
+         */ 
+        public static function measure($label, $closure)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->measure($label, $closure);
+        }
+                    /**
+         * Collect data in a CLI request
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function collectConsole()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->collectConsole();
+        }
+                    /**
+         * Adds a message to the MessagesCollector
+         * 
+         * A message can be anything from an object to a string
+         *
+         * @param mixed $message
+         * @param string $label
+         * @static 
+         */ 
+        public static function addMessage($message, $label = 'info')
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addMessage($message, $label);
+        }
+                    /**
+         * Checks if a data collector has been added
+         *
+         * @param string $name
+         * @return boolean 
+         * @static 
+         */ 
+        public static function hasCollector($name)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->hasCollector($name);
+        }
+                    /**
+         * Returns a data collector
+         *
+         * @param string $name
+         * @return \DebugBar\DataCollector\DataCollectorInterface 
+         * @throws DebugBarException
+         * @static 
+         */ 
+        public static function getCollector($name)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCollector($name);
+        }
+                    /**
+         * Returns an array of all data collectors
+         *
+         * @return \DebugBar\array[DataCollectorInterface] 
+         * @static 
+         */ 
+        public static function getCollectors()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCollectors();
+        }
+                    /**
+         * Sets the request id generator
+         *
+         * @param \DebugBar\RequestIdGeneratorInterface $generator
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setRequestIdGenerator($generator)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setRequestIdGenerator($generator);
+        }
+                    /**
+         * 
+         *
+         * @return \DebugBar\RequestIdGeneratorInterface 
+         * @static 
+         */ 
+        public static function getRequestIdGenerator()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getRequestIdGenerator();
+        }
+                    /**
+         * Returns the id of the current request
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getCurrentRequestId()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCurrentRequestId();
+        }
+                    /**
+         * Sets the storage backend to use to store the collected data
+         *
+         * @param \DebugBar\StorageInterface $storage
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStorage($storage = null)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStorage($storage);
+        }
+                    /**
+         * 
+         *
+         * @return \DebugBar\StorageInterface 
+         * @static 
+         */ 
+        public static function getStorage()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStorage();
+        }
+                    /**
+         * Checks if the data will be persisted
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isDataPersisted()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isDataPersisted();
+        }
+                    /**
+         * Sets the HTTP driver
+         *
+         * @param \DebugBar\HttpDriverInterface $driver
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setHttpDriver($driver)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setHttpDriver($driver);
+        }
+                    /**
+         * Returns the HTTP driver
+         * 
+         * If no http driver where defined, a PhpHttpDriver is automatically created
+         *
+         * @return \DebugBar\HttpDriverInterface 
+         * @static 
+         */ 
+        public static function getHttpDriver()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getHttpDriver();
+        }
+                    /**
+         * Returns collected data
+         * 
+         * Will collect the data if none have been collected yet
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getData()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getData();
+        }
+                    /**
+         * Returns an array of HTTP headers containing the data
+         *
+         * @param string $headerName
+         * @param integer $maxHeaderLength
+         * @return array 
+         * @static 
+         */ 
+        public static function getDataAsHeaders($headerName = 'phpdebugbar', $maxHeaderLength = 4096, $maxTotalHeaderLength = 250000)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getDataAsHeaders($headerName, $maxHeaderLength, $maxTotalHeaderLength);
+        }
+                    /**
+         * Sends the data through the HTTP headers
+         *
+         * @param bool $useOpenHandler
+         * @param string $headerName
+         * @param integer $maxHeaderLength
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function sendDataInHeaders($useOpenHandler = null, $headerName = 'phpdebugbar', $maxHeaderLength = 4096)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->sendDataInHeaders($useOpenHandler, $headerName, $maxHeaderLength);
+        }
+                    /**
+         * Stacks the data in the session for later rendering
+         *
+         * @static 
+         */ 
+        public static function stackData()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->stackData();
+        }
+                    /**
+         * Checks if there is stacked data in the session
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function hasStackedData()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->hasStackedData();
+        }
+                    /**
+         * Returns the data stacked in the session
+         *
+         * @param boolean $delete Whether to delete the data in the session
+         * @return array 
+         * @static 
+         */ 
+        public static function getStackedData($delete = true)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStackedData($delete);
+        }
+                    /**
+         * Sets the key to use in the $_SESSION array
+         *
+         * @param string $ns
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStackDataSessionNamespace($ns)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStackDataSessionNamespace($ns);
+        }
+                    /**
+         * Returns the key used in the $_SESSION array
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getStackDataSessionNamespace()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStackDataSessionNamespace();
+        }
+                    /**
+         * Sets whether to only use the session to store stacked data even
+         * if a storage is enabled
+         *
+         * @param boolean $enabled
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStackAlwaysUseSessionStorage($enabled = true)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStackAlwaysUseSessionStorage($enabled);
+        }
+                    /**
+         * Checks if the session is always used to store stacked data
+         * even if a storage is enabled
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isStackAlwaysUseSessionStorage()
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isStackAlwaysUseSessionStorage();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetSet($key, $value)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetSet($key, $value);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetGet($key)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetGet($key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetExists($key)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetExists($key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetUnset($key)
+        {            //Method inherited from \DebugBar\DebugBar         
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetUnset($key);
         }
          
     }
@@ -16524,6 +17071,883 @@
         {
                         /** @var \Facade\FlareClient\Flare $instance */
                         return $instance->group($groupName, $properties);
+        }
+         
+    }
+     
+}
+
+    namespace Kreait\Laravel\Firebase\Facades { 
+            /**
+     * 
+     *
+     * @method static \Kreait\Firebase\Auth auth()
+     * @method static \Kreait\Firebase\Database database()
+     * @method static \Kreait\Firebase\DynamicLinks dynamicLinks()
+     * @method static \Kreait\Firebase\Firestore firestore()
+     * @method static \Kreait\Firebase\Messaging messaging()
+     * @method static \Kreait\Firebase\RemoteConfig remoteConfig()
+     * @method static \Kreait\Firebase\Storage storage()
+     * @see \Kreait\Laravel\Firebase\FirebaseProjectManager
+     * @see \Kreait\Laravel\Firebase\FirebaseProject
+     */ 
+        class Firebase {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function project($name = null)
+        {
+                        /** @var \Kreait\Laravel\Firebase\FirebaseProjectManager $instance */
+                        return $instance->project($name);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getDefaultProject()
+        {
+                        /** @var \Kreait\Laravel\Firebase\FirebaseProjectManager $instance */
+                        return $instance->getDefaultProject();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setDefaultProject($name)
+        {
+                        /** @var \Kreait\Laravel\Firebase\FirebaseProjectManager $instance */
+                        return $instance->setDefaultProject($name);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\Auth
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::auth()} instead.
+     */ 
+        class FirebaseAuth {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getUser($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getUser($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getUsers($uids)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getUsers($uids);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function listUsers($maxResults = 1000, $batchSize = 1000)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->listUsers($maxResults, $batchSize);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createUser($properties)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->createUser($properties);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function updateUser($uid, $properties)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->updateUser($uid, $properties);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createUserWithEmailAndPassword($email, $password)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->createUserWithEmailAndPassword($email, $password);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getUserByEmail($email)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getUserByEmail($email);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getUserByPhoneNumber($phoneNumber)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getUserByPhoneNumber($phoneNumber);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createAnonymousUser()
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->createAnonymousUser();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function changeUserPassword($uid, $newPassword)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->changeUserPassword($uid, $newPassword);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function changeUserEmail($uid, $newEmail)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->changeUserEmail($uid, $newEmail);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function enableUser($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->enableUser($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function disableUser($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->disableUser($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function deleteUser($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->deleteUser($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getEmailActionLink($type, $email, $actionCodeSettings = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getEmailActionLink($type, $email, $actionCodeSettings);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendEmailActionLink($type, $email, $actionCodeSettings = null, $locale = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->sendEmailActionLink($type, $email, $actionCodeSettings, $locale);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getEmailVerificationLink($email, $actionCodeSettings = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getEmailVerificationLink($email, $actionCodeSettings);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendEmailVerificationLink($email, $actionCodeSettings = null, $locale = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->sendEmailVerificationLink($email, $actionCodeSettings, $locale);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getPasswordResetLink($email, $actionCodeSettings = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getPasswordResetLink($email, $actionCodeSettings);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendPasswordResetLink($email, $actionCodeSettings = null, $locale = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->sendPasswordResetLink($email, $actionCodeSettings, $locale);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getSignInWithEmailLink($email, $actionCodeSettings = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->getSignInWithEmailLink($email, $actionCodeSettings);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendSignInWithEmailLink($email, $actionCodeSettings = null, $locale = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->sendSignInWithEmailLink($email, $actionCodeSettings, $locale);
+        }
+                    /**
+         * 
+         *
+         * @deprecated 5.4.0 use {@see setCustomUserClaims}($id, array $claims) instead
+         * @param \Kreait\Firebase\Value\Uid|string $uid
+         * @param \Kreait\Firebase\Contract\array<string,  mixed> $attributes
+         * @throws Exception\AuthException
+         * @throws Exception\FirebaseException
+         * @deprecated 5.4.0 use {@see setCustomUserClaims}($id, array $claims) instead
+         * @see setCustomUserClaims
+         * @codeCoverageIgnore 
+         * @static 
+         */ 
+        public static function setCustomUserAttributes($uid, $attributes)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->setCustomUserAttributes($uid, $attributes);
+        }
+                    /**
+         * 
+         *
+         * @deprecated 5.4.0 use {@see setCustomUserClaims}($uid) instead
+         * @param \Kreait\Firebase\Value\Uid|string $uid
+         * @throws Exception\AuthException
+         * @throws Exception\FirebaseException
+         * @see removeCustomUserClaims
+         * @deprecated 5.4.0 use {@see setCustomUserClaims}($uid) instead
+         * @static 
+         */ 
+        public static function deleteCustomUserAttributes($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->deleteCustomUserAttributes($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setCustomUserClaims($uid, $claims)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->setCustomUserClaims($uid, $claims);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createCustomToken($uid, $claims = [])
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->createCustomToken($uid, $claims);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function parseToken($tokenString)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->parseToken($tokenString);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function verifyIdToken($idToken, $checkIfRevoked = false)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->verifyIdToken($idToken, $checkIfRevoked);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function verifyPasswordResetCode($oobCode)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->verifyPasswordResetCode($oobCode);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function verifyPasswordResetCodeAndReturnEmail($oobCode)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->verifyPasswordResetCodeAndReturnEmail($oobCode);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function confirmPasswordReset($oobCode, $newPassword, $invalidatePreviousSessions = true)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->confirmPasswordReset($oobCode, $newPassword, $invalidatePreviousSessions);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function confirmPasswordResetAndReturnEmail($oobCode, $newPassword, $invalidatePreviousSessions = true)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->confirmPasswordResetAndReturnEmail($oobCode, $newPassword, $invalidatePreviousSessions);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function revokeRefreshTokens($uid)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->revokeRefreshTokens($uid);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function unlinkProvider($uid, $provider)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->unlinkProvider($uid, $provider);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInAsUser($user, $claims = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInAsUser($user, $claims);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithCustomToken($token)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithCustomToken($token);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithRefreshToken($refreshToken)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithRefreshToken($refreshToken);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithEmailAndPassword($email, $clearTextPassword)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithEmailAndPassword($email, $clearTextPassword);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithEmailAndOobCode($email, $oobCode)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithEmailAndOobCode($email, $oobCode);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInAnonymously()
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInAnonymously();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithTwitterOauthCredential($accessToken, $oauthTokenSecret, $redirectUrl = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithTwitterOauthCredential($accessToken, $oauthTokenSecret, $redirectUrl);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithGoogleIdToken($idToken, $redirectUrl = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithGoogleIdToken($idToken, $redirectUrl);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithFacebookAccessToken($accessToken, $redirectUrl = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithFacebookAccessToken($accessToken, $redirectUrl);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithIdpAccessToken($provider, $accessToken, $redirectUrl = null, $oauthTokenSecret = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithIdpAccessToken($provider, $accessToken, $redirectUrl, $oauthTokenSecret);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function signInWithIdpIdToken($provider, $idToken, $redirectUrl = null)
+        {
+                        /** @var \Kreait\Firebase\Auth $instance */
+                        return $instance->signInWithIdpIdToken($provider, $idToken, $redirectUrl);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\Database
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::database()} instead.
+     */ 
+        class FirebaseDatabase {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getReference($path = null)
+        {
+                        /** @var \Kreait\Firebase\Database $instance */
+                        return $instance->getReference($path);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getReferenceFromUrl($uri)
+        {
+                        /** @var \Kreait\Firebase\Database $instance */
+                        return $instance->getReferenceFromUrl($uri);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getRuleSet()
+        {
+                        /** @var \Kreait\Firebase\Database $instance */
+                        return $instance->getRuleSet();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function updateRules($ruleSet)
+        {
+                        /** @var \Kreait\Firebase\Database $instance */
+                        return $instance->updateRules($ruleSet);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function runTransaction($callable)
+        {
+                        /** @var \Kreait\Firebase\Database $instance */
+                        return $instance->runTransaction($callable);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\DynamicLinks
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::dynamicLinks()} instead.
+     */ 
+        class FirebaseDynamicLinks {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function withApiClient($apiClient)
+        {
+                        return \Kreait\Firebase\DynamicLinks::withApiClient($apiClient);
+        }
+                    /**
+         * 
+         *
+         * @param string|\Url|\Psr\Http\Message\UriInterface|mixed $mixedLinksDomain
+         * @static 
+         */ 
+        public static function withApiClientAndDefaultDomain($apiClient, $dynamicLinksDomain)
+        {
+                        return \Kreait\Firebase\DynamicLinks::withApiClientAndDefaultDomain($apiClient, $dynamicLinksDomain);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createUnguessableLink($url)
+        {
+                        /** @var \Kreait\Firebase\DynamicLinks $instance */
+                        return $instance->createUnguessableLink($url);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createShortLink($url)
+        {
+                        /** @var \Kreait\Firebase\DynamicLinks $instance */
+                        return $instance->createShortLink($url);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function createDynamicLink($actionOrParametersOrUrl, $suffixType = null)
+        {
+                        /** @var \Kreait\Firebase\DynamicLinks $instance */
+                        return $instance->createDynamicLink($actionOrParametersOrUrl, $suffixType);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function shortenLongDynamicLink($longDynamicLinkOrAction, $suffixType = null)
+        {
+                        /** @var \Kreait\Firebase\DynamicLinks $instance */
+                        return $instance->shortenLongDynamicLink($longDynamicLinkOrAction, $suffixType);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getStatistics($dynamicLinkOrAction, $durationInDays = null)
+        {
+                        /** @var \Kreait\Firebase\DynamicLinks $instance */
+                        return $instance->getStatistics($dynamicLinkOrAction, $durationInDays);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\Messaging
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::messaging()} instead.
+     */ 
+        class FirebaseMessaging {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function send($message, $validateOnly = false)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->send($message, $validateOnly);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendMulticast($message, $registrationTokens, $validateOnly = false)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->sendMulticast($message, $registrationTokens, $validateOnly);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendAll($messages, $validateOnly = false)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->sendAll($messages, $validateOnly);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function validate($message)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->validate($message);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function validateRegistrationTokens($registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->validateRegistrationTokens($registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function subscribeToTopic($topic, $registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->subscribeToTopic($topic, $registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function subscribeToTopics($topics, $registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->subscribeToTopics($topics, $registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function unsubscribeFromTopic($topic, $registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->unsubscribeFromTopic($topic, $registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function unsubscribeFromTopics($topics, $registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->unsubscribeFromTopics($topics, $registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function unsubscribeFromAllTopics($registrationTokenOrTokens)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->unsubscribeFromAllTopics($registrationTokenOrTokens);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getAppInstance($registrationToken)
+        {
+                        /** @var \Kreait\Firebase\Messaging $instance */
+                        return $instance->getAppInstance($registrationToken);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\RemoteConfig
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::remoteConfig()} instead.
+     */ 
+        class FirebaseRemoteConfig {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function get()
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->get();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function validate($template)
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->validate($template);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function publish($template)
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->publish($template);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getVersion($versionNumber)
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->getVersion($versionNumber);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function rollbackToVersion($versionNumber)
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->rollbackToVersion($versionNumber);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function listVersions($query = null)
+        {
+                        /** @var \Kreait\Firebase\RemoteConfig $instance */
+                        return $instance->listVersions($query);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Kreait\Firebase\Storage
+     * @deprecated 3.0 Use {@see \Kreait\Laravel\Firebase\Facades\Firebase::storage()} instead.
+     */ 
+        class FirebaseStorage {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getStorageClient()
+        {
+                        /** @var \Kreait\Firebase\Storage $instance */
+                        return $instance->getStorageClient();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getBucket($name = null)
+        {
+                        /** @var \Kreait\Firebase\Storage $instance */
+                        return $instance->getBucket($name);
         }
          
     }
@@ -19896,10 +21320,18 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Excel extends \Maatwebsite\Excel\Facades\Excel {}
             class Cart extends \Gloudemans\Shoppingcart\Facades\Cart {}
+            class Debugbar extends \Barryvdh\Debugbar\Facade {}
             class OneSignal extends \Berkayk\OneSignal\OneSignalFacade {}
             class ReceiptPrinter extends \charlieuki\ReceiptPrinter\Facades\ReceiptPrinter {}
             class Msg91 extends \Craftsys\Msg91\Facade\Msg91 {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
+            class Firebase extends \Kreait\Laravel\Firebase\Facades\Firebase {}
+            class FirebaseAuth extends \Kreait\Laravel\Firebase\Facades\FirebaseAuth {}
+            class FirebaseDatabase extends \Kreait\Laravel\Firebase\Facades\FirebaseDatabase {}
+            class FirebaseDynamicLinks extends \Kreait\Laravel\Firebase\Facades\FirebaseDynamicLinks {}
+            class FirebaseMessaging extends \Kreait\Laravel\Firebase\Facades\FirebaseMessaging {}
+            class FirebaseRemoteConfig extends \Kreait\Laravel\Firebase\Facades\FirebaseRemoteConfig {}
+            class FirebaseStorage extends \Kreait\Laravel\Firebase\Facades\FirebaseStorage {}
      
 }
 
