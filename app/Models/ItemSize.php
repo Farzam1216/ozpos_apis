@@ -30,4 +30,8 @@ class ItemSize extends Model
     protected $table = 'item_size';
 
     protected $fillable = ['vendor_id','name'];
+   
+   public function MenuSize() {
+      return $this->hasMany('App\Models\MenuSize');
+   }
 }

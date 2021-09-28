@@ -1,8 +1,9 @@
 <div>
    @foreach($MenuCategory->SingleMenu()->get() as $SingleMenuIDX=>$SingleMenu)
-      @foreach($SingleMenu->Menu()->get() as $MenuIDX=>$Menu)
-         
-         <div class="p-3 border-bottom menu-list">
+      @php
+         $Menu = $SingleMenu->Menu()->get()->first();
+      @endphp
+      <div class="p-3 border-bottom menu-list">
             @if($Menu->MenuSize()->get()->count() != 0)
                <span class="float-right">
                   <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#customization{{ $Menu->id }}">Edit</button>
@@ -271,7 +272,5 @@
                </div>
             </div>
          </div>
-      
-      @endforeach
    @endforeach
 </div>

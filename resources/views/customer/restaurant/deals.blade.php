@@ -25,14 +25,13 @@
                               <script type="text/javascript">
                                  $(".DealsMenuPick{{$DealsMenu->id}}").click(function () {
                                     let button = $("#CartAddDeals{{ $DealsMenu->id }}");
+                                    let dataID = "3";
                                     let data = JSON.parse(JSON.stringify(button.data('summary')));
                                     let thisData = $(this).data();
 
                                     
                                     // if($(this).data('deal') in data.Deals)
                                     //    delete data.Deals[$(this).data('deal')];
-                                    console.log(thisData);
-                                    console.log(data);
                                     data.Deals[thisData.deals] = {};
                                     data.Deals[thisData.deals].ID = $(this).data('id');
                                     data.Deals[thisData.deals].DataID = $(this).data('id');
@@ -40,7 +39,6 @@
                                     data.Deals[thisData.deals].TotalAddonsPrice = 0;
                                     data.Deals[thisData.deals].Addons = [];
 
-                                    console.log('.DealsMenuAddon-{{ $DealsMenu->id }}-'+$(this).data('deals')+'-'+$(this).data('menu'));
                                     $('.DealsMenuAddon-{{ $DealsMenu->id }}-'+$(this).data('deals')+'-'+$(this).data('menu')+':checked').each(function (i, obj) {
                                        data.Deals[thisData.deals].Addons.push({
                                           "ID": $(this).data('id'),
@@ -51,10 +49,21 @@
                                     });
 
                                     button.data('summary', data);
-   
+
+                                    $.each(data.Deals, function (key, deal) {
+                                       dataID += "_"+deal.ID;
+
+                                       $.each(deal.Addons, function (key, addon) {
+                                          dataID += "-"+addon.ID;
+                                       });
+                                    });
+               
                                     {{--button.data('price', data.MenuFirst.TotalPrice + data.MenuSecond.TotalPrice);--}}
-                                    {{--button.data('id', "2-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}_"+data.MenuFirst.DataID+"_"+data.MenuSecond.DataID);--}}
-                                    
+                                    button.data('id', dataID);
+
+                                    $('#DealsItemsBtn-{{ $DealsMenu->id }}-'+$(this).data('deals')).removeClass("btn-outline-secondary");
+                                    $('#DealsItemsBtn-{{ $DealsMenu->id }}-'+$(this).data('deals')).addClass("btn-primary");
+                                    $('#DealsItemsBtn-{{ $DealsMenu->id }}-'+$(this).data('deals')).html("Picked");
 
                                     console.log(button.data());
                                     console.log();
@@ -72,7 +81,7 @@
                                  <div class="p-3 border-bottom menu-list">
                                     
                                     <span class="float-right">
-                                       <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsItems-{{ $DealsMenu->id }}-{{ $DealsItems->id }}">Browse</button>
+                                       <button id="DealsItemsBtn-{{ $DealsMenu->id }}-{{ $DealsItems->id }}" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsItems-{{ $DealsMenu->id }}-{{ $DealsItems->id }}">Browse</button>
                                     </span>
                                     
                                     @section('custom_modals')
@@ -151,9 +160,16 @@
                                                                                     </button>
                                                                                  </div>
                                                                                  <div class="col-6 m-0 p-0">
-                                                                                    <button id="Menu{{ $Menu->id }}" type="button" class="btn btn-primary btn-lg btn-block DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
+                                                                                    <button data-dismiss="modal" id="DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}" type="button" class="btn btn-primary btn-lg btn-block DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
                                                                                        Pick
                                                                                     </button>
+                                                                                    @section('postScript')
+                                                                                       <script type="text/javascript">
+                                                                                          $("#DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}").click(function (){
+                                                                                             $('#DealsItems-{{ $DealsMenu->id }}-{{ $DealsItems->id }}').modal('hide');
+                                                                                          });
+                                                                                       </script>
+                                                                                    @append
                                                                                  </div>
                                                                               </div>
                                                                            </div>
@@ -164,14 +180,14 @@
                                                                   
                                                                @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                                                                      <span class="float-right">
-                                                                        <button class="btn btn-primary btn-sm DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
+                                                                        <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
                                                                            Pick
                                                                         </button>
                                                                      </span>
                                                                @elseif($Menu->MenuAddon()->get()->count() != 0)
                                                                @else
                                                                   <span class="float-right">
-                                                                     <button class="btn btn-primary btn-sm" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">
+                                                                     <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
                                                                         Pick
                                                                      </button>
                                                                   </span>
@@ -233,8 +249,8 @@
                         <div class="col-6 m-0 p-0">
                            <button id="CartAddDeals{{ $DealsMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="3-{{ $DealsMenu->id }}" data-name="{{ ucwords($DealsMenu->name) }}" data-summary='{
                                                    "MenuCategory":"Deals",
-                                                   "Menu": {{json_encode($defaultData["Menu"])}},
-                                                   "Deals": [],
+                                                   "Menu": [],
+                                                   "Deals": {},
                                                    "Size": null,
                                                    "TotalPrice":0
                                                    }' data-price="0" data-quantity="1" data-image="{{ $DealsMenu->image }}">

@@ -71,7 +71,7 @@
                      <div class="col-md-12 px-0 border-top">
                         <div class="">
                            @if($MenuCategory->type == 'SINGLE')
-                              @include('customer.restaurant.single')
+                              @include('customer.restaurant.single.index')
                            @elseif($MenuCategory->type == 'HALF_N_HALF')
                               @include('customer.restaurant.half')
                            @elseif($MenuCategory->type == 'DEALS')

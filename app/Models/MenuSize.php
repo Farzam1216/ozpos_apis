@@ -40,12 +40,16 @@ class MenuSize extends Model
 
     protected $fillable = ['vendor_id','menu_id','item_size_id','price'];
 
+    public function Menu() {
+        return $this->belongsTo('App\Models\Menu');
+    }
+
     public function MenuAddon() {
         return $this->hasMany('App\Models\MenuAddon');
     }
 
     public function GroupMenuAddon() {
-        return $this->hasMany('App\Models\MenuAddon')->groupBy('addon_category_id');
+        return $this->hasMany('App\Models\MenuAddon');
     }
 
     public function ItemSize() {
