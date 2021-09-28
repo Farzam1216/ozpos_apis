@@ -73,7 +73,7 @@
                            @if($MenuCategory->type == 'SINGLE')
                               @include('customer.restaurant.single.index')
                            @elseif($MenuCategory->type == 'HALF_N_HALF')
-                              @include('customer.restaurant.half')
+                              @include('customer.restaurant.half.index')
                            @elseif($MenuCategory->type == 'DEALS')
                               @include('customer.restaurant.deals')
                            @endif
