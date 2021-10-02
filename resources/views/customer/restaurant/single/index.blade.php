@@ -29,7 +29,19 @@
                   @endif
                </h6>
                @if($Menu->price !== NULL)
-                  <p class="text-muted mb-0">{{ $Menu->price }} {{ App\Models\GeneralSetting::first()->currency }}</p>
+                  @if($Menu->display_discount_price === NULL)
+                     <p class="text-muted mb-0">
+                        {{ $Menu->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                     </p>
+                  @else
+                     <p class="text-muted mb-0">
+                        <span class="text-decoration-overline">
+                        {{ $Menu->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                        </span>
+                        &ensp;
+                        {{ $Menu->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                     </p>
+                  @endif
                @endif
             </div>
          </div>

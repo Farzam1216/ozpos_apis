@@ -1,49 +1,52 @@
 @section('postScript')
    <script type="text/javascript">
-      $(".DealsMenuPick{{$DealsMenu->id}}").click(function () {
-         let button = $("#CartAddDeals{{ $DealsMenu->id }}");
-         let dataID = "3";
-         let data = JSON.parse(JSON.stringify(button.data('summary')));
+      $(".DealsMenuPick-{{$DealsMenu->id}}").click(function () {
          let thisData = $(this).data();
+         let masterData = $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data();
+         masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
+         let generateId = "{{ $unique_id }}-{{ $DealsMenu->id }}";
+         
+         
+         
 
 
          // if($(this).data('deal') in data.Deals)
          //    delete data.Deals[$(this).data('deal')];
-         data.Deals[thisData.deals] = {};
-         data.Deals[thisData.deals].ID = $(this).data('id');
-         data.Deals[thisData.deals].DataID = $(this).data('id');
-         data.Deals[thisData.deals].Name = $(this).data('name');
-         data.Deals[thisData.deals].TotalAddonsPrice = 0;
-         data.Deals[thisData.deals].Addons = [];
+         masterData.summary.menu[thisData.deals] = {};
+         masterData.summary.menu[thisData.deals].id = $(this).data('id');
+         masterData.summary.menu[thisData.deals].data_id = $(this).data('id');
+         masterData.summary.menu[thisData.deals].name = $(this).data('name');
+         masterData.summary.menu[thisData.deals].total_addons_price = 0;
+         masterData.summary.menu[thisData.deals].addons = [];
 
          $('.DealsMenuAddon-{{ $DealsMenu->id }}-' + $(this).data('deals') + '-' + $(this).data('menu') + ':checked').each(function (i, obj) {
-            data.Deals[thisData.deals].Addons.push({
-               "ID": $(this).data('id'),
-               "Name": $(this).data('name'),
-               "Price": $(this).data('price')
+            masterData.summary.menu[thisData.deals].addons.push({
+               "id": $(this).data('id'),
+               "name": $(this).data('name'),
+               "price": $(this).data('price').toString()
             });
-            data.Deals[thisData.deals].TotalAddonsPrice += $(this).data('price');
+            masterData.summary.menu[thisData.deals].total_addons_price += parseFloat( $(this).data('price') );
          });
 
-         button.data('summary', data);
 
-         $.each(data.Deals, function (key, deal) {
-            dataID += "_" + deal.ID;
+         $.each(masterData.summary.menu, function (key, menu) {
+            generateId += "_" + $(this).id;
 
-            $.each(deal.Addons, function (key, addon) {
-               dataID += "-" + addon.ID;
+            $.each($(this).addons, function (key, addon) {
+               generateId += "-" + $(this).id;
             });
          });
          
-         {{--button.data('price', data.MenuFirst.TotalPrice + data.MenuSecond.TotalPrice);--}}
-         button.data('id', dataID);
+         $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).removeClass("btn-outline-secondary");
+         $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).addClass("btn-primary");
+         $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).html("Picked");
 
-         $('#DealsItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).removeClass("btn-outline-secondary");
-         $('#DealsItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).addClass("btn-primary");
-         $('#DealsItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).html("Picked");
-
-         console.log(button.data());
-         console.log();
+         $("#DealsMenuSubmit-{{ $DealsMenu->id }}").prop('disabled',
+             ( masterData.summary.menu.filter(Boolean).length === parseInt(masterData.required) ) ? false : true
+         );
+         
+         $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data(masterData);
+         console.log($("#DealsMenuSubmit-{{ $DealsMenu->id }}").data());
       });
    </script>
 @append

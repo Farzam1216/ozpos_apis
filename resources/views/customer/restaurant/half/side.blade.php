@@ -21,7 +21,7 @@
                      Edit
                   </button>
                </span>
-   $asd.
+            
                @include('customer.restaurant.half.modals.side')
    
             @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
@@ -36,12 +36,21 @@
                <img src="{{ $Menu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">
                <div class="media-body">
                   <h6 class="mb-1">{{ ucwords($Menu->name) }}
-                     @if($Menu->price == NULL)
-                        <span class="badge badge-danger">Customizable</span>
-                     @endif
                   </h6>
-                  @if($Menu->price != NULL)
-                     <p class="text-muted mb-0">{{ $Menu->price }} {{ App\Models\GeneralSetting::first()->currency }}</p>
+                  @if($MenuSize->price !== NULL)
+                     @if($MenuSize->display_discount_price === NULL)
+                        <p class="text-muted mb-0">
+                           {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                        </p>
+                     @else
+                        <p class="text-muted mb-0">
+                           <span class="text-decoration-overline">
+                              {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                           </span>
+                           &ensp;
+                           {{ $MenuSize->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                        </p>
+                     @endif
                   @endif
                </div>
             </div>

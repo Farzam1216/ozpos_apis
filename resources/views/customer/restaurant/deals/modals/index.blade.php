@@ -15,7 +15,7 @@
                          "Menu" => []
                      );
                   @endphp
-   
+                  
                   @include('customer.restaurant.deals.scripts.index')
                   
                   @foreach($DealsMenu->DealsItems()->get() as $DealsItemsIDX=>$DealsItems)
@@ -23,9 +23,11 @@
                         <div class="p-3 border-bottom menu-list">
                            
                            <span class="float-right">
-                              <button id="DealsMenuItemsBtn-{{ $DealsMenu->id }}-{{ $DealsItems->id }}" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenuItems-{{ $DealsMenu->id }}-{{ $DealsItems->id }}">Browse</button>
+                              <button id="DealsMenuItemsBtn-{{ $DealsMenu->id }}-{{ $DealsItems->id }}" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenuItems-{{ $DealsMenu->id }}-{{ $DealsItems->id }}">
+                                 Browse
+                              </button>
                            </span>
-   
+                           
                            @include('customer.restaurant.deals.modals.items')
                            
                            <div class="media">
@@ -45,13 +47,13 @@
                   </button>
                </div>
                <div class="col-6 m-0 p-0">
-                  <button id="DealsMenuSubmit-{{ $DealsMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="3-{{ $DealsMenu->id }}" data-name="{{ ucwords($DealsMenu->name) }}" data-summary='{
-                                                   "category":"DEALS",
-                                                   "menu_category":{ "id": {{ $DealsMenu->id }} },
-                                                   "menu": [],
-                                                   "size": null,
-                                                   "total_price":0
-                                                   }' data-price="0" data-quantity="1" data-image="{{ $DealsMenu->image }}">
+                  <button id="DealsMenuSubmit-{{ $DealsMenu->id }}" type="button" disabled class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="3-{{ $DealsMenu->id }}" data-name="{{ ucwords($DealsMenu->name) }}" data-summary='{
+                           "category":"DEALS",
+                           "menu_category":{ "id": {{ $DealsMenu->id }} },
+                           "menu": [],
+                           "size": null,
+                           "total_price":0
+                           }' data-price="{{ $DealsMenu->price }}" data-quantity="1" data-image="{{ $DealsMenu->image }}" data-required="{{ $DealsMenu->DealsItems()->count() }}" data-dismiss="modal">
                      Add To Cart
                   </button>
                </div>

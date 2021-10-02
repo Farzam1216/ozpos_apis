@@ -21,7 +21,20 @@
                         @endif
                         <li>
                            <a id="SingleMenuSizeBtn-{{ $SingleMenu->id }}-{{ $MenuSize->id }}" class="btn btn-outline-primary btn-sm mb-3 mr-3 @if( $MenuSizeIDX === 0 ) active @endif" data-toggle="pill" href="#SingleMenuSize-{{ $SingleMenu->id }}-{{ $MenuSize->id }}">
-                              {{ $MenuSize->ItemSize()->get()->first()->name }} {{ $MenuSize->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                              <b>
+                                 {{ $MenuSize->ItemSize()->get()->first()->name }}
+                              </b>
+                              
+                              <br>
+                              @if($MenuSize->display_discount_price === NULL)
+                                 {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                              @else
+                                 <span class="text-decoration-overline">
+                                    {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                 </span>
+                                 &ensp;
+                                 {{ $MenuSize->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                              @endif
                            </a>
                         </li>
                         @include('customer.restaurant.single.scripts.sizes')

@@ -38,10 +38,12 @@
       
       protected $table = 'menu_size';
       
-      protected $fillable = ['vendor_id', 'menu_id', 'item_size_id', 'price'];
+      protected $fillable = ['vendor_id', 'menu_id', 'item_size_id', 'price', 'display_price', 'display_discount_price'];
       
       protected $casts = [
           'price' => 'decimal:2',
+          'display_price' => 'decimal:2',
+          'display_discount_price' => 'decimal:2',
       ];
       
       public function Menu()

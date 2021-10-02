@@ -1406,3 +1406,6 @@ footer .text-muted {
     width: 100%;
     z-index: 1;
 }
+.text-decoration-overline {
+    text-decoration: line-through!important;
+}

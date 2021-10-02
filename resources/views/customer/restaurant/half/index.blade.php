@@ -11,7 +11,7 @@
             <img src="{{ $HalfNHalfMenu->image }}" alt="" class="mr-3 rounded-pill ">
             <div class="media-body">
                <h6 class="mb-1">{{ ucwords($HalfNHalfMenu->name) }}
-                  <span class="badge badge-danger">Customizable</span>
+                  <span class="badge badge-danger">Customizable Half n Half</span>
                </h6>
             </div>
          </div>

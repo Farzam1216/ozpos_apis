@@ -24,12 +24,16 @@
                             "Addons" => []
                         );
                      @endphp
+                  
+                     @include('customer.restaurant.deals.scripts.addons')
                      
                      <div>
                         <div class="p-3 border-bottom menu-list">
                            @if($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() !== 0)
                               <span class="float-right">
-                                 <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}">Edit</button>
+                                 <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}">
+                                    Edit
+                                 </button>
                               </span>
                               
                               
@@ -38,14 +42,14 @@
                            
                            @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                               <span class="float-right">
-                                 <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
+                                 <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick-{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
                                     Pick
                                  </button>
                               </span>
                            @elseif($Menu->MenuAddon()->get()->count() != 0)
                            @else
                               <span class="float-right">
-                                 <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
+                                 <button data-dismiss="modal" class="btn btn-primary btn-sm DealsMenuPick-{{$DealsMenu->id}}" data-deals="{{$DealsItems->id}}" data-menu="{{$Menu->id}}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
                                     Pick
                                  </button>
                               </span>
