@@ -3,63 +3,70 @@
       $("#SingleMenuSizeBtn-{{ $SingleMenu->id }}-{{ $MenuSize->id }}").click(function () {
          let masterData = $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data();
          masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
-         let generateId = "{{ $Menu->id }}-{{ $MenuSize->id }}";
-         let generateTotalPrice = {{$MenuSize->price}};
+         let generateId = "{{ $unique_id }}-{{ $SingleMenu->id }}-{{ $MenuSize->id }}";
+         let generateTotalPrice = parseFloat("{{$MenuSize->price}}");
 
-         masterData.summary.Size.ID = "{{ $MenuSize->id }}";
-         masterData.summary.Size.Name = "{{ $MenuSize->ItemSize()->get()->first()->name }}";
-         masterData.summary.Size.Price = "{{ $MenuSize->price }}";
-         masterData.summary.Addons = []
+         masterData.summary.size.id = {{ $MenuSize->id }};
+         masterData.summary.size.name = "{{ $MenuSize->ItemSize()->get()->first()->name }}";
+         masterData.summary.size.price = "{{ $MenuSize->price }}";
+         masterData.summary.menu[0].addons.length = []
 
          $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}:checked').each(function (i, obj) {
-            masterData.summary.Addons.push({
-               "ID": $(this).data('id'),
-               "Name": $(this).data('name'),
-               "Price": $(this).data('price')
+            masterData.summary.menu[0].addons.push({
+               "id": $(this).data('id'),
+               "name": $(this).data('name'),
+               "price": $(this).data('price').toString()
             });
             generateId += "-" + $(this).data('id');
-            generateTotalPrice += $(this).data('price');
+            generateTotalPrice += parseFloat($(this).data('price'));
          });
 
          masterData.id = generateId;
-         masterData.price = generateTotalPrice;
-         masterData.summary.TotalPrice = generateTotalPrice;
+         masterData.price = generateTotalPrice.toString();
+         masterData.summary.total_price = generateTotalPrice.toString();
          $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data(masterData);
          console.log($("#SingleMenuSubmit-{{ $SingleMenu->id }}").data());
       });
 
       $(".SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}").change(function () {
          let groupMenuAddonId = $(this).data('group_menu_addon_id');
-         let checked = $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}-' + groupMenuAddonId + ':checked').length;
+         let checkedCheckBox = $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}-'+groupMenuAddonId+':checked');
+         let checked = checkedCheckBox.length;
          let masterData = $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data();
-         let generateId = "{{ $Menu->id }}-{{ $MenuSize->id }}";
-         let generateTotalPrice = {{$MenuSize->price}};
+         masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
+         let generateId = "{{ $unique_id }}-{{ $SingleMenu->id }}-{{ $MenuSize->id }}";
+         let generateTotalPrice = parseFloat("{{$MenuSize->price}}");
          let maxAllowed = $(this).data('max');
 
-         if (checked > maxAllowed) {
+         if (maxAllowed == 1) {
+            checkedCheckBox.each(function (i, obj) {
+               $(this).prop('checked', false);
+            });
+            $(this).prop('checked', true);
+         }
+         else if (checked > maxAllowed) {
             $(this).prop('checked', false);
             return;
          }
 
-         masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
-         masterData.summary.Addons = [];
+         masterData.summary.menu[0].addons = [];
 
          $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}:checked').each(function (i, obj) {
-            masterData.summary.Addons.push({
-               "ID": $(this).data('id'),
-               "Name": $(this).data('name'),
-               "Price": $(this).data('price')
+            masterData.summary.menu[0].addons.push({
+               "id": $(this).data('id'),
+               "name": $(this).data('name'),
+               "price": $(this).data('price').toString()
             });
             generateId += "-" + $(this).data('id');
-            generateTotalPrice += $(this).data('price');
+            generateTotalPrice += parseFloat($(this).data('price'));
          });
 
          masterData.id = generateId;
-         masterData.price = generateTotalPrice;
-         masterData.summary.TotalPrice = generateTotalPrice;
+         masterData.price = generateTotalPrice.toString();
+         masterData.summary.total_price = generateTotalPrice.toString();
          $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data(masterData);
          
-         {{--console.log($("#SingleMenuSubmit-{{ $SingleMenu->id }}").data());--}}
+         console.log($("#SingleMenuSubmit-{{ $SingleMenu->id }}").data());
       });
    </script>
 @append

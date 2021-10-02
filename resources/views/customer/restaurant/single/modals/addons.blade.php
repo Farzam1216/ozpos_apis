@@ -43,12 +43,13 @@
                   </button>
                </div>
                <div class="col-6 m-0 p-0">
-                  <button id="SingleMenuSubmit-{{ $SingleMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary='{
-                                                                                                            "Menu":{ "ID":"{{ $Menu->id }}", "Name":"{{ ucwords($Menu->name) }}" },
-                                                                                                            "TotalPrice":{{ $Menu->price }},
-                                                                                                            "Size":null,
-                                                                                                            "Addons":[ ]
-                                                                                                           }' data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">
+                  <button id="SingleMenuSubmit-{{ $SingleMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}"
+                     data-summary='{
+                                       "category":"SINGLE",
+                                       "menu": [ { "id":{{ $Menu->id }}, "name":"{{ ucwords($Menu->name) }}", "price":"{{ $Menu->price }}", "addons":[] } ],
+                                       "size": null,
+                                       "total_price": "{{ $Menu->price }}"
+                                    }' data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}" data-dismiss="modal">
                      Add To Cart
                   </button>
                </div>

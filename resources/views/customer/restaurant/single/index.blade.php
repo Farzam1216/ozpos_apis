@@ -21,7 +21,7 @@
             </span>
          @endif
          <div class="media">
-            <img src="{{ $Menu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">
+            <img src="{{ $Menu->image }}" alt="" class="mr-3 rounded-pill ">
             <div class="media-body">
                <h6 class="mb-1">{{ ucwords($Menu->name) }}
                   @if($Menu->price === NULL)

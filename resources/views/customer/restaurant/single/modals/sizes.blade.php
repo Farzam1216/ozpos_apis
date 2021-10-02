@@ -62,12 +62,13 @@
                   </button>
                </div>
                <div class="col-6 m-0 p-0">
-                  <button id="SingleMenuSubmit-{{ $SingleMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="{{ $Menu->id }}-{{ $defaultSize['ID'] }}" data-name="{{ ucwords($Menu->name) }}" data-summary='{
-                                                                                                                        "Menu":{ "ID":"{{ $Menu->id }}-{{ $defaultSize['ID'] }}", "Name":"{{ ucwords($Menu->name) }}" },
-                                                                                                                        "TotalPrice":{{ $defaultSize['Price'] }},
-                                                                                                                        "Size":{ "ID":{{ $defaultSize['ID'] }}, "Name": "{{ $defaultSize['Name'] }}", "Price":{{ $defaultSize['Price'] }}},
-                                                                                                                        "Addons":[ ]
-                                                                                                                      }' data-price="{{ $defaultSize['Price'] }}" data-quantity="1" data-image="{{ $Menu->image }}">
+                  <button id="SingleMenuSubmit-{{ $SingleMenu->id }}" type="button" class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="{{ $Menu->id }}-{{ $defaultSize['ID'] }}" data-name="{{ ucwords($Menu->name) }}"
+                     data-summary='{
+                        "category":"SINGLE",
+                        "menu": [ { "id":{{ $Menu->id }}, "name":"{{ ucwords($Menu->name) }}", "price":"{{ $defaultSize['Price'] }}", "addons":[] } ],
+                        "size": { "id":{{ $defaultSize['ID'] }}, "name": "{{ $defaultSize['Name'] }}", "price":"{{ $defaultSize['Price'] }}"},
+                        "total_price": {{ $defaultSize['Price'] }}
+                     }' data-price="{{ $defaultSize['Price'] }}" data-quantity="1" data-image="{{ $Menu->image }}" data-dismiss="modal">
                      Add To Cart
                   </button>
                </div>

@@ -435,8 +435,8 @@
        */
       public function apiSingleVendorRetrieveSize($vendor_id, $item_category_id, $item_size_id)
       {
-         Log::info($item_category_id);
-         Log::info($item_size_id);
+//         Log::info($item_category_id);
+//         Log::info($item_size_id);
          $data = ItemSize::with([
              'MenuSize.Menu.SingleMenu.SingleMenuItemCategory' => function ($query) use ($item_category_id) {
                 $query->where('item_category_id', $item_category_id);
@@ -446,7 +446,7 @@
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where([['id', $item_size_id], ['vendor_id', $vendor_id]])->first();
          
-//         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
       

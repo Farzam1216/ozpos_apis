@@ -2,68 +2,43 @@
    <script type="text/javascript">
       $(".SingleMenuCheckbox-{{ $SingleMenu->id }}").change(function () {
          let groupMenuAddonId = $(this).data('group_menu_addon_id');
-         let checked = $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-'+groupMenuAddonId+':checked').length;
+         let checkedCheckBox = $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-'+groupMenuAddonId+':checked');
+         let checked = checkedCheckBox.length;
+         let masterData = $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data();
+         masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
+         let generateId = "{{ $unique_id }}-{{ $SingleMenu->id }}";
+         let generateTotalPrice = parseFloat("{{$Menu->price}}");
          let maxAllowed = $(this).data('max');
 
-         if (checked > maxAllowed) {
+         if (maxAllowed == 1) {
+            checkedCheckBox.each(function (i, obj) {
+               $(this).prop('checked', false);
+            });
+            $(this).prop('checked', true);
+         }
+         else if (checked > maxAllowed) {
             $(this).prop('checked', false);
             return;
          }
 
-         let totalPrice = 0;
-         let masterData = $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data();
-         masterData.summary = JSON.parse( JSON.stringify( masterData.summary ) );
-         let generateId = masterData.summary.Menu.ID;
-         let generateTotalPrice = {{$Menu->price}};
+         masterData.summary.menu[0].addons.length = 0;
 
-
-         masterData.summary.Addons = []
-         $('.SingleMenuCheckbox-{{ $SingleMenu->id }}-'+groupMenuAddonId+':checked').each(function (i, obj) {
-            masterData.summary.Addons.push({
-               "ID": $(this).data('id'),
-               "Name": $(this).data('name'),
-               "Price": $(this).data('price')
+         $('.SingleMenuCheckbox-{{ $SingleMenu->id }}:checked').each(function (i, obj) {
+            masterData.summary.menu[0].addons.push({
+               "id": $(this).data('id'),
+               "name": $(this).data('name'),
+               "price": $(this).data('price').toString()
             });
             generateId += "-" + $(this).data('id');
-            generateTotalPrice += $(this).data('price');
+            generateTotalPrice += parseFloat($(this).data('price'));
          });
 
-         masterData.summary.TotalPrice = totalPrice;
+         masterData.id = generateId;
+         masterData.price = generateTotalPrice.toString();
+         masterData.summary.total_price = generateTotalPrice.toString();
          $("#SingleMenuSubmit-{{ $SingleMenu->id }}").data(masterData);
-   
-         {{--console.log($("#SingleMenuSubmit-{{ $SingleMenu->id }}").data());--}}
-         
-         
-         {{--if ($('.MenuAddonCategory' + $(this).data('cat') + ':checked').length > $(this).data('max')) {--}}
-         {{--   $(this).prop('checked', false);--}}
-         {{--   return;--}}
-         {{--}--}}
-         
-         {{--var totalPrice = 0;--}}
-         {{--var data = JSON.parse(JSON.stringify(--}}
-         {{--    $("#Menu{{ $Menu->id }}").data('summary')--}}
-         {{--));--}}
-         {{--var dataID = data.Menu.ID;--}}
-         
-         {{--totalPrice += {{ $Menu->price }};--}}
-         {{--data.Addons = []--}}
-         
-         {{--$('.Menu{{ $Menu->id }}:checked').each(function (i, obj) {--}}
-         {{--   data.Addons.push({--}}
-         {{--      "ID": $(this).data('id'),--}}
-         {{--      "Name": $(this).data('name'),--}}
-         {{--      "Price": $(this).data('price')--}}
-         {{--   });--}}
-         {{--   dataID += "-" + $(this).data('id');--}}
-         {{--   totalPrice += $(this).data('price');--}}
-         {{--});--}}
-         
-         {{--data.TotalPrice = totalPrice;--}}
-         {{--$("#Menu{{ $Menu->id }}").data('summary', data);--}}
-         {{--$("#Menu{{ $Menu->id }}").data('id', dataID);--}}
-         
-         {{--console.log($("#Menu{{ $Menu->id }}").data('summary'));--}}
-         {{--console.log($("#Menu{{ $Menu->id }}").data('id'));--}}
+
+         console.log($("#SingleMenuSubmit-{{ $SingleMenu->id }}").data());
       });
    </script>
 @append

@@ -1,4 +1,4 @@
-<div id="Half-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}" class="tab-pane fade @if($prefix=='First') show in active @endif ">
+<div id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}" class="tab-pane fade @if($prefix=='First') show in active @endif ">
    @foreach($HalfNHalfMenu->ItemCategory()->get()->first()->SingleMenuItemCategory()->get() as $SingleMenuItemCategoryIDX=>$SingleMenuItemCategory)
       
       @php
@@ -14,12 +14,23 @@
       
       <div>
          <div class="p-3 border-bottom menu-list">
-            
-            <span class="float-right">
-               <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#HalfAddon-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}">ADD</button>
-            </span>
    
-            @include('customer.restaurant.half.modals.side')
+            @if($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() !== 0)
+               <span class="float-right">
+                  <button class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Edit" data-toggle="modal" data-target="#HalfMenuAddon-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}">
+                     Edit
+                  </button>
+               </span>
+   $asd.
+               @include('customer.restaurant.half.modals.side')
+   
+            @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
+               <span class="float-right">
+                  <button id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Pick">
+                     Pick
+                  </button>
+               </span>
+            @endif
             
             <div class="media">
                <img src="{{ $Menu->image }}" alt="askbootstrap" class="mr-3 rounded-pill ">

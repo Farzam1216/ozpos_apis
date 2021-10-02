@@ -71,11 +71,11 @@
                      <div class="col-md-12 px-0 border-top">
                         <div class="">
                            @if($MenuCategory->type == 'SINGLE')
-                              @include('customer.restaurant.single.index')
+                              @include('customer.restaurant.single.index', ['unique_id'=>1])
                            @elseif($MenuCategory->type == 'HALF_N_HALF')
-                              @include('customer.restaurant.half.index')
+                              @include('customer.restaurant.half.index', ['unique_id'=>2])
                            @elseif($MenuCategory->type == 'DEALS')
-                              @include('customer.restaurant.deals')
+                              @include('customer.restaurant.deals', ['unique_id'=>3])
                            @endif
                         </div>
                      </div>
