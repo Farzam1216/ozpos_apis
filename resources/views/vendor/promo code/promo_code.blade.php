@@ -21,7 +21,7 @@
     <div class="section-header">
         <h1>{{__('Promo code')}}</h1>
         <div class="section-header-breadcrumb">
-            <div class="breadcrumb-item active"><a href="{{ url('admin/home') }}">{{__('Dashboard')}}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ url('vendor/home') }}">{{__('Dashboard')}}</a></div>
             <div class="breadcrumb-item">{{__('Promo Code')}}</div>
         </div>
     </div>
@@ -32,7 +32,7 @@
             <div class="card-header">
                 <div class="w-100">
                     @can('promo_code_add')
-                        <a href="{{ url('admin/promo_code/create') }}" class="btn btn-primary float-right">{{__('Add New')}}</a>
+                        <a href="{{ url('vendor/promo_code/create') }}" class="btn btn-primary float-right">{{__('Add New')}}</a>
                     @endcan
                 </div>
             </div>
@@ -73,17 +73,17 @@
                                 <td>{{$PromoCode->start_end_date}}</td>
                                 <td>
                                     <label class="switch">
-                                        <input type="checkbox" name="status" onclick="change_status('admin/promo_code',{{ $PromoCode->id }})" {{($PromoCode->status == 1) ? 'checked' : ''}}>
+                                        <input type="checkbox" name="status" onclick="change_status('vendor/promo_code',{{ $PromoCode->id }})" {{($PromoCode->status == 1) ? 'checked' : ''}}>
                                         <div class="slider"></div>
                                     </label>
                                 </td>
                                 @if(Gate::check('promo_code_edit') && Gate::check('promo_code_delete'))
                                     <td>
                                         @can('promo_code_edit')
-                                            <a href="{{ url('admin/promo_code/'.$PromoCode->id.'/edit') }}" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                            <a href="{{ url('vendor/promo_code/'.$PromoCode->id.'/edit') }}" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                         @endcan
                                         @can('promo_code_delete')
-                                            <a href="javascript:void(0);" class="table-action ml-2 btn btn-danger btn-action" onclick="deleteData('admin/promo_code',{{ $PromoCode->id }},'Promo Code')">
+                                            <a href="javascript:void(0);" class="table-action ml-2 btn btn-danger btn-action" onclick="deleteData('vendor/promo_code',{{ $PromoCode->id }},'Promo Code')">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         @endcan

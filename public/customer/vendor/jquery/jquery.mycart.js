@@ -159,6 +159,7 @@
         var classProductQuantity = 'my-product-quantity';
         var classProductTotal = 'my-product-total';
         var idGrandTotal = 'my-cart-grand-total';
+        var idTotal = 'my-cart-total';
         var idCheckoutCart = 'checkout-my-cart';
         var classProductInput = 'my-product-input';
         var classProductRemove = 'my-product-remove';
@@ -206,7 +207,7 @@
                 //     );
                 // }
 
-                var total = this.quantity * this.price;
+                var total = parseFloat(parseInt(this.quantity) * parseFloat(this.price)).toFixed(2);
                 $cartTable.append(
                     '<div title="' + this.summary + '" data-id="' + this.id + '" data-price="' + this.price + '" class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom menu-list ' + classProduct + '">'+
                     '<div class="media align-items-center">'+
@@ -238,7 +239,7 @@
 
             $cartTable.append(products.length ?
                 '<div class="bg-white p-3 clearfix border-bottom">'+
-                '<p class="mb-1">Item Total <span class="float-right text-dark">$3140</span></p>'+
+                '<p class="mb-1">Item Total <span class="float-right text-dark" id="' + idTotal + '">$</span></p>'+
                 '<p class="mb-1">Restaurant Charges <span class="float-right text-dark">$62.8</span></p>'+
                 '<p class="mb-1">Delivery Fee<span class="text-info ml-1"><i class="feather-info"></i></span><span class="float-right text-dark">$10</span></p>'+
                 '<p class="mb-1 text-success">Total Discount<span class="float-right text-success">$1884</span></p>'+
@@ -280,11 +281,11 @@
             });
         }
         var showGrandTotal = function(products){
-            var total = 0;
+            var total = 0.00;
             $.each(products, function(){
-                total += this.quantity * this.price;
+                total += parseFloat(parseInt(this.quantity) * parseFloat(this.price));
             });
-            $("#" + idGrandTotal).text("$" + total);
+            $("#" + idTotal).text("$" + total.toFixed(2));
         }
         var showDiscountPrice = function(products){
             $("#" + idDiscountPrice).text("$" + options.getDiscountPrice(products));

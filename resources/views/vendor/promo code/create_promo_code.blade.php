@@ -8,8 +8,8 @@
     <div class="section-header">
         <h1>{{__('Create new promo code')}}</h1>
         <div class="section-header-breadcrumb">
-            <div class="breadcrumb-item active"><a href="{{ url('admin/home') }}">{{__('Dashboard')}}</a></div>
-            <div class="breadcrumb-item"><a href="{{ url('admin/promo_code') }}">{{__('Promo code')}}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ url('vendor/home') }}">{{__('Dashboard')}}</a></div>
+            <div class="breadcrumb-item"><a href="{{ url('vendor/promo_code') }}">{{__('Promo code')}}</a></div>
             <div class="breadcrumb-item">{{__('create a promo code')}}</div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <p class="section-lead">{{__('create promo code')}}</p>
         <div class="card">
             <div class="card-body">
-                <form class="container-fuild" action="{{ url('admin/promo_code') }}" method="post"  enctype="multipart/form-data">
+                <form class="container-fuild" action="{{ url('vendor/promo_code') }}" method="post"  enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12 mb-5">
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-6 mb-5" style="display: none;">
                             <label for="vendor">{{__('Promo code valid for this Vendor')}}<span class="text-danger">&nbsp;*</span></label>
                             <select name="vendor_id[]" class="select2 form-control" multiple>
                                 @foreach ($vendors as $vendor)
@@ -85,7 +85,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-12 mb-5">
                             <label for="vendor">{{__('Promo code valid for this Customer')}}<span class="text-danger">&nbsp;*</span></label>
                             <select name="customer_id[]" class="select2 form-control" multiple>
                                 @foreach ($users as $user)

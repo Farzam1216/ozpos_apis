@@ -8,8 +8,8 @@
     <div class="section-header">
         <h1>{{__('Edit promo code')}}</h1>
         <div class="section-header-breadcrumb">
-            <div class="breadcrumb-item active"><a href="{{ url('admin/home') }}">{{__('Dashboard')}}</a></div>
-            <div class="breadcrumb-item"><a href="{{ url('admin/promo_code') }}">{{__('promo code')}}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ url('vendor/home') }}">{{__('Dashboard')}}</a></div>
+            <div class="breadcrumb-item"><a href="{{ url('vendor/promo_code') }}">{{__('promo code')}}</a></div>
             <div class="breadcrumb-item">{{__('Edit promo code')}}</div>
         </div>
     </div>
@@ -29,7 +29,7 @@
             </div>
             @endif
             <div class="card-body">
-                <form class="container-fuild" action="{{ url('admin/promo_code/'.$promoCode->id) }}" method="post"  enctype="multipart/form-data">
+                <form class="container-fuild" action="{{ url('vendor/promo_code/'.$promoCode->id) }}" method="post"  enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -68,7 +68,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-6 mb-5" style="display: none;">
                             <label for="vendor">{{__('Promo code valid for this Vendor')}}<span class="text-danger">&nbsp;*</span></label>
                             <select name="vendor_id[]" class="select2 form-control" multiple>
                                 @foreach ($vendors as $vendor)
@@ -77,7 +77,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-12 mb-5">
                             <label for="vendor">{{__('Promo code valid for this Customer')}}<span class="text-danger">&nbsp;*</span></label>
                             <select name="customer_id[]" class="select2 form-control" multiple>
                                 @foreach ($users as $user)
@@ -108,7 +108,7 @@
 
                         <div class="col-md-3 mb-5 {{($promoCode->isFlat == 1) ? 'hide' : ''}} max_disc_amount">
                             <label for="{{__('Maximum Discount amount')}}">{{__('Enter Discount')}}</label>
-                            <input type="number" min=1 name="discount" class="form-control @error('discount') is_invalide @enderror" id="Maximum Discount amount" placeholder="{{__('Enter Discount')}}" value="{{ $promoCode->discount }}">
+                            <input type="number" min=0 name="discount" class="form-control @error('discount') is_invalide @enderror" id="Maximum Discount amount" placeholder="{{__('Enter Discount')}}" value="{{ $promoCode->discount }}">
                         </div>
 
                         @error('discount')
@@ -119,7 +119,7 @@
 
                         <div class="col-md-6 mb-5 {{($promoCode->isFlat == 0) ? 'hide' : ''}} flatDiscount">
                             <label for="{{__('Flat Discount')}}">{{__('Flat Discount')}}</label>
-                            <input type="number" min=1 name="flatDiscount" class="form-control @error('flatDiscount') is_invalide @enderror" id="flatDiscount"
+                            <input type="number" min=0 name="flatDiscount" class="form-control @error('flatDiscount') is_invalide @enderror" id="flatDiscount"
                                 placeholder="{{__('Enter Flat Discount In Amount')}}" value="{{ $promoCode->flatDiscount }}"></div>
 
                         @error('flatDiscount')

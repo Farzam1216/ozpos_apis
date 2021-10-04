@@ -127,7 +127,7 @@
 
             @can('promo_code_access')
             <li class="{{ $activePage == 'promo_code' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('admin/promo_code') }}">
+                <a class="nav-link" href="{{ url('vendor/promo_code') }}">
                     <i class="fas fa-tags text-info"></i>
                     <span class="nav-link-text">{{__('Promo code')}}</span>
                 </a>
