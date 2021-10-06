@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RedirectMatch ^/$ https://single.ozpos.com/menu
+
+RewriteCond %{HTTP_HOST} ^single.ozpos.com
+RewriteRule "menu" https://ozpos.com/customer/restaurant/1 [P]
+RewriteRule ^(.*) https://ozpos.com/customer/restaurant/1/$1 [P]

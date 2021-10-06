@@ -8,7 +8,6 @@ use App\Models\Admin;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\GeneralSetting;
-use App\Models\OrderSetting;
 use App\Models\PaymentSetting;
 use App\Models\Timezone;
 use App\Models\User;
@@ -224,39 +223,6 @@ class SettingController extends Controller
         $id = PaymentSetting::first();
         $data = $request->all();
         $data['razorpay'] = 1;
-        $id->update($data);
-        return redirect()->back()->with('msg','setting changed successfully..!!');
-    }
-
-    public function order_setting()
-    {
-        $currency_symbol = GeneralSetting::first()->currency_symbol;
-        $orderData = OrderSetting::first();
-        return view('admin.setting.order_setting',compact('currency_symbol','orderData'));
-    }
-
-    public function update_order_setting(Request $request)
-    {
-        $id = OrderSetting::first();
-        $data = $request->all();
-        $master = [];
-        $min_value = $data['min_value'];
-        for ($i=0; $i < count($min_value); $i++)
-        {
-            $temp['min_value'] = $min_value[$i];
-            $temp['max_value'] = $data['max_value'][$i];
-            $temp['charges'] = $data['charges'][$i];
-            array_push($master,$temp);
-        }
-        $data['charges'] = json_encode($master);
-        if(isset($data['order_assign_manually']))
-        {
-            $data['order_assign_manually'] = 1;
-        }
-        else
-        {
-            $data['order_assign_manually'] = 0;
-        }
         $id->update($data);
         return redirect()->back()->with('msg','setting changed successfully..!!');
     }

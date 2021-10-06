@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers;
-   
+
    use App\Mail\Verification;
    use App\Mail\ForgotPassword;
    use App\Mail\StatusChange;
@@ -50,7 +50,7 @@
    use Bavix\Wallet\Models\Transaction;
    use Arr;
    use Log;
-   
+
    class UserApiController extends Controller
    {
       public function apiUserLogin(Request $request)
@@ -65,7 +65,7 @@
              'email_id' => $request->email_id,
              'password' => $request->password,
          ]);
-         
+
          if ($request->provider == 'LOCAL') {
             if (Auth::attempt($user)) {
                $user = Auth::user();
@@ -127,7 +127,7 @@
             }
          }
       }
-      
+
       public function apiUserRegister(Request $request)
       {
          $request->validate([
@@ -139,7 +139,7 @@
          ]);
          $admin_verify_user = GeneralSetting::find(1)->verification;
          $veri = $admin_verify_user == 1 ? 0 : 1;
-         
+
          $data = $request->all();
          $data['password'] = Hash::make($data['password']);
          $data['status'] = 1;
@@ -150,7 +150,7 @@
          $user = User::create($data);
          $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
          $user->roles()->sync($role_id);
-         
+
          if ($user['is_verified'] == 1) {
             $user['token'] = $user->createToken('mealUp')->accessToken;
             return response()->json(['success' => true, 'data' => $user, 'msg' => 'account created successfully..!!'], 200);
@@ -162,7 +162,7 @@
             }
          }
       }
-      
+
       public function apiForgotPassword(Request $request)
       {
          $request->validate([
@@ -180,7 +180,7 @@
             return response(['success' => false, 'data' => 'User not found!!']);
          }
       }
-      
+
       public function apiChangePassword(Request $request)
       {
          $request->validate([
@@ -202,7 +202,7 @@
             return response(['success' => false, 'data' => 'Old password does not match.']);
          }
       }
-      
+
       public function apiSendOtp(Request $request)
       {
          $request->validate([
@@ -223,7 +223,7 @@
             return response(['success' => false, 'msg' => __('User Not Found.')]);
          }
       }
-      
+
       public function apiCancelOrder(Request $request)
       {
          $request->validate([
@@ -240,7 +240,7 @@
          }
          return response(['success' => false, 'data' => 'No record found for this record']);
       }
-      
+
       public function apiSingleMenu($menu_id)
       {
          $menu = Menu::find($menu_id);
@@ -257,7 +257,7 @@
          }
          return response(['success' => true, 'data' => $submenus]);
       }
-      
+
       public function apiSingleVendor($vendor_id)
       {
          $master = array();
@@ -295,7 +295,7 @@
              ])
                  ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                  ->get();
-         
+
 //         $MenuCategoryFormatted = array();
 //         foreach($MenuCategory as $MenuCategoryValue)
 //         {
@@ -342,11 +342,11 @@
          $master['delivery_timeslot'] = WorkingHours::where([['type', 'delivery_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
          $master['pick_up_timeslot'] = WorkingHours::where([['type', 'pick_up_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
          $master['selling_timeslot'] = WorkingHours::where([['type', 'selling_timeslot'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
-         
+
          $now = Carbon::now();
          $today = Carbon::createFromFormat('H:i', '21:00');
          $dayname = $now->format('l');
-         
+
          foreach ($master['delivery_timeslot'] as $value) {
             $arr = json_decode($value['period_list'], true);
             if ($dayname == $value['day_index']) {
@@ -354,7 +354,7 @@
                   $Hour1 = strtotime($a['start_time']);
                   $Hour2 = strtotime($a['end_time']);
                   $startofday = strtotime("01:00 am");
-                  
+
                   $seconds = $Hour2 - $Hour1;
                   $hours = $seconds / 60 / 60;
                   $hours = abs($hours);
@@ -394,7 +394,7 @@
                   $pbeadded = 0;
                   if ($phours < 0) {
                      $premainDay = 24 - $ptts;
-                     
+
                      $pnextday = $pHour2 - $pstartofday;
                      $pd = $pnextday / 60 / 60;
                      $pbeadded = $premainDay + $pd + 1;
@@ -411,7 +411,7 @@
          Log::info(json_encode(['success' => true, 'data' => $master], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $master]);
       }
-   
+
       /**
        * @throws \JsonException
        */
@@ -425,11 +425,11 @@
              'MenuSize.GroupMenuAddon.AddonCategory',
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where('vendor_id', $vendor_id)->get();
-         
+
          Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
-   
+
       /**
        * @throws \JsonException
        */
@@ -445,11 +445,11 @@
              'MenuSize.GroupMenuAddon.AddonCategory',
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where([['id', $item_size_id], ['vendor_id', $vendor_id]])->first();
-         
+
          Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
-      
+
       public function apiPromoCode($vendor_id)
       {
          $promo = PromoCode::where('status', 1);
@@ -464,13 +464,13 @@
          $promo = $promo->whereIn('id', $v)->get();
          return response(['success' => true, 'data' => $promo]);
       }
-      
+
       public function apiTax()
       {
          $taxs = Tax::whereStatus(1)->get(['id', 'name', 'tax', 'type']);
          return response(['success' => true, 'data' => $taxs]);
       }
-      
+
       public function apiApplyPromoCode(Request $request)
       {
          $request->validate([
@@ -480,10 +480,10 @@
              'promocode_id' => 'required',
          ]);
          $data = $request->all();
-         
+
          $currency = GeneralSetting::first()->currency_symbol;
          $promoCode = PromoCode::find($data['promocode_id']);
-         
+
          $users = explode(',', $promoCode->customer_id);
          if (($key = array_search(auth()->user()->id, $users)) !== false) {
             $exploded_date = explode(' - ', $promoCode->start_end_date);
@@ -493,6 +493,7 @@
                   if ($promoCode->coupen_type == 'both') {
                      if ($promoCode->count_max_count < $promoCode->max_count && $promoCode->count_max_order < $promoCode->max_order && $promoCode->count_max_user < $promoCode->max_user) {
                         $promo = PromoCode::where('id', $data['promocode_id'])->first(['id', 'image', 'isFlat', 'flatDiscount', 'discount', 'discountType']);
+                        Log::critical($promo);
                         return response(['success' => true, 'data' => $promo]);
                      } else {
                         return response(['success' => false, 'data' => 'This Coupon is expire..!!']);
@@ -501,6 +502,7 @@
                      if ($promoCode->coupen_type == $data['delivery_type']) {
                         if ($promoCode->count_max_count < $promoCode->max_count && $promoCode->count_max_order < $promoCode->max_order && $promoCode->count_max_user < $promoCode->max_user) {
                            $promo = PromoCode::where('id', $data['promocode_id'])->first(['id', 'image', 'isFlat', 'flatDiscount', 'discount', 'discountType']);
+                          Log::critical($promo);
                            return response(['success' => true, 'data' => $promo]);
                         } else {
                            return response(['success' => false, 'data' => 'This Coupon is expire..!!']);
@@ -519,43 +521,43 @@
             return response(['success' => false, 'data' => 'Coupon is not valid for this user..!!']);
          }
       }
-      
+
       public function apiCuisine()
       {
          $cuisines = Cuisine::where('status', 1)->orderBy('id', 'DESC')->get();
          return response(['success' => true, 'data' => $cuisines]);
       }
-      
+
       public function apiFaq()
       {
          $faqs = Faq::where('type', 'customer')->orderBy('id', 'DESC')->get();
          return response(['success' => true, 'data' => $faqs]);
       }
-      
+
       public function apiBanner()
       {
          $banners = Banner::where('status', 1)->orderBy('id', 'DESC')->get();
          return response(['success' => true, 'data' => $banners]);
       }
-      
+
       public function apiSetting()
       {
          $setting = GeneralSetting::first();
          return response(['success' => true, 'data' => $setting]);
       }
-      
+
       public function apiOrderSetting()
       {
          $setting = OrderSetting::first();
          return response(['success' => true, 'data' => $setting]);
       }
-      
+
       public function apiPaymentSetting()
       {
          $setting = PaymentSetting::first();
          return response(['success' => true, 'data' => $setting]);
       }
-      
+
       public function apiBookOrder(Request $request)
       {
          $request->validate([
@@ -575,7 +577,7 @@
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
-         
+
          if ($bookData['payment_type'] == 'STRIPE') {
             $paymentSetting = PaymentSetting::find(1);
             $stripe_sk = $paymentSetting->stripe_secret_key;
@@ -596,7 +598,7 @@
             }
          }
          $bookData['user_id'] = auth()->user()->id;
-         
+
          if (isset($bookData['promocode_id'])) {
             $promocode = PromoCode::find($bookData['promocode_id']);
             $promocode->count_max_user = $promocode->count_max_user + 1;
@@ -604,7 +606,7 @@
             $promocode->count_max_order = $promocode->count_max_order + 1;
             $promocode->save();
          }
-         
+
          $bookData['order_id'] = '#' . rand(100000, 999999);
          $bookData['vendor_id'] = $vendor->id;
          $order = Order::create($bookData);
@@ -638,16 +640,16 @@
             $tax['admin_commission'] = $amount - $tax['vendor_amount'];
          }
          $order->update($tax);
-         
+
          $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
-         
+
          if ($order->payment_type == 'FLUTTERWAVE') {
             return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
          } else {
             return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
          }
       }
-      
+
       public function apiShowOrder()
       {
          app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
@@ -665,7 +667,7 @@
          }
          return response(['success' => true, 'data' => $orders]);
       }
-      
+
       public function apiVendor(Request $request)
       {
          return Vendor::get();
@@ -703,7 +705,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiCheckOtp(Request $request)
       {
          $request->validate([
@@ -729,7 +731,7 @@
             return response(['success' => false, 'msg' => 'Oops...user not found..!!']);
          }
       }
-      
+
       public function apiUpdateUser(Request $request)
       {
          $data = $request->all();
@@ -740,7 +742,7 @@
          $id->update($data);
          return response(['success' => true, 'data' => 'Update Successfully']);
       }
-      
+
       public function apiUpdateImage(Request $request)
       {
          $request->validate([
@@ -760,7 +762,7 @@
          $id->update($data);
          return response(['success' => true, 'data' => 'image updated succssfully..!!']);
       }
-      
+
       public function apiFaviroute(Request $request)
       {
          $data = auth()->user();
@@ -789,7 +791,7 @@
             return response(['success' => false, 'data' => 'No Restaurant found..!!']);
          }
       }
-      
+
       public function apiNearBy(Request $request)
       {
          $radius = GeneralSetting::first()->radius;
@@ -805,7 +807,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiRestFaviroute(Request $request)
       {
          $user = auth()->user();
@@ -838,13 +840,13 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiUserAddress()
       {
          $user_address = UserAddress::where('user_id', auth()->user()->id)->get();
          return response(['success' => true, 'data' => $user_address]);
       }
-      
+
       public function apiAddAddress(Request $request)
       {
          $request->validate([
@@ -857,13 +859,13 @@
          UserAddress::create($data);
          return response(['success' => true, 'data' => 'user added successfully']);
       }
-      
+
       public function apiEditAddress($address_id)
       {
          $user_address = UserAddress::find($address_id);
          return response(['success' => true, 'data' => $user_address]);
       }
-      
+
       public function apiUpdateAddress(Request $request, $address_id)
       {
          $request->validate([
@@ -875,14 +877,14 @@
          $user_address->update($request->all());
          return response(['success' => true, 'data' => $user_address]);
       }
-      
+
       public function apiRemoveAddress($address_id)
       {
          $id = UserAddress::find($address_id);
          $id->delete();
          return response(['success' => true, 'data' => 'remove successfully..!!']);
       }
-      
+
       public function apiFilter(Request $request)
       {
          $result = Vendor::where('status', 1);
@@ -897,13 +899,13 @@
             }
             $result = $result->whereIn('id', $v);
          }
-         
+
          if (isset($request->quick_filter)) {
             $result = $result->where('vendor_type', $request->quick_filter);
          }
-         
+
          $data = $result->get(['id', 'name', 'image', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
-         
+
          if (isset($request->sorting)) {
             if ($request->sorting == 'high_to_low') {
                $data = $data->sortByDesc('rate')->values()->all();
@@ -912,7 +914,7 @@
                $data = $data->sortBy('rate')->values()->all();
             }
          }
-         
+
          foreach ($data as $vendor) {
             $lat1 = $vendor->lat;
             $lon1 = $vendor->lang;
@@ -946,7 +948,7 @@
          }
          return response(['success' => true, 'data' => $data]);
       }
-      
+
       public function apiVegRest(Request $request)
       {
          $vendors = Vendor::where([['vendor_type', 'veg'], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -983,7 +985,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiNonVegRest(Request $request)
       {
          $vendors = Vendor::where([['vendor_type', 'non_veg'], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -1020,7 +1022,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiTopRest(Request $request)
       {
          $vendors = Vendor::where([['isTop', '1'], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'image', 'name', 'lat', 'lang', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
@@ -1057,7 +1059,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiExploreRest(Request $request)
       {
          $vendors = Vendor::where([['isExplorer', '1'], ['status', 1]])->orderBy('id', 'DESC')->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -1094,7 +1096,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiSingleOrder($id)
       {
          $order = Order::where('id', $id)->first(['id', 'order_id', 'vendor_id', 'amount', 'delivery_person_id', 'order_status', 'address_id', 'promocode_id', 'promocode_price', 'user_id', 'vendor_discount_price', 'delivery_charge']);
@@ -1108,7 +1110,7 @@
          }
          return response(['success' => true, 'data' => $order]);
       }
-      
+
       public function apiCuisineVendor($id)
       {
          $v = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -1121,7 +1123,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiSearch(Request $request)
       {
          $data = $request->all();
@@ -1133,7 +1135,7 @@
          $req['cuisine'] = Cuisine::where('name', 'LIKE', '%' . $data['name'] . "%")->get(['id', 'name', 'image']);
          return response(['success' => true, 'data' => $req]);
       }
-      
+
       public function apiTracking($order_id)
       {
          $order = Order::find($order_id);
@@ -1146,7 +1148,7 @@
          $data = $temp;
          return response(['success' => true, 'data' => $data]);
       }
-      
+
       public function apiAddReview(Request $request)
       {
          $request->validate([
@@ -1183,7 +1185,7 @@
             return response(['success' => false, 'data' => 'Review already addedd...!!']);
          }
       }
-      
+
       public function apiAddFeedback(Request $request)
       {
          $request->validate([
@@ -1214,13 +1216,13 @@
          Feedback::create($data);
          return response(['success' => true, 'data' => "thanks for your feedback"]);
       }
-      
+
       public function FlutterWavepayment($order_id)
       {
          $order = Order::find($order_id);
          return view('flutterPaymentTest', compact('order'));
       }
-      
+
       public function transction_verify(Request $request, $order_id)
       {
          $order = Order::find($order_id);
@@ -1234,7 +1236,7 @@
             return view('cancel');
          }
       }
-      
+
       public function apiUserOrderStatus()
       {
          $user = User::find(auth()->user()->id);
@@ -1242,7 +1244,7 @@
          $order = Order::where('user_id', $user->id)->where([['order_status', '!=', 'COMPLETE'], ['order_status', '!=', 'PENDING'], ['order_status', '!=', 'CANCEL']])->get(['order_status', 'id'])->makeHidden(['vendor', 'user', 'orderItems', 'user_address']);
          return response(['data' => $order, 'success' => true]);
       }
-      
+
       public function apiRefund(Request $request)
       {
          $request->validate([
@@ -1259,7 +1261,7 @@
             return response(['success' => false, 'data' => 'refund request already generated..!!']);
          }
       }
-      
+
       public function apiBankDetails(Request $request)
       {
          $request->validate([
@@ -1272,7 +1274,7 @@
          $user = User::find(auth()->user()->id)->update($data);
          return response(['success' => true, 'data' => 'details update successfully..!!']);
       }
-      
+
       public function sendNotification($user)
       {
          $admin_verify_user = GeneralSetting::find(1)->verification;
@@ -1285,15 +1287,15 @@
             if ($user->language == 'spanish') {
                $msg_content = $verification_content->spanish_notification_content;
                $mail_content = $verification_content->spanish_mail_content;
-               
+
                $sid = GeneralSetting::first()->twilio_acc_id;
                $token = GeneralSetting::first()->twilio_auth_token;
-               
+
                $detail['otp'] = $otp;
                $detail['user_name'] = $user->name;
                $detail['app_name'] = GeneralSetting::first()->business_name;
                $data = ["{otp}", "{user_name}", "{app_name}"];
-               
+
                $user->otp = $otp;
                $user->save();
                if ($mail_verification == 1) {
@@ -1323,15 +1325,15 @@
             } else {
                $msg_content = $verification_content->notification_content;
                $mail_content = $verification_content->mail_content;
-               
+
                $sid = GeneralSetting::first()->twilio_acc_id;
                $token = GeneralSetting::first()->twilio_auth_token;
-               
+
                $detail['otp'] = $otp;
                $detail['user_name'] = $user->name;
                $detail['app_name'] = GeneralSetting::first()->business_name;
                $data = ["{otp}", "{user_name}"];
-               
+
                $user->otp = $otp;
                $user->save();
                if ($mail_verification == 1) {
@@ -1547,7 +1549,7 @@
 //        }
 //        return true;
 //    }
-      
+
       public function apiUserBalance()
       {
          $user = auth()->user();
@@ -1563,12 +1565,12 @@
          }
          return response(['success' => true, 'data' => $transactions]);
       }
-      
+
       public function apiWalletBalance()
       {
          return response(['success' => true, 'data' => auth()->user()->balance]);
       }
-      
+
       public function apiUserAddBalance(Request $request)
       {
          $request->validate([
@@ -1587,7 +1589,7 @@
          WalletPayment::create($transction);
          return response(['success' => true, 'data' => 'balance added']);
       }
-      
+
       public function ForgotPassword($user)
       {
          $verification_content = NotificationTemplate::where('title', 'verification')->first();
@@ -1597,14 +1599,14 @@
          if ($user->language == 'spanish') {
             $msg_content = $verification_content->spanish_notification_content;
             $mail_content = $verification_content->spanish_mail_content;
-            
+
             $sid = GeneralSetting::first()->twilio_acc_id;
             $token = GeneralSetting::first()->twilio_auth_token;
             $detail['otp'] = $otp;
             $detail['user_name'] = $user->name;
             $detail['app_name'] = GeneralSetting::first()->business_name;
             $data = ["{otp}", "{user_name}", "{app_name}"];
-            
+
             $message1 = str_replace($data, $detail, $mail_content);
             // try {
             Mail::to($user->email_id)->send(new Verification($message1));

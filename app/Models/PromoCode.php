@@ -80,13 +80,13 @@ class PromoCode extends Model
         return url('images/upload') . '/'.$this->attributes['image'];
     }
 
-    public function getDiscountAttribute()
-    {
-        if($this->attributes['discount'] == null)
-        {
-            return 0;
-        }
-    }
+//    public function getDiscountAttribute()
+//    {
+//        if($this->attributes['discount'] == null)
+//        {
+//            return 0;
+//        }
+//    }
 
     protected $casts = [
         'flatDiscount' => 'integer',

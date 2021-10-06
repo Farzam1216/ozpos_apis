@@ -1,5 +1,5 @@
 <?php
-   
+
    use Illuminate\Support\Facades\Route;
    use App\Http\Controllers\Admin\HomeController;
    use App\Http\Controllers\Admin\AdminController;
@@ -31,7 +31,7 @@
    use App\Http\Controllers\UserApiController;
    use App\Http\Controllers\Admin\TaxController;
    use App\Http\Controllers\multiDeleteController;
-   
+
    /*
    |--------------------------------------------------------------------------
    | Web Routes
@@ -42,7 +42,7 @@
    | contains the "web" middleware group. Now create something great!
    |
    */
-   
+
    Route::get('/clear-cache', function () {
       Artisan::call('cache:clear');
       Artisan::call('route:clear');
@@ -50,15 +50,15 @@
       Artisan::call('config:clear');
       return "Cache is cleared";
    });
-   
+
    Auth::routes();
-   
+
    Route::get('/admin', [AdminController::class, 'showLogin']);
    Route::get('/import', [AdminController::class, 'import'])->name('import');
-   
+
    Route::get('FlutterWavepayment/{id}', [UserApiController::class, 'FlutterWavepayment']);
    Route::get('transction_verify/{id}', [UserApiController::class, 'transction_verify']);
-   
+
    Route::post('confirm_login', [AdminController::class, 'confirm_login']);
    Route::get('admin/forgot_password', [AdminController::class, 'forgot_password']);
    Route::post('admin/admin_forgot_password', [AdminController::class, 'admin_forgot_password']);
@@ -67,12 +67,12 @@
    Route::middleware(['auth'])->prefix('admin')->group(function () {
       Route::get('orderChart', [HomeController::class, 'orderChart']);
       Route::post('orderChart', [HomeController::class, 'orderChart']);
-      
+
       Route::get('earningChart', [HomeController::class, 'earningChart']);
       Route::post('earningChart', [HomeController::class, 'earningChart']);
       Route::get('topItems', [HomeController::class, 'topItems']);
       Route::get('avarageItems', [HomeController::class, 'avarageItems']);
-      
+
       Route::resources([
           'delivery_person' => Admin\DeliveryPersonController::class,
           'delivery_zone' => Admin\DeliveryZoneController::class,
@@ -91,25 +91,25 @@
           'refund' => Admin\RefaundController::class,
           'tax' => Admin\TaxController::class,
       ]);
-      
+
       Route::get('user_bank_details/{id}', [RefaundController::class, 'user_bank_details']);
       Route::post('refund/refund_status', [RefaundController::class, 'status']);
       Route::post('refund/refaundStripePayment', [RefaundController::class, 'refaundStripePayment']);
       Route::post('refund/confirm_refund', [RefaundController::class, 'confirm_refund']);
-      
+
       Route::get('delivery_person_finance_details/{id}', [DeliveryPersonController::class, 'finance_details']);
       Route::post('driver_make_payment', [DeliveryPersonController::class, 'driver_make_payment']);
       Route::post('driver_settle', [DeliveryPersonController::class, 'driver_settle']);
       Route::get('show_driver_settle_details/{duration}/{driver_id}', [DeliveryPersonController::class, 'show_driver_settle_details']);
       Route::post('/driver_fluterPayment', [DeliveryPersonController::class, 'driver_fluterPayment']);
       Route::get('/driver_transction/{duration}/{driver_id}', [DeliveryPersonController::class, 'driver_transction']);
-      
+
       //Delivery zone area
       Route::get('delivery_zone_area/{id}', [DeliveryZoneAreaController::class, 'index']);
       Route::resource('delivery_zone_area', Admin\DeliveryZoneAreaController::class)->except([
           'index', 'show'
       ]);
-      
+
       Route::get('delivery_zone_area/delivery_zone_area_map/{id}', [DeliveryZoneAreaController::class, 'delivery_zone_area_map']);
       Route::get('order/invoice/{id}', [OrderController::class, 'invoice']);
       Route::get('order/invoice_print/{id}', [OrderController::class, 'invoice_print']);
@@ -119,7 +119,7 @@
           'index', 'create'
       ]);
       Route::get('/vendor_discounts', [VendorDiscountController::class, 'index']);
-      
+
       // Customization type
       Route::get('/customization_type/{id}', [SubmenuCustomizationTypeController::class, 'index']);
       Route::get('/customization_type/create/{id}', [SubmenuCustomizationTypeController::class, 'create']);
@@ -127,14 +127,14 @@
           'index', 'create'
       ]);
       Route::post('customization_type/updateItem', [SubmenuCustomizationTypeController::class, 'updateItem']);
-      
+
       //Customization item
       Route::get('/customization_item/{id}', [SubmenuCustomizationItemController::class, 'index']);
       Route::get('/customization_item/create/{id}', [SubmenuCustomizationItemController::class, 'create']);
       Route::resource('customization_item', Admin\SubmenuCustomizationItemController::class)->except([
           'index', 'create'
       ]);
-      
+
       Route::get('/edit_delivery_time/{id}', [VendorController::class, 'edit_delivery_time']);
       Route::get('/edit_pick_up_time/{id}', [VendorController::class, 'edit_pick_up_time']);
       Route::get('/edit_selling_timeslot/{id}', [VendorController::class, 'edit_selling_timeslot']);
@@ -148,60 +148,58 @@
       Route::post('/fluterPayment', [VendorController::class, 'fluterPayment']);
       Route::get('/transction/{duration}/{vendor_id}', [VendorController::class, 'transction']);
       Route::get('/show_settalement/{duration}', [VendorController::class, 'show_settalement']);
-      
+
       Route::get('/home', [HomeController::class, 'index']);
       Route::get('admin_profile', [AdminController::class, 'admin_profile']);
-      
+
       Route::post('update_admin_profile', [AdminController::class, 'update_admin_profile']);
       Route::post('update_password', [AdminController::class, 'change_password']);
       Route::get('feedback', [AdminController::class, 'feedback']);
-      
+
       //Setting
       Route::get('setting', [SettingController::class, 'setting']);
       Route::get('general_setting', [SettingController::class, 'general_setting']);
-      Route::get('order_setting', [SettingController::class, 'order_setting']);
       Route::get('delivery_person_setting', [SettingController::class, 'delivery_person_setting']);
-      
+
       Route::get('verification_setting', [SettingController::class, 'verification_setting']);
       Route::post('update_verification_seting', [SettingController::class, 'update_verification_seting']);
       Route::post('update_status', [SettingController::class, 'update_status']);
-      
+
       Route::post('update_general_setting', [SettingController::class, 'update_general_setting']);
-      Route::post('update_order_setting', [SettingController::class, 'update_order_setting']);
       Route::post('update_delivery_person_setting', [SettingController::class, 'update_delivery_person_setting']);
-      
+
       Route::post('update_privacy', [SettingController::class, 'update_privacy']);
       Route::post('update_terms', [SettingController::class, 'update_terms']);
       Route::post('update_help', [SettingController::class, 'update_help']);
       Route::post('update_about', [SettingController::class, 'update_about']);
       Route::post('update_company_details', [SettingController::class, 'update_company_details']);
-      
+
       Route::get('notification_setting', [SettingController::class, 'notification_setting']);
       Route::post('update_customer_notification', [SettingController::class, 'update_customer_notification']);
       Route::post('update_driver_notification', [SettingController::class, 'update_driver_notification']);
       Route::post('update_vendor_notification', [SettingController::class, 'update_vendor_notification']);
       Route::post('update_mail_setting', [SettingController::class, 'update_mail_setting']);
-      
+
       Route::post('update_noti', [SettingController::class, 'update_noti']);
-      
+
       Route::get('version_setting', [SettingController::class, 'version_setting']);
       Route::get('static_pages', [SettingController::class, 'static_pages']);
-      
+
       Route::get('payment_setting', [SettingController::class, 'payment_setting']);
       Route::post('update_stripe_setting', [SettingController::class, 'update_stripe_setting']);
       Route::post('update_version_setting', [SettingController::class, 'update_version_setting']);
-      
+
       Route::post('update_paypal', [SettingController::class, 'update_paypal']);
       Route::post('update_razorpay', [SettingController::class, 'update_razorpay']);
       Route::post('update_flutterwave', [SettingController::class, 'update_flutterwave']);
-      
+
       Route::get('vendor_change_password/{id}', [VendorController::class, 'vendor_change_password']);
       Route::post('vendor_update_password/{id}', [VendorController::class, 'vendor_update_password']);
-      
+
       Route::get('vendor_bank_details/{id}', [VendorBankDetailController::class, 'vendor_bank_details']);
       Route::post('add_bank_details', [VendorBankDetailController::class, 'add_bank_details']);
       Route::post('update_bank_details/{id}', [VendorBankDetailController::class, 'update_bank_details']);
-      
+
       //change status
       Route::post('delivery_zone/change_status', [DeliveryZoneController::class, 'change_status']);
       Route::post('delivery_person/change_status', [DeliveryPersonController::class, 'change_status']);
@@ -216,7 +214,7 @@
       Route::post('submenu/selling_timeslot', [SubMenuController::class, 'selling_timeslot']);
       Route::post('settle', [App\Http\Controllers\Admin\VendorController::class, 'settle']);
       Route::post('tax/change_status', [TaxController::class, 'change_status']);
-      
+
       //Change password
       Route::post('change_password', [AdminController::class, 'change_password']);
       Route::get('user_report', [ReportController::class, 'user_report']);
@@ -233,7 +231,7 @@
       Route::post('driver_report', [ReportController::class, 'driver_report']);
       Route::get('earning_report', [ReportController::class, 'earning_report']);
       Route::get('change_language/{name}', [AdminController::class, 'change_language']);
-      
+
       // Multi Delete
       Route::post('/cuisine_multi_delete', [multiDeleteController::class, 'cuisine_delete']);
       Route::post('/vendor_multi_delete', [multiDeleteController::class, 'vendor_delete']);
@@ -248,13 +246,13 @@
       Route::post('/banner_multi_delete', [multiDeleteController::class, 'banner_multi_delete']);
       Route::post('/tax_multi_delete', [multiDeleteController::class, 'tax_multi_delete']);
       Route::post('/vendor_discount_multi_delete', [multiDeleteController::class, 'vendor_discount_multi_delete']);
-      
+
       // Bulk Import
       Route::post('/submenu_import/{id}', [SubMenuController::class, 'submenu_import']);
-      
+
       // download PDF
       Route::get('download_pdf/{excel_file}', [AdminController::class, 'download_pdf']);
-      
+
       // user wallet
       Route::get('user/user_wallet/{user_id}', [UserController::class, 'user_wallet']);
       Route::post('user/user_wallet/{user_id}', [UserController::class, 'user_wallet']);
@@ -272,39 +270,43 @@
    Route::post('admin/admin_forgot_password', [AdminController::class, 'admin_forgot_password']);
    Route::get('vendor/send_otp/{id}', [VendorSettingController::class, 'send_otp']);
    Route::post('vendor/check_otp', [VendorSettingController::class, 'check_otp']);
-   
+
    Route::middleware(['auth'])->prefix('vendor')->group(function () {
       Route::get('user_report', [App\Http\Controllers\Vendor\ReportController::class, 'user_report']);
       Route::post('user_report', [App\Http\Controllers\Vendor\ReportController::class, 'user_report']);
-      
+
       Route::get('order_report', [App\Http\Controllers\Vendor\ReportController::class, 'order_report']);
       Route::post('order_report', [App\Http\Controllers\Vendor\ReportController::class, 'order_report']);
-      
+
       Route::get('cancel_max_order', [VendorSettingController::class, 'cancel_max_order']);
       Route::get('orderChart', [VendorSettingController::class, 'orderChart']);
       Route::get('revenueChart', [VendorSettingController::class, 'revenueChart']);
       Route::get('vendorAvarageTime', [VendorSettingController::class, 'vendorAvarageTime']);
       Route::get('change_password', [VendorSettingController::class, 'change_password']);
       Route::post('update_pwd', [VendorSettingController::class, 'update_pwd']);
-      
+
+
+     Route::get('order_setting', [VendorSettingController::class, 'order_setting']);
+     Route::post('update_order_setting', [VendorSettingController::class, 'update_order_setting']);
+
       Route::get('vendor/vendor_finance_details', [App\Http\Controllers\Vendor\VendorDiscountController::class, 'vendor_finance_details']);
       Route::get('vendor/delivery_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'delivery_timeslot']);
       Route::get('vendor/pickup_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'pickup_timeslot']);
-      
+
       Route::get('vendor/selling_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'selling_timeslot']);
       Route::get('order/transaction/{duration}', [App\Http\Controllers\Vendor\VendorController::class, 'transaction']);
-      
+
       // add_user
       // Route::post('add_user',[App\Http\Controllers\Vendor\VendorController::class,'add_user']);
-      
+
       Route::get('rattings', [App\Http\Controllers\Vendor\VendorController::class, 'rattings']);
-      
+
       Route::get('bank_details', [App\Http\Controllers\Vendor\VendorController::class, 'bank_details']);
       Route::post('add_vendor_bank_details', [App\Http\Controllers\Vendor\VendorController::class, 'add_vendor_bank_details']);
       Route::post('edit_vendor_bank_details/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'edit_vendor_bank_details']);
 
 //    Route::get('twillo',[App\Http\Controllers\Vendor\VendorController::class,'twillo']);
-      
+
       Route::post('cart', [App\Http\Controllers\Vendor\OrderController::class, 'cart']);
       Route::get('DispCustimization/{submenu_id}', [App\Http\Controllers\Vendor\OrderController::class, 'custimization']);
       Route::post('update_custimization', [App\Http\Controllers\Vendor\OrderController::class, 'update_custimization']);
@@ -315,7 +317,7 @@
       Route::post('order/change_status', [App\Http\Controllers\Vendor\OrderController::class, 'change_status']);
       Route::get('month_finanace', [App\Http\Controllers\Vendor\VendorController::class, 'month_finanace']);
       Route::post('month', [App\Http\Controllers\Vendor\VendorController::class, 'month']);
-      
+
       Route::resources([
           'promo_code' => Vendor\PromoCodeController::class,
           'vendor_discount' => Vendor\VendorDiscountController::class,
@@ -328,34 +330,34 @@
       ]);
       Route::get('/custimization_type/{id}', [CustimizationTypeController::class, 'index']);
       Route::get('/custimization_type/create/{id}', [CustimizationTypeController::class, 'create']);
-      
+
       // order
       Route::get('Orders', [App\Http\Controllers\Vendor\OrderController::class, 'index']);
       Route::post('Orders', [App\Http\Controllers\Vendor\OrderController::class, 'index']);
       Route::resource('order', Vendor\OrderController::class)->except([
           'index'
       ]);
-      
+
       Route::post('vendor_menu/{menu_id}', [App\Http\Controllers\Vendor\MenuController::class, 'show']);
-      
+
       Route::post('order/driver_assign', [App\Http\Controllers\Vendor\OrderController::class, 'driver_assign']);
-      
+
       // delivery zone area
       Route::get('deliveryZoneArea/{id}', [DeliveryZoneAreaController::class, 'index']);
       Route::resource('deliveryZoneArea', Admin\DeliveryZoneAreaController::class)->except([
           'index', 'show'
       ]);
-      
+
       Route::get('update_vendor', [VendorSettingController::class, 'update_vendor']);
-      
+
       Route::get('print_thermal/{order_id}', [App\Http\Controllers\Vendor\OrderController::class, 'print_thermal']);
       Route::get('printer_setting', [VendorSettingController::class, 'print_setting']);
       Route::post('update_printer_setting', [VendorSettingController::class, 'update_printer_setting']);
-      
+
       // change status
       Route::post('promo_code/change_status', [PromoCodeController::class, 'change_status']);
    });
-   
+
    Route::post('saveEnvData', [AdminController::class, 'saveEnvData']);
    Route::post('saveAdminData', [AdminController::class, 'saveAdminData']);
 
@@ -442,11 +444,11 @@
 //    Route::get('/order/{order_id}/track', [App\Http\Controllers\Frontend\OrderController::class , 'trackOrder'])
 //        ->name('order.track');
 //});
-   
+
    Route::prefix('restaurant/{id}')->group(function () {
       Route::get('/', [App\Http\Controllers\Frontend\SingleRestaurantController::class, 'index'])
           ->name('single.restaurant.index');
-      
+
       // Route::post('/order', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'book'])
       //                 ->name('single.order.book');
       // Route::get('/order/1', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'first_index'])
@@ -455,32 +457,32 @@
       //                 ->name('single.order.second.index');
       // Route::get('/order/3', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'third_index'])
       //                 ->name('single.order.third.index');
-      
+
       // Route::post('/cart/add', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'add'])
       //                 ->name('single.cart.add');
       // Route::post('/cart/remove', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'remove'])
       //                 ->name('single.cart.remove');
-      
+
       // Route::post('/setting/delivery_type', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'delivery_type'])
       //                 ->name('single.setting.delivery_type');
       // Route::post('/setting/user_address', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'user_address'])
       //                 ->name('single.setting.user_address');
       // Route::post('/setting/user_address/add', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'add_user_address'])
       //                 ->name('single.setting.user_address.add');
-      
+
       // Route::post('/login', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'customer_confirm_login'])
       //                 ->name('single.confirm.login');
    });
-   
-   
+
+
    Route::get('local_print_thermal/{vendorEmail}/{vendorPassword}', [App\Http\Controllers\Vendor\OrderController::class, 'local_print_thermal']);
-   
-   
+
+
    Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index']);
    Route::prefix('customer')->name('customer.')->group(function () {
       Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index'])
           ->name('home.index');
-      
+
       /* Single Restaurant Routes */
       Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
          Route::get('/', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])
@@ -534,6 +536,6 @@
 //            Route::post('/user_address/add', [App\Http\Controllers\Frontend\CustomerController::class , 'add_user_address'])
 //                            ->name('user_address.add');
 //        });
-      
+
       });
    });
