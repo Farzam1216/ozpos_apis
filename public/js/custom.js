@@ -2582,3 +2582,92 @@ function deleteAll(url,name)
     }
 }
 
+function deleteSelectionData(url,name)
+{
+    var allVals = [];
+    $(".sub_chk:checked").each(function() {
+        allVals.push($(this).attr('data-id'));
+    });
+    if(allVals.length <=0)
+    {
+        alert("Please select row.");
+    }
+    else
+    {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    headers:
+                    {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "POST",
+                    url: base_url + '/' + url,
+                    data:{
+                        ids: allVals.join(","),
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success == true) {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                            console.log('result ', result)
+                            Swal.fire(
+                                'Deleted!',
+                                'Your '+name+' has been deleted.',
+                                'success'
+                            )
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: result.data
+                            })
+                        }
+                    },
+                    error: function (err) {
+                        console.log('err ', err)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'This record is conntect with another data!'
+                        })
+                    }
+                });
+            }
+        });
+    }
+}
+
+
+function updateData(url,id) {
+   $.ajax({
+      headers:
+          {
+             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+      type: "GET",
+      url: base_url + '/' + url + '/' + id + '/edit',
+      success: function (result) {
+         if (result.success == true) {
+            $('#update_form').attr("action", base_url + "/" + url + "/" + result.data.id);
+            // $('#update_image').attr('src', result.data.image);
+            $('#update').val(result.data.name);
+            // $('#update_menu_category_id').val(result.data.menu_category_id);
+         }
+      },
+      error: function (err) {
+         console.log('err ', err)
+      }
+   });
+}
