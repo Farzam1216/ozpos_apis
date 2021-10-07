@@ -257,8 +257,8 @@
                     <span>{{__('Menu Category')}}</span>
                 </a>
             </li>
-      
-      
+
+
             <li class="dropdown {{ $activePage == 'vendor_item_category' ? 'active' : ''}} || {{ $activePage == 'vendor_item_size' ? 'active' : ''}} || {{ $activePage == 'vendor_addons' ? 'active' : ''}} || {{ $activePage == 'vendor_menu' ? 'active' : ''}} || {{ $activePage == 'vendor_menu_category' ? 'active' : ''}}">
                <a href="javascript:void(0);" class="nav-link has-dropdown">
                   <i class="fas fa-file-alt text-warning"></i>
@@ -276,13 +276,13 @@
                      </a>
                   </li>
                   <li class="{{ $activePage == 'vendor_addons' ? 'active' : ''}}">
-                     <a href="{{ url('vendor/addons') }}">
-                        Item Sizes
+                     <a href="{{ url('vendor/addon_category') }}">
+                        Addons
                      </a>
                   </li>
                   <li class="{{ $activePage == 'vendor_menu' ? 'active' : ''}}">
                      <a href="{{ url('vendor/menu') }}">
-                        Item Sizes
+                        Menus
                      </a>
                   </li>
                   <li class="{{ $activePage == 'vendor_menu_category' ? 'active' : ''}}">
@@ -294,7 +294,7 @@
             </li>
             @endcan
 
-            
+
             @can('vendor_reviews')
             <li class="{{ $activePage == 'rattings' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('vendor/rattings') }}">

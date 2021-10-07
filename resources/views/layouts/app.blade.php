@@ -7,8 +7,9 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
 
     @php
-        $title = App\Models\GeneralSetting::find(1)->business_name;
-        $favicon = App\Models\GeneralSetting::find(1)->favicon;
+        $GeneralSetting = App\Models\GeneralSetting::first();
+        $title = $GeneralSetting->business_name;
+        $favicon = $GeneralSetting->favicon;
     @endphp
 
     <title>{{ $title }} | @yield('title')</title>

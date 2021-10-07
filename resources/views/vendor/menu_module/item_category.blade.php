@@ -5,7 +5,7 @@
 @section('title',$title)
 
 @section('content')
-   
+
    <section class="section">
       @if (Session::has('msg'))
          <script>
@@ -18,8 +18,8 @@
             });
          </script>
       @endif
-      
-      @if (old('old_value') == "add_menu")
+
+      @if (old('old_value') == "add")
          <script type="text/javascript">
             $(function () {
                $('#insert_modal').modal();
@@ -27,7 +27,7 @@
             });
          </script>
       @endif
-      
+
       @if (old('old_value') == "update")
          <script type="text/javascript">
             window.onload = () => {
@@ -35,7 +35,7 @@
             }
          </script>
       @endif
-      
+
       <div class="section-header">
          <h1>{{ $title }}</h1>
          <div class="section-header-breadcrumb">
@@ -46,7 +46,7 @@
             </div>
          </div>
       </div>
-      
+
       <div class="section-body">
          <h2 class="section-title">Item category management</h2>
          {{--         <p class="section-lead">{{__('Add, and categorize the menu adding sub-menus. (Add,Edit & Manage Menu Categories )')}}</p>--}}
@@ -95,15 +95,15 @@
             </div>
          </div>
       </div>
-   
+
    </section>
-   
+
    <div class="modal right fade" id="insert_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
             <form class="container-fuild" action="{{ url('vendor/item_category') }}" method="post" enctype="multipart/form-data">
                @csrf
-               <input type="hidden" name="old_value" value="add_menu">
+               <input type="hidden" name="old_value" value="add">
                <input type="hidden" name="vendor_id" value="{{ $Vendor->id }}">
                <div class="modal-header">
                   <h5 class="text-primary">Add</h5>
@@ -115,14 +115,14 @@
                   <div class="form-group">
                      <label class="form-control-label">Name<span class="text-danger">&nbsp;*</span></label>
                      <input class="form-control @error('name') is-invalid @enderror" name="name" type="text" placeholder="{{ $title }} Name" required value="{{ old('name') }}">
-                     
+
                      @error('name')
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
                   <hr class="my-3">
-                  
+
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                      <input type="submit" value="{{__('Save')}}" class="btn btn-primary">
@@ -132,7 +132,7 @@
          </div>
       </div>
    </div>
-   
+
    <div class="modal right fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -150,13 +150,13 @@
                <div class="modal-body">
                   <div class="form-group">
                      <label class="form-control-label">Name<span class="text-danger">&nbsp;*</span></label>
-                     <input class="form-control @error('name') is-invalid @enderror" name="name" type="text" placeholder="{{ $title }} Name" id="update" required value="{{ old('name') }}">
-                     
+                     <input class="populate form-control @error('name') is-invalid @enderror" name="name" type="text" placeholder="{{ $title }} Name" required value="{{ old('name') }}">
+
                      @error('name')
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                      <input type="submit" value="{{__('Update')}}" class="btn btn-primary">
