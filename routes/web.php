@@ -331,6 +331,7 @@ Route::middleware(['auth'])->prefix('vendor')->group(function () {
   Route::get('addon/{addon_category_id}', [App\Http\Controllers\Vendor\MenuModule\AddonController::class, 'index']);
   Route::get('menu_size/{menu_id}', [App\Http\Controllers\Vendor\MenuModule\MenuSizeController::class, 'index']);
   Route::get('menu_addon/{menu_id}', [App\Http\Controllers\Vendor\MenuModule\MenuAddonController::class, 'index']);
+  Route::get('menu_addon/{menu_id}/menu_size/{menu_size_id}', [App\Http\Controllers\Vendor\MenuModule\MenuAddonController::class, 'index']);
 
   Route::resources([
     'promo_code' => Vendor\PromoCodeController::class,

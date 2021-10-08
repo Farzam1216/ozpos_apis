@@ -46,6 +46,9 @@
         <div class="section-header-breadcrumb">
           <div class="breadcrumb-item active"><a href="{{ url('vendor/vendor_home') }}">{{__('Dashboard')}}</a></div>
           <div class="breadcrumb-item active"><a href="{{ url('vendor/menu') }}">Menu</a></div>
+           @if($menu_size_id !== null)
+              <div class="breadcrumb-item active"><a href="{{ url('vendor/menu_size/'.$menu_id) }}">Menu Size</a></div>
+           @endif
           <div class="breadcrumb-item">{{ $title }}</div>
         </div>
       </div>
@@ -112,6 +115,7 @@
           <input type="hidden" name="old_value" value="add">
           <input type="hidden" name="vendor_id" value="{{ $Vendor->id }}">
           <input type="hidden" name="menu_id" value="{{ $menu_id }}">
+          <input type="hidden" name="menu_size_id" value="{{ $menu_size_id }}">
           <div class="modal-header">
             <h5 class="text-primary">Add</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -160,6 +164,7 @@
           <input type="hidden" name="old_value" value="update">
           <input type="hidden" name="vendor_id" value="{{ $Vendor->id }}">
           <input type="hidden" name="menu_id" value="{{ $menu_id }}">
+          <input type="hidden" name="menu_size_id" value="{{ $menu_size_id }}">
           <div class="modal-header">
             <h5 class="text-primary">Update</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
