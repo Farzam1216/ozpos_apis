@@ -1,0 +1,52 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <option name="AUTODETECT_INDENTS" value="false" />
+    <HTMLCodeStyleSettings>
+      <option name="HTML_UNIFORM_INDENT" value="true" />
+      <option name="HTML_ATTRIBUTE_WRAP" value="0" />
+      <option name="HTML_TEXT_WRAP" value="0" />
+      <option name="HTML_KEEP_LINE_BREAKS" value="false" />
+      <option name="HTML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
+      <option name="HTML_KEEP_BLANK_LINES" value="1" />
+      <option name="HTML_ALIGN_TEXT" value="true" />
+      <option name="HTML_KEEP_WHITESPACES_INSIDE" value="" />
+      <option name="HTML_ENFORCE_QUOTES" value="true" />
+    </HTMLCodeStyleSettings>
+    <PHPCodeStyleSettings>
+      <option name="INDENT_CODE_IN_PHP_TAGS" value="true" />
+    </PHPCodeStyleSettings>
+    <editorconfig>
+      <option name="ENABLED" value="false" />
+    </editorconfig>
+    <codeStyleSettings language="Blade">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="3" />
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+        <option name="TAB_SIZE" value="3" />
+        <option name="SMART_TABS" value="true" />
+        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="HTML">
+      <option name="RIGHT_MARGIN" value="0" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="3" />
+        <option name="TAB_SIZE" value="3" />
+        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="JavaScript">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="3" />
+        <option name="TAB_SIZE" value="3" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="PHP">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="3" />
+        <option name="TAB_SIZE" value="3" />
+        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
+  </code_scheme>
+</component>
