@@ -35,5 +35,5 @@ class UserAddress extends Model
 
     protected $table = 'user_address';
 
-    protected $fillable = ['user_id','lat','lang','address','type'];
+    protected $fillable = ['user_id','lat','lang','address','type', 'selected'];
 }
