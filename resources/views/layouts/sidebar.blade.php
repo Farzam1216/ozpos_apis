@@ -287,7 +287,7 @@
                   </li>
                   <li class="{{ $activePage == 'vendor_menu_category' ? 'active' : ''}}">
                      <a href="{{ url('vendor/menu_category') }}">
-                        Item Sizes
+                        Menu Category
                      </a>
                   </li>
                </ul>

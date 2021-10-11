@@ -2562,10 +2562,14 @@ function updateData(url, id) {
         $('#update_form').attr("action", base_url + "/" + url + "/" + result.data.id);
 
         $(".populate").each(function () {
-          if ($(this).attr("name") !== 'image')
-            $(this).val(result.data[$(this).attr("name")]);
+          if ($(this).attr("name") === 'image')
+             $('#update_image').attr('src', result.data[$(this).attr("name")]);
+          else if ($(this).attr("name") === 'status')
+             $(this).prop('checked', result.data[$(this).attr("name")]);
+          else if ($(this).attr("name") === 'type')
+             $('#update_type option[value="'+result.data[$(this).attr("name")]+'"]').attr("selected","selected");
           else
-            $('#update_image').attr('src', result.data[$(this).attr("name")]);
+             $(this).val(result.data[$(this).attr("name")]);
         });
         console.log(result);
         // $('#update_image').attr('src', result.data.image);

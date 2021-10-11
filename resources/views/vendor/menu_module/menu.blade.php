@@ -195,7 +195,7 @@
                 @enderror
 
                 <label class="form-control-label">Discount Price</label>
-                <input class="form-control @error('display_discount_price') is-invalid @enderror" id="display_discount_price" name="display_discount_price" type="text" placeholder="{{ $title }} Max" value="{{ old('display_discount_price') }}">
+                <input class="form-control @error('display_discount_price') is-invalid @enderror" id="display_discount_price" name="display_discount_price" type="text" placeholder="{{ $title }} Discount Price" value="{{ old('display_discount_price') }}">
                 @error('display_discount_price')
                 <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                 @enderror
@@ -290,7 +290,7 @@
                 @enderror
 
                 <label class="form-control-label">Discount Price</label>
-                <input class="populate form-control @error('display_discount_price') is-invalid @enderror" id="update_display_discount_price" name="display_discount_price" type="text" placeholder="{{ $title }} Max" value="{{ old('display_discount_price') }}">
+                <input class="populate form-control @error('display_discount_price') is-invalid @enderror" id="update_display_discount_price" name="display_discount_price" type="text" placeholder="{{ $title }} Discount Price" value="{{ old('display_discount_price') }}">
                 @error('display_discount_price')
                 <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                 @enderror

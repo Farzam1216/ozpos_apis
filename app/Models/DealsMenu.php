@@ -41,7 +41,7 @@
       
       protected $table = 'deals_menu';
       
-      protected $fillable = ['vendor_id', 'menu_category_id', 'name', 'image', 'description', 'price', 'status'];
+      protected $fillable = ['vendor_id', 'menu_category_id', 'name', 'image', 'description', 'price', 'display_price', 'display_discount_price', 'status'];
       
       protected $casts = [
           'price' => 'decimal:2',
