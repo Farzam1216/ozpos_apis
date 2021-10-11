@@ -331,6 +331,7 @@
       Route::post('single_menu/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\SingleMenuController::class, 'selection_destroy']);
       Route::post('half_n_half_menu/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\HalfNHalfMenuController::class, 'selection_destroy']);
       Route::post('deals_menu/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\DealsMenuController::class, 'selection_destroy']);
+      Route::post('deals_items/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\DealsItemsController::class, 'selection_destroy']);
       
       Route::get('addon/{addon_category_id}', [App\Http\Controllers\Vendor\MenuModule\AddonController::class, 'index']);
       Route::get('menu_size/{menu_id}', [App\Http\Controllers\Vendor\MenuModule\MenuSizeController::class, 'index']);
@@ -339,6 +340,7 @@
       Route::get('single_menu/{menu_category_id}', [App\Http\Controllers\Vendor\MenuModule\SingleMenuController::class, 'index']);
       Route::get('half_n_half_menu/{menu_category_id}', [App\Http\Controllers\Vendor\MenuModule\HalfNHalfMenuController::class, 'index']);
       Route::get('deals_menu/{menu_category_id}', [App\Http\Controllers\Vendor\MenuModule\DealsMenuController::class, 'index']);
+      Route::get('deals_items/{deals_menu_id}', [App\Http\Controllers\Vendor\MenuModule\DealsItemsController::class, 'index']);
    
       Route::resources([
           'promo_code' => Vendor\PromoCodeController::class,
@@ -363,6 +365,7 @@
           'single_menu' => Vendor\MenuModule\SingleMenuController::class,
           'half_n_half_menu' => Vendor\MenuModule\HalfNHalfMenuController::class,
           'deals_menu' => Vendor\MenuModule\DealsMenuController::class,
+          'deals_items' => Vendor\MenuModule\DealsItemsController::class,
       ]);
       Route::get('/custimization_type/{id}', [CustimizationTypeController::class, 'index']);
       Route::get('/custimization_type/create/{id}', [CustimizationTypeController::class, 'create']);
