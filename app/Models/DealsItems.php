@@ -36,6 +36,7 @@ class DealsItems extends Eloquent
     use HasFactory;
 
     protected $table = 'deals_items';
+    protected $primaryKey = 'id';
 
     protected $fillable = ['vendor_id', 'menu_category_id', 'item_category_id', 'item_size_id', 'deals_menu_id', 'name'];
 

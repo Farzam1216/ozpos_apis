@@ -261,7 +261,7 @@
       public function apiSingleVendor($vendor_id)
       {
          $master = array();
-         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'lat', 'lang', 'cuisine_id'])->makeHidden(['vendor_logo']);
+         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax_type', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'lat', 'lang', 'cuisine_id'])->makeHidden(['vendor_logo']);
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
          }

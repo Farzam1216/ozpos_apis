@@ -103,6 +103,9 @@
                            </button>
                            <a href="javascript:void(0);" class="table-action btn btn-danger btn-action" onclick="deleteData('vendor/deals_menu',{{ $item->id }},'{{ $title }}')">
                               <i class="fas fa-trash"></i> </a>
+                           <a href="{{ url('vendor/deals_items/'.$item->id) }}" class="btn btn-warning btn-action mr-1" data-toggle="tooltip" data-original-title="Deals Items">
+                              <i class="fas fa-utensils"></i>
+                           </a>
                         </td>
                      </tr>
                   @endforeach

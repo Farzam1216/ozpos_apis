@@ -3,6 +3,7 @@
    namespace App\Http\Controllers\Vendor\MenuModule;
    
    use App\Http\Controllers\CustomController;
+   use App\Models\DealsMenu;
    use App\Models\ItemCategory;
    use App\Models\DealsItems;
    use App\Models\DealsItemsItemCategory;
@@ -25,8 +26,9 @@
       public function index($deals_menu_id): View
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         $DealsItems = DealsItems::where([['vendor_id', $Vendor->id], ['deals_menu_id', $deals_menu_id]])->get();
-         return view('vendor.menu_module.deals_items', compact('Vendor', 'DealsItems', 'deals_menu_id'));
+         $menu_category_id = DealsMenu::find($deals_menu_id)->menu_category_id;
+         $DealsItems = DealsItems::with(['ItemCategory', 'ItemSize'])->where([['vendor_id', $Vendor->id], ['deals_menu_id', $deals_menu_id]])->get();
+         return view('vendor.menu_module.deals_items', compact('Vendor', 'DealsItems', 'menu_category_id', 'deals_menu_id'));
       }
       
       /**
@@ -48,11 +50,11 @@
       public function store(Request $request): RedirectResponse
       {
          $request->validate([
-             'item_category_id' => 'required',
-             'item_size_id' => 'required',
              'menu_category_id' => 'required',
              'deals_menu_id' => 'required',
              'name' => 'required',
+             'item_category_id' => 'required',
+             'item_size_id' => 'required',
          ]);
          
          $data = $request->all();
@@ -71,16 +73,16 @@
       {
       
       }
-      
+   
       /**
        * Show the form for editing the specified resource.
        *
        * @param DealsItems $DealsItems
        * @return Response
        */
-      public function edit(DealsItems $DealsItems): Response
+      public function edit(DealsItems $DealsItem): Response
       {
-         return response(['success' => true , 'data' => $DealsItems]);
+         return response(['success' => true , 'data' => $DealsItem]);
       }
       
       /**
@@ -90,46 +92,19 @@
        * @param DealsItems $DealsItems
        * @return RedirectResponse
        */
-      public function update(Request $request, DealsItems $DealsItems): RedirectResponse
+      public function update(Request $request, DealsItems $DealsItem): RedirectResponse
       {
          $request->validate([
+             'menu_category_id' => 'required',
+             'deals_menu_id' => 'required',
              'name' => 'required',
-             'description' => 'required',
-             'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'item_category_id' => 'required',
+             'item_size_id' => 'required',
          ]);
          
          $data = $request->all();
          
-         
-         ////////// price \\\\\\\\\\
-         if (isset($data['display_discount_price']))
-            $data['price'] = $data['display_discount_price'];
-         else
-            $data['price'] = $data['display_price'];
-         
-         
-         ////////// image \\\\\\\\\\
-         if ($request->hasfile('image'))
-         {
-            $request->validate(
-                ['image' => 'max:1000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
-                ]);
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsItems->id)->value('image'));
-            $data['image'] = (new CustomController)->uploadImage($data['image']);
-         }
-         
-         
-         ////////// status \\\\\\\\\\
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
-         
-         
-         $DealsItems->update($data);
+         $DealsItem->update($data);
          return redirect()->back()->with('msg','Deals Items updated.');
       }
       
@@ -139,10 +114,9 @@
        * @param DealsItems $DealsItems
        * @return Response
        */
-      public function destroy(DealsItems $DealsItems): Response
+      public function destroy(DealsItems $DealsItem): Response
       {
-         (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsItems->id)->value('image'));
-         $DealsItems->delete();
+         $DealsItem->delete();
          return response(['success' => true]);
       }
       
@@ -156,12 +130,7 @@
       {
          $data = $request->all();
          $ids = explode(',', $data['ids']);
-         $DealsItemss = DealsItems::whereIn('id',$ids)->get();
-         foreach ($DealsItemss as $DealsItems)
-         {
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsItems->id)->value('image'));
-            $DealsItems->delete();
-         }
+         $DealsItemss = DealsItems::whereIn('id',$ids)->delete();
          return response(['success' => true]);
       }
    }
