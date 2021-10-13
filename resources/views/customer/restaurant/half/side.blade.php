@@ -5,6 +5,7 @@
          $SingleMenu = $SingleMenuItemCategory->SingleMenu()->get()->first();
          $Menu = $SingleMenu->Menu()->get()->first();
          $MenuSize = $Menu->MenuSize()->where('item_size_id', $ItemSize->id )->get()->first();
+         if(!$MenuSize) continue;
          $Menu = App\Models\Menu::where('id', $MenuSize->menu_id )->get()->first();
          
          if($MenuSize->price != 0) $MenuSize->price = $MenuSize->price / 2;

@@ -73,7 +73,7 @@ class MenuController extends Controller
     if ($file = $request->hasfile('image'))
     {
       $request->validate(
-        ['image' => 'max:1000'],
+        ['image' => 'max:5000'],
         [
           'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
         ]);
@@ -148,7 +148,7 @@ class MenuController extends Controller
     if ($request->hasfile('image'))
     {
       $request->validate(
-        ['image' => 'max:1000'],
+        ['image' => 'max:5000'],
         [
           'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
         ]);
