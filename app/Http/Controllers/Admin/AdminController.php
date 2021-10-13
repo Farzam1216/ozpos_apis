@@ -30,14 +30,14 @@ class AdminController extends Controller
 {
     public function showLogin()
     {
-        if (env('DB_DATABASE'))
-        {
+        // if (env('DB_DATABASE'))
+        // {
             return view('auth.login');
-        }
-        else
-        {
-            return view('first_page');
-        }
+        // }
+        // else
+        // {
+        //     return view('first_page');
+        // }
     }
 
     public function confirm_login(Request $request)

@@ -88,6 +88,11 @@
                             <i class="fas fa-users text-success"></i><span>{{__('Delivery zone')}}</span>
                         </a>
                     </li>
+                    <li class="{{ $activePage == 'delivery_zone' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('vendor/deliveryZoneNew') }}">
+                            <i class="fas fa-users text-success"></i><span>{{__('Delivery zone new')}}</span>
+                        </a>
+                    </li>
                     @endif
                 @endif
             @endcan

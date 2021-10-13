@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3",
+        "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^2.10",
         "bavix/laravel-wallet": "^6.1",
         "berkayk/onesignal-laravel": "^1.0",
@@ -16,6 +17,7 @@
         "craftsys/msg91-laravel": "^0.12.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
+        "grimzy/laravel-mysql-spatial": "5.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "hardevine/shoppingcart": "^3.0",
         "kreait/laravel-firebase": "^3.1",
@@ -30,8 +32,7 @@
         "spatie/laravel-http-logger": "^1.7",
         "stripe/stripe-php": "^7.66",
         "tanmuhittin/laravel-google-translate": "^2.0",
-        "twilio/sdk": "^6.13",
-      "ext-json": "*"
+        "twilio/sdk": "^6.13"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
