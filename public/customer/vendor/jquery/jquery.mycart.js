@@ -160,6 +160,7 @@
         var classProductTotal = 'my-product-total';
         var idGrandTotal = 'my-cart-grand-total';
         var idTotal = 'my-cart-total';
+        // var idCoupons = 'my-cart-coupon';
         var idCheckoutCart = 'checkout-my-cart';
         var classProductInput = 'my-product-input';
         var classProductRemove = 'my-product-remove';
@@ -239,19 +240,23 @@
 
             $cartTable.append(products.length ?
                 '<div class="bg-white p-3 clearfix border-bottom">'+
+                '<p class="mb-1"><div class="row"><div class="col-md-6"><input type="text" id="coupon" name="promo_coupon" placeholder="Apply Coupon Code here" class="form-control"></div><div class="col-md-6"> <span class="float-right text-dark" id=""><button  class="btn btn-primary btn-sm" id="applyCoupon" >Apply Coupon</button></span></div></div></p>'+
                 '<p class="mb-1">Item Total <span class="float-right text-dark" id="' + idTotal + '">$</span></p>'+
+                '<p class="mb-1">Apply Coupon <span class="float-right text-dark" id="idCoupons" class="idCoupons"><span id="idCoupons">$0</span></span></p>'+
+                '<p class="mb-1"><input type="hidden" name="idTotal" id="idTotal"></p>'+
                 '<p class="mb-1">Restaurant Charges <span class="float-right text-dark">$62.8</span></p>'+
                 '<p class="mb-1">Delivery Fee<span class="text-info ml-1"><i class="feather-info"></i></span><span class="float-right text-dark">$10</span></p>'+
-                '<p class="mb-1 text-success">Total Discount<span class="float-right text-success">$1884</span></p>'+
+                '<p class="mb-1 text-success">Total Discount<span class="float-right text-success" id="idTotals">$0</span></p>'+
                 '<hr>'+
                 '<h6 class="font-weight-bold mb-0">TO PAY <span class="float-right" id="' + idGrandTotal + '">$</span></h6>'+
                 '</div>'
-                : '<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Your cart is empty</div>'
+                :'<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Your cart is empty</div>'
 
 
 
 
             );
+
 
             // var discountPrice = options.getDiscountPrice(products);
             // if(discountPrice !== null) {
@@ -286,6 +291,11 @@
                 total += parseFloat(parseInt(this.quantity) * parseFloat(this.price));
             });
             $("#" + idTotal).text("$" + total.toFixed(2));
+
+            console.log(total);
+            $("#idTotal").val(total);
+
+            $("#idTotals").text("$" + total.toFixed(2));
         }
         var showDiscountPrice = function(products){
             $("#" + idDiscountPrice).text("$" + options.getDiscountPrice(products));
@@ -396,6 +406,41 @@
     }
 
 
+
+    $(document).on('click', '#applyCoupon', function(){
+      let base_url = window.location.origin;
+          //  alert('asdasd');
+          $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+           console.log($("#coupon").val());
+           var coupon = $("#coupon").val();
+            var idTotal = $("#idTotal").val();
+           $.ajax({
+
+            url: base_url+"/customer/restaurant/coupon",
+            method: "GET",
+            data:{coupon:coupon,idTotal:idTotal},
+            success: function(response) {
+              console.log(response);
+              // $("#idCoupons").append(
+              //   '<span>'+response+'</span>'
+              // );
+              // $("#idCoupons").val(response);
+              $("#idCoupons").text("$" + response.toFixed(2));
+
+              var idTotal = $("#idTotal").val();
+
+              $("#idTotals").text("$" + total.toFixed(2));
+              // alert(response);
+            }
+          });
+        });
+
+
+
     var MyCart = function (target, userOptions) {
         /*
         PRIVATE
@@ -437,3 +482,5 @@
 
 
 })(jQuery);
+
+

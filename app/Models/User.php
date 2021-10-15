@@ -139,4 +139,8 @@ class User extends Authenticatable implements Wallet
     {
         return url('images/upload') . '/'.$this->attributes['image'];
     }
+    public function userAddress()
+    {
+        return $this->belongsTo(UserAddress::class, 'user_id','id');
+    }
 }

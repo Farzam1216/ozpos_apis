@@ -376,6 +376,6 @@
                 </div><!-- End container  -->
                 <!-- End Content =============================================== -->
             </div><!-- End Map -->
-        </div>
+          </div>
     </div>
 </div><!-- End modal -->

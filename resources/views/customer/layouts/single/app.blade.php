@@ -5,17 +5,17 @@
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    <meta name="description" content="Askbootstrap">
    <meta name="author" content="Askbootstrap">
-   
+
    <!-- CSRF Token -->
    <meta name="csrf-token" content="{{ csrf_token() }}">
-   
+
    @php
       $title = App\Models\GeneralSetting::find(1)->business_name;
       $favicon = App\Models\GeneralSetting::find(1)->favicon;
    @endphp
    <link rel="icon" type="image/png" href="{{ url('images/upload/'.$favicon) }}">
    <title>@yield('title') | @yield('subtitle')</title>
-   
+
    <!-- Slick Slider -->
    <link rel="stylesheet" type="text/css" href="{{ url('/customer/vendor/slick/slick.min.css')}}?v={{ env('APP_V') }}"/>
    <link rel="stylesheet" type="text/css" href="{{ url('/customer/vendor/slick/slick-theme.min.css')}}?v={{ env('APP_V') }}"/>
@@ -27,7 +27,7 @@
    <link href="{{ url('/customer/css/style.css')}}?v={{ env('APP_V') }}" rel="stylesheet">
    <!-- Sidebar CSS -->
    <link href="{{ url('/customer/vendor/sidebar/demo.css')}}?v={{ env('APP_V') }}" rel="stylesheet">
-   
+
    <!-- Dynamic Color Scheme -->
    @php
       $color = App\Models\GeneralSetting::find(1)->site_color;
@@ -69,6 +69,9 @@
 @include('customer.modals.filters')
 
 @yield('custom_modals')
+
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=drawing&v=3"></script> --}}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=geometry,places&ext=.js"></script>
 
 <!-- Bootstrap core JavaScript -->
 <script type="text/javascript" src="{{ url('/customer/vendor/jquery/jquery.min.js')}}?v={{ env('APP_V') }}"></script>

@@ -30,7 +30,8 @@
    use App\Http\Controllers\Admin\ReportController;
    use App\Http\Controllers\UserApiController;
    use App\Http\Controllers\Admin\TaxController;
-   use App\Http\Controllers\multiDeleteController;
+use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\multiDeleteController;
 
    /*
    |--------------------------------------------------------------------------
@@ -404,7 +405,20 @@
    Route::post('saveAdminData', [AdminController::class, 'saveAdminData']);
 
 
-//Route::prefix('customer')->name('customer.')->group(function () {
+   /////////////////////////  Customer ////////////////////////////////////////////////////////////////////
+   Route::get('/customer/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('customer.login');
+   Route::get('/customer/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('customer.signup');
+   Route::post('/customer/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
+   Route::post('/customer/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
+   Route::post('customer/delivery/location',[CustomerController::class,'deliveryLocation'])->name('delivery.location');
+
+   Route::get('customer/restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
+
+
+
+
+
+   //Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
 //                ->name('home.index');
 //

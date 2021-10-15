@@ -35,5 +35,10 @@ class UserAddress extends Model
 
     protected $table = 'user_address';
 
-    protected $fillable = ['user_id','lat','lang','zone_id','address','type', 'selected'];
+    protected $fillable = ['user_id','lat','lang','address','type','selected'];
+
+    public function user()
+    {
+        return $this->hasMany(User::class,'user_id','id');
+    }
 }

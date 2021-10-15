@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Customer;
-   
+
    use App\Http\Controllers\Controller;
    use App\Models\MenuCategory;
    use App\Models\Vendor;
@@ -13,7 +13,7 @@
    use App\Models\WorkingHours;
    use Carbon\Carbon;
    use DB;
-   
+
    class RestaurantController extends Controller
    {
       /*
@@ -28,10 +28,10 @@
 //        dd($singleVendor);
          return view('customer/restaurant', compact('rest', 'singleVendor', 'page'));
       }
-      
-      
+
+
       /* -------------------------------------------------------------------------------------------------------- */
-      
+
       public function enabledRest(/* Request $request */)
       {
          $vendors = Vendor::where([['status', 1]])->orderBy('id', 'DESC')->get()->makeHidden(['vendor_logo']);
@@ -63,7 +63,7 @@
             } else {
                $vendor['distance'] = '?';
             }
-            
+
             if (auth('api')->user() != null) {
                $user = auth('api')->user();
                $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
@@ -73,7 +73,7 @@
          }
          return $vendors;
       }
-      
+
       public function getRest($id)
       {
          $vendor = Vendor::where('id', $id)->first();
@@ -110,8 +110,8 @@
          // }
          return $vendor;
       }
-      
-      
+
+
       public function singleVendor($vendor_id)
       {
          $master = array();
@@ -132,7 +132,7 @@
          $MenuCategory =
              MenuCategory::with([
                  'SingleMenu',
-                 
+
                  'HalfNHalfMenu',
                  'DealsMenu'
              ])
@@ -227,7 +227,7 @@
 //            }
 //            $pvalue['period_list'] = $parr;
 //        }
-         
+
          return $master;
       }
    }

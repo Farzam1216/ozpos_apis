@@ -3,7 +3,17 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\GeneralSetting;
+use App\Models\PromoCode;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\UserAddress;
 use App\Models\Vendor;
+use Auth;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Stripe\Coupon;
 
 class CustomerController extends Controller
 {
@@ -12,6 +22,200 @@ class CustomerController extends Controller
         $topRest = $this->topRest();
         return view('customer/home',compact('topRest'));
     }
+
+
+    public function login()
+      {
+        return view('customer/login');
+      }
+
+
+      public function loginVerify(Request $request)
+      {
+            $request->validate([
+              'email_id' => 'bail|required|email',
+              'password' => 'bail|required',
+          ]);
+
+          // dd($request->all());
+          if(Auth::attempt(['email_id' => request('email_id'), 'password' => request('password')]))
+          {
+              $user = Auth::user()->load('roles');
+
+              // if($user->is_verified == 1)
+              // {
+
+                  if ($user->roles->contains('title', 'user'))
+                  {
+
+                      $customer = User::where('id',auth()->user()->id)->first();
+
+                      if($customer->status == 1)
+                      {
+                          if ($user->roles->contains('title', 'user'))
+                          {
+                              $userAddress = UserAddress::where('user_id',auth()->user()->id)->where('selected',1)->first();
+                              // dd($user);
+                              if ($userAddress)
+                              {
+                                // dd('asdasd');
+                                Toastr::success('You have set location already exist!');
+                                // return redirect()->route('customer.restaurant.index',$customer->id);
+                                return redirect('customer/restaurant/1');
+                              }
+                              else
+                              {
+                                Toastr::success('Successfully Logged in!');
+                                return view('customer.map-select');
+                                  // Session::put('vendor_driver', 0);
+                              }
+                              // dd('asdsasdasd');
+
+                              // return back();
+                          }
+                          else
+                          {
+                            Toastr::error('Invalid Email Or Password.');
+                              return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
+                          }
+                      }
+                      else
+                      {
+                        Toastr::warning('You disable by admin please contact admin.');
+                          return redirect()->back()->withErrors('You disable by admin please contact admin.')->withInput();
+                      }
+                  }
+                  else
+                  {
+                      Auth::logout();
+                      Toastr::warning('Only customer can login.');
+                      return redirect()->back()->withErrors('Only customer can login.')->withInput();
+                  }
+              // }
+              // else
+              // {
+              //     return redirect('customer/send_otp/'.$user->id);
+              // }
+          }
+          else
+          {
+            Toastr::error('Invalid Email Or Password.');
+              return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
+          }
+
+
+          // $request->validate([
+          //     'email_id' => 'bail|required|email',
+          //     'password' => 'bail|required',
+          // ]);
+          // if(Auth::attempt(['email_id' => request('email_id'), 'password' => request('password')]))
+          // {
+          //     $user = Auth::user()->load('roles');
+          //     if ($user->roles->contains('title', 'user') == true)
+          //     {
+          //         Auth::logout();
+          //         return redirect()->back()->withErrors('Only admin can login');
+          //     }
+          //     if ($user->roles->contains('title', 'admin'))
+          //     {
+          //         return redirect('admin/home');
+          //     }
+          // }
+          // return redirect()->back()->withErrors('this credential does not match our record')->withInput();
+      }
+
+      public function signup()
+      {
+        return view('customer/signup');
+      }
+
+
+      public function signUpVerify(Request $request)
+      {
+          // dd($request->all());
+
+          $request->validate([
+            'name' => 'bail|required',
+            'email_id' => 'bail|required|email|unique:users',
+            'password' => 'bail|required|min:6',
+            'phone' => 'bail|required|numeric|digits_between:6,12',
+            'phone_code' => 'required'
+        ]);
+
+
+        $admin_verify_user = GeneralSetting::find(1)->verification;
+
+        $veri = $admin_verify_user == 1 ? 0 : 1;
+        // dd($veri);
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        $data['status'] = 1;
+        $data['image'] = 'noimage.png';
+        $data['is_verified'] = $veri;
+        $data['phone_code'] = '+'.$request->phone_code;
+        $data['language'] = 'english';
+        $user = User::create($data);
+        $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+        $user->roles()->sync($role_id);
+
+        if ($user['is_verified'] == 1) {
+            // $user['token'] = $user->createToken('mealUp')->accessToken;
+            Toastr::success('Successfully signed up.');
+            return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
+        } else {
+            $admin_verify_user = GeneralSetting::find(1)->verification;
+            if ($admin_verify_user == 1) {
+                // $this->sendNotification($user);
+                Toastr::success('Your account created successfully please verify your account.');
+                return redirect()->back()->with('success', 'Your account created successfully please verify your account.')->withInput();
+            }
+        }
+      }
+
+      public function deliveryLocation( Request $request)
+      {
+        $input = $request->all();
+
+          $address = new UserAddress;
+
+          $address->create($input);
+
+          session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
+          Toastr::success('Delivery Zone added successfully!');
+          return redirect('customer/restaurant/1');
+      }
+
+
+      public function applyCoupon(Request $request)
+      {
+          //  dd($request->all());
+
+         $coupon = PromoCode::where('promo_code',$request->coupon)->first();
+         if($coupon)
+         {
+           if($coupon->discountType == "percentage")
+           {
+            //  dd('cccc');
+                  // $discount = ($request->idTotal/$coupon->discount) * 100;
+                $discount = $request->idTotal * $coupon->discount / 100;
+
+                return response()->json($discount);
+
+
+           }
+           else
+           {
+               $discounts =  $coupon->discount;
+              //  dd('dasdas');
+               return response()->json($discounts);
+           }
+         }
+         else
+         {
+          dd('error');
+         }
+
+      }
 
     public function topRest(/* Request $request */)
     {
@@ -55,4 +259,7 @@ class CustomerController extends Controller
         }
         return $vendors;
     }
+
+
+
 }
