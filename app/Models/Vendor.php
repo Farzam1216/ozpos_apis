@@ -144,17 +144,17 @@ class Vendor extends Model
 
     public function scopeGetByDistance($query, $lat, $lang, $radius)
     {
-        $results = DB::select(DB::raw('SELECT id, ( 3959 * acos( cos( radians(' . $lat . ') ) * cos( radians( lat ) ) * cos( radians( lang ) - radians(' . $lang . ') ) + sin( radians(' . $lat . ') ) * sin( radians(lat) ) ) ) AS distance FROM vendor HAVING distance < ' . $radius . ' ORDER BY distance'));
-        if (!empty($results))
-        {
-            $ids = [];
-            //Extract the id's
-            foreach ($results as $q)
-            {
-                array_push($ids, $q->id);
-            }
-            return $query->whereIn('id', $ids);
-        }
-        return $query->whereIn('id', []);
+//        $results = DB::select(DB::raw('SELECT id, ( 3959 * acos( cos( radians(' . $lat . ') ) * cos( radians( lat ) ) * cos( radians( lang ) - radians(' . $lang . ') ) + sin( radians(' . $lat . ') ) * sin( radians(lat) ) ) ) AS distance FROM vendor HAVING distance < ' . $radius . ' ORDER BY distance'));
+//        if (!empty($results))
+//        {
+//            $ids = [];
+//            //Extract the id's
+//            foreach ($results as $q)
+//            {
+//                array_push($ids, $q->id);
+//            }
+//            return $query->whereIn('id', $ids);
+//        }
+//        return $query->whereIn('id', []);
     }
 }

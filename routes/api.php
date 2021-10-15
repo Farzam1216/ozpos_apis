@@ -124,6 +124,7 @@
    
    /******  User ********/
    Route::middleware('auth:api')->group(function () {
+      Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
       Route::post('book_order', 'UserApiController@apiBookOrder');
       Route::get('show_order', 'UserApiController@apiShowOrder');
       Route::post('update_user', 'UserApiController@apiUpdateUser');
@@ -186,7 +187,6 @@
    Route::get('faq', 'UserApiController@apiFaq');
    Route::get('single_menu/{menu_id}', 'UserApiController@apiSingleMenu');
    Route::get('setting', 'UserApiController@apiSetting');
-   Route::get('order_setting', 'UserApiController@apiOrderSetting');
    Route::get('payment_setting', 'UserApiController@apiPaymentSetting');
    
    /******  Driver ********/

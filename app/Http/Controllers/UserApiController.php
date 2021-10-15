@@ -540,12 +540,26 @@
          return response(['success' => true, 'data' => $setting]);
       }
       
-      public function apiOrderSetting()
+      public function apiOrderSetting($vendor_id)
       {
          $User = auth()->user();
-         $Vendor = Vendor::where('user_id', $User->id)->first();
-         $setting = OrderSetting::where('vendor_id', $Vendor->id)->first();
-         return response(['success' => true, 'data' => $setting]);
+         $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+         $Vendor = Vendor::find($vendor_id);
+         $Setting = OrderSetting::where('vendor_id', $vendor_id)->first();
+         
+         
+         $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+         $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
+         $googleDistance =
+             file_get_contents(
+                 $googleUrl,
+             );
+         $googleDistance = json_decode($googleDistance);
+   
+         $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 'no route found';
+//         $Setting['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+   
+         return response(['success' => true, 'data' => $Setting]);
       }
       
       public function apiPaymentSetting()

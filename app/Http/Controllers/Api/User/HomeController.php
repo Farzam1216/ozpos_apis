@@ -27,13 +27,24 @@
          
          $Point = new Point($UserAddress->lat, $UserAddress->lang);
          $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
-         if(!$DeliveryZoneNew)
+         if (!$DeliveryZoneNew)
             return response(['success' => false, 'data' => 'Service not available in this area.']);
          
          $radius = GeneralSetting::first()->radius;
          // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
          $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
          foreach ($vendors as $vendor) {
+            $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+            $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+            $googleDistance =
+                file_get_contents(
+                    $googleUrl,
+                );
+            $googleDistance = json_decode($googleDistance);
+            
+            $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
+            $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+            
             if (auth('api')->user() != null) {
                $user = auth('api')->user();
                $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
@@ -41,6 +52,7 @@
                $vendor['like'] = false;
             }
          }
+         \Log::critical($vendors);
          return response(['success' => true, 'data' => $vendors]);
       }
       
