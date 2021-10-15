@@ -2,11 +2,14 @@
    
    namespace App\Http\Controllers\Api\User;
    
+   use App\Http\Controllers\Auth\LoginController;
    use App\Http\Controllers\Controller;
    use App\Models\Banner;
+   use App\Models\DeliveryZoneNew;
    use App\Models\GeneralSetting;
    use App\Models\UserAddress;
    use App\Models\Vendor;
+   use Grimzy\LaravelMysqlSpatial\Types\Point;
    use Illuminate\Http\Request;
    
    class HomeController extends Controller
@@ -21,9 +24,15 @@
       {
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+         
+         $Point = new Point($UserAddress->lat, $UserAddress->lang);
+         $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
+         if(!$DeliveryZoneNew)
+            return response(['success' => false, 'data' => 'Service not available in this area.']);
+         
          $radius = GeneralSetting::first()->radius;
          // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
-         $vendors = Vendor::where('status', 1)->GetByDistance($UserAddress->lat, $UserAddress->lang, $radius)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+         $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
          foreach ($vendors as $vendor) {
             if (auth('api')->user() != null) {
                $user = auth('api')->user();

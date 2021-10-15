@@ -2,7 +2,6 @@
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
 .env
 .env.backup
 .phpunit.result.cache
@@ -10,6 +9,19 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+/vendor/*
+/vendor/*/*
+/vendor/*/*/*
+/vendor/*/*/*/*
+/vendor/*/*/*/*/*
+/vendor/*/*/*/*/*/*
+
+!/vendor/
+!/vendor/spatie/
+!/vendor/spatie/laravel-http-logger/
+!/vendor/spatie/laravel-http-logger/src/
+!/vendor/spatie/laravel-http-logger/src/LogNonGetRequests.php
 
 
 #/public/images/upload/*

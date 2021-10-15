@@ -556,20 +556,25 @@
       
       public function apiBookOrder(Request $request)
       {
-         $request->validate([
+   
+         $validation = $request->validate([
              'date' => 'bail|required',
-             'time' => 'bail|required|date_format:h:i a',
+             'time' => 'bail|required',
              'amount' => 'bail|required|numeric',
              'item' => 'bail|required',
              'vendor_id' => 'required',
              'delivery_type' => 'bail|required',
-             'address_id' => 'bail|required_if:delivery_type,HOME',
+//             'address_id' => 'bail|required_if:delivery_type,HOME',
              'payment_type' => 'bail|required',
              'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
             // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
              'tax' => 'required',
          ]);
+//         \Log::critical($request);
+//         return;
+         
          $bookData = $request->all();
+         $bookData['address_id'] = 28;
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
@@ -609,18 +614,18 @@
          if ($bookData['payment_type'] == 'WALLET') {
             $user->withdraw($bookData['amount'], [$order->id]);
          }
-         $bookData['item'] = json_decode($bookData['item'], true);
-         foreach ($bookData['item'] as $child_item) {
-            $order_child = array();
-            $order_child['order_id'] = $order->id;
-            $order_child['item'] = $child_item['id'];
-            $order_child['price'] = $child_item['price'];
-            $order_child['qty'] = $child_item['qty'];
-            if (isset($child_item['custimization'])) {
-               $order_child['custimization'] = $child_item['custimization'];
-            }
-            OrderChild::create($order_child);
-         }
+//         $bookData['item'] = json_decode($bookData['item'], true);
+//         foreach ($bookData['item'] as $child_item) {
+//            $order_child = array();
+//            $order_child['order_id'] = $order->id;
+//            $order_child['item'] = $child_item['id'];
+//            $order_child['price'] = $child_item['price'];
+//            $order_child['qty'] = $child_item['qty'];
+//            if (isset($child_item['custimization'])) {
+//               $order_child['custimization'] = $child_item['custimization'];
+//            }
+//            OrderChild::create($order_child);
+//         }
 //        $this->sendVendorOrderNotification($vendor,$order->id);
 //        $this->sendUserNotification($bookData['user_id'],$order->id);
          app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
@@ -637,7 +642,7 @@
          }
          $order->update($tax);
          
-         $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+//         $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
          
          if ($order->payment_type == 'FLUTTERWAVE') {
             return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
