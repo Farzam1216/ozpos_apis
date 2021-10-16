@@ -160,7 +160,14 @@
         var classProductTotal = 'my-product-total';
         var idGrandTotal = 'my-cart-grand-total';
         var idTotal = 'my-cart-total';
-        // var idCoupons = 'my-cart-coupon';
+        var idTotalInput = 'my-cart-total-input';
+        var idTax = 'my-cart-tax';
+        var idTaxInput = 'my-cart-tax-input';
+        var id = 'my-cart-total-input';
+        var idTotalInput = 'my-cart-total-input';
+        var idDelivery = 'my-cart-delivery';
+        var idCoupons = 'my-cart-coupon';
+        var idCouponInput = 'my-cart-coupon-input';
         var idCheckoutCart = 'checkout-my-cart';
         var classProductInput = 'my-product-input';
         var classProductRemove = 'my-product-remove';
@@ -169,6 +176,16 @@
         var idEmptyCartMessage = 'my-cart-empty-message';
         var classAffixMyCartIcon = 'my-cart-icon-affix';
         var idDiscountPrice = 'my-cart-discount-price';
+        var taxType = null;
+        var tax = null;
+        var couponType = null;
+        var couponCode = '';
+        var freeDelivery = '';
+        var freeDeliveryDistance = '';
+        var freeDeliveryAmount = '';
+        var minOrderValue = '';
+        var userDistance = '';
+
 
         $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
         $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
@@ -240,20 +257,19 @@
 
             $cartTable.append(products.length ?
                 '<div class="bg-white p-3 clearfix border-bottom">'+
-                '<p class="mb-1"><div class="row"><div class="col-md-6"><input type="text" id="coupon" name="promo_coupon" placeholder="Apply Coupon Code here" class="form-control"></div><div class="col-md-6"> <span class="float-right text-dark" id=""><button  class="btn btn-primary btn-sm" id="applyCoupon" >Apply Coupon</button></span></div></div></p>'+
-                '<p class="mb-1">Item Total <span class="float-right text-dark" id="' + idTotal + '">$</span></p>'+
-                '<p class="mb-1">Apply Coupon <span class="float-right text-dark" id="idCoupons" class="idCoupons"><span id="idCoupons">$0</span></span></p>'+
-                '<p class="mb-1"><input type="hidden" name="idTotal" id="idTotal"></p>'+
-                '<p class="mb-1">Restaurant Charges <span class="float-right text-dark">$62.8</span></p>'+
-                '<p class="mb-1">Delivery Fee<span class="text-info ml-1"><i class="feather-info"></i></span><span class="float-right text-dark">$10</span></p>'+
-                '<p class="mb-1 text-success">Total Discount<span class="float-right text-success" id="idTotals">$0</span></p>'+
+                '<p class="mb-1"><div class="row"><div class="col-md-6"><input type="text" id="'+ idCouponInput +'" name="promo_coupon" placeholder="Apply Coupon Code here" class="form-control"></div><div class="col-md-6"> <span class="float-right text-dark" id=""><button  class="btn btn-primary btn-sm" id="applyCoupon" >Apply Coupon</button></span></div></div></p>'+
+                '<p class="mb-1">Item Total <span class="float-right text-dark" id="' + idTotal + '" data-value="0">$</span></p>'+
+                '<p class="mb-1">Apply Coupon <span class="float-right text-dark" id="'+ idCoupons +'"  data-value="0">$</span></p>'+
+                // '<p class="mb-1"><input type="hidden" name="idTotalInput" id="'+ idTotalInput +'"></p>'+
+                '<p class="mb-1">Tax <span class="float-right text-dark" id="'+ idTax +'" data-value="0">$0</span></p>'+
+                // '<p class="mb-1"><input type="hidden" id="'+ idTaxInput + '" name="idTaxInput"> </p>'+
+                '<p class="mb-1">Delivery <span class="float-right text-dark" id="'+ idDelivery +'" data-value="0">free</span></p>'+
+                // '<p class="mb-1">Delivery<span class="text-info ml-1"><i class="feather-info"></i></span><span class="float-right text-dark">$10</span></p>'+
+                // '<p class="mb-1 text-success">Total Discount<span class="float-right text-success" id="idTotals">$0</span></p>'+
                 '<hr>'+
-                '<h6 class="font-weight-bold mb-0">TO PAY <span class="float-right" id="' + idGrandTotal + '">$</span></h6>'+
+                '<h6 class="font-weight-bold mb-0">TO PAY <span class="float-right" id="'+ idGrandTotal +'" data-value="0">$0</span></h6>'+
                 '</div>'
                 :'<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Your cart is empty</div>'
-
-
-
 
             );
 
@@ -272,8 +288,106 @@
             //     );
             // }
 
-            showGrandTotal(products);
+            showGrandTotal();
+
+              //  alert('asd');
+            let base_url = window.location.origin;
+          //  alert('asdasd');
+
+          $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+           $.ajax({
+            url: base_url+"/customer/restaurant/tax",
+            method: "GET",
+            success: function(data) {
+              taxType = data.taxtype;
+              tax = data.tax;
+              freeDelivery = data.orderSettting.free_delivery;
+              freeDeliveryDistance = data.orderSettting.free_delivery_distance;
+              freeDeliveryAmount = data.orderSettting.free_delivery_amount;
+              minOrderValue = data.orderSettting.min_order_value;
+              userDistance = data.orderSettting.distance;
+              // console.log(data.orderSettting.free_delivery_distance);
+             console.log(minOrderValue);
+
+             showGrandTotal();
+
+            // if(data.taxtype == 1)
+            //  {
+            //     var caltax =   parseFloat($("#"+idTotal).data('value')) * parseFloat(data.tax).toFixed(2) / 100;
+            //     $("#"+idTax).text("$" + caltax.toFixed(2));
+            //     $("#"+idTax).data('value', caltax.toFixed(2));
+
+            //   // $("#"+idTaxInput).val(caltax);
+
+            //     var total = parseFloat($("#"+idTotal).data('value')) - caltax;
+            //      $("#"+idTotal).text("$" + total.toFixed(2));
+            //      $("#"+idTotal).data('value', total.toFixed(2));
+            // }
+            // else if(data.taxtype == 2)
+            // {
+            //   var caltax =   parseFloat($("#"+idTotal).text()) * parseFloat(data.tax).toFixed(2) / 100;
+            //   $("#"+idTax).text("$" + caltax.toFixed(2));
+
+            //     var grrandTotal = parseFloat($("#"+idGrandTotal).data('value')).toFixed(2) + caltax;
+            //     // console.log(total);
+            //      $("#"+idGrandTotal).text("$" + grrandTotal.toFixed(2));
+            //      $("#"+idGrandTotal).data('value', "$" + grrandTotal.toFixed(2));
+            // }
+
+
+
+            }
+          });
+
             // showDiscountPrice(products);
+
+            $(document).on('click', '#applyCoupon', function(){
+              let base_url = window.location.origin;
+                  //  alert('asdasd');
+                  $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                     console.log($("#"+ idCouponInput).val());
+                    var coupon = $("#"+ idCouponInput).val();
+                   $.ajax({
+
+                    url: base_url+"/customer/restaurant/coupon",
+                    method: "GET",
+                    data:{coupon:coupon},
+                    success: function(data) {
+                        console.log(data);
+                      couponType = data.discountType;
+                      couponCode = data.discount;
+                      showGrandTotal();
+
+                      // if(data.discountType == 'percentage')
+                      // {
+                      //   var calCoupon =   parseFloat($("#"+idTotal).data('value')) * parseFloat(data.discount).toFixed(2) / 100;
+                      //   var grandTotal = parseFloat($("#"+idGrandTotal).data('value')).toFixed(2) - calCoupon;
+
+                      //   $("#"+idCoupons).text("$" + calCoupon.toFixed(2));
+                      //   $("#"+idGrandTotal).text("$" + grandTotal.toFixed(2));
+                      // }
+                      // else
+                      // {
+                      //   /// for high coupon discount value then actual taotal...
+                      //     var calCoupon =  parseFloat(data.discount).toFixed(2);
+                      //     var grandTotal = parseFloat($("#"+idGrandTotal).data('value')).toFixed(2) - calCoupon;
+                      //     $("#"+idCoupons).text("$" + calCoupon);
+                      //     $("#"+idGrandTotal).text("$" + grandTotal.toFixed(2));
+
+                      // }
+
+                      // alert(response);
+                    }
+                  });
+                });
         }
         var showModal = function(){
             drawTable();
@@ -285,18 +399,130 @@
                 ProductManager.updatePoduct(id, $(this).val());
             });
         }
-        var showGrandTotal = function(products){
-            var total = 0.00;
-            $.each(products, function(){
-                total += parseFloat(parseInt(this.quantity) * parseFloat(this.price));
-            });
-            $("#" + idTotal).text("$" + total.toFixed(2));
 
-            console.log(total);
-            $("#idTotal").val(total);
+        var showGrandTotal = function(){
+          var products = ProductManager.getAllProducts();
+          console.log(products);
+          // 1st
+          var localTotal = 0.00;
+          var localCoupon = 0.00;
+          var localTax = 0.00;
+          var localDelivery = 0.00;
+          var localGrandTotal = 0.00;
 
-            $("#idTotals").text("$" + total.toFixed(2));
+          $.each(products, function(){
+              // localTotal += parseFloat(parseInt(this.quantity) * parseFloat(this.price));
+              localTotal += parseFloat(parseInt(this.quantity) * parseFloat(this.price));
+          });
+
+          //grnad calc
+          localGrandTotal += localTotal;
+          // localGrandTotal = parseFloat(localGrandTotal).toFixed(2) + parseFloat(localTotal).toFixed(2);
+          ////////////// Tax /////////////////
+          if(taxType == 1)
+          {
+              localTax = localTotal * parseFloat(tax) / 100;
+              localTotal -= localTax;
+              // localTotal = parseFloat(localTotal).toFixed(2) - parseFloat(localTax).toFixed(2);
+          }
+          else if(taxType == 2)
+          {
+            localTax = localTotal * parseFloat(tax) / 100;
+            localGrandTotal += localTax;
+            // localTax = localTotal * parseFloat(tax).toFixed(2) / 100;
+            // localGrandTotal = parseFloat(localGrandTotal).toFixed(2) + parseFloat(localTax).toFixed(2);
+          }
+
+
+          console.log('before coupon');
+          console.log(localGrandTotal);
+        ///////////////////// Coupon  ////////////////////
+          if(couponType =='percentage')
+          {
+            // console.log(localTax);
+            localCoupon = localTotal * parseFloat(couponCode) / 100;
+             localGrandTotal -= localCoupon;
+
+
+          }
+          else if(couponType =='amount')
+          {
+            /// for high coupon discount value then actual taotal...
+              // var calCoupon =  couponCode;
+            localCoupon = parseFloat(couponCode);
+              localGrandTotal -= localCoupon;
+
+          }
+
+          console.log('after coupon');
+          console.log(localGrandTotal);
+
+        ///////////////////// Delivery  ////////////////////
+        if(freeDelivery==1){
+          localDelivery = 'free';
+        }else{
+          if(freeDeliveryDistance!=0 && freeDeliveryAmount!=0){
+            if( localGrandTotal >= freeDeliveryAmount && userDistance<=freeDeliveryDistance ){
+              localDelivery = 'free';
+            }else{
+            //  localDelivery=parseFloat(localGrandTotal)*0.1;
+            //  localDelivery=parseFloat(localDelivery).toFixed(2);
+              localDelivery = localGrandTotal * 0.1;
+             localGrandTotal += localDelivery;
+            //  localGrandTotal = parseFloat(localGrandTotal).toFixed(2) + parseFloat(localDelivery).toFixed(2);
+            }
+          }else if(freeDeliveryDistance==0){
+            if(localGrandTotal>=freeDeliveryAmount){
+              localDelivery = 'free';
+            }else{
+            //  localDelivery=localGrandTotal*0.1;
+            //  localDelivery=parseFloat(localDelivery).toFixed(2);
+              localDelivery = localGrandTotal * 0.1;
+              localGrandTotal += localDelivery;
+            }
+          }else if(freeDeliveryAmount==0){
+              if(userDistance<=freeDeliveryDistance){
+                localDelivery = 'free';
+              }else{
+              //  localDelivery=localGrandTotal*0.1;
+              //  localDelivery=parseFloat(localDelivery).toFixed(2);
+              localDelivery = localGrandTotal * 0.1;
+              localGrandTotal += localDelivery;
+              }
+          }
         }
+
+            /////////////// calc total/////////////////////////////////////
+            $("#" + idTotal).text("$" + parseFloat(localTotal).toFixed(2));
+            $("#" + idTotal).data('value', parseFloat(localTotal).toFixed(2));
+
+            /////////////// calc tax/////////////////////////////////////
+            $("#"+idTax).text("$" + parseFloat(localTax).toFixed(2));
+            $("#"+idTax).data('value', parseFloat(localTax).toFixed(2));
+
+           /////////////// calc Coupon/////////////////////////////////////
+           $("#"+idCoupons).text("$" + parseFloat(localCoupon).toFixed(2));
+            $("#"+idCoupons).data('value', parseFloat(localCoupon).toFixed(2));
+
+           /////////////// calc Coupon/////////////////////////////////////
+           if(localDelivery == 'free') {
+            $("#"+idDelivery).text(localDelivery);
+           $("#"+idDelivery).data('value', 0);
+           }
+           else {
+
+            $("#"+idDelivery).text("$" + parseFloat(localDelivery).toFixed(2));
+           $("#"+idDelivery).data('value', parseFloat(localDelivery).toFixed(2));
+           }
+
+           /////////////// calc Grandtotal/////////////////////////////////////
+            $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
+            $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
+        }
+
+
+
+
         var showDiscountPrice = function(products){
             $("#" + idDiscountPrice).text("$" + options.getDiscountPrice(products));
         }
@@ -330,7 +556,7 @@
             $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
             $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
             var products = ProductManager.getAllProducts();
-            showGrandTotal(products);
+            showGrandTotal();
             showDiscountPrice(products);
         });
 
@@ -347,7 +573,7 @@
             $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
             $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
             var products = ProductManager.getAllProducts();
-            showGrandTotal(products);
+            showGrandTotal();
             showDiscountPrice(products);
         });
 
@@ -368,7 +594,7 @@
             $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
             $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
             var products = ProductManager.getAllProducts();
-            showGrandTotal(products);
+            showGrandTotal();
             showDiscountPrice(products);
         });
 
@@ -407,37 +633,7 @@
 
 
 
-    $(document).on('click', '#applyCoupon', function(){
-      let base_url = window.location.origin;
-          //  alert('asdasd');
-          $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-           console.log($("#coupon").val());
-           var coupon = $("#coupon").val();
-            var idTotal = $("#idTotal").val();
-           $.ajax({
 
-            url: base_url+"/customer/restaurant/coupon",
-            method: "GET",
-            data:{coupon:coupon,idTotal:idTotal},
-            success: function(response) {
-              console.log(response);
-              // $("#idCoupons").append(
-              //   '<span>'+response+'</span>'
-              // );
-              // $("#idCoupons").val(response);
-              $("#idCoupons").text("$" + response.toFixed(2));
-
-              var idTotal = $("#idTotal").val();
-
-              $("#idTotals").text("$" + total.toFixed(2));
-              // alert(response);
-            }
-          });
-        });
 
 
 
@@ -474,6 +670,7 @@
 
 
     $.fn.myCart = function (userOptions) {
+
         loadMyCartEvent(userOptions);
         return $.each(this, function () {
             new MyCart(this, userOptions);

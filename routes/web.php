@@ -411,10 +411,13 @@ use App\Http\Controllers\multiDeleteController;
    Route::post('/customer/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
    Route::post('/customer/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
    Route::post('customer/delivery/location',[CustomerController::class,'deliveryLocation'])->name('delivery.location');
+///////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
-   Route::get('customer/restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
 
-
+   Route::middleware(['auth'])->prefix('customer')->group(function () {
+    Route::get('restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
+    Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
+   });
 
 
 

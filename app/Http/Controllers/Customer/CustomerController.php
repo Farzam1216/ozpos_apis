@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
+use App\Models\OrderSetting;
 use App\Models\PromoCode;
 use App\Models\Role;
 use App\Models\User;
@@ -81,7 +82,7 @@ class CustomerController extends Controller
                       }
                       else
                       {
-                        Toastr::warning('You disable by admin please contact admin.');
+                          Toastr::warning('You disable by admin please contact admin.');
                           return redirect()->back()->withErrors('You disable by admin please contact admin.')->withInput();
                       }
                   }
@@ -186,6 +187,41 @@ class CustomerController extends Controller
       }
 
 
+      public function applyTax()
+      {
+          //  dd($request->all());
+              // $user = Auth::user()->id;
+              //    dd($user);
+         $vendor = Vendor::find(1);
+
+        //  dd($vendor);
+         if($vendor)
+         {
+
+
+
+
+          $User = auth()->user();
+          $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+          $orderSettting = OrderSetting::where('vendor_id',$vendor->id)->first();
+
+         $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+         $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+         $googleDistance =
+             file_get_contents(
+                 $googleUrl,
+             );
+         $googleDistance = json_decode($googleDistance);
+
+         $orderSettting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 0;
+
+
+                $taxtype  = $vendor->tax_type;
+                $tax    = $vendor->tax;
+                return response()->json(['tax'=>$tax , 'taxtype'=> $taxtype, 'orderSettting' => $orderSettting]);
+
+          }
+        }
       public function applyCoupon(Request $request)
       {
           //  dd($request->all());
@@ -193,22 +229,18 @@ class CustomerController extends Controller
          $coupon = PromoCode::where('promo_code',$request->coupon)->first();
          if($coupon)
          {
-           if($coupon->discountType == "percentage")
-           {
-            //  dd('cccc');
-                  // $discount = ($request->idTotal/$coupon->discount) * 100;
-                $discount = $request->idTotal * $coupon->discount / 100;
+          //  if($coupon->discountType == "percentage")
+          //  {
+                //  dd('cccc');
+               // $discount = ($request->idTotal/$coupon->discount) * 100;
+                // $discount    = $request->idTotal * $coupon->discount / 100;
+                // $subtotal    = $request->idTotal - $discount;
+                // $total       = $request->idTaxInput + $subtotal;
 
-                return response()->json($discount);
+                $discountType = $coupon->discountType;
+                $discount     = $coupon->discount;
+                return response()->json(['discountType'=>$discountType,'discount'=>$discount]);
 
-
-           }
-           else
-           {
-               $discounts =  $coupon->discount;
-              //  dd('dasdas');
-               return response()->json($discounts);
-           }
          }
          else
          {

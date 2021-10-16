@@ -423,18 +423,15 @@
             url: base_url+"/customer/restaurant/coupon",
             method: "GET",
             data:{coupon:coupon,idTotal:idTotal},
-            success: function(response) {
-              console.log(response);
-              // $("#idCoupons").append(
-              //   '<span>'+response+'</span>'
-              // );
-              // $("#idCoupons").val(response);
-              $("#idCoupons").text("$" + response.toFixed(2));
+            success: function(data) {
+              console.log(data);
 
-              var idTotal = $("#idTotal").val();
+              $("#idCoupons").text("$" + data.discount.toFixed(2));
 
-              $("#idTotals").text("$" + total.toFixed(2));
-              // alert(response);
+              // var idTotal = $("#idTotal").val();
+
+              $("#idTotals").text("$" + data.total.toFixed(2));
+
             }
           });
         });
