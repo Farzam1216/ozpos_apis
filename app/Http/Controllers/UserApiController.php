@@ -558,7 +558,9 @@
    
          $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 'no route found';
 //         $Setting['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
-   
+         $Setting['tax_type'] = $Vendor->tax_type;
+         $Setting['tax'] = $Vendor->tax;
+         
          return response(['success' => true, 'data' => $Setting]);
       }
       
@@ -575,6 +577,7 @@
              'date' => 'bail|required',
              'time' => 'bail|required',
              'amount' => 'bail|required|numeric',
+             'sub_total' => 'bail|required|numeric',
              'item' => 'bail|required',
              'vendor_id' => 'required',
              'delivery_type' => 'bail|required',
@@ -582,13 +585,15 @@
              'payment_type' => 'bail|required',
              'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
             // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
-             'tax' => 'required',
+//             'tax' => 'required',
          ]);
 //         \Log::critical($request);
 //         return;
          
          $bookData = $request->all();
-         $bookData['address_id'] = 28;
+         $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
+         $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
+         $bookData['address_id'] = 32;
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
@@ -600,7 +605,7 @@
             $stripe = new \Stripe\StripeClient($stripe_sk);
             $charge = $stripe->charges->create(
                 [
-                    "amount" => $bookData['amount'],
+                    "amount" => $bookData['amount'] * 100,
                     "currency" => $currency,
                     "source" => $request->payment_token,
                 ]);
@@ -613,21 +618,26 @@
             }
          }
          $bookData['user_id'] = auth()->user()->id;
-         
-         if (isset($bookData['promocode_id'])) {
-            $promocode = PromoCode::find($bookData['promocode_id']);
-            $promocode->count_max_user = $promocode->count_max_user + 1;
-            $promocode->count_max_count = $promocode->count_max_count + 1;
-            $promocode->count_max_order = $promocode->count_max_order + 1;
-            $promocode->save();
+   
+         $PromoCode = PromoCode::find($bookData['promocode_id']);
+         if ($PromoCode) {
+            $PromoCode->count_max_user = $PromoCode->count_max_user + 1;
+            $PromoCode->count_max_count = $PromoCode->count_max_count + 1;
+            $PromoCode->count_max_order = $PromoCode->count_max_order + 1;
+            $PromoCode->save();
+         }
+         else {
+            $bookData['promocode_id'] = null;
+            $bookData['promocode_price'] = 0;
          }
          
          $bookData['order_id'] = '#' . rand(100000, 999999);
          $bookData['vendor_id'] = $vendor->id;
+         $bookData['order_data'] = $bookData['item'];
          $order = Order::create($bookData);
-         if ($bookData['payment_type'] == 'WALLET') {
-            $user->withdraw($bookData['amount'], [$order->id]);
-         }
+//         if ($bookData['payment_type'] == 'WALLET') {
+//            $user->withdraw($bookData['amount'], [$order->id]);
+//         }
 //         $bookData['item'] = json_decode($bookData['item'], true);
 //         foreach ($bookData['item'] as $child_item) {
 //            $order_child = array();
@@ -644,25 +654,25 @@
 //        $this->sendUserNotification($bookData['user_id'],$order->id);
          app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
          $amount = $order->amount;
-         $tax = array();
-         if ($vendor->admin_comission_type == 'percentage') {
-            $comm = $amount * $vendor->admin_comission_value;
-            $tax['admin_commission'] = intval($comm / 100);
-            $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
-         }
-         if ($vendor->admin_comission_type == 'amount') {
-            $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
-            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
-         }
-         $order->update($tax);
+//         $tax = array();
+//         if ($vendor->admin_comission_type == 'percentage') {
+//            $comm = $amount * $vendor->admin_comission_value;
+//            $tax['admin_commission'] = intval($comm / 100);
+//            $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
+//         }
+//         if ($vendor->admin_comission_type == 'amount') {
+//            $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
+//            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
+//         }
+//         $order->update($tax);
          
 //         $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
          
-         if ($order->payment_type == 'FLUTTERWAVE') {
-            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
-         } else {
+//         if ($order->payment_type == 'FLUTTERWAVE') {
+//            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
+//         } else {
             return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
-         }
+//         }
       }
       
       public function apiShowOrder()

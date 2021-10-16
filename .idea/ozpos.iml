@@ -200,6 +200,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/vendor/asm89" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vendor/barryvdh" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vendor/bavix" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kitloong/laravel-migrations-generator" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

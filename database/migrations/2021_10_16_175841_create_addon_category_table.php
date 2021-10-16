@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateAddonCategoryTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('addon_category', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('vendor_id')->index('fk_vendor_id');
+            $table->string('name');
+            $table->integer('min');
+            $table->integer('max');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('addon_category');
+    }
+}
