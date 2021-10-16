@@ -254,26 +254,13 @@
             //         '</div>'
             //     );
             // }
-         });
 
-         $cartTable.append(products.length ?
-             '<div class="bg-white p-3 clearfix border-bottom">' +
-             '<p class="mb-1"><div class="row"><div class="col-md-6"><input type="text" id="' + idCouponInput + '" name="promo_coupon" placeholder="Apply Coupon Code here" class="form-control"></div><div class="col-md-6"> <span class="float-right text-dark" id=""><button  class="btn btn-primary btn-sm" id="applyCoupon" >Apply Coupon</button></span></div></div></p>' +
-             '<p class="mb-1">Item Total <span class="float-right text-dark" id="' + idTotal + '" data-value="0">$</span></p>' +
-             '<p class="mb-1">Apply Coupon <span class="float-right text-dark" id="' + idCoupons + '"  data-value="0">$</span></p>' +
-             '<p class="mb-1">Tax <span class="float-right text-dark" id="' + idTax + '" data-value="0">$0</span></p>' +
-             '<p class="mb-1">Delivery <span class="float-right text-dark" id="' + idDelivery + '" data-value="0">free</span></p>' +
-             '<hr>' +
-             '<h6 class="font-weight-bold mb-0">TO PAY <span class="float-right" id="' + idGrandTotal + '" data-value="0">$0</span></h6>' +
-             '</div>'
-             : '<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Your cart is empty</div>'
-         );
+            showGrandTotal();
 
-         showGrandTotal();
+            let base_url = window.location.origin;
 
-         let base_url = window.location.origin;
 
-         $.ajaxSetup({
+          $.ajaxSetup({
             headers: {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }

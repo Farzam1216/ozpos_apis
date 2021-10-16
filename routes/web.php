@@ -30,6 +30,7 @@
    use App\Http\Controllers\Admin\ReportController;
    use App\Http\Controllers\UserApiController;
    use App\Http\Controllers\Admin\TaxController;
+use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\multiDeleteController;
 
@@ -411,12 +412,14 @@ use App\Http\Controllers\multiDeleteController;
    Route::post('/customer/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
    Route::post('/customer/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
    Route::post('customer/delivery/location',[CustomerController::class,'deliveryLocation'])->name('delivery.location');
-///////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
+   ////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
    Route::middleware(['auth'])->prefix('customer')->group(function () {
     Route::get('restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
     Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
+    Route::post('address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress'])->name('address.store');
+    Route::get('change-address',[App\Http\Controllers\Customer\AddressController::class,'changeAddress'])->name('change.address');
    });
 
 

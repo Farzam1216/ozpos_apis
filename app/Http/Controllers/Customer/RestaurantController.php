@@ -9,12 +9,15 @@
    use App\Models\Submenu;
    use App\Models\SubmenuCusomizationType;
    use App\Models\GeneralSetting;
-   use App\Models\VendorDiscount;
+use App\Models\UserAddress;
+use App\Models\VendorDiscount;
    use App\Models\WorkingHours;
-   use Carbon\Carbon;
+use Auth;
+use Carbon\Carbon;
    use DB;
 
-   class RestaurantController extends Controller
+
+class RestaurantController extends Controller
    {
       /*
           Single Restaurant Index
@@ -26,7 +29,11 @@
          $page = 1;
 //        echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
 //        dd($singleVendor);
-         return view('customer/restaurant', compact('rest', 'singleVendor', 'page'));
+              $user=Auth::user()->id;
+              $userAddress = UserAddress::where('user_id',$user)->get();
+              $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+
+         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
       }
 
 
