@@ -290,9 +290,8 @@
 
             showGrandTotal();
 
-              //  alert('asd');
             let base_url = window.location.origin;
-          //  alert('asdasd');
+
 
           $.ajaxSetup({
             headers: {

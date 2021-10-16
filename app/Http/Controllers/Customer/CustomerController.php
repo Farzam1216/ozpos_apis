@@ -197,10 +197,6 @@ class CustomerController extends Controller
         //  dd($vendor);
          if($vendor)
          {
-
-
-
-
           $User = auth()->user();
           $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
           $orderSettting = OrderSetting::where('vendor_id',$vendor->id)->first();

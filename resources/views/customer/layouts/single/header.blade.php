@@ -1,68 +1,188 @@
+
+
+<style>
+
+
+  .map {
+    position: relative;
+
+}
+
+.map:after {
+    width: 22px;
+    height: 40px;
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 50%; left: 50%;
+    margin: -40px 0 0 -11px;
+    background: url('https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi_hdpi.png');
+    background-size: 22px 40px; /* Since I used the HiDPI marker version this compensates for the 2x size */
+     pointer-events: none; /*This disables clicks on the marker. Not fully supported by all major browsers, though */
+ }
+        #map {
+          /* border: 1px solid; */
+    height: 70%;
+  /* top: 66px */
+}
+
+/* Optional: Makes the sample page fill the window. */
+/* html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+
+#description {
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+#infowindow-content .title {
+  font-weight: bold;
+}
+
+#infowindow-content {
+  display: none;
+}
+
+#map #infowindow-content {
+  display: inline;
+}
+
+.pac-card {
+  background-color: #fff;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+  padding: 0 0.5em;
+  font: 400 18px Roboto, Arial, sans-serif;
+  overflow: hidden;
+  font-family: Roboto;
+  padding: 0;
+
+}
+
+.conform
+{
+  margin-top: 40px;
+    padding-top: 33px;
+    padding-bottom: 12px;
+  margin-right: 12px;
+}
+#pac-container {
+  padding-bottom: 12px;
+  margin-right: 12px;
+}
+
+.pac-controls {
+  display: inline-block;
+  padding: 5px 11px;
+}
+
+.pac-controls label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+#pac-input {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 400px;
+  border-radius: 8px;
+  border: 1px solid;
+    margin-top: 10px;
+}
+
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+
+#title {
+  color: #fff;
+  background-color: #4d90fe;
+  font-size: 25px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+#target {
+  width: 345px;
+}
+/* .delivery{
+  margin-top: 50px;
+} */
+.pac-container{
+  z-index: 3000;
+}
+    </style>
+
+
 <header class="section-header">
     <section class="header-main shadow-sm bg-white">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-4">
+                <div class="col-1">
                     <a href="home.html" class="brand-wrap mb-0">
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png')}}">
                     </a>
                     <!-- brand-wrap.// -->
                 </div>
-{{--                <div class="col-3 d-flex align-items-center m-none">--}}
-{{--                    <div class="dropdown mr-3">--}}
-{{--                        <a class="text-dark dropdown-toggle d-flex align-items-center py-3" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-{{--                            <div><i class="feather-map-pin mr-2 bg-light rounded-pill p-2 icofont-size"></i></div>--}}
-{{--                            <div>--}}
-{{--                                <p class="text-muted mb-0 small">Select Location</p>--}}
-{{--                                Jawaddi Ludhiana...--}}
-{{--                            </div>--}}
-{{--                        </a>--}}
-{{--                        <div class="dropdown-menu p-0 drop-loc" aria-labelledby="navbarDropdown">--}}
-{{--                            <div class="osahan-country">--}}
-{{--                                <div class="search_location bg-primary p-3 text-right">--}}
-{{--                                    <div class="input-group rounded shadow-sm overflow-hidden">--}}
-{{--                                        <div class="input-group-prepend">--}}
-{{--                                            <button class="border-0 btn btn-outline-secondary text-dark bg-white btn-block"><i class="feather-search"></i></button>--}}
-{{--                                        </div>--}}
-{{--                                        <input type="text" class="shadow-none border-0 form-control" placeholder="Enter Your Location">--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="p-3 border-bottom">--}}
-{{--                                    <a href="home.html" class="text-decoration-none">--}}
-{{--                                        <p class="font-weight-bold text-primary m-0"><i class="feather-navigation"></i> New York, USA</p>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                                <div class="filter">--}}
-{{--                                    <h6 class="px-3 py-3 bg-light pb-1 m-0 border-bottom">Choose your country</h6>--}}
-{{--                                    <div class="custom-control  border-bottom px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio1" name="location" class="custom-control-input">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio1">Afghanistan</label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="custom-control  border-bottom px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio2" name="location" class="custom-control-input" checked="">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio2">India</label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="custom-control  border-bottom px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio3" name="location" class="custom-control-input">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio3">USA</label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="custom-control  border-bottom px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio4" name="location" class="custom-control-input">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio4">Australia</label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="custom-control  border-bottom px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio5" name="location" class="custom-control-input">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio5">Japan</label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="custom-control  px-0 custom-radio">--}}
-{{--                                        <input type="radio" id="customRadio6" name="location" class="custom-control-input">--}}
-{{--                                        <label class="custom-control-label py-3 w-100 px-3" for="customRadio6">China</label>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+
+               <div class="col-3 d-flex align-items-center m-none">
+                   <div class="dropdown mr-3">
+                       <a class="text-dark dropdown-toggle d-flex align-items-center py-3" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           <div><i class="feather-map-pin mr-2 bg-light rounded-pill p-2 icofont-size"></i></div>
+                           <div>
+                               <p class="text-muted mb-0 small">Select Location</p>
+                               @php
+                                 use Illuminate\Support\Str;
+                               @endphp
+
+                                {{ Str::limit($selectedAddress->type, 20) }}
+
+                           </div>
+                       </a>
+                       <div class="dropdown-menu p-0 drop-loc" aria-labelledby="navbarDropdown">
+                           <div class="osahan-country">
+                               <div class="search_location bg-primary p-3 text-right">
+                                   <div class="input-group rounded shadow-sm overflow-hidden">
+                                       <div class="input-group-prepend">
+                                           {{-- <button class="border-0 btn btn-outline-secondary text-dark bg-white btn-block"><i class="feather-search"></i></button> --}}
+                                           <a class="btn btn-outline-secondary text-dark bg-white btn-block" href="#" data-toggle="modal" data-target="#addModalAddress"> ADD NEW ADDRESS </a>
+                                       </div>
+
+                                   </div>
+                               </div>
+                               <div class="p-3 border-bottom">
+                                   <a href="home.html" class="text-decoration-none">
+                                       <p class="font-weight-bold text-primary m-0"><i class="feather-navigation"></i> New York, USA</p>
+                                   </a>
+                               </div>
+                               <div class="filter">
+                                   <h6 class="px-3 py-3 bg-light pb-1 m-0 border-bottom">Choose your country</h6>
+                                   @foreach ($userAddress as $userAdre)
+                                   <div class="custom-control  border-bottom px-0 custom-radio">
+                                    <input type="radio" id="customRadio{{ $userAdre->id }}" name="user_address" class="custom-control-input" value="{{ $userAdre->id }}" {{ $userAdre->selected == 1 ? 'checked' : '' }} onchange="changeAddress(this)">
+                                    <label class="custom-control-label py-3 w-100 px-3" for="customRadio{{ $userAdre->id }}">{{ $userAdre->type }}</label>
+                                   </div>
+                                   @endforeach
+
+
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
                 <!-- col.// -->
                 <div class="col-8">
                     <div class="d-flex align-items-center justify-content-end pr-5">
@@ -129,3 +249,55 @@
         <h4 class="font-weight-bold m-0 text-white">Osahan Bar</h4>
     </div>
 </div>
+
+  {{-- Customer Address Model --}}
+<div class="modal fade" id="addModalAddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <input id="pac-input" class="form-control" type="text" placeholder="Enter your location or drag marker" style="margin: 10px 4%;"/>
+        <div id="map" class="map"></div>
+        <form action="{{route('address.store')}}" method="POST">
+        @csrf
+        <input type="hidden" id="lang" name="lang" readonly="readonly">
+        <input type="hidden" id="lat" name="lat" readonly="readonly">
+        <input type="hidden" id="selected" name="selected" readonly="readonly" value="1">
+        <input type="hidden" id="user_id" name="user_id" readonly="readonly" value="{{ Auth::user()->id }}">
+        <br> <br>
+          <div class="row">
+            <div class="col-md-6">
+
+
+          <div class="form-row">
+              <div class="col-md-12 form-group delivery">
+                  <div class="input-group">
+                      <input type="text" class="form-control form-white" id="address" name="address" placeholder="Selected address" readonly="readonly">
+                      <div class="input-group-append"><button type="button" class="btn btn-outline-secondary"><i class="feather-map-pin"></i></button></div>
+                  </div>
+              </div>
+              <div class="col-md-12 form-group">
+                <input type="text" class="form-control form-white" id="type" name="type" placeholder="Type (Home,Apparment)">
+              </div>
+              <div class="col-md-12 form-group">
+                <input name="term" type="checkbox" value="" class="icheck" checked>Accept <a href="#0">terms and conditions</a>.
+              </div>
+
+              <div class="col-md-12 form-group">
+              <button type="submit" class="btn btn-success">Submit</button>
+             </div>
+             </div>
+            </div>
+          </div>
+      </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

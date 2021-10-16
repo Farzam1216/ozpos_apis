@@ -43,11 +43,9 @@
     </head>
     <body class="fixed-bottom-bar">
 
-        @include('customer.layouts.single.header')
 
         @yield('content')
 
-        @include('customer.layouts.single.footer')
 
         @include('customer.layouts.single.nav')
 
@@ -61,9 +59,6 @@
 
           var inProgress = false;
       </script>
-
-
-
         <script src="{{ url('/customer/js/map_select.js')}}"></script>
         <script type="text/javascript" src="{{ url('/customer/vendor/jquery/jquery.min.js')}}?v={{ env('APP_V') }}"></script>
         <script type="text/javascript" src="{{ url('/customer/vendor/bootstrap/js/bootstrap.bundle.min.js')}}?v={{ env('APP_V') }}"></script>
