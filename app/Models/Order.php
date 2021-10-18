@@ -95,10 +95,11 @@ class Order extends Model
         return User::find($this->user_id);
     }
 
-//    public function getOrderItemsAttribute()
-//    {
-//        return OrderChild::where('order_id',$this->attributes['id'])->get();
-//    }
+   public function getOrderItemsAttribute()
+   {
+      //  return OrderChild::where('order_id',$this->attributes['id'])->get();
+      return [];
+   }
 
     public function getUserAddressAttribute()
     {

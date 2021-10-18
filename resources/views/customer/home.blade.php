@@ -14,7 +14,7 @@
             $favicon = App\Models\GeneralSetting::find(1)->favicon;
         @endphp
         <link rel="icon" type="image/png" href="{{ url('images/upload/'.$favicon) }}">
-        <title>{{ $title }} | @yield('title')</title>
+        <title>{{ $title ?? '' }} | @yield('title')</title>
 
         <!-- Slick Slider -->
         <link rel="stylesheet" type="text/css" href="{{ url('/customer/vendor/slick/slick.min.css')}}?v={{ env('APP_V') }}" />
