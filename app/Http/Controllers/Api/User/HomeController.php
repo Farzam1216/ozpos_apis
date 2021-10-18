@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\User;
-   
+
    use App\Http\Controllers\Auth\LoginController;
    use App\Http\Controllers\Controller;
    use App\Models\Banner;
@@ -11,7 +11,7 @@
    use App\Models\Vendor;
    use Grimzy\LaravelMysqlSpatial\Types\Point;
    use Illuminate\Http\Request;
-   
+
    class HomeController extends Controller
    {
       public function apiBanner()
@@ -19,17 +19,17 @@
          $banners = Banner::where('status', 1)->orderBy('id', 'DESC')->get();
          return response(['success' => true, 'data' => $banners]);
       }
-      
+
       public function getNearBy()
       {
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
-         
+
          $Point = new Point($UserAddress->lat, $UserAddress->lang);
          $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
          if (!$DeliveryZoneNew)
-            return response(['success' => false, 'data' => 'Service not available in this area.']);
-         
+            return response(['success' => false, 'data' => []]);
+
          $radius = GeneralSetting::first()->radius;
          // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
          $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -41,10 +41,10 @@
                     $googleUrl,
                 );
             $googleDistance = json_decode($googleDistance);
-            
+
             $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
             $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
-            
+
             if (auth('api')->user() != null) {
                $user = auth('api')->user();
                $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
@@ -55,7 +55,7 @@
          \Log::critical($vendors);
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiTopRest()
       {
          $User = auth()->user();
@@ -94,7 +94,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiVegRest()
       {
          $User = auth()->user();
@@ -133,7 +133,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiNonVegRest()
       {
          $User = auth()->user();
@@ -172,7 +172,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiExploreRest()
       {
          $User = auth()->user();
@@ -211,7 +211,7 @@
          }
          return response(['success' => true, 'data' => $vendors]);
       }
-      
+
       public function apiFavorite(Request $request)
       {
          $data = auth()->user();
