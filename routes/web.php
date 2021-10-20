@@ -420,6 +420,9 @@ use App\Http\Controllers\multiDeleteController;
     Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
     Route::post('address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress'])->name('address.store');
     Route::get('change-address',[App\Http\Controllers\Customer\AddressController::class,'changeAddress'])->name('change.address');
+    Route::get('restaurant/checkout',[App\Http\Controllers\Customer\CustomerController::class,'checkout'])->name('checkout');
+    Route::post('restaurant/book-order',[App\Http\Controllers\Customer\CustomerController::class,'bookOrder'])->name('restaurant.payment');
+    Route::get('restaurant/order',[App\Http\Controllers\Customer\CustomerController::class,'completeBookOrder'])->name('restaurant.order');
    });
 
 

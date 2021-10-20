@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
+use App\Models\Order;
 use App\Models\OrderSetting;
+use App\Models\PaymentSetting;
 use App\Models\PromoCode;
 use App\Models\Role;
 use App\Models\User;
@@ -12,8 +14,10 @@ use App\Models\UserAddress;
 use App\Models\Vendor;
 use Auth;
 use Brian2694\Toastr\Facades\Toastr;
+use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Session;
 use Stripe\Coupon;
 
 class CustomerController extends Controller
@@ -225,17 +229,10 @@ class CustomerController extends Controller
          $coupon = PromoCode::where('promo_code',$request->coupon)->first();
          if($coupon)
          {
-          //  if($coupon->discountType == "percentage")
-          //  {
-                //  dd('cccc');
-               // $discount = ($request->idTotal/$coupon->discount) * 100;
-                // $discount    = $request->idTotal * $coupon->discount / 100;
-                // $subtotal    = $request->idTotal - $discount;
-                // $total       = $request->idTaxInput + $subtotal;
 
                 $discountType = $coupon->discountType;
                 $discount     = $coupon->discount;
-                return response()->json(['discountType'=>$discountType,'discount'=>$discount]);
+                return response()->json(['discountType'=>$discountType,'discount'=>$discount,'coupon_id'=> $coupon->id]);
 
          }
          else
@@ -244,6 +241,135 @@ class CustomerController extends Controller
          }
 
       }
+
+////// checkout /////
+
+
+public function checkout(Request $request)
+{
+
+  // dd($request->all());
+  Session::put(['total'=>$request->total,'idTax'=>$request->idTax,'iCoupons'=>$request->iCoupons,
+                'iDelivery'=>$request->iDelivery,'iGrandTotal'=>$request->iGrandTotal,'coupon_id'=>$request->coupon_id]);
+
+  $user=Auth::user()->id;
+  $userAddress = UserAddress::where('user_id',$user)->get();
+  $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+  return view('customer.checkout',compact('user','userAddress','selectedAddress'));
+}
+
+//// payment/////////////
+public function bookOrder(Request $request)
+{
+  // dd($request->all());
+
+//    $validation = $request->validate([
+//        'date' => 'bail|required',
+//        'time' => 'bail|required',
+//        'amount' => 'bail|required|numeric',
+//        'sub_total' => 'bail|required|numeric',
+//        'item' => 'bail|required',
+//        'vendor_id' => 'required',
+//        'delivery_type' => 'bail|required',
+// //             'address_id' => 'bail|required_if:delivery_type,HOME',
+//        'payment_type' => 'bail|required',
+//        'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
+//       // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
+// //             'tax' => 'required',
+//    ]);
+//         \Log::critical($request);
+//         return;
+
+   $bookData = $request->all();
+   $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
+   $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
+   $bookData['address_id'] = 32;
+   $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
+   $vendorUser = User::find($vendor->user_id);
+   $customer = auth()->user();
+
+   if ($bookData['payment_method'] == 'STRIPE') {
+      $paymentSetting = PaymentSetting::find(1);
+      $stripe_sk = $paymentSetting->stripe_secret_key;
+      $currency = GeneralSetting::find(1)->currency;
+      $stripe = new \Stripe\StripeClient($stripe_sk);
+      $charge = $stripe->charges->create(
+          [
+              "amount" => $bookData['amount'] * 100,
+              "currency" => $currency,
+              "source" => $request->stripe_token,
+          ]);
+      $bookData['payment_token'] = $charge->id;
+   }
+   if ($bookData['payment_method'] == 'WALLET') {
+      $user = auth()->user();
+      if ($bookData['amount'] > $user->balance) {
+         return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
+      }
+   }
+   $bookData['user_id'] = auth()->user()->id;
+
+   $PromoCode = PromoCode::find($bookData['coupon_id']);
+   if ($PromoCode) {
+      $PromoCode->count_max_user = $PromoCode->count_max_user + 1;
+      $PromoCode->count_max_count = $PromoCode->count_max_count + 1;
+      $PromoCode->count_max_order = $PromoCode->count_max_order + 1;
+      $PromoCode->save();
+   }
+   else {
+      $bookData['coupon_id'] = null;
+      $bookData['promocode_price'] = 0;
+   }
+
+   $bookData['order_id'] = '#' . rand(100000, 999999);
+   $bookData['vendor_id'] = $vendor->id;
+  //  $bookData['order_data'] = $bookData['item'];
+   $order = Order::create($bookData);
+//         if ($bookData['payment_type'] == 'WALLET') {
+//            $user->withdraw($bookData['amount'], [$order->id]);
+//         }
+//         $bookData['item'] = json_decode($bookData['item'], true);
+//         foreach ($bookData['item'] as $child_item) {
+//            $order_child = array();
+//            $order_child['order_id'] = $order->id;
+//            $order_child['item'] = $child_item['id'];
+//            $order_child['price'] = $child_item['price'];
+//            $order_child['qty'] = $child_item['qty'];
+//            if (isset($child_item['custimization'])) {
+//               $order_child['custimization'] = $child_item['custimization'];
+//            }
+//            OrderChild::create($order_child);
+//         }
+//        $this->sendVendorOrderNotification($vendor,$order->id);
+//        $this->sendUserNotification($bookData['user_id'],$order->id);
+            app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
+           $amount = $order->amount;
+//         $tax = array();
+//         if ($vendor->admin_comission_type == 'percentage') {
+//            $comm = $amount * $vendor->admin_comission_value;
+//            $tax['admin_commission'] = intval($comm / 100);
+//            $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
+//         }
+//         if ($vendor->admin_comission_type == 'amount') {
+//            $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
+//            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
+//         }
+//         $order->update($tax);
+
+//         $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+
+//         if ($order->payment_type == 'FLUTTERWAVE') {
+//            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
+//         } else {
+      return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
+//         }
+}
+
+        public function completeBookOrder()
+        {
+           dd('successfull');
+        }
+
 
     public function topRest(/* Request $request */)
     {

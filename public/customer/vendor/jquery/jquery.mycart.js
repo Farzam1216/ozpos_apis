@@ -158,9 +158,6 @@
       var $cartBadgePhone = $("." + options.classCartBadgePhone);
 
       var idCartModal = 'my-cart-modal';
-      var idCartCheckoutModal = 'my-cart-checkout-modal';
-      var idStripeTable = 'my-stripe-table';
-      var checkoutButton = 'my-checkout-button';
       var idCartTable = 'my-cart-table';
       var classProduct = 'my-product';
       var classProductQuantity = 'my-product-quantity';
@@ -183,6 +180,7 @@
       var idDiscountPrice = 'my-cart-discount-price';
       var taxType = null;
       var tax = null;
+      var couponID = null;
       var couponType = null;
       var couponCode = '';
       var freeDelivery = '';
@@ -216,51 +214,7 @@
              '</div>'
          );
       }
-      if($("#" + idCartCheckoutModal)) {
-        $('body').append(
-            '<div class="modal fade" id="' + idCartCheckoutModal + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">' +
-            '<div class="modal-dialog" role="document">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<h4 class="modal-title" id="myModalLabel"><i class="feather-shopping-cart"></i> Payment Method </h4>' +
-            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<form action="" method="POST">'+
-            '<div class="row">'+
-            '<div class="col-sm-12 mx-auto">'+
-            '<div class="wrappers">'+
-            '<input type="radio" class="cash" name="payment" id="option-1" checked>'+
-            '<input type="radio" class="stripe" name="payment" id="option-2">'+
-            '<label for="option-1" class="option option-1">'+
-            '<div class="dot"></div>'+
-            '<span>Cash on Delivery</span>'+
-            '</label>'+
-            '<label for="option-2" class="option option-2">'+
-            '<div class="dot"></div>'+
-            '<span>Stripe</span>'+
-            '</label>'+
-            '</div>' +
 
-            '</div>' +
-
-            '<div class="col-sm-8 mx-auto">'+
-            '<span id="'+ idStripeTable +'"></span>'+
-
-            '</div>' +
-            '</div>'+
-            '</form>'+
-            '</div>' +
-            '<div class="modal-footer" id="'+ checkoutButton+'" style="display:none">' +
-            '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-            '<button type="button" class="btn btn-primary" id="' + idCheckoutCart + '">Checkout</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>'
-        );
-
-      }
 
       var drawTable = function () {
          var $cartTable = $("#" + idCartTable);
@@ -320,6 +274,7 @@
 
 
 
+
          showGrandTotal();
 
          let base_url = window.location.origin;
@@ -362,6 +317,7 @@
                success: function (data) {
                   couponType = data.discountType;
                   couponCode = data.discount;
+                  couponID = data.coupon_id;
 
                   showGrandTotal();
                }
@@ -464,11 +420,42 @@
 
          $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
+
+  ///////////// store into session ///
+
+
+           var iTotal = $("#" + idTotal).data();
+           var iTax    = $("#" + idTax).data();
+           var iCoupons =$("#" + idCoupons).data();
+            var iDelivery  =$("#" + idDelivery).data();
+             var iGrandTotal  =$("#" + idGrandTotal).data();
+
+         $("#" + idCheckoutCart).click(function () {
+          var products = ProductManager.getAllProducts();
+          const url = "checkout?total="+ iTotal.value + "&idTax=" + iTax.value +
+                    "&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID  ;
+
+         window.location.href = url;
+         //alert('asdasd');
+         //if (!products.length) {
+         //$("#" + idEmptyCartMessage).fadeTo('fast', 0.5).fadeTo('fast', 1.0);
+         //return;
+         //}
+         //updateCart();
+         //options.checkoutCart(ProductManager.getAllProducts());
+         //ProductManager.clearProduct();
+         //$cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
+         //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
+
+       });
+
       }
 
       var showDiscountPrice = function (products) {
          $("#" + idDiscountPrice).text("$" + options.getDiscountPrice(products));
       }
+
+
 
       /*
       EVENT
@@ -552,62 +539,8 @@
          });
       });
 
-      $("#" + idCheckoutCart).click(function () {
-         var products = ProductManager.getAllProducts();
-         $("#" + idCartCheckoutModal).modal("show");
-        //  alert('asdasd');
-        //  if (!products.length) {
-        //     $("#" + idEmptyCartMessage).fadeTo('fast', 0.5).fadeTo('fast', 1.0);
-        //     return;
-        //  }
-        //  updateCart();
-        //  options.checkoutCart(ProductManager.getAllProducts());
-        //  ProductManager.clearProduct();
-        //  $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
-        //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
 
-      });
 
-      ///////////////////  Append Stripe checkout ?////////////////////////
-      $(document).ready(function(){
-        $(".cash").click(function(){
-
-            $("#cash").prop("checked", true);
-            $("#" + idStripeTable).hide();
-            $("#" + idStripeTable).empty();
-            $("#" + checkoutButton).show();
-
-        });
-        $(".stripe").click(function(){
-          $("#" + idStripeTable).show();
-          $("#" + checkoutButton).hide();
-
-            if($("#striped").prop("checked", true))
-            {
-            $("#" + idStripeTable).append(
-              '<div class="bg-white p-5 clearfix border-bottom" style=" margin-top: 60px;">' +
-              '<div class="row justify-content-center"><div class="col-md-6">'+
-              '<p class="mb-1">Name on Card<input type="text" id="cname" class="form-control"  name="cardname" placeholder="John More Doe"></p>' +
-              '<p class="mb-1">Credit card number <input type="text" class="form-control"  id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444"></p>' +
-              '<p class="mb-1">Exp Year <input type="text"class="form-control"  id="expmonth" name="expmonth" placeholder="September"></p>' +
-              '<p class="mb-1">CVV <input type="text"class="form-control"  id="cvv" name="cvv" placeholder="352"></p>' +
-              '<p class="mb-1">Exp Yea <input type="text" id="expmonth" class="form-control" name="expmonth" placeholder="September"></span></p>' +
-              '<hr>' +
-              '<div class="modal-footer">' +
-              '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-              '<button type="button" class="btn btn-primary" id="' + idCheckoutCart + '">Checkout</button>' +
-              '</div>' +
-              '</div>'+
-              '</div>'+
-              '</div>'
-            );
-          }
-          else
-          {
-            $("#" + idStripeTable).empty();
-          }
-        });
-    });
 
       $(document).on('keypress', "." + classProductQuantity, function (evt) {
          if (evt.keyCode == 38 || evt.keyCode == 40) {

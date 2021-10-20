@@ -60,6 +60,7 @@
           var inProgress = false;
       </script>
         <script src="{{ url('/customer/js/map_select.js')}}"></script>
+
         <script type="text/javascript" src="{{ url('/customer/vendor/jquery/jquery.min.js')}}?v={{ env('APP_V') }}"></script>
         <script type="text/javascript" src="{{ url('/customer/vendor/bootstrap/js/bootstrap.bundle.min.js')}}?v={{ env('APP_V') }}"></script>
         <!-- slick Slider JS-->

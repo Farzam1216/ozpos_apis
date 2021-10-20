@@ -135,7 +135,7 @@ body {
       <div class="col-md-6 ml-auto">
 
         <div class="login-page vh-100">
-          <input id="pac-input" class="form-control" type="text" placeholder="Enter your location or drag marker" style="margin: 10px 4%;"/>
+          <input id="pac-input" class="form-control" type="text" placeholder="Enter your location or drag marker" style="margin: 10px 4%;" required>
           <div id="map" class="map"></div>
           <div class="container conform">
             <div class="row justify-content-center">
@@ -149,14 +149,14 @@ body {
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-white" id="address" name="address" placeholder="Selected address" readonly="readonly">
+                                    <input type="text" class="form-control form-white" id="address" name="address" placeholder="Selected address" readonly="readonly" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-white" id="type" name="type" placeholder="Type (Home,Apparment)">
+                                    <input type="text" class="form-control form-white" id="type" name="type" placeholder="Type (Home,Apparment)" required>
                                 </div>
                             </div>
                         </div>
