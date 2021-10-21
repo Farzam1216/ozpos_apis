@@ -143,8 +143,8 @@
       Route::get('wallet_balance', 'UserApiController@apiWalletBalance');
       Route::post('add_balance', 'UserApiController@apiUserAddBalance');
       Route::post('user_change_password', 'UserApiController@apiChangePassword');
-   
-   
+      
+      
       //////////////////////////////////////////////       General      //////////////////////////////////////////////
       
       
