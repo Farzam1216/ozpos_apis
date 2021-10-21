@@ -160,7 +160,6 @@
 				                    @else
 		                        		<input type="radio" value="{{$userAddress->id}}" name="user_address" class="icheck update_user_address">
 				                    @endif
-
 	                        		{{$userAddress->type}}
 	                        	</label>
 		                        <i class="icon_pin"></i>
