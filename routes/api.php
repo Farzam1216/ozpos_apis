@@ -166,6 +166,10 @@
       Route::get('nonveg_rest', [App\Http\Controllers\Api\User\HomeController::class, 'apiNonVegRest']);
       Route::get('explore_rest', [App\Http\Controllers\Api\User\HomeController::class, 'apiExploreRest']);
       Route::post('faviroute', [App\Http\Controllers\Api\User\HomeController::class, 'apiFavorite']);
+   
+   
+      //////////////////////////////////////////////        Vednor       //////////////////////////////////////////////
+      Route::get('slider/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSlider']);
       
    });
    

@@ -321,6 +321,10 @@ use App\Http\Controllers\multiDeleteController;
       Route::post('month', [App\Http\Controllers\Vendor\VendorController::class, 'month']);
 
 
+      //////////             Slider Module                //////////
+      Route::post('slider/selection_destroy', [App\Http\Controllers\Vendor\SliderModule\SliderController::class, 'selection_destroy']);
+      
+
       //////////             Menu Module                //////////
       Route::post('item_category/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\ItemCategoryController::class, 'selection_destroy']);
       Route::post('item_size/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\ItemSizeController::class, 'selection_destroy']);
@@ -355,6 +359,9 @@ use App\Http\Controllers\multiDeleteController;
           'deliveryZone' => Admin\DeliveryZoneController::class,
           'deliveryZoneNew' => DeliveryZoneNewController::class,
 
+
+         //////////             Slider Module                //////////
+          'slider' => Vendor\SliderModule\SliderController::class,
 
          //////////             Menu Module                //////////
           'item_category' => Vendor\MenuModule\ItemCategoryController::class,

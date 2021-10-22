@@ -126,6 +126,9 @@
                 <a href="{{ url('vendor/order_setting') }}" class="dropdown-item has-icon">
                     <i class="fas fa-sort"></i> Order Settings
                 </a>
+                <a href="{{ url('vendor/slider') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-list"></i> Slider
+                </a>
                 <a href="{{ url('vendor/change_password') }}" class="dropdown-item has-icon">
                     <i class="fas fa-key"></i> {{__('Change password')}}
                 </a>
