@@ -1,5 +1,6 @@
 
 
+@section('postScript')
 <style>
 
 
@@ -126,13 +127,13 @@ body {
 }
     </style>
 
-
+@append
 <header class="section-header">
     <section class="header-main shadow-sm bg-white">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-1">
-                    <a href="home.html" class="brand-wrap mb-0">
+                    <a href="#" class="brand-wrap mb-0">
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png')}}">
                     </a>
                     <!-- brand-wrap.// -->
@@ -200,25 +201,33 @@ body {
 {{--                            </div>--}}
 {{--                        </a>--}}
                         <!-- signin -->
+                       @if (!Auth::check())
+
+
                         <a href="login.html" class="widget-header mr-4 text-dark m-none">
                             <div class="icon d-flex align-items-center">
                                 <i class="feather-user h6 mr-2 mb-0"></i> <span>Sign in</span>
                             </div>
                         </a>
+                        @else
                         <!-- my account -->
                         <div class="dropdown mr-4 m-none">
                             <a href="#" class="dropdown-toggle text-dark py-3 d-block" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img alt="#" src="{{ url('/customer/img/user/1.jpg')}}" class="img-fluid rounded-circle header-user mr-2 header-user"> Hi Osahan
+                                <img alt="#" src="{{ asset('customer/img/user/1.jpg')}}" class="img-fluid rounded-circle header-user mr-2 header-user"> {{ Auth::user()->name }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="profile.html">My account</a>
-                                <a class="dropdown-item" href="faq.html">Delivery support</a>
+                                <a class="dropdown-item" href="{{ url('customer/order-history')}}">Order History</a>
                                 <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                 <a class="dropdown-item" href="terms.html">Term of use</a>
                                 <a class="dropdown-item" href="privacy.html">Privacy policy</a>
-                                <a class="dropdown-item" href="login.html">Logout</a>
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  <i class="fas fa-sign-out-alt"></i>
+                                  {{__('Logout')}}
+                              </a>
                             </div>
                         </div>
+                        @endif
                         <!-- signin -->
                         <a href="javascript:void(0)" class="widget-header mr-4 text-dark">
                             <div class="icon d-flex align-items-center">
@@ -244,12 +253,12 @@ body {
     <!-- header-main .// -->
 </header>
 
-<div class="d-none">
+{{-- <div class="d-none">
     <div class="bg-primary p-3 d-flex align-items-center">
         <a class="toggle togglew toggle-2" href="#"><span></span></a>
         <h4 class="font-weight-bold m-0 text-white">Osahan Bar</h4>
     </div>
-</div>
+</div> --}}
 
   {{-- Customer Address Model --}}
 <div class="modal fade" id="addModalAddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -257,7 +266,9 @@ body {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">Add Address</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
       </div>
       <div class="modal-body">
 
@@ -291,6 +302,7 @@ body {
               <div class="col-md-12 form-group">
               <button type="submit" class="btn btn-success">Submit</button>
              </div>
+
              </div>
             </div>
           </div>
@@ -300,5 +312,4 @@ body {
     </div>
   </div>
 </div>
-
 

@@ -14,6 +14,7 @@ use App\Models\UserAddress;
 use App\Models\Vendor;
 use Auth;
 use Brian2694\Toastr\Facades\Toastr;
+use Carbon\Carbon;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -177,7 +178,7 @@ class CustomerController extends Controller
         }
       }
 
-      public function deliveryLocation( Request $request)
+      public function deliveryLocation(Request $request)
       {
         $input = $request->all();
 
@@ -263,32 +264,36 @@ public function bookOrder(Request $request)
 {
   // dd($request->all());
 
-//    $validation = $request->validate([
-//        'date' => 'bail|required',
-//        'time' => 'bail|required',
-//        'amount' => 'bail|required|numeric',
-//        'sub_total' => 'bail|required|numeric',
-//        'item' => 'bail|required',
-//        'vendor_id' => 'required',
-//        'delivery_type' => 'bail|required',
-// //             'address_id' => 'bail|required_if:delivery_type,HOME',
-//        'payment_type' => 'bail|required',
-//        'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
-//       // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
-// //             'tax' => 'required',
-//    ]);
+   $validation = $request->validate([
+      //  'date' => 'bail|required',
+      //  'time' => 'bail|required',
+       'amount' => 'bail|required|numeric',
+       'sub_total' => 'bail|required|numeric',
+      //  'item' => 'bail|required',
+       'vendor_id' => 'required',
+       'delivery_type' => 'bail|required',
+//             'address_id' => 'bail|required_if:delivery_type,HOME',
+       'payment_type' => 'bail|required',
+       'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
+      // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
+       'tax' => 'required',
+   ]);
 //         \Log::critical($request);
 //         return;
 
    $bookData = $request->all();
+   $bookData['date'] = Carbon::now()->format('Y-m-d');
+   $bookData['time'] = Carbon::now()->format('g:i A');;
+    //  dd($time);
+
    $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
    $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
-   $bookData['address_id'] = 32;
+   $bookData['order_status'] = "PENDING";
    $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
    $vendorUser = User::find($vendor->user_id);
    $customer = auth()->user();
 
-   if ($bookData['payment_method'] == 'STRIPE') {
+   if ($bookData['payment_type'] == 'STRIPE') {
       $paymentSetting = PaymentSetting::find(1);
       $stripe_sk = $paymentSetting->stripe_secret_key;
       $currency = GeneralSetting::find(1)->currency;
@@ -297,19 +302,20 @@ public function bookOrder(Request $request)
           [
               "amount" => $bookData['amount'] * 100,
               "currency" => $currency,
-              "source" => $request->stripe_token,
+              "source" => $request->payment_token,
           ]);
       $bookData['payment_token'] = $charge->id;
    }
-   if ($bookData['payment_method'] == 'WALLET') {
+   if ($bookData['payment_type'] == 'WALLET') {
       $user = auth()->user();
+      dd($user);
       if ($bookData['amount'] > $user->balance) {
          return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
       }
    }
    $bookData['user_id'] = auth()->user()->id;
 
-   $PromoCode = PromoCode::find($bookData['coupon_id']);
+   $PromoCode = PromoCode::find($bookData['promocode_id']);
    if ($PromoCode) {
       $PromoCode->count_max_user = $PromoCode->count_max_user + 1;
       $PromoCode->count_max_count = $PromoCode->count_max_count + 1;
@@ -317,7 +323,7 @@ public function bookOrder(Request $request)
       $PromoCode->save();
    }
    else {
-      $bookData['coupon_id'] = null;
+      $bookData['promocode_id'] = null;
       $bookData['promocode_price'] = 0;
    }
 
@@ -343,7 +349,7 @@ public function bookOrder(Request $request)
 //        $this->sendVendorOrderNotification($vendor,$order->id);
 //        $this->sendUserNotification($bookData['user_id'],$order->id);
             app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
-           $amount = $order->amount;
+            $amount = $order->amount;
 //         $tax = array();
 //         if ($vendor->admin_comission_type == 'percentage') {
 //            $comm = $amount * $vendor->admin_comission_value;
@@ -361,7 +367,9 @@ public function bookOrder(Request $request)
 //         if ($order->payment_type == 'FLUTTERWAVE') {
 //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
 //         } else {
-      return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
+
+
+            return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
 //         }
 }
 

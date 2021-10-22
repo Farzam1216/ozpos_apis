@@ -2,7 +2,7 @@
 <nav id="main-nav">
     <ul class="second-nav">
         <li><a href="home.html"><i class="feather-home mr-2"></i> Homepage</a></li>
-        <li><a href="my_order.html"><i class="feather-list mr-2"></i> My Orders</a></li>
+        <li><a href="{{ url('customer/order-history')}}"><i class="feather-list mr-2"></i> My Orders</a></li>
         <li>
             <a href="#"><i class="feather-edit-2 mr-2"></i> Authentication</a>
             <ul>
