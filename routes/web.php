@@ -323,7 +323,7 @@ use App\Http\Controllers\multiDeleteController;
 
       //////////             Slider Module                //////////
       Route::post('slider/selection_destroy', [App\Http\Controllers\Vendor\SliderModule\SliderController::class, 'selection_destroy']);
-      
+
 
       //////////             Menu Module                //////////
       Route::post('item_category/selection_destroy', [App\Http\Controllers\Vendor\MenuModule\ItemCategoryController::class, 'selection_destroy']);
@@ -433,6 +433,9 @@ use App\Http\Controllers\multiDeleteController;
 
     ///////// order history///
     Route::get('/order-history',[App\Http\Controllers\Customer\OrderController::class,'orderHistory'])->name('order.history');
+    Route::get('/get-orderModel/{id}', [App\Http\Controllers\Customer\OrderController::class , 'getOrderModel']);
+    Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class , 'getOrder'])->name('order.get');
+    Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class , 'trackOrder'])->name('order.track');
    });
 
 

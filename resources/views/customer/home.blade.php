@@ -77,7 +77,6 @@
       ></script> --}}
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=geometry,places&ext=.js"></script>
 
-
       @yield('postScript')
       <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
       {!! Toastr::message() !!}

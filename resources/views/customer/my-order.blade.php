@@ -75,6 +75,9 @@
                             </div>
                         </div>
                           @empty
+                          <div>
+                            <p class="mb-0 font-weight-bold text-center">No completed order are availables yet ...</p>
+                          </div>
 
                           @endforelse
 
@@ -115,7 +118,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab" style="top: 60px;">
-                        <div class="order-body">
+                        <div class="order-body" id="track-order">
 
                           @forelse ($pendingOrders as $pending)
 
@@ -146,15 +149,20 @@
                                         <div class="text-muted m-0 ml-auto mr-3 small">Total Payment<br>
                                             <span class="text-dark font-weight-bold">${{ $pending->amount }}</span>
                                         </div>
-                                        {{-- <div class="text-right">
-                                            <a href="status_onprocess.html" class="btn btn-primary px-3">Track</a>
-                                            <a href="contact-us.html" class="btn btn-outline-primary px-3">Help</a>
-                                        </div> --}}
+
+                                        <div class="text-right">
+                                            <button class="btn btn-primary px-3" onclick="orderTrack('{{ $pending->id }}')">Track</button>
+                                            {{-- <a href="contact-us.html" class="btn btn-outline-primary px-3">Help</a> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                           @empty
+
+                            <div>
+                              <p class="mb-0 font-weight-bold text-center">No pendding order are availables yet ...</p>
+                          </div>
+
                             @endforelse
                         </div>
                     </div>
@@ -195,6 +203,9 @@
                                 </div>
                             </div>
                             @empty
+                            <div>
+                              <p class="mb-0 font-weight-bold text-center">No any Cancel order are availables yet ...</p>
+                          </div>
 
                             @endforelse
                         </div>
@@ -204,3 +215,27 @@
         </div>
       </section>
 @endsection
+@section('postScript')
+<script>
+ function orderTrack(order_id)
+ {
+    // alert(order_id);
+
+    $.ajax({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type: "get",
+      url:"{{ url('customer/get-orderModel')}}/"+order_id,
+      success: function (result){
+                $("#track-order").html(result)
+
+
+      },error: function (err){
+
+      }
+    });
+
+ }
+</script>
+@append

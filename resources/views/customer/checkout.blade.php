@@ -477,7 +477,7 @@ function stripeResponseHandler(status, response)
                                 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                     window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/book");
                                 @else
-                                window.location.replace("{{ url('customer/restaurant/order/success', request()->route('id')) }}");
+                                window.location.replace("{{ url('customer/order-history')}}");
                                 @endif
                             }, 1000);
                         }
@@ -526,7 +526,7 @@ function codResponseHandler()
                             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                 window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/3");
                             @else
-                            window.location.replace("{{ url('customer/restaurant/order/success', request()->route('id')) }}");
+                            window.location.replace("{{ url('customer/order-history')}}");
                             @endif
                         }, 1000);
                     }
