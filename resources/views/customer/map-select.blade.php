@@ -133,14 +133,16 @@ body {
    </video>
   <div class="row d-flex">
       <div class="col-md-6 ml-auto">
+        <script>
 
+      </script>
         <div class="login-page vh-100">
           <input id="pac-input" class="form-control" type="text" placeholder="Enter your location or drag marker" style="margin: 10px 4%;" required>
           <div id="map" class="map"></div>
           <div class="container conform">
             <div class="row justify-content-center">
                 <div class="col-md-12">
-                        <form method="post" action="{{route('delivery.location')}}"  id="myDeliveryLocation">
+                        <form method="post" action="{{route('customer.delivery.location.store')}}"  id="myDeliveryLocation">
                         @csrf
                         <input type="hidden" id="lang" name="lang" readonly="readonly">
                         <input type="hidden" id="lat" name="lat" readonly="readonly">
@@ -150,7 +152,10 @@ body {
                             <div class="col-12">
                                 <div class="form-group">
                                     <input type="text" class="form-control form-white" id="address" name="address" placeholder="Selected address" readonly="readonly" required>
-                                </div>
+                                    @if($errors->has('address'))
+                                      <div class="error text-danger">{{ $errors->first('address') }}</div>
+                                   @endif
+                                  </div>
                             </div>
                         </div>
                         <div class="row">

@@ -93,8 +93,6 @@
 
 <!-- Post scripts for all pages-->
 @yield('postScript')
-
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=geometry,places&ext=.js"></script>
 <script>
 
@@ -237,7 +235,7 @@ google.maps.event.addListener(map, "dragend", function (argMarker) {
       }
     });
     $.ajax({
-      url:"{{route('change.address')}}",
+      url:"{{route('customer.change.address')}}",
       method: "GET",
       data:{address_id:address_id},
       success: function(data) {

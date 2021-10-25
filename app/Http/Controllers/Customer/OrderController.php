@@ -18,13 +18,16 @@ class OrderController extends Controller
     app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
     // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
     $pendingOrders = Order::where('user_id', auth()->user()->id)
-                      ->where('order_status','PENDING')
+                      ->where(function($q) {
+                        $q->where('order_status','PENDING')
                       ->orWhere('order_status','APPROVE')
                       ->orWhere('order_status','ACCEPT')
                       ->orWhere('order_status','PICKUP')
                       ->orWhere('order_status','DELIVERED')
-                      ->orWhere('order_status','REJECT')
-                      ->orderBy('id', 'DESC')->get();
+                      ->orWhere('order_status','REJECT');
+                    })->orderBy('id', 'DESC')->get();
+                      // dd($pendingOrders);
+
     $cancelOrders = Order::where('user_id', auth()->user()->id)
                       ->where('order_status','CANCEL')->orderBy('id', 'DESC')->get();
     $completeOrders = Order::where('user_id', auth()->user()->id)
@@ -39,7 +42,7 @@ class OrderController extends Controller
     //       ];
     //    }
     // }
-    // dd($cancelOrders);
+
     $user=Auth::user()->id;
     $userAddress = UserAddress::where('user_id',$user)->get();
     $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
@@ -61,7 +64,7 @@ class OrderController extends Controller
       //         'contact' => $delivery_person->contact,
       //     ];
       // }
-
+      // dd($order->userAddress->address);
       return view('customer.modals.track_Onprocess',compact('order'));
   }
   public function getOrder($order_id)

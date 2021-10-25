@@ -71,8 +71,7 @@ class CustomerController extends Controller
                               }
                               else
                               {
-                                Toastr::success('Successfully Logged in!');
-                                return view('customer.map-select');
+                                return redirect()->route('customer.delivery.location.index');
                                   // Session::put('vendor_driver', 0);
                               }
                               // dd('asdsasdasd');
@@ -178,12 +177,22 @@ class CustomerController extends Controller
         }
       }
 
-      public function deliveryLocation(Request $request)
+      public function deliveryLocation()
       {
-        $input = $request->all();
-
+        Toastr::warning('Please Select Your Location on the Map!');
+        Toastr::success('Successfully Logged in!');
+        return view('customer.map-select');
+      }
+      public function storeDeliveryLocation(Request $request)
+      {
+        $request->validate([
+          'address' => 'bail|required',
+          'lang' => 'bail|required',
+          'lat' => 'bail|required',
+          'type' => 'bail|required',
+      ]);
+          $input = $request->all();
           $address = new UserAddress;
-
           $address->create($input);
 
           session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
@@ -251,7 +260,8 @@ public function checkout(Request $request)
 
   // dd($request->all());
   Session::put(['total'=>$request->total,'idTax'=>$request->idTax,'iCoupons'=>$request->iCoupons,
-                'iDelivery'=>$request->iDelivery,'iGrandTotal'=>$request->iGrandTotal,'coupon_id'=>$request->coupon_id]);
+                'iDelivery'=>$request->iDelivery,'iGrandTotal'=>$request->iGrandTotal,'coupon_id'=>$request->coupon_id,'product'=>$request
+              ->product]);
 
   $user=Auth::user()->id;
   $userAddress = UserAddress::where('user_id',$user)->get();
@@ -262,7 +272,8 @@ public function checkout(Request $request)
 //// payment/////////////
 public function bookOrder(Request $request)
 {
-  // dd($request->all());
+  // dd( Session::get('product'));
+
 
    $validation = $request->validate([
       //  'date' => 'bail|required',
@@ -281,9 +292,11 @@ public function bookOrder(Request $request)
 //         \Log::critical($request);
 //         return;
 
+// foreach($data as )
    $bookData = $request->all();
    $bookData['date'] = Carbon::now()->format('Y-m-d');
-   $bookData['time'] = Carbon::now()->format('g:i A');;
+   $bookData['time'] = Carbon::now()->format('g:i A');
+  //  $bookData['time'] = Carbon::now()->format('g:i A');
     //  dd($time);
 
    $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
@@ -308,7 +321,7 @@ public function bookOrder(Request $request)
    }
    if ($bookData['payment_type'] == 'WALLET') {
       $user = auth()->user();
-      dd($user);
+      // dd($user);
       if ($bookData['amount'] > $user->balance) {
          return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
       }
@@ -329,8 +342,84 @@ public function bookOrder(Request $request)
 
    $bookData['order_id'] = '#' . rand(100000, 999999);
    $bookData['vendor_id'] = $vendor->id;
-  //  $bookData['order_data'] = $bookData['item'];
+   $bookData['order_data'] =Session::get('product');
    $order = Order::create($bookData);
+
+   $daiterm = Session::get('product');
+
+    $data = json_decode($daiterm);
+// dd($data);
+    $finalData = [];
+    $cart = array();
+    $menu = array();
+    $addons = array();
+    $size = array();
+    $finalData['vendor_id'] = $vendor->id;
+    $finalData['cart'] = [];
+    // array_push($finalData,['vendor_id'=>$vendor->id]);
+    $idx = -1;
+    foreach($data as $key=>$item)
+    {
+      $idx++;
+      $finalData['cart'][$idx] = [
+            'category'=> $item->summary->category,
+            'total_amount'=>$item->price,
+            'menu'=>[]
+        ];
+        $idx2 = -1;
+      foreach($item->summary->menu  as $key2=> $value)
+      {
+        $idx2++;
+        $finalData['cart'][$idx]['menu'][$idx2] = [
+          'id'=> $value->id,
+          'name'=>$value->name,
+          'image'=>$item->image,
+          'total_amount'=>$item->price,
+          'addons'=>[]
+          //'deals_items' => $value->deals_items
+      ];
+
+      $idx3 = -1;
+          foreach($value->addons as $addo)
+          {
+            $idx3++;
+            $finalData['cart'][$idx]['menu'][$idx2]['addons'][$idx3] = [
+              'id'=> $addo->id,
+              'name'=>$addo->name,
+              'price'=>$addo->price,
+              //  'deals_items' => $value->deals_items
+
+          ];
+
+
+            // dd($addo->id);
+          }
+      }
+      // if(isset($item->summary->size))
+      //   {
+      //     foreach($item->summary->size as $siz)
+      //     {
+      //       $finalData['size'] = [
+      //         'id'=> $siz->id,
+      //         'size_name'=>$siz->name,
+
+      //     ];
+      //     }
+      //   }
+      //   else
+      //   {
+      //     $finalData['size'] ="null";
+      //   }
+      //   $finalData[] = [
+      //     'menu_category'=> "null",
+      //     'quantity'=>$item->quantity,
+      // ];
+      // dd();
+
+    }
+
+    dd(json_encode($finalData));
+
 //         if ($bookData['payment_type'] == 'WALLET') {
 //            $user->withdraw($bookData['amount'], [$order->id]);
 //         }
@@ -373,10 +462,10 @@ public function bookOrder(Request $request)
 //         }
 }
 
-        public function completeBookOrder()
-        {
-           dd('successfull');
-        }
+        // public function completeBookOrder()
+        // {
+        //    dd('successfull');
+        // }
 
 
     public function topRest(/* Request $request */)

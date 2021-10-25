@@ -41,4 +41,8 @@ class UserAddress extends Model
     {
         return $this->hasMany(User::class,'user_id','id');
     }
+    public function order()
+    {
+       return $this->hasMany(Order::class,'address_id','id');
+    }
 }

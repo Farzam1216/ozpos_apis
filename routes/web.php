@@ -418,18 +418,20 @@ use App\Http\Controllers\multiDeleteController;
    Route::get('/customer/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('customer.signup');
    Route::post('/customer/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
    Route::post('/customer/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
-   Route::post('customer/delivery/location',[CustomerController::class,'deliveryLocation'])->name('delivery.location');
+
 
    ////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
-   Route::middleware(['auth'])->prefix('customer')->group(function () {
+   Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
     Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
-    Route::post('address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress'])->name('address.store');
-    Route::get('change-address',[App\Http\Controllers\Customer\AddressController::class,'changeAddress'])->name('change.address');
     Route::get('restaurant/checkout',[App\Http\Controllers\Customer\CustomerController::class,'checkout'])->name('checkout');
     Route::post('restaurant/book-order',[App\Http\Controllers\Customer\CustomerController::class,'bookOrder'])->name('restaurant.payment');
     Route::get('/restaurant/order/success',[App\Http\Controllers\Customer\CustomerController::class,'completeBookOrder'])->name('restaurant.order');
+    Route::get('/delivery-location',[CustomerController::class,'deliveryLocation'])->name('delivery.location.index');
+    Route::match(['post','get'],'/delivery-location/save',[CustomerController::class,'storeDeliveryLocation'])->name('delivery.location.store');
+    Route::post('address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress'])->name('address.store');
+    Route::get('change-address',[App\Http\Controllers\Customer\AddressController::class,'changeAddress'])->name('change.address');
 
     ///////// order history///
     Route::get('/order-history',[App\Http\Controllers\Customer\OrderController::class,'orderHistory'])->name('order.history');

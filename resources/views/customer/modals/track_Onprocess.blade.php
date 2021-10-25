@@ -53,7 +53,7 @@
                   <!-- Destination -->
                   <div class="p-3 border-bottom bg-white">
                       <h6 class="font-weight-bold">Destination</h6>
-                      <p class="m-0 small">554 West 142nd Street, New York, NY 10031</p>
+                      <p class="m-0 small">{{$order->userAddress->address}}</p>
                   </div>
                   <div class="p-3 border-bottom">
                       <p class="font-weight-bold small mb-1">Courier</p>
@@ -65,7 +65,7 @@
                   <div class="p-3 border-bottom bg-white">
                       <div class="d-flex align-items-center mb-2">
                           <h6 class="font-weight-bold mb-1">Total Cost</h6>
-                          <h6 class="font-weight-bold ml-auto mb-1">$8.52</h6>
+                          <h6 class="font-weight-bold ml-auto mb-1">${{$order->amount}}</h6>
                       </div>
                       <p class="m-0 small text-muted">You can check your order detail here,<br>Thank you for order.</p>
                   </div>

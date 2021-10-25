@@ -117,4 +117,9 @@
       {
          return UserAddress::where('id', $this->attributes['address_id'])->first(['lat', 'lang', 'address']);
       }
+
+      public function userAddress()
+      {
+         return $this->belongsTo(UserAddress::class,'address_id','id');
+      }
    }
