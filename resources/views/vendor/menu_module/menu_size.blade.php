@@ -53,7 +53,7 @@
       </div>
       
       <div class="section-body">
-         <h2 class="section-title">{ $title }} Management</h2>
+         <h2 class="section-title">{{ $title }} Management</h2>
          {{--         <p class="section-lead">{{__('Add, and categorize the menu adding sub-menus. (Add,Edit & Manage Menu Categories )')}}</p>--}}
          <div class="card">
             <div class="card-header">
