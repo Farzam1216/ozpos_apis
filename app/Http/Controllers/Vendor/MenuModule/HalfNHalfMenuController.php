@@ -5,7 +5,7 @@
    use App\Http\Controllers\CustomController;
    use App\Models\ItemCategory;
    use App\Models\HalfNHalfMenu;
-   use App\Models\HalfNHalfMenuItemCategory;
+//   use App\Models\HalfNHalfMenuItemCategory;
    use DB;
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
@@ -80,12 +80,12 @@
             $data['status'] = 0;
          
          
-         $HalfNHalfMenu = HalfNHalfMenu::create($data);
+         HalfNHalfMenu::create($data);
          
-         foreach ($data['item_categories'] as $ItemCategory)
-         {
-            HalfNHalfMenuItemCategory::create(['vendor_id' => $data['vendor_id'], 'half_n_half_menu_id' => $HalfNHalfMenu->id, 'item_category_id' => $ItemCategory]);
-         }
+//         foreach ($data['item_categories'] as $ItemCategory)
+//         {
+//            HalfNHalfMenuItemCategory::create(['vendor_id' => $data['vendor_id'], 'half_n_half_menu_id' => $HalfNHalfMenu->id, 'item_category_id' => $ItemCategory]);
+//         }
          
          return redirect()->back()->with('msg', 'Half n half Menu created.');
       }
@@ -124,8 +124,7 @@
          $request->validate([
              'name' => 'required',
              'description' => 'required',
-             'display_price' => 'nullable|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'item_category_id' => 'required',
          ]);
    
          $data = $request->all();

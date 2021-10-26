@@ -152,12 +152,12 @@
    
                   <div class="form-group">
                      <label class="form-control-label">Item Category<span class="text-danger">&nbsp;*</span></label>
-                     <select class="form-control @error('item_categories') is-invalid @enderror" name="item_categories" multiple>
+                     <select class="form-control @error('item_category_id') is-invalid @enderror" name="item_category_id">
                         @foreach(App\Models\ItemCategory::where('vendor_id', $Vendor->id)->get() as $ItemCategory)
-                           <option value="{{ $ItemCategory->id }}" @if(old('item_categories') === $ItemCategory->id) selected @endif >{{ $ItemCategory->name }}</option>
+                           <option value="{{ $ItemCategory->id }}" @if(old('item_category_id') === $ItemCategory->id) selected @endif >{{ $ItemCategory->name }}</option>
                         @endforeach
                      </select>
-                     @error('item_categories')
+                     @error('item_category_id')
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
@@ -228,12 +228,12 @@
                   
                   <div class="form-group">
                      <label class="form-control-label">Item Category<span class="text-danger">&nbsp;*</span></label>
-                     <select class="populate form-control @error('item_categories') is-invalid @enderror" name="item_categories" multiple>
+                     <select class="populate form-control @error('item_category_id') is-invalid @enderror" name="item_category_id">
                         @foreach(App\Models\ItemCategory::where('vendor_id', $Vendor->id)->get() as $ItemCategory)
-                           <option value="{{ $ItemCategory->id }}" @if(old('item_categories') === $ItemCategory->id) selected @endif >{{ $ItemCategory->name }}</option>
+                           <option value="{{ $ItemCategory->id }}" @if(old('item_category_id') === $ItemCategory->id) selected @endif >{{ $ItemCategory->name }}</option>
                         @endforeach
                      </select>
-                     @error('item_categories')
+                     @error('item_category_id')
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
