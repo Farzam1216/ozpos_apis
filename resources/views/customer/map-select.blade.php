@@ -133,9 +133,6 @@ body {
    </video>
   <div class="row d-flex">
       <div class="col-md-6 ml-auto">
-        <script>
-
-      </script>
         <div class="login-page vh-100">
           <input id="pac-input" class="form-control" type="text" placeholder="Enter your location or drag marker" style="margin: 10px 4%;" required>
           <div id="map" class="map"></div>

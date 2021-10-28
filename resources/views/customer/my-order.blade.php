@@ -18,13 +18,13 @@
                     <ul class="nav nav-tabsa custom-tabsa border-0 flex-column bg-white rounded overflow-hidden shadow-sm p-2 c-t-order"
                         id="myTab" role="tablist">
                         <li class="nav-item border-top" role="presentation">
-                          <a class="nav-link border-0 text-dark py-3 active" id="progress-tab" data-toggle="tab" href="#progress"
-                              role="tab" aria-controls="progress" aria-selected="false">
+                          <a class="nav-link border-0 text-dark py-3 " id="progress-tab" data-toggle="tab" href="#progress"
+                              role="tab" aria-controls="progress" aria-selected="true">
                               <i class="feather-clock mr-2 text-warning mb-0"></i> On Progress</a>
                       </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link border-0 text-dark py-3 " id="completed-tab" data-toggle="tab"
-                                href="#completed" role="tab" aria-controls="completed" aria-selected="true">
+                            <a class="nav-link border-0 text-dark py-3 active" id="completed-tab" data-toggle="tab"
+                                href="#completed" role="tab" aria-controls="completed" aria-selected="false">
                                 <i class="feather-check mr-2 text-success mb-0"></i> Completed</a>
                         </li>
 

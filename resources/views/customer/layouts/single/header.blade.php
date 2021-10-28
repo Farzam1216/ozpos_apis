@@ -135,7 +135,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-1">
-                    <a href="#" class="brand-wrap mb-0">
+                    <a href="{{route('restaurant.index',1)}}" class="brand-wrap mb-0">
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png') }}">
                     </a>
                     <!-- brand-wrap.// -->
@@ -229,14 +229,13 @@
                                     {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="profile.html">My account</a>
+                                    <a class="dropdown-item" href="{{route('customer.profile')}}">My account</a>
                                     <a class="dropdown-item" href="{{ url('customer/order-history') }}">Order
                                         History</a>
                                     <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                     <a class="dropdown-item" href="terms.html">Term of use</a>
                                     <a class="dropdown-item" href="privacy.html">Privacy policy</a>
-                                    <a href="{{ route('logout') }}" class="dropdown-item text-danger"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <a href="{{ route('customer.logout') }}" class="dropdown-item text-danger">
                                         <i class="fas fa-sign-out-alt"></i>
                                         {{ __('Logout') }}
                                     </a>
@@ -310,10 +309,11 @@
                                         <div class="input-group-append"><button type="button"
                                                 class="btn btn-outline-secondary"><i
                                                     class="feather-map-pin"></i></button></div>
-                                                    @if($errors->has('address'))
-                                                    <div class="error text-danger">{{ $errors->first('address') }}</div>
-                                                 @endif
+
                                     </div>
+                                    @if($errors->has('address'))
+                                    <div class="error text-danger">{{ $errors->first('address') }}</div>
+                                 @endif
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <input type="text" class="form-control form-white" id="type" name="type"

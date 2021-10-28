@@ -256,15 +256,15 @@ a {
 .slick-arrow,
 .slick-arrow:hover,
 .slick-arrow:focus {
-    background-size: 6px;
-    width: 34px;
-    border-radius: 50px;
-    height: 34px;
-    margin: 0 8px;
-    background-color: #fff;
-    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important;
-    border: 1px solid #e4e7ea;
-    z-index: 9;
+  background-size: 6px;
+      width: 34px;
+      border-radius: 60px;
+      height: 34px;
+      margin: 0px -11px ;
+      background-color: #fff;
+      box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important;
+      border: 1px solid #e4e7ea;
+      z-index: 0;
 }
 
 .slick-next:before,

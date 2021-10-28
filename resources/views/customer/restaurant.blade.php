@@ -10,6 +10,7 @@
 @section('title',$rest->name)
 
 
+
 @section('content')
 
    <div class="offer-section py-4">
@@ -47,18 +48,82 @@
          {{--            </div>--}}
       </div>
    </div>
+   <div class="container backcolor" >
+    <div class="cat-slider" id="navbar-example2">
+
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#Traditional Pizza">
+                <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Traditional Pizza</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Drinks">
+                <img alt="#" src="{{asset('customer/img/icons/Pizza.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Drinks</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Breakfast">
+                <img alt="#" src="{{asset('customer/img/icons/Burger.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Breakfast</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Cokes">
+                <img alt="#" src="{{asset('customer/img/icons/Sandwich.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Cokes</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Burger">
+                <img alt="#" src="{{asset('customer/img/icons/Coffee.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Burger</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#steak">
+                <img alt="#" src="{{asset('customer/img/icons/Steak.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Steak</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#colacan">
+                <img alt="#" src="{{asset('customer/img/icons/ColaCan.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">ColaCan</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#breakfast">
+                <img alt="#" src="{{asset('customer/img/icons/Breakfast.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Breakfast</p>
+            </a>
+        </div>
+        <div class="cat-item px-1 py-3">
+            <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#salad">
+                <img alt="#" src="{{asset('customer/img/icons/Salad.png')}}" class="img-fluid mb-2">
+                <p class="m-0 small">Salad</p>
+            </a>
+        </div>
+
+
+    </div>
+</div>
    <!-- Menu -->
    <div class="container position-relative">
       <div class="row">
          <div class="col-md-12 pt-3">
+
             <div class="shadow-sm rounded bg-white mb-3 overflow-hidden">
                <div class="d-flex item-aligns-center">
                   <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100">Menu</p>
+
                   <!-- <a class="small text-primary font-weight-bold ml-auto" href="#">View all <i class="feather-chevrons-right"></i></a> -->
                </div>
+               <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
                @foreach($singleVendor['MenuCategory'] as $MenuCategoryIDX=>$MenuCategory)
                   <div class="row m-0">
-                     <h6 class="p-3 m-0 bg-light w-100">{{ ucwords($MenuCategory->name) }}
+                     <h6 class="p-3 m-0 bg-light w-100" id="{{ ucwords($MenuCategory->name) }}">{{ ucwords($MenuCategory->name) }}
                         <small class="text-black-50">
                            @if($MenuCategory->type == 'SINGLE')
                               {{ $MenuCategory->SingleMenu()->count() }} ITEM(S)
@@ -83,6 +148,7 @@
                   </div>
 
                @endforeach
+              </div>
             </div>
          </div>
       </div>

@@ -423,6 +423,7 @@ use App\Http\Controllers\multiDeleteController;
    ////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
    Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
+
     Route::get('restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
     Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
     Route::get('restaurant/checkout',[App\Http\Controllers\Customer\CustomerController::class,'checkout'])->name('checkout');
@@ -432,16 +433,26 @@ use App\Http\Controllers\multiDeleteController;
     Route::match(['post','get'],'/delivery-location/save',[CustomerController::class,'storeDeliveryLocation'])->name('delivery.location.store');
     Route::post('address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress'])->name('address.store');
     Route::get('change-address',[App\Http\Controllers\Customer\AddressController::class,'changeAddress'])->name('change.address');
+    //  Customer Account ////
+    Route::get('profile',[App\Http\Controllers\Customer\CustomerController::class,'profile'])->name('profile');
+    Route::post('profile-update/{id}',[App\Http\Controllers\Customer\CustomerController::class,'profileUpdate'])->name('profile.update');
+    Route::post('change-password/{id}',[App\Http\Controllers\Customer\CustomerController::class,'passwordChange'])->name('password.change');
 
     ///////// order history///
     Route::get('/order-history',[App\Http\Controllers\Customer\OrderController::class,'orderHistory'])->name('order.history');
     Route::get('/get-orderModel/{id}', [App\Http\Controllers\Customer\OrderController::class , 'getOrderModel']);
     Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class , 'getOrder'])->name('order.get');
     Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class , 'trackOrder'])->name('order.track');
+
+    //////////////////// Logout ////////////////
+
+    Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class , 'logout'])->name('logout');
    });
 
-
-
+    /////    /* Single Restaurant Routes */
+   Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
+          Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
+   });
    //Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
 //                ->name('home.index');
@@ -525,9 +536,9 @@ use App\Http\Controllers\multiDeleteController;
 //        ->name('order.track');
 //});
 
-   Route::prefix('restaurant/{id}')->group(function () {
-      Route::get('/', [App\Http\Controllers\Frontend\SingleRestaurantController::class, 'index'])
-          ->name('single.restaurant.index');
+  //  Route::prefix('restaurant/{id}')->group(function () {
+  //     Route::get('/', [App\Http\Controllers\Frontend\SingleRestaurantController::class, 'index'])
+  //         ->name('single.restaurant.index');
 
       // Route::post('/order', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'book'])
       //                 ->name('single.order.book');
@@ -552,21 +563,21 @@ use App\Http\Controllers\multiDeleteController;
 
       // Route::post('/login', [App\Http\Controllers\Frontend\SingleRestaurantController::class , 'customer_confirm_login'])
       //                 ->name('single.confirm.login');
-   });
+  //  });
 
 
    Route::get('local_print_thermal/{vendorEmail}/{vendorPassword}', [App\Http\Controllers\Vendor\OrderController::class, 'local_print_thermal']);
 
 
-   Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index']);
-   Route::prefix('customer')->name('customer.')->group(function () {
-      Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index'])
-          ->name('home.index');
+  //  Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index']);
+  //  Route::prefix('customer')->name('customer.')->group(function () {
+  //     Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index'])
+  //         ->name('home.index');
 
       /* Single Restaurant Routes */
-      Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
-         Route::get('/', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])
-             ->name('index');
+      // Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
+      //    Route::get('/', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])
+      //        ->name('index');
 //        Route::post('/register', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_register'])
 //                    ->name('register');
 //        Route::post('/login', [App\Http\Controllers\Frontend\CustomerController::class , 'customer_confirm_login'])
@@ -617,5 +628,5 @@ use App\Http\Controllers\multiDeleteController;
 //                            ->name('user_address.add');
 //        });
 
-      });
-   });
+      // });
+  //  });

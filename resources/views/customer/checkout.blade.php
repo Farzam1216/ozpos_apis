@@ -539,7 +539,7 @@ function codResponseHandler()
                 error: function (err)
                 {
                     console.log(err);
-                    toastr.error(err.responseJSON.errors.delivery_type[0]);
+                    toastr.error(err.responseJSON.errors);
                 }
 
             });

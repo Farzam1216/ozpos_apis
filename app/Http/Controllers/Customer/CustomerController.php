@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Vendor;
+use App\Rules\MatchOldPassword;
 use Auth;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
@@ -67,10 +68,11 @@ class CustomerController extends Controller
                                 // dd('asdasd');
                                 Toastr::success('You have set location already exist!');
                                 // return redirect()->route('customer.restaurant.index',$customer->id);
-                                return redirect('customer/restaurant/1');
+                                return redirect()->route('restaurant.index',1);
                               }
                               else
                               {
+                                Toastr::success('Set Your Location!');
                                 return redirect()->route('customer.delivery.location.index');
                                   // Session::put('vendor_driver', 0);
                               }
@@ -81,7 +83,7 @@ class CustomerController extends Controller
                           else
                           {
                             Toastr::error('Invalid Email Or Password.');
-                              return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
+                            return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
                           }
                       }
                       else
@@ -94,7 +96,7 @@ class CustomerController extends Controller
                   {
                       Auth::logout();
                       Toastr::warning('Only customer can login.');
-                      return redirect()->back()->withErrors('Only customer can login.')->withInput();
+                      return redirect()->back()->with('error','Only customer can login.')->withInput();
                   }
               // }
               // else
@@ -104,7 +106,7 @@ class CustomerController extends Controller
           }
           else
           {
-            Toastr::error('Invalid Email Or Password.');
+              Toastr::error('Invalid Email Or Password.');
               return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
           }
 
@@ -166,7 +168,8 @@ class CustomerController extends Controller
         if ($user['is_verified'] == 1) {
             // $user['token'] = $user->createToken('mealUp')->accessToken;
             Toastr::success('Successfully signed up.');
-            return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
+            // return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
+            return redirect()->route('customer.delivery.location.index');
         } else {
             $admin_verify_user = GeneralSetting::find(1)->verification;
             if ($admin_verify_user == 1) {
@@ -197,7 +200,8 @@ class CustomerController extends Controller
 
           session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
           Toastr::success('Delivery Zone added successfully!');
-          return redirect('customer/restaurant/1');
+          $id = 1;
+          return redirect()->route('customer.restaurant.index',$id);
       }
 
 
@@ -340,10 +344,7 @@ public function bookOrder(Request $request)
       $bookData['promocode_price'] = 0;
    }
 
-   $bookData['order_id'] = '#' . rand(100000, 999999);
-   $bookData['vendor_id'] = $vendor->id;
-   $bookData['order_data'] =Session::get('product');
-   $order = Order::create($bookData);
+
 
    $daiterm = Session::get('product');
 
@@ -364,6 +365,8 @@ public function bookOrder(Request $request)
       $finalData['cart'][$idx] = [
             'category'=> $item->summary->category,
             'total_amount'=>$item->price,
+            'menu_category'=> "null",
+            'quantity'=>$item->quantity,
             'menu'=>[]
         ];
         $idx2 = -1;
@@ -410,15 +413,17 @@ public function bookOrder(Request $request)
       //   {
       //     $finalData['size'] ="null";
       //   }
-      //   $finalData[] = [
-      //     'menu_category'=> "null",
-      //     'quantity'=>$item->quantity,
-      // ];
+      //
       // dd();
 
     }
 
-    dd(json_encode($finalData));
+    // dd(json_encode($finalData));
+    $order_data = json_encode($finalData);
+    $bookData['order_id'] = '#' . rand(100000, 999999);
+    $bookData['vendor_id'] = $vendor->id;
+    $bookData['order_data'] =$order_data;
+    $order = Order::create($bookData);
 
 //         if ($bookData['payment_type'] == 'WALLET') {
 //            $user->withdraw($bookData['amount'], [$order->id]);
@@ -468,6 +473,42 @@ public function bookOrder(Request $request)
         // }
 
 
+
+    /////////// Profile /////////////
+    public function profile()
+    {
+      $user=Auth::user();
+      $userAddress = UserAddress::where('user_id',$user->id)->get();
+      $selectedAddress = UserAddress::where(['user_id'=>$user->id,'selected'=> 1])->first();
+        return view('customer.profile',compact('user','userAddress','selectedAddress'));
+    }
+
+  public function profileUpdate(Request $request,$id)
+  {
+    // dd($request->all());
+     User::find($id)->update([
+      'name' => $request->name,
+      'phone_code' => '+'.$request->phone_code,
+      'phone' => $request->phone,
+      'email' => $request->name
+    ]);
+    Toastr::success('Successfuly Updated your profile!');
+    return redirect()->back();
+  }
+
+  public function passwordChange(Request $request,$id)
+  {
+    $request->validate([
+      'current_password' => ['required', new MatchOldPassword],
+      'new_password' => ['required'],
+      'new_confirm_password' => ['same:new_password'],
+    ]);
+
+    User::find($id)->update(['password'=> Hash::make($request->new_password)]);
+    Toastr::success('Successfuly Changed the Password!');
+    dd('Successfuly Changed the Password!');
+    return back();
+  }
     public function topRest(/* Request $request */)
     {
         $vendors = Vendor::where([['isTop', '1'], ['status', 1]])->orderBy('id', 'DESC')->get()->makeHidden(['vendor_logo']);
@@ -512,5 +553,14 @@ public function bookOrder(Request $request)
     }
 
 
+
+    public function logout()
+    {
+      Session::flush();
+
+      Auth::logout();
+
+      return redirect()->route('customer.login');
+    }
 
 }

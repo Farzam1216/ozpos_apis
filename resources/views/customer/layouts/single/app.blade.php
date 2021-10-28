@@ -90,7 +90,8 @@
       $('#overlay').fadeOut();
    });
 </script>
-
+<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+      {!! Toastr::message() !!}
 <!-- Post scripts for all pages-->
 @yield('postScript')
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=geometry,places&ext=.js"></script>

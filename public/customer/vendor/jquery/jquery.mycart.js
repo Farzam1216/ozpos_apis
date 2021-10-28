@@ -432,9 +432,8 @@
          $("#" + idCheckoutCart).click(function () {
           var products = ProductManager.getAllProducts();
           var jsonProducts = JSON.stringify(products);
-          console.log(jsonProducts);
-          const url = "checkout?total="+ iTotal.value + "&idTax=" + iTax.value +
-                    "&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
+          // console.log(iTax);
+          const url = "checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
 
          window.location.href = url;
 

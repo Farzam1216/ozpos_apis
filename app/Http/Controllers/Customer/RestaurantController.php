@@ -9,6 +9,7 @@
    use App\Models\Submenu;
    use App\Models\SubmenuCusomizationType;
    use App\Models\GeneralSetting;
+use App\Models\ItemCategory;
 use App\Models\UserAddress;
 use App\Models\VendorDiscount;
    use App\Models\WorkingHours;
@@ -27,14 +28,30 @@ class RestaurantController extends Controller
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);
          $page = 1;
+
+         $itemCategory = ItemCategory::where('vendor_id',$id)->get();
         // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
         // dd($singleVendor);
               $user=Auth::user()->id;
               $userAddress = UserAddress::where('user_id',$user)->get();
               $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
-         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
+         return view('customer/restaurant/home', compact('rest', 'singleVendor', 'page'
+                                                ,'userAddress','selectedAddress','itemCategory'));
       }
+      // public function index($id)
+      // {
+      //    $rest = $this->getRest($id);
+      //    $singleVendor = $this->singleVendor($id);
+      //    $page = 1;
+      //   // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
+      //   // dd($singleVendor);
+      //         $user=Auth::user()->id;
+      //         $userAddress = UserAddress::where('user_id',$user)->get();
+      //         $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+
+      //    return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
+      // }
 
 
       /* -------------------------------------------------------------------------------------------------------- */
