@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7b37f99ac3a31e49a6dc5fe93db0c9c",
+    "content-hash": "a23fc283b3040015deebb4bf2ce3c22a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3751,28 +3751,28 @@
         },
         {
             "name": "kreait/laravel-firebase",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/laravel-firebase.git",
-                "reference": "c00ec1e3ce30e07ccdd6ea08712d8c75d0998ff5"
+                "reference": "a1e9eace849539753f3821ad64e40212d6e1512c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/laravel-firebase/zipball/c00ec1e3ce30e07ccdd6ea08712d8c75d0998ff5",
-                "reference": "c00ec1e3ce30e07ccdd6ea08712d8c75d0998ff5",
+                "url": "https://api.github.com/repos/kreait/laravel-firebase/zipball/a1e9eace849539753f3821ad64e40212d6e1512c",
+                "reference": "a1e9eace849539753f3821ad64e40212d6e1512c",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "^6.0|^7.0|^8.0",
                 "illuminate/support": "^6.0|^7.0|^8.0",
-                "kreait/firebase-php": "^5.14.1",
+                "kreait/firebase-php": "^5.24",
                 "php": "^7.2|~8.0.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.16",
                 "orchestra/testbench": "^4.0|^5.0|^6.0",
-                "roave/better-reflection": "^3.6|^4.6"
+                "roave/better-reflection": "^3.6|^4.6|5.0.x-dev"
             },
             "type": "library",
             "extra": {
@@ -3819,7 +3819,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kreait/laravel-firebase/issues",
-                "source": "https://github.com/kreait/laravel-firebase/tree/3.1.0"
+                "source": "https://github.com/kreait/laravel-firebase/tree/3.2.0"
             },
             "funding": [
                 {
@@ -3843,7 +3843,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-02-02T23:32:34+00:00"
+            "time": "2021-10-21T22:47:30+00:00"
         },
         {
             "name": "laravel/framework",

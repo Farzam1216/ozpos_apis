@@ -137,7 +137,7 @@
                      @enderror
                   </div>
                   <div class="form-group">
-                     <input class="form-control @error('status') is-invalid @enderror" id="status" name="status" type="checkbox" placeholder="{{ $title }} Status" value="{{ old('status') }}">
+                     <input class="form-control @error('status') is-invalid @enderror" id="status" name="status" type="checkbox" placeholder="{{ $title }} Status">
                      <label for="status" class="form-control-label">Status<span class="text-danger">&nbsp;*</span></label>
                      @error('status')
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
