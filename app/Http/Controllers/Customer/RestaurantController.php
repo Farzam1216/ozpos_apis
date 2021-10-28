@@ -10,6 +10,7 @@
    use App\Models\SubmenuCusomizationType;
    use App\Models\GeneralSetting;
 use App\Models\ItemCategory;
+use App\Models\Slider;
 use App\Models\UserAddress;
 use App\Models\VendorDiscount;
    use App\Models\WorkingHours;
@@ -30,28 +31,32 @@ class RestaurantController extends Controller
          $page = 1;
 
          $itemCategory = ItemCategory::where('vendor_id',$id)->get();
+         $slider = Slider::where('vendor_id',$id)->get();
+       $deals = MenuCategory::with('DealsMenu')->where([['type', 'DEALS'],['vendor_id', $id]])->get();
+        //  dd($deals);
+        //  dd($deals);
         // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
         // dd($singleVendor);
               $user=Auth::user()->id;
               $userAddress = UserAddress::where('user_id',$user)->get();
               $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
-         return view('customer/restaurant/home', compact('rest', 'singleVendor', 'page'
-                                                ,'userAddress','selectedAddress','itemCategory'));
+         return view('customer/restaurant/home', compact('rest', 'singleVendor', 'page','slider'
+                                                ,'userAddress','selectedAddress','itemCategory','deals'));
       }
-      // public function index($id)
-      // {
-      //    $rest = $this->getRest($id);
-      //    $singleVendor = $this->singleVendor($id);
-      //    $page = 1;
-      //   // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
-      //   // dd($singleVendor);
-      //         $user=Auth::user()->id;
-      //         $userAddress = UserAddress::where('user_id',$user)->get();
-      //         $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+      public function menu($id)
+      {
+         $rest = $this->getRest($id);
+         $singleVendor = $this->singleVendor($id);
+         $page = 1;
+        // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
+        // dd($singleVendor);
+              $user=Auth::user()->id;
+              $userAddress = UserAddress::where('user_id',$user)->get();
+              $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
-      //    return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
-      // }
+         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
+      }
 
 
       /* -------------------------------------------------------------------------------------------------------- */
