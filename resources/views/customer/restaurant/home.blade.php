@@ -167,7 +167,7 @@ img {vertical-align: middle;}
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
               <h5 class="m-0">Deals item</h5>
-              <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a>
+              {{-- <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- slider -->
           <div class="trending-slider">
@@ -275,7 +275,7 @@ img {vertical-align: middle;}
           <!-- Most popular -->
           <div class="py-3 title d-flex align-items-center">
               <h5 class="m-0">Half N Half Menu</h5>
-              <a class="font-weight-bold ml-auto" href="most_popular.html">26 places <i class="feather-chevrons-right"></i></a>
+              {{-- <a class="font-weight-bold ml-auto" href="most_popular.html">26 places <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- Most popular -->
           <div class="most_popular">
@@ -323,7 +323,7 @@ img {vertical-align: middle;}
 
                   {{ $halfNhalf->links()}}
               </div>
-              <div class="row">
+              {{-- <div class="row">
                   <div class="col-md-3 pb-3">
                       <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
                           <div class="list-card-image">
@@ -460,15 +460,15 @@ img {vertical-align: middle;}
                           </div>
                       </div>
                   </div>
-              </div>
+              </div> --}}
           </div>
           <!-- Most sales -->
-          <div class="pt-2 pb-3 title d-flex align-items-center">
+          {{-- <div class="pt-2 pb-3 title d-flex align-items-center">
               <h5 class="m-0">Most sales</h5>
               <a class="font-weight-bold ml-auto" href="#">26 places <i class="feather-chevrons-right"></i></a>
-          </div>
+          </div> --}}
           <!-- Most sales -->
-          <div class="most_sale">
+          {{-- <div class="most_sale">
               <div class="row mb-3">
                   <div class="col-md-4 mb-3">
                       <div class="d-flex align-items-center list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
@@ -541,7 +541,7 @@ img {vertical-align: middle;}
                       </div>
                   </div>
               </div>
-          </div>
+          </div> --}}
       </div>
     </div>
 
