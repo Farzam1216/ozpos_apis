@@ -170,6 +170,8 @@
    
       //////////////////////////////////////////////        Vednor       //////////////////////////////////////////////
       Route::get('slider/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSlider']);
+      Route::get('deals/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiDeals']);
+      Route::get('half_n_half/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiHalfnhalf']);
       
    });
    
