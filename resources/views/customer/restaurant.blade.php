@@ -51,13 +51,16 @@
    <div class="container backcolor" >
     <div class="cat-slider" id="navbar-example2">
 
-        <div class="cat-item px-1 py-3">
-            <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#Traditional Pizza">
-                <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
-                <p class="m-0 small">Traditional Pizza</p>
-            </a>
-        </div>
-        <div class="cat-item px-1 py-3">
+      @foreach ($itemCategory as $item)
+      <div class="cat-item px-1 py-3">
+        <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#{{ $item->name }}">
+            <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
+            <p class="m-0 small">{{ $item->name }}</p>
+        </a>
+    </div>
+      @endforeach
+
+        {{-- <div class="cat-item px-1 py-3">
             <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Drinks">
                 <img alt="#" src="{{asset('customer/img/icons/Pizza.png')}}" class="img-fluid mb-2">
                 <p class="m-0 small">Drinks</p>
@@ -68,8 +71,8 @@
                 <img alt="#" src="{{asset('customer/img/icons/Burger.png')}}" class="img-fluid mb-2">
                 <p class="m-0 small">Breakfast</p>
             </a>
-        </div>
-        <div class="cat-item px-1 py-3">
+        </div> --}}
+        {{-- <div class="cat-item px-1 py-3">
             <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="#Cokes">
                 <img alt="#" src="{{asset('customer/img/icons/Sandwich.png')}}" class="img-fluid mb-2">
                 <p class="m-0 small">Cokes</p>
@@ -104,7 +107,7 @@
                 <img alt="#" src="{{asset('customer/img/icons/Salad.png')}}" class="img-fluid mb-2">
                 <p class="m-0 small">Salad</p>
             </a>
-        </div>
+        </div> --}}
 
 
     </div>

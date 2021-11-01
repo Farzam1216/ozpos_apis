@@ -168,8 +168,8 @@ class CustomerController extends Controller
         if ($user['is_verified'] == 1) {
             // $user['token'] = $user->createToken('mealUp')->accessToken;
             Toastr::success('Successfully signed up.');
-            // return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
-            return redirect()->route('customer.delivery.location.index');
+            return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
+            // return redirect()->route('customer.delivery.location.index');
         } else {
             $admin_verify_user = GeneralSetting::find(1)->verification;
             if ($admin_verify_user == 1) {
@@ -201,7 +201,7 @@ class CustomerController extends Controller
           session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
           Toastr::success('Delivery Zone added successfully!');
           $id = 1;
-          return redirect()->route('customer.restaurant.index',$id);
+          return redirect()->route('restaurant.index',$id);
       }
 
 

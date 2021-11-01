@@ -1,11 +1,11 @@
 <?php
-   
+
    namespace App\Models;
-   
+
    use Eloquent;
    use Illuminate\Database\Eloquent\Factories\HasFactory;
    use Illuminate\Database\Eloquent\Model;
-   
+
    /**
     * App\Models\DealsMenu
     *
@@ -38,27 +38,27 @@
    class DealsMenu extends Eloquent
    {
       use HasFactory;
-      
+
       protected $table = 'deals_menu';
-      
+
       protected $fillable = ['vendor_id', 'menu_category_id', 'name', 'image', 'description', 'price', 'display_price', 'display_discount_price', 'status'];
-      
+
       protected $casts = [
           'price' => 'decimal:2',
       ];
-      
+
       protected $appends = ['image'];
-      
+
       public function getImageAttribute()
       {
          return url('images/upload') . '/' . $this->attributes['image'];
       }
-      
+
       public function MenuCategory()
       {
          return $this->belongsTo('App\Models\MenuCategory');
       }
-      
+
       public function DealsItems()
       {
          return $this->hasMany('App\Models\DealsItems');

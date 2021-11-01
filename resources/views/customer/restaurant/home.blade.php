@@ -150,7 +150,7 @@ img {vertical-align: middle;}
           <div class="cat-slider">
             @forelse ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
-              <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="trending.html">
+              <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
                   <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
               </a>
@@ -166,7 +166,7 @@ img {vertical-align: middle;}
       <div class="container">
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
-              <h5 class="m-0">Deals</h5>
+              <h5 class="m-0">Deals item</h5>
               <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a>
           </div>
           <!-- slider -->
@@ -178,23 +178,23 @@ img {vertical-align: middle;}
             <div class="osahan-slider-item">
               <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
                   <div class="list-card-image">
-                      <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                      <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                      <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
-                      <a href="restaurant.html">
-                          <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100">
+                      {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
+                      {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
+                      {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
+                      <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
+                          <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
                       </a>
                   </div>
                   <div class="p-3 position-relative">
                       <div class="list-card-body">
-                          <h6 class="mb-1"><a href="restaurant.html" class="text-black">{{ $value->name }}
+                          <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
                         </a>
                           </h6>
-                          <p class="text-gray mb-3">Vegetarian • Indian • Pure veg</p>
-                          <p class="text-gray mb-3 time"><span class="bg-light text-dark rounded-sm pl-2 pb-1 pt-1 pr-2"><i class="feather-clock"></i> 15–30 min</span> <span class="float-right text-black-50"> $350 FOR TWO</span></p>
+                          {{-- <p class="text-gray mb-3">Vegetarian • Indian • Pure veg</p> --}}
+                          {{-- <p class="text-gray mb-3 time"><span class="bg-light text-dark rounded-sm pl-2 pb-1 pt-1 pr-2"><i class="feather-clock"></i> 15–30 min</span> <span class="float-right text-black-50"> $350 FOR TWO</span></p> --}}
                       </div>
                       <div class="list-card-badge">
-                          <span class="badge badge-danger">{{$value->display_price }}</span> <small> {{$value->display_discount_price}}</small>
+                          <span class="badge badge-danger"><del>{{$value->display_price }}</del></span> <small class="badge badge-success"> {{$value->display_discount_price}}</small>
                       </div>
                   </div>
               </div>
@@ -270,151 +270,58 @@ img {vertical-align: middle;}
                       </div>
                   </div>
               </div> --}}
+
           </div>
           <!-- Most popular -->
           <div class="py-3 title d-flex align-items-center">
-              <h5 class="m-0">Most popular</h5>
+              <h5 class="m-0">Half N Half Menu</h5>
               <a class="font-weight-bold ml-auto" href="most_popular.html">26 places <i class="feather-chevrons-right"></i></a>
           </div>
           <!-- Most popular -->
           <div class="most_popular">
               <div class="row">
+                @foreach ($halfNhalf as $half)
+                  @foreach ($half->HalfNHalfMenu as $halfmenu)
                   <div class="col-md-3 pb-3">
-                      <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
-                          <div class="list-card-image">
-                              <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                              <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                              <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
-                              <a href="restaurant.html">
-                                  <img alt="#" src="{{asset('customer/img/popular1.png')}}" class="img-fluid item-img w-100">
-                              </a>
-                          </div>
-                          <div class="p-3 position-relative">
-                              <div class="list-card-body">
-                                  <h6 class="mb-1"><a href="restaurant.html" class="text-black">The osahan Restaurant
-                               </a>
-                                  </h6>
-                                  <p class="text-gray mb-1 small">• North • Hamburgers</p>
-                                  <p class="text-gray mb-1 rating">
-                                  </p>
-                                  <ul class="rating-stars list-unstyled">
-                                      <li>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star"></i>
-                                      </li>
-                                  </ul>
-                                  <p></p>
-                              </div>
-                              <div class="list-card-badge">
-                                  <span class="badge badge-danger">OFFER</span> <small>65% OSAHAN50</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-md-3 pb-3">
-                      <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
-                          <div class="list-card-image">
-                              <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                              <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                              <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
-                              <a href="restaurant.html">
-                                  <img alt="#" src="{{asset('customer/img/popular2.png')}}" class="img-fluid item-img w-100">
-                              </a>
-                          </div>
-                          <div class="p-3 position-relative">
-                              <div class="list-card-body">
-                                  <h6 class="mb-1"><a href="restaurant.html" class="text-black">Thai Famous Indian Cuisine</a></h6>
-                                  <p class="text-gray mb-1 small">• Indian • Pure veg</p>
-                                  <p class="text-gray mb-1 rating">
-                                  </p>
-                                  <ul class="rating-stars list-unstyled">
-                                      <li>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star"></i>
-                                      </li>
-                                  </ul>
-                                  <p></p>
-                              </div>
-                              <div class="list-card-badge">
-                                  <span class="badge badge-success">OFFER</span> <small>65% off</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-md-3 pb-3">
-                      <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
-                          <div class="list-card-image">
-                              <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                              <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                              <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
-                              <a href="restaurant.html">
-                                  <img alt="#" src="{{asset('customer/img/popular3.png')}}" class="img-fluid item-img w-100">
-                              </a>
-                          </div>
-                          <div class="p-3 position-relative">
-                              <div class="list-card-body">
-                                  <h6 class="mb-1"><a href="restaurant.html" class="text-black">The osahan Restaurant
-                               </a>
-                                  </h6>
-                                  <p class="text-gray mb-1 small">• Hamburgers • Pure veg</p>
-                                  <p class="text-gray mb-1 rating">
-                                  </p>
-                                  <ul class="rating-stars list-unstyled">
-                                      <li>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star"></i>
-                                      </li>
-                                  </ul>
-                                  <p></p>
-                              </div>
-                              <div class="list-card-badge">
-                                  <span class="badge badge-danger">OFFER</span> <small>65% OSAHAN50</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-md-3 pb-3">
-                      <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
-                          <div class="list-card-image">
-                              <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                              <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                              <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
-                              <a href="restaurant.html">
-                                  <img alt="#" src="{{asset('customer/img/popular4.png')}}" class="img-fluid item-img w-100">
-                              </a>
-                          </div>
-                          <div class="p-3 position-relative">
-                              <div class="list-card-body">
-                                  <h6 class="mb-1"><a href="restaurant.html" class="text-black">Bite Me Now Sandwiches</a></h6>
-                                  <p class="text-gray mb-1 small">American • Pure veg</p>
-                                  <p class="text-gray mb-1 rating">
-                                  </p>
-                                  <ul class="rating-stars list-unstyled">
-                                      <li>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star star_active"></i>
-                                          <i class="feather-star"></i>
-                                      </li>
-                                  </ul>
-                                  <p></p>
-                              </div>
-                              <div class="list-card-badge">
-                                  <span class="badge badge-success">OFFER</span> <small>65% off</small>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                    <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
+                        <div class="list-card-image">
+                            {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
+                            {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
+                            {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
+                            <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
+                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
+                            </a>
+                        </div>
+                        <div class="p-3 position-relative">
+                            <div class="list-card-body">
+
+                                <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
+                             </a>
+                                </h6>
+                                {{-- <p class="text-gray mb-1 small">• North • Hamburgers</p>
+                                <p class="text-gray mb-1 rating">
+                                </p>
+                                <ul class="rating-stars list-unstyled">
+                                    <li>
+                                        <i class="feather-star star_active"></i>
+                                        <i class="feather-star star_active"></i>
+                                        <i class="feather-star star_active"></i>
+                                        <i class="feather-star star_active"></i>
+                                        <i class="feather-star"></i>
+                                    </li>
+                                </ul>
+                                <p></p> --}}
+                            </div>
+                            {{-- <div class="list-card-badge">
+                                <span class="badge badge-danger">OFFER</span> <small>65% OSAHAN50</small>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+                  @endforeach
+                @endforeach
+
+                  {{ $halfNhalf->links()}}
               </div>
               <div class="row">
                   <div class="col-md-3 pb-3">
@@ -662,68 +569,6 @@ img {vertical-align: middle;}
     setTimeout(showSlides, 2000); // Change image every 2 seconds
   }
   </script>
-   <script type="text/javascript">
-       $(document).ready(function () {
 
-           var goToCartIcon = function ($addTocartBtn) {
-               $cartIconPhone = $(".my-cart-icon-phone");
-               $cartIconPc = $(".my-cart-icon-pc");
-               $cartIconPc
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1)
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1);
-               $cartIconPhone
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1)
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1);
-               $addTocartBtn
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1)
-                   .delay(10).fadeTo(50, 0.5)
-                   .delay(10).fadeTo(50, 1);
-           }
-
-           $('.add-cart-btn').myCart({
-               currencySymbol: '{{ App\Models\GeneralSetting::first()->currency }}',
-               classCartIcon: 'my-cart-icon',
-               classCartBadge: 'my-cart-badge',
-               classProductQuantity: 'my-product-quantity',
-               classProductRemove: 'my-product-remove',
-               classCheckoutCart: 'my-cart-checkout',
-               affixCartIcon: false,
-               showCheckoutModal: true,
-               numberOfDecimals: 2,
-               cartItems: [
-                   {id: 1, name: 'product 1', summary: 'summary 1', price: 10, quantity: 1, image: 'images/img_1.png'},
-                   {id: 2, name: 'product 2', summary: 'summary 2', price: 20, quantity: 2, image: 'images/img_2.png'},
-                   {id: 3, name: 'product 3', summary: 'summary 3', price: 30, quantity: 1, image: 'images/img_3.png'}
-               ],
-               clickOnAddToCart: function ($addTocart) {
-                   goToCartIcon($addTocart);
-               },
-               afterAddOnCart: function (products, totalPrice, totalQuantity) {
-                   console.log("afterAddOnCart", products, totalPrice, totalQuantity);
-               },
-               clickOnCartIcon: function ($cartIcon, products, totalPrice, totalQuantity) {
-                   console.log("cart icon clicked", $cartIcon, products, totalPrice, totalQuantity);
-               },
-               checkoutCart: function (products, totalPrice, totalQuantity) {
-                   var checkoutString = "Total Price: " + totalPrice + "\nTotal Quantity: " + totalQuantity;
-                   checkoutString += "\n\n id \t name \t summary \t price \t quantity \t image path";
-                   $.each(products, function () {
-                       checkoutString += ("\n " + this.id + " \t " + this.name + " \t " + this.summary + " \t " + this.price + " \t " + this.quantity + " \t " + this.image);
-                   });
-                   alert(checkoutString)
-                   console.log("checking out", products, totalPrice, totalQuantity);
-               },
-               getDiscountPrice: function (products, totalPrice, totalQuantity) {
-                   console.log("calculating discount", products, totalPrice, totalQuantity);
-                   return totalPrice * 0.5;
-               }
-           });
-       });
-   </script>
 
 @append

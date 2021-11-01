@@ -26,26 +26,27 @@ class RestaurantController extends Controller
       */
       public function index($id)
       {
+         $vendor_id = $id;
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);
          $page = 1;
 
          $itemCategory = ItemCategory::where('vendor_id',$id)->get();
          $slider = Slider::where('vendor_id',$id)->get();
-       $deals = MenuCategory::with('DealsMenu')->where([['type', 'DEALS'],['vendor_id', $id]])->get();
-        //  dd($deals);
-        //  dd($deals);
-        // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
-        // dd($singleVendor);
+         $deals = MenuCategory::with('DealsMenu')->where([['type', 'DEALS'],['vendor_id', $id]])->get();
+         $halfNhalf = MenuCategory::with('HalfNHalfMenu')->where([['type', 'HALF_N_HALF'],['vendor_id', $id]])->paginate(4);
+
+    // dd($halfNhalf);
               $user=Auth::user()->id;
               $userAddress = UserAddress::where('user_id',$user)->get();
               $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
-         return view('customer/restaurant/home', compact('rest', 'singleVendor', 'page','slider'
+         return view('customer/restaurant/home', compact('rest', 'singleVendor', 'page','slider','halfNhalf','vendor_id'
                                                 ,'userAddress','selectedAddress','itemCategory','deals'));
       }
       public function menu($id)
       {
+         $itemCategory = ItemCategory::where('vendor_id',$id)->get();
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);
          $page = 1;
@@ -55,7 +56,7 @@ class RestaurantController extends Controller
               $userAddress = UserAddress::where('user_id',$user)->get();
               $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
-         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress'));
+         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress','itemCategory'));
       }
 
 
