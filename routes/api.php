@@ -174,9 +174,10 @@ use Illuminate\Http\Request;
 
       //////////////////////////////////////////////  Vednor    //////////////////////////////////////////////
       Route::get('slider/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSlider']);
-      Route::get('deals/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiDeals']);
-      Route::get('half_n_half/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiHalfnhalf']);
-
+      Route::get('single/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSingleMenu']);
+      Route::get('deals/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiDealsMenu']);
+      Route::get('half_n_half/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiHalfnhalfMenu']);
+      
    });
 
 
