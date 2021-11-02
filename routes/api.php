@@ -33,7 +33,9 @@ use Illuminate\Http\Request;
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
       /* ---- Vendor ---- */
        ///////// Add Menu Category /////////
-
+      // Route::post('menuCategory/store',MenuCategoryApiController::class, 'store');
+      // Route::edit('menuCategory/{menuCategory_id}/edit',MenuCategoryApiController::class, 'edit');
+      // Route::put('menuCategory/{menuCategory_id}/update',MenuCategoryApiController::class, 'store');
 
       // driver
       Route::get('drivers', 'VendorApiController@apiDrivers');
@@ -177,7 +179,7 @@ use Illuminate\Http\Request;
       Route::get('single/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSingleMenu']);
       Route::get('deals/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiDealsMenu']);
       Route::get('half_n_half/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiHalfnhalfMenu']);
-      
+
    });
 
 
