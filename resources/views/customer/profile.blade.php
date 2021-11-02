@@ -21,9 +21,9 @@
       </div>
   </div>
   <!-- profile -->
-  <div class="container position-relative " style="top: 100px ;height: 100vh;">
-      <div class="py-5 osahan-profile row">
-          <div class="col-md-4 mb-3">
+  <div class="container position-relative">
+      <div class="py-5 osahan-profile row" >
+          <div class="col-md-4 mb-3" style="margin-top: 30px;">
               <div class="bg-white rounded shadow-sm sticky_sidebar overflow-hidden">
                   <a href="profile.html" class="">
                       <div class="d-flex align-items-center p-3">
@@ -37,7 +37,7 @@
                       </div>
                   </a>
 
-                  <div class="bg-white profile-details">
+                  {{-- <div class="bg-white profile-details">
                       <a data-toggle="modal" data-target="#paycard" class="d-flex w-100 align-items-center border-bottom p-3">
                           <div class="left mr-3">
                               <h6 class="font-weight-bold mb-1 text-dark">Payment Cards</h6>
@@ -89,10 +89,10 @@
                               <h6 class="font-weight-bold m-0"><i class="feather-chevron-right"></i></h6>
                           </div>
                       </a>
-                  </div>
+                  </div> --}}
               </div>
           </div>
-          <div class="col-md-8 mb-3">
+          <div class="col-md-8 mb-3" style="margin-top: 30px;">
               <div class="rounded shadow-sm p-4 bg-white">
                   <h5 class="mb-4">My account</h5>
                   <div id="edit_profile">
@@ -154,52 +154,13 @@
                                 </div>
                             </form>
                           </div>
-                          {{-- <div class="deactivate_account">
-                              <a href="forgot_password.html" class="p-3 border rounded bg-white btn d-flex align-items-center">Deactivate Account
-                        <i class="feather-arrow-right ml-auto"></i></a>
-                          </div> --}}
-                      </div>
+
                   </div>
               </div>
           </div>
       </div>
   </div>
-  <!-- Footer -->
-  {{-- <div class="osahan-menu-fotter fixed-bottom bg-white px-3 py-2 text-center d-none">
-      <div class="row">
-          <div class="col">
-              <a href="home.html" class="text-dark small font-weight-bold text-decoration-none">
-                  <p class="h4 m-0"><i class="feather-home text-dark"></i></p>
-                  Home
-              </a>
-          </div>
-          <div class="col">
-              <a href="most_popular.html" class="text-dark small font-weight-bold text-decoration-none">
-                  <p class="h4 m-0"><i class="feather-map-pin"></i></p>
-                  Trending
-              </a>
-          </div>
-          <div class="col bg-white rounded-circle mt-n4 px-3 py-2">
-              <div class="bg-danger rounded-circle mt-n0 shadow">
-                  <a href="checkout.html" class="text-white small font-weight-bold text-decoration-none">
-                      <i class="feather-shopping-cart"></i>
-                  </a>
-              </div>
-          </div>
-          <div class="col">
-              <a href="favorites.html" class="text-dark small font-weight-bold text-decoration-none">
-                  <p class="h4 m-0"><i class="feather-heart"></i></p>
-                  Favorites
-              </a>
-          </div>
-          <div class="col selected">
-              <a href="profile.html" class="text-danger small font-weight-bold text-decoration-none">
-                  <p class="h4 m-0"><i class="feather-user"></i></p>
-                  Profile
-              </a>
-          </div>
-      </div>
-  </div> --}}
+
 </div>
 
 @endsection

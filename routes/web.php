@@ -455,6 +455,15 @@ use App\Http\Controllers\multiDeleteController;
           Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
           Route::get('/restaurant/{id}/{menu}', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
    });
+   Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
+
+           Route::post('/register', [App\Http\Controllers\Customer\CustomerController::class , 'customer_confirm_register'])
+                       ->name('register');
+           Route::post('/login', [App\Http\Controllers\Customer\CustomerController::class , 'customer_confirm_login'])
+                       ->name('login');
+           Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class , 'logout'])
+                       ->name('logout');
+   });
    //Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
 //                ->name('home.index');

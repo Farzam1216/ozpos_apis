@@ -55,6 +55,7 @@
    {
       public function apiUserLogin(Request $request)
       {
+        log::info($request);
          $request->validate([
              'email_id' => 'bail|required|email',
              'password' => 'bail|required|min:6',

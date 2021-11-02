@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Vendor\MenuModule;
-   
+
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
@@ -9,7 +9,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\MenuCategory;
    use App\Models\Vendor;
-   
+
    class MenuCategoryController extends Controller
    {
       /**
@@ -23,7 +23,7 @@
          $MenuCategory = MenuCategory::where('vendor_id',$Vendor->id)->get();
          return view('vendor.menu_module.menu_category',compact('Vendor', 'MenuCategory'));
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -33,7 +33,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -46,18 +46,18 @@
              'name' => 'required',
              'type' => 'required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-   
+
          $data = $request->all();
-   
+
          if(isset($data['status']))
             $data['status'] = 1;
          else
             $data['status'] = 0;
-         
+
          MenuCategory::create($data);
          return redirect()->back()->with('msg','Menu category created.');
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -66,9 +66,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -79,7 +79,7 @@
       {
          return response(['success' => true , 'data' => $MenuCategory]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -93,18 +93,18 @@
              'name' => 'required',
              'type' => 'required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-         
+
          $data = $request->all();
-   
+
          if(isset($data['status']))
             $data['status'] = 1;
          else
             $data['status'] = 0;
-         
+
          $MenuCategory->update($data);
          return redirect()->back()->with('msg','Menu category updated.');
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *
@@ -116,7 +116,7 @@
          $MenuCategory->delete();
          return response(['success' => true]);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

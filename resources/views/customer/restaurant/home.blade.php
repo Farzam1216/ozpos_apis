@@ -166,7 +166,7 @@ img {vertical-align: middle;}
       <div class="container">
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
-              <h5 class="m-0">Deals item</h5>
+              <h5 class="m-0">Deals Menu</h5>
               {{-- <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- slider -->
@@ -174,7 +174,6 @@ img {vertical-align: middle;}
 
             @foreach ($deals as $deal)
             @foreach ($deal->DealsMenu as $value)
-
             <div class="osahan-slider-item">
               <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
                   <div class="list-card-image">

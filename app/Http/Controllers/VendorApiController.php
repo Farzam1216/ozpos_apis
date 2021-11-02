@@ -569,7 +569,9 @@ class VendorApiController extends Controller
     public function apiSingleMenu($menu_id)
     {
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
+
         $menu = Menu::where([['id',$menu_id],['vendor_id',$vendor->id]])->first();
+
         if($menu)
         {
             return response(['success' => true , 'data' => $menu]);
