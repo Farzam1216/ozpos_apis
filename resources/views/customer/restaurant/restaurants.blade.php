@@ -26,7 +26,7 @@
           <!-- nav tabs -->
           <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
-                  <a class="nav-link active border-0 bg-light text-dark rounded" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="feather-home mr-2"></i>Restaurants (8)</a>
+                  <a class="nav-link active border-0 bg-light text-dark rounded" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="feather-home mr-2"></i>Restaurants ({{$vendors->count()}})</a>
               </li>
               {{-- <li class="nav-item" role="presentation">
                   <a class="nav-link border-0 bg-light text-dark rounded ml-3" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="feather-disc mr-2"></i>Dishes (23)</a>

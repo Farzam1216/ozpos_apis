@@ -55,6 +55,9 @@ use App\Http\Controllers\multiDeleteController;
 
    Auth::routes();
 
+   Route::get('/', function () {
+       return redirect('customer/login');
+   });
    Route::get('/admin', [AdminController::class, 'showLogin']);
    Route::get('/import', [AdminController::class, 'import'])->name('import');
 
@@ -411,6 +414,7 @@ use App\Http\Controllers\multiDeleteController;
 
    Route::post('saveEnvData', [AdminController::class, 'saveEnvData']);
    Route::post('saveAdminData', [AdminController::class, 'saveAdminData']);
+
 
 
    /////////////////////////  Customer ////////////////////////////////////////////////////////////////////
