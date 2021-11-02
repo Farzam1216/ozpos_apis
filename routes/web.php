@@ -451,7 +451,8 @@ use App\Http\Controllers\multiDeleteController;
 
     /////    /* Single Restaurant Routes */
    Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
-          Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
+          Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
+          Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
           Route::get('/restaurant/{id}/{menu}', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
    });
    //Route::prefix('customer')->name('customer.')->group(function () {

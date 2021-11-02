@@ -68,7 +68,7 @@ class CustomerController extends Controller
                                 // dd('asdasd');
                                 Toastr::success('You have set location already exist!');
                                 // return redirect()->route('customer.restaurant.index',$customer->id);
-                                return redirect()->route('restaurant.index',1);
+                                return redirect()->route('restaurant.index');
                               }
                               else
                               {
@@ -200,8 +200,8 @@ class CustomerController extends Controller
 
           session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
           Toastr::success('Delivery Zone added successfully!');
-          $id = 1;
-          return redirect()->route('restaurant.index',$id);
+
+          return redirect()->route('restaurant.index');
       }
 
 

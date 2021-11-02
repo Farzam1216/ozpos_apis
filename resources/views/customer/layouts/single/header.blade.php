@@ -135,7 +135,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-1">
-                    <a href="{{route('restaurant.index',1)}}" class="brand-wrap mb-0">
+                    <a href="{{route('restaurant.index1',1)}}" class="brand-wrap mb-0">
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png') }}">
                     </a>
                     <!-- brand-wrap.// -->

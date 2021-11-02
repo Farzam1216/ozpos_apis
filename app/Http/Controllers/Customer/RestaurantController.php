@@ -24,7 +24,16 @@ class RestaurantController extends Controller
       /*
           Single Restaurant Index
       */
-      public function index($id)
+      public function index()
+      {
+              $vendors =  Vendor::all();
+              $user=Auth::user()->id;
+              $userAddress = UserAddress::where('user_id',$user)->get();
+              $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+
+         return view('customer/restaurant/restaurants', compact('userAddress','selectedAddress','vendors'));
+      }
+      public function index1($id)
       {
          $vendor_id = $id;
          $rest = $this->getRest($id);
