@@ -33,7 +33,27 @@ class CustomerController extends Controller
 
     public function login()
       {
+        if(Auth::check())
+        {
+              return redirect()->route('restaurant.index');
+        }
+        else
+        {
         return view('customer/login');
+        }
+      }
+    public function restaurantLogin($id)
+      {
+        // dd($id);
+        if(Auth::check())
+        {
+              return redirect()->route('restaurant.index');
+        }
+        else
+        {
+           $vendor=Vendor::find($id);
+          return view('customer/restaurant/login',compact('vendor'));
+        }
       }
 
 
@@ -134,6 +154,11 @@ class CustomerController extends Controller
       public function signup()
       {
         return view('customer/signup');
+      }
+      public function restaurantSignup($id)
+      {
+        $vendor=Vendor::find($id);
+        return view('customer/signup',compact('vendor'));
       }
 
 

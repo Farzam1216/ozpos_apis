@@ -85,8 +85,8 @@
                   <label for="{{$item->id}}"></label>
                 </td>
                 <td>{{ $idx+1 }}</td>
-                <td>{{ $item->Addon->name }}</td>
-                <td>{{ $currency_symbol }} {{ $item->price }}</td>
+                <td>{{ $item->Addon->name ?? ''}}</td>
+                <td>{{ $currency_symbol ?? ''}} {{ $item->price ?? ''}}</td>
                 <td>
                   <button type="button" onclick="updateData('vendor/menu_addon',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
                     <i class="fas fa-pencil-alt"></i>

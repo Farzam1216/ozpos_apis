@@ -18,16 +18,16 @@
                         <div class="recepie-body">
                            @foreach($Menu->GroupMenuAddon()->groupBy('addon_category_id')->get() as $GroupMenuAddonIDX=>$GroupMenuAddon)
                               <h6 class="font-weight-bold mt-4">
-                                 {{ $GroupMenuAddon->AddonCategory()->get()->first()->name }}
+                                 {{ $GroupMenuAddon->AddonCategory()->get()->first()->name ?? ''}}
                                  <span class="text-muted"> ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}) </span>
                               </h6>
-                              
+
                               @foreach($Menu->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
                                  <div class="custom-control custom-radio border-bottom py-2">
-                                    <input type="checkbox" id="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input SingleMenuCheckbox-{{ $SingleMenu->id }} SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name }}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
-                                    <label class="custom-control-label" for="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}">
-                                       {{ $MenuAddon->Addon()->get()->first()->name }}
-                                       <span class="text-muted"> +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
+                                    <input type="checkbox" id="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input SingleMenuCheckbox-{{ $SingleMenu->id }} SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name ?? ''}}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
+                                    <label class="custom-control-label" for="SingleMenuCheckbox-{{ $SingleMenu->id ?? ''}}-{{ $GroupMenuAddon->id ?? ''}}-{{ $MenuAddon->id ?? ''}}">
+                                       {{ $MenuAddon->Addon()->get()->first()->name ?? ''}}
+                                       <span class="text-muted"> +{{ $MenuAddon->price ?? ''}} {{ App\Models\GeneralSetting::first()->currency }}
                                        </span> </label>
                                  </div>
                               @endforeach

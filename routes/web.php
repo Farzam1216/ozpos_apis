@@ -416,13 +416,11 @@ use App\Http\Controllers\multiDeleteController;
    Route::post('saveAdminData', [AdminController::class, 'saveAdminData']);
 
 
-
-   /////////////////////////  Customer ////////////////////////////////////////////////////////////////////
+    /////////////////////////  Customer ////////////////////////////////////////////////////////////////////
    Route::get('/customer/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('customer.login');
    Route::get('/customer/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('customer.signup');
    Route::post('/customer/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
    Route::post('/customer/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
-
 
    ////////////////////////////  Ajax Jquery On Cart Model For Apply Coupon ,Tax /////////////////////////////////
 
@@ -430,7 +428,7 @@ use App\Http\Controllers\multiDeleteController;
 
     Route::get('restaurant/coupon',[CustomerController::class,'applyCoupon'])->name('restaurant.coupon');
     Route::get('restaurant/tax',[CustomerController::class,'applyTax'])->name('restaurant.tax');
-    Route::get('restaurant/checkout',[App\Http\Controllers\Customer\CustomerController::class,'checkout'])->name('checkout');
+
     Route::post('restaurant/book-order',[App\Http\Controllers\Customer\CustomerController::class,'bookOrder'])->name('restaurant.payment');
     Route::get('/restaurant/order/success',[App\Http\Controllers\Customer\CustomerController::class,'completeBookOrder'])->name('restaurant.order');
     Route::get('/delivery-location',[CustomerController::class,'deliveryLocation'])->name('delivery.location.index');
@@ -457,16 +455,15 @@ use App\Http\Controllers\multiDeleteController;
    Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
           Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
           Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
-          Route::get('/restaurant/{id}/{menu}', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
-   });
-   Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
+          Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
 
-           Route::post('/register', [App\Http\Controllers\Customer\CustomerController::class , 'customer_confirm_register'])
-                       ->name('register');
-           Route::post('/login', [App\Http\Controllers\Customer\CustomerController::class , 'customer_confirm_login'])
-                       ->name('login');
-           Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class , 'logout'])
-                       ->name('logout');
+   });
+
+   Route::prefix('customer')->name('restaurant.')->group(function () {
+            Route::get('restaurant/{id}/login', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantLogin'])->name('login');
+            Route::get('restaurant/{id}/signup', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantSignup'])->name('signup');
+            // Route::post('restaurant/{id}/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantSignUpVerify'])->name('signup.verify');
+            // Route::post('restaurant/{id}/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantLoginVerify'])->name('login.verify');
    });
    //Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])

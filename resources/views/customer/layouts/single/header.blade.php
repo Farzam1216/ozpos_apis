@@ -193,24 +193,19 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <!-- col.// -->
+
                 <div class="col-8">
                     <div class="d-flex align-items-center justify-content-end pr-5">
                         <!-- search -->
-                        {{-- <a href="search.html" class="widget-header mr-4 text-dark"> --}}
-                        {{-- <div class="icon d-flex align-items-center"> --}}
-                        {{-- <i class="feather-search h6 mr-2 mb-0"></i> <span>Search</span> --}}
-                        {{-- </div> --}}
-                        {{-- </a> --}}
+
                         <!-- offers -->
-                        {{-- <a href="offers.html" class="widget-header mr-4 text-white btn bg-primary m-none"> --}}
-                        {{-- <div class="icon d-flex align-items-center"> --}}
-                        {{-- <i class="feather-disc h6 mr-2 mb-0"></i> <span>Offers</span> --}}
-                        {{-- </div> --}}
-                        {{-- </a> --}}
+
                         <!-- signin -->
+
                         @if (!Auth::check())
 
 

@@ -167,6 +167,11 @@ img {vertical-align: middle;}
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
               <h5 class="m-0">Deals Menu</h5>
+              <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+                <div class="icon d-flex align-items-center">
+                <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
+                </div>
+                </a>
               {{-- <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- slider -->
@@ -274,6 +279,11 @@ img {vertical-align: middle;}
           <!-- Most popular -->
           <div class="py-3 title d-flex align-items-center">
               <h5 class="m-0">Half N Half Menu</h5>
+              <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+                <div class="icon d-flex align-items-center">
+                <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
+                </div>
+                </a>
               {{-- <a class="font-weight-bold ml-auto" href="most_popular.html">26 places <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- Most popular -->
