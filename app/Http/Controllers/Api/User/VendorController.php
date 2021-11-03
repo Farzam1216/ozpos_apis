@@ -21,7 +21,7 @@
       }
       function apiSingleMenu($vendor_id)
       {
-         $SingleMenu = SingleMenu::where([['vendor_id', $vendor_id], ['status', 1]])->get()->makeHidden(['created_at', 'updated_at']);
+         $SingleMenu = SingleMenu::with('Menu')->where([['vendor_id', $vendor_id], ['status', 1]])->get()->makeHidden(['created_at', 'updated_at']);
          return response(['success' => true, 'data' => $SingleMenu]);
       }
       function apiDealsMenu($vendor_id)
