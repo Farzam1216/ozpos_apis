@@ -224,20 +224,28 @@
                                     {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="{{route('customer.profile')}}">My account</a>
-                                    <a class="dropdown-item" href="{{ url('customer/order-history') }}">Order
+                                  @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/profile">My account</a>
+                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order-history">Order
                                         History</a>
                                     <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                     <a class="dropdown-item" href="terms.html">Term of use</a>
                                     <a class="dropdown-item" href="privacy.html">Privacy policy</a>
 
-                                      @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+
                                       {{-- <form id="logout-form" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" method="POST" style="display: none;"> --}}
                                         <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" class="dropdown-item text-danger">
                                           <i class="fas fa-sign-out-alt"></i>
                                           {{ __('Logout') }}
                                       </a>
                                       @else
+                                      <a class="dropdown-item" href="{{route('customer.profile')}}">My account</a>
+                                    <a class="dropdown-item" href="{{ url('customer/order-history') }}">Order
+                                        History</a>
+                                    <a class="dropdown-item" href="contact-us.html">Contant us</a>
+                                    <a class="dropdown-item" href="terms.html">Term of use</a>
+                                    <a class="dropdown-item" href="privacy.html">Privacy policy</a>
+
                                       <a href="{{ route('customer.logout') }}" class="dropdown-item text-danger">
                                         <i class="fas fa-sign-out-alt"></i>
                                         {{ __('Logout') }}
