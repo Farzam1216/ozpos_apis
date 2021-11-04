@@ -150,7 +150,7 @@ img {vertical-align: middle;}
           <div class="cat-slider">
             @forelse ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
-              <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
+              <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}">
                   <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
               </a>
@@ -167,11 +167,20 @@ img {vertical-align: middle;}
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
               <h5 class="m-0">Deals Menu</h5>
-              <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/main/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
                 </a>
+
+                @else
+                <a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+                  <div class="icon d-flex align-items-center">
+                  <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
+                  </div>
+                  </a>
+              @endif
               {{-- <a class="font-weight-bold ml-auto" href="trending.html">View all <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- slider -->
@@ -185,13 +194,13 @@ img {vertical-align: middle;}
                       {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
                       {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                       {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
-                      <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
+                      <a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}">
                           <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
                       </a>
                   </div>
                   <div class="p-3 position-relative">
                       <div class="list-card-body">
-                          <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
+                          <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
                         </a>
                           </h6>
                           {{-- <p class="text-gray mb-3">Vegetarian • Indian • Pure veg</p> --}}
@@ -279,7 +288,7 @@ img {vertical-align: middle;}
           <!-- Most popular -->
           <div class="py-3 title d-flex align-items-center">
               <h5 class="m-0">Half N Half Menu</h5>
-              <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              <a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
@@ -297,14 +306,14 @@ img {vertical-align: middle;}
                             {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
                             {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                             {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
-                            <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
+                            <a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}">
                                 <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
                             </a>
                         </div>
                         <div class="p-3 position-relative">
                             <div class="list-card-body">
 
-                                <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
+                                <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/main/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
                              </a>
                                 </h6>
                                 {{-- <p class="text-gray mb-1 small">• North • Hamburgers</p>

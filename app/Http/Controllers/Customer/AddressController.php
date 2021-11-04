@@ -9,8 +9,9 @@ use Log;
 
 class AddressController extends Controller
 {
-  public function addAddress(Request $request)
+  public function addAddress(Request $request,$id)
   {
+
      $request->validate([
          'address' => 'required',
          'lat' => 'required',
@@ -18,12 +19,19 @@ class AddressController extends Controller
      ]);
       // dd($request->all());
      $User  = auth()->user();
+
      $data = $request->all();
      $data['user_id'] = $User->id;
 
      UserAddress::where('user_id', $data['user_id'])->update(['selected' => 0]);
      UserAddress::create($data);
-     return back();
+     if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+      $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
+      return redirect($url.'/address-store');
+    } else {
+       return back();
+    }
+
   }
 
   public function changeAddress(Request $request)

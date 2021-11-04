@@ -230,10 +230,20 @@
                                     <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                     <a class="dropdown-item" href="terms.html">Term of use</a>
                                     <a class="dropdown-item" href="privacy.html">Privacy policy</a>
-                                    <a href="{{ route('customer.logout') }}" class="dropdown-item text-danger">
+
+                                      @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                      {{-- <form id="logout-form" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" method="POST" style="display: none;"> --}}
+                                        <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" class="dropdown-item text-danger">
+                                          <i class="fas fa-sign-out-alt"></i>
+                                          {{ __('Logout') }}
+                                      </a>
+                                      @else
+                                      <a href="{{ route('customer.logout') }}" class="dropdown-item text-danger">
                                         <i class="fas fa-sign-out-alt"></i>
                                         {{ __('Logout') }}
                                     </a>
+                                      @endif
+
                                 </div>
                             </div>
                         @endif
@@ -285,7 +295,13 @@
                 <input id="pac-input"  class="form-control" type="text"
                     placeholder="Enter your location or drag marker" style="margin: 10px 4%;" />
                 <div id="map" class="map"></div>
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                {{-- <form action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store" method="POST"> --}}
+                  <form class="mt-5 mb-4" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store" method="POST">
+                  @else
                 <form action="{{ route('customer.address.store') }}" method="POST">
+                @endif
+
                     @csrf
                     <input type="hidden" id="lang" name="lang" readonly="readonly">
                     <input type="hidden" id="lat" name="lat" readonly="readonly">

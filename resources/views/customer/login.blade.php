@@ -20,7 +20,7 @@
               <h2 class="text-dark my-0">Welcome Back</h2>
               <p class="text-50">Sign in to continue</p>
               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                 <form class="mt-5 mb-4" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/customer/login-verify" method="POST">
+              <form class="mt-5 mb-4" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/login-verify" method="POST">
               @else
                  <form class="mt-5 mb-4" action="{{route('login.verify')}}" method="POST">
               @endif

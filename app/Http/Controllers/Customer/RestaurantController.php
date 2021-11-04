@@ -55,6 +55,7 @@ class RestaurantController extends Controller
       }
       public function menu($id)
       {
+        dd('dad');
          $itemCategory = ItemCategory::where('vendor_id',$id)->get();
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);
@@ -64,8 +65,7 @@ class RestaurantController extends Controller
               $user=Auth::user()->id;
               $userAddress = UserAddress::where('user_id',$user)->get();
               $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
-
-         return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress','itemCategory'));
+               return view('customer/restaurant', compact('rest', 'singleVendor', 'page','userAddress','selectedAddress','itemCategory'));
       }
 
 

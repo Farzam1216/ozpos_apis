@@ -455,17 +455,25 @@ use App\Http\Controllers\multiDeleteController;
    Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
           Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
           Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
-          Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+          Route::get('/restaurant/{id}/main/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
 
    });
 
-   Route::prefix('customer')->name('restaurant.')->group(function () {
-            Route::get('restaurant/{id}/login', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantLogin'])->name('login');
-            Route::get('restaurant/{id}/signup', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantSignup'])->name('signup');
-            // Route::post('restaurant/{id}/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantSignUpVerify'])->name('signup.verify');
-            // Route::post('restaurant/{id}/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'restaurantLoginVerify'])->name('login.verify');
-   });
-   //Route::prefix('customer')->name('customer.')->group(function () {
+   Route::prefix('customer')->group(function () {
+       Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {
+            Route::get('/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('login');
+            Route::post('/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
+            Route::get('/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('signup');
+            Route::post('/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
+            Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class , 'logout'])->name('logout');
+
+            ////Single Store Address
+            Route::get('/', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
+            Route::post('/address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress']);
+            Route::get('/main/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu']);
+          });
+          });
+//    Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
 //                ->name('home.index');
 //
