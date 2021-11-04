@@ -33,18 +33,18 @@
       
       Route::resources([
          //////////             Menu Module                //////////
-          'item_category' => App\Http\Controllers\Api\Vendor\MenuModule\ItemCategoryController::class,
-          'item_size' => App\Http\Controllers\Api\Vendor\MenuModule\ItemSizeController::class,
-          'addon_category' => App\Http\Controllers\Api\Vendor\MenuModule\AddonCategoryController::class,
-          'addon' => App\Http\Controllers\Api\Vendor\MenuModule\AddonController::class,
-          'menu' => App\Http\Controllers\Api\Vendor\MenuModule\MenuController::class,
-          'menu_size' => App\Http\Controllers\Api\Vendor\MenuModule\MenuSizeController::class,
-          'menu_addon' => App\Http\Controllers\Api\Vendor\MenuModule\MenuAddonController::class,
-          'menu_category' => App\Http\Controllers\Api\Vendor\MenuModule\MenuCategoryController::class,
-          'single_menu' => App\Http\Controllers\Api\Vendor\MenuModule\SingleMenuController::class,
-          'half_n_half_menu' => App\Http\Controllers\Api\Vendor\MenuModule\HalfNHalfMenuController::class,
-          'deals_menu' => App\Http\Controllers\Api\Vendor\MenuModule\DealsMenuController::class,
-          'deals_items' => App\Http\Controllers\Api\Vendor\MenuModule\DealsItemsController::class,
+          'item_category' => Api\Vendor\MenuModule\ItemCategoryController::class,
+          'item_size' => Api\Vendor\MenuModule\ItemSizeController::class,
+          'addon_category' => Api\Vendor\MenuModule\AddonCategoryController::class,
+          'addon' => Api\Vendor\MenuModule\AddonController::class,
+          'menu' => Api\Vendor\MenuModule\MenuController::class,
+          'menu_size' => Api\Vendor\MenuModule\MenuSizeController::class,
+          'menu_addon' => Api\Vendor\MenuModule\MenuAddonController::class,
+          'menu_category' => Api\Vendor\MenuModule\MenuCategoryController::class,
+          'single_menu' => Api\Vendor\MenuModule\SingleMenuController::class,
+          'half_n_half_menu' => Api\Vendor\MenuModule\HalfNHalfMenuController::class,
+          'deals_menu' => Api\Vendor\MenuModule\DealsMenuController::class,
+          'deals_items' => Api\Vendor\MenuModule\DealsItemsController::class,
       ]);
       
       
