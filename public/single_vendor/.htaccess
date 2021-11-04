@@ -1,6 +1,6 @@
 RewriteEngine On
 
-RedirectMatch ^/$ http://single.com/menu
+RedirectMatch ^/$ http://single.com/menu_temp
 
 RewriteCond %{HTTP_HOST} ^single.com
 RewriteRule "menu" http://ozpos.com/customer/restaurant/1 [P]
