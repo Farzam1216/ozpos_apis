@@ -1,6 +1,6 @@
 <?php
    
-   namespace App\Http\Controllers\Vendor\MenuModule;
+   namespace App\Http\Controllers\Api\Vendor\MenuModule;
    
    use App\Models\Addon;
    use App\Models\MenuAddon;

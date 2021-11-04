@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vendor\MenuModule;
+namespace App\Http\Controllers\Api\Vendor\MenuModule;
 
 use App\Http\Controllers\CustomController;
 use DB;

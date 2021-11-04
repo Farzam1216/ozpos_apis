@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\Vendor\MenuCategoryApiController;
+   use App\Http\Controllers\Api as Api;
 use Illuminate\Http\Request;
    use Illuminate\Support\Facades\Route;
 
@@ -34,18 +34,18 @@ use Illuminate\Http\Request;
    
       Route::resources([
          //////////             Menu Module                //////////
-          'item_category' => Vendor\MenuModule\ItemCategoryController::class,
-          'item_size' => Vendor\MenuModule\ItemSizeController::class,
-          'addon_category' => Vendor\MenuModule\AddonCategoryController::class,
-          'addon' => Vendor\MenuModule\AddonController::class,
-          'menu' => Vendor\MenuModule\MenuController::class,
-          'menu_size' => Vendor\MenuModule\MenuSizeController::class,
-          'menu_addon' => Vendor\MenuModule\MenuAddonController::class,
-          'menu_category' => Vendor\MenuModule\MenuCategoryController::class,
-          'single_menu' => Vendor\MenuModule\SingleMenuController::class,
-          'half_n_half_menu' => Vendor\MenuModule\HalfNHalfMenuController::class,
-          'deals_menu' => Vendor\MenuModule\DealsMenuController::class,
-          'deals_items' => Vendor\MenuModule\DealsItemsController::class,
+          'item_category' => Api\Vendor\MenuModule\ItemCategoryController::class,
+          'item_size' => Api\Vendor\MenuModule\ItemSizeController::class,
+          'addon_category' => Api\Vendor\MenuModule\AddonCategoryController::class,
+          'addon' => Api\Vendor\MenuModule\AddonController::class,
+          'menu' => Api\Vendor\MenuModule\MenuController::class,
+          'menu_size' => Api\Vendor\MenuModule\MenuSizeController::class,
+          'menu_addon' => Api\Vendor\MenuModule\MenuAddonController::class,
+          'menu_category' => Api\Vendor\MenuModule\MenuCategoryController::class,
+          'single_menu' => Api\Vendor\MenuModule\SingleMenuController::class,
+          'half_n_half_menu' => Api\Vendor\MenuModule\HalfNHalfMenuController::class,
+          'deals_menu' => Api\Vendor\MenuModule\DealsMenuController::class,
+          'deals_items' => Api\Vendor\MenuModule\DealsItemsController::class,
       ]);
       
       

@@ -1,6 +1,6 @@
 <?php
    
-   namespace App\Http\Controllers\Vendor\MenuModule;
+   namespace App\Http\Controllers\Api\Vendor\MenuModule;
    
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
@@ -24,7 +24,7 @@
          //
       }
       
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request)
       {
          $request->validate([
              'name' => 'required',
@@ -45,7 +45,7 @@
          return response(['success' => true , 'data' => $ItemSize]);
       }
       
-      public function update(Request $request, ItemSize $ItemSize): RedirectResponse
+      public function update(Request $request, ItemSize $ItemSize)
       {
          $request->validate([
              'name' => 'required',
@@ -56,7 +56,7 @@
          return response(['success' => true, 'msg' => 'Item size created.']);
       }
       
-      public function destroy(ItemSize $ItemSize): Response
+      public function destroy(ItemSize $ItemSize)
       {
          $ItemSize->delete();
          return response(['success' => true, 'msg' => 'Item size deleted.']);

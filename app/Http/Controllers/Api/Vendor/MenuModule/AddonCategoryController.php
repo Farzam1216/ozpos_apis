@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vendor\MenuModule;
+namespace App\Http\Controllers\Api\Vendor\MenuModule;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
