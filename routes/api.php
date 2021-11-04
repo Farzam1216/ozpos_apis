@@ -31,6 +31,24 @@ use Illuminate\Http\Request;
    Route::get('vendor/vendor_setting', 'VendorApiController@apiVendorSetting');
 
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
+   
+      Route::resources([
+         //////////             Menu Module                //////////
+          'item_category' => Vendor\MenuModule\ItemCategoryController::class,
+          'item_size' => Vendor\MenuModule\ItemSizeController::class,
+          'addon_category' => Vendor\MenuModule\AddonCategoryController::class,
+          'addon' => Vendor\MenuModule\AddonController::class,
+          'menu' => Vendor\MenuModule\MenuController::class,
+          'menu_size' => Vendor\MenuModule\MenuSizeController::class,
+          'menu_addon' => Vendor\MenuModule\MenuAddonController::class,
+          'menu_category' => Vendor\MenuModule\MenuCategoryController::class,
+          'single_menu' => Vendor\MenuModule\SingleMenuController::class,
+          'half_n_half_menu' => Vendor\MenuModule\HalfNHalfMenuController::class,
+          'deals_menu' => Vendor\MenuModule\DealsMenuController::class,
+          'deals_items' => Vendor\MenuModule\DealsItemsController::class,
+      ]);
+      
+      
       /* ---- Vendor ---- */
        ///////// Add Menu Category /////////
       // Route::post('menuCategory/store',MenuCategoryApiController::class, 'store');
