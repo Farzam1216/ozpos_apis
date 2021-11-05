@@ -3,9 +3,8 @@
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
 
    use Illuminate\Http\Request;
-   use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
-   use Illuminate\View\View;
+   use Illuminate\Support\Facades\Validator;
    use App\Http\Controllers\Controller;
    use App\Models\ItemCategory;
    use App\Models\Vendor;
@@ -15,13 +14,13 @@
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @return Response
        */
-      public function index(): View
+      public function index(): Response
       {
          $Vendor = Vendor::where('user_id',auth()->user()->id)->first();
          $ItemCategory = ItemCategory::where('vendor_id',$Vendor->id)->get();
-         return view('vendor.menu_module.item_category',compact('Vendor', 'ItemCategory'));
+         return response(['success' => true, 'data' => $ItemCategory]);
       }
       
       /**
@@ -38,23 +37,26 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request): Response
       {
-         $request->validate([
-             'name' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
          ]);
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
          
          $data = $request->all();
          ItemCategory::create($data);
-         return redirect()->back()->with('msg','Item category created.');
+         return response(['success' => true, 'msg' => 'Item category created.']);
       }
-      
+   
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -78,17 +80,20 @@
        *
        * @param  Request  $request
        * @param  ItemCategory  $ItemCategory
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, ItemCategory $ItemCategory): RedirectResponse
+      public function update(Request $request, ItemCategory $ItemCategory): Response
       {
-         $request->validate([
-             'name' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
          ]);
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
       
          $data = $request->all();
          $ItemCategory->update($data);
-         return redirect()->back()->with('msg','Item category updated.');
+         return response(['success' => true, 'msg' => 'Item category updated.']);
       }
       
       /**
@@ -100,7 +105,7 @@
       public function destroy(ItemCategory $ItemCategory): Response
       {
          $ItemCategory->delete();
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Item category deleted.']);
       }
       
       /**
