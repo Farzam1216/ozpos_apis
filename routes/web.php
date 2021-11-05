@@ -455,7 +455,7 @@ use App\Http\Controllers\multiDeleteController;
    Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
           Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
           Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
-          Route::get('/restaurant/{id}/main/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+          Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
 
    });
 
@@ -468,9 +468,15 @@ use App\Http\Controllers\multiDeleteController;
             Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class , 'logout'])->name('logout');
 
             ////Single Store Address
-            Route::get('/', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
             Route::post('/address-store',[App\Http\Controllers\Customer\AddressController::class,'addAddress']);
-            Route::get('/main/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu']);
+            Route::get('/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+            // Order History
+            Route::get('/order-history',[App\Http\Controllers\Customer\OrderController::class,'orderHistory'])->name('order.history');
+            //Profile
+            Route::get('profile',[App\Http\Controllers\Customer\CustomerController::class,'profile'])->name('profile');
+            Route::post('profile-update/{id}',[App\Http\Controllers\Customer\CustomerController::class,'profileUpdate'])->name('profile.update');
+            Route::post('change-password/{id}',[App\Http\Controllers\Customer\CustomerController::class,'passwordChange'])->name('password.change');
+
           });
           });
 //    Route::prefix('customer')->name('customer.')->group(function () {
