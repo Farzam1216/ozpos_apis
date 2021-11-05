@@ -236,7 +236,11 @@ google.maps.event.addListener(map, "dragend", function (argMarker) {
       }
     });
     $.ajax({
+      @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+      url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/change-address",
+      @else
       url:"{{route('customer.change.address')}}",
+      @endif
       method: "GET",
       data:{address_id:address_id},
       success: function(data) {

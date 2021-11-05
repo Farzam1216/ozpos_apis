@@ -421,8 +421,6 @@
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
 
   ///////////// store into session ///
-
-
            var iTotal = $("#" + idTotal).data();
            var iTax    = $("#" + idTax).data();
            var iCoupons =$("#" + idCoupons).data();

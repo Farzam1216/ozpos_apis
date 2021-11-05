@@ -35,6 +35,7 @@ class RestaurantController extends Controller
       }
       public function index1($id)
       {
+        // dd('asdsa');
          $vendor_id = $id;
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);
@@ -55,7 +56,7 @@ class RestaurantController extends Controller
       }
       public function menu($id)
       {
-        dd('dad');
+        // dd('dad');
          $itemCategory = ItemCategory::where('vendor_id',$id)->get();
          $rest = $this->getRest($id);
          $singleVendor = $this->singleVendor($id);

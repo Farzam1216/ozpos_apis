@@ -97,7 +97,12 @@
                   <h5 class="mb-4">My account</h5>
                   <div id="edit_profile">
                       <div>
-                          <form action="{{route('customer.profile.update',$user->id)}}" method="POST">
+                        @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                        <form  action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/profile-update/{{$user->id}}" method="POST">
+                        {{-- <form action="{{route('customer.profile.update',$user->id)}}" method="POST"> --}}
+                        @else
+                        <form action="{{route('customer.profile.update',$user->id)}}" method="POST">
+                        @endif
                             @csrf
                               <div class="form-group">
                                   <label for="exampleInputName1">Name</label>

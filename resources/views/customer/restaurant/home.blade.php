@@ -154,7 +154,7 @@ img {vertical-align: middle;}
                   <img alt="#" src="{{asset('customer/img/icons/Fries.png')}}" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
               </a>
-          </div>
+             </div>
             @empty
 
             @endforelse
@@ -168,7 +168,7 @@ img {vertical-align: middle;}
           <div class="pt-4 pb-2 title d-flex align-items-center">
               <h5 class="m-0">Deals Menu</h5>
               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
@@ -194,14 +194,27 @@ img {vertical-align: middle;}
                       {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
                       {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                       {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
+                      @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                      <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu">
+                          <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
+                      </a>
+                      @else
                       <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
                           <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
                       </a>
+
+                      @endif
                   </div>
                   <div class="p-3 position-relative">
                       <div class="list-card-body">
-                          <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
-                        </a>
+                          <h6 class="mb-1">
+                            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
+                            </a>
+                            @else
+                            <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
+                            </a>
+                            @endif
                           </h6>
                           {{-- <p class="text-gray mb-3">Vegetarian • Indian • Pure veg</p> --}}
                           {{-- <p class="text-gray mb-3 time"><span class="bg-light text-dark rounded-sm pl-2 pb-1 pt-1 pr-2"><i class="feather-clock"></i> 15–30 min</span> <span class="float-right text-black-50"> $350 FOR TWO</span></p> --}}
@@ -288,11 +301,19 @@ img {vertical-align: middle;}
           <!-- Most popular -->
           <div class="py-3 title d-flex align-items-center">
               <h5 class="m-0">Half N Half Menu</h5>
-              <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
                 </a>
+                @else
+                <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+                  <div class="icon d-flex align-items-center">
+                  <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
+                  </div>
+                  </a>
+                @endif
               {{-- <a class="font-weight-bold ml-auto" href="most_popular.html">26 places <i class="feather-chevrons-right"></i></a> --}}
           </div>
           <!-- Most popular -->
@@ -306,15 +327,28 @@ img {vertical-align: middle;}
                             {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div> --}}
                             {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                             {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
+                            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu">
+                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
+                            </a>
+                            @else
                             <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
                                 <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
                             </a>
+                            @endif
                         </div>
                         <div class="p-3 position-relative">
                             <div class="list-card-body">
 
-                                <h6 class="mb-1"><a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
-                             </a>
+                                <h6 class="mb-1">
+                                  @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                                  <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
+                                 </a>
+                                 @else
+                                 <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
+                                </a>
+
+                                 @endif
                                 </h6>
                                 {{-- <p class="text-gray mb-1 small">• North • Hamburgers</p>
                                 <p class="text-gray mb-1 rating">
