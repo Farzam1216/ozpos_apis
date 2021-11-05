@@ -61,7 +61,7 @@
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
          ]);
-   
+         
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
          
