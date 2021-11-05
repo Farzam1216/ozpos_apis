@@ -506,9 +506,9 @@
          return view('customer.profile', compact('user', 'userAddress', 'selectedAddress'));
       }
 
-      public function profileUpdate(Request $request, $id)
+      public function profileUpdate(Request $request,$ids,$id)
       {
-         // dd($request->all());
+        //  dd($id);
          User::find($id)->update([
              'name' => $request->name,
              'phone_code' => '+' . $request->phone_code,
@@ -516,7 +516,13 @@
              'email' => $request->name
          ]);
          Toastr::success('Successfuly Updated your profile!');
-         return redirect()->back();
+         if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+          $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
+
+          return redirect($url.'/user-profile');
+       } else {
+          return redirect()->back();
+       }
       }
 
       public function passwordChange(Request $request, $id)

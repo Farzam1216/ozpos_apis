@@ -135,7 +135,11 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-1">
-                    <a href="{{route('restaurant.index1',1)}}" class="brand-wrap mb-0">
+                  @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                  <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/" class="brand-wrap mb-0">
+                   @else
+                   <a href="{{route('restaurant.index1',1)}}" class="brand-wrap mb-0">
+                   @endif
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png') }}">
                     </a>
                     <!-- brand-wrap.// -->
@@ -162,8 +166,9 @@
                                     <div class="input-group rounded shadow-sm overflow-hidden">
                                         <div class="input-group-prepend">
                                             {{-- <button class="border-0 btn btn-outline-secondary text-dark bg-white btn-block"><i class="feather-search"></i></button> --}}
-                                            <a class="btn btn-outline-secondary text-dark bg-white btn-block" href="#"
-                                                data-toggle="modal" data-target="#addModalAddress"> ADD NEW ADDRESS </a>
+                                            {{-- <a class="btn btn-outline-secondary text-dark bg-white btn-block" href="#0"
+                                                data-toggle="modal" data-target="#addModalAddress"> ADD NEW ADDRESS </a> --}}
+                                                <a href="#0" class="btn btn-outline-secondary text-dark bg-white btn-block" data-toggle="modal" data-target="#addModalAddress">ADD NEW ADDRESS </a>
                                         </div>
 
                                     </div>
@@ -207,8 +212,6 @@
                         <!-- signin -->
 
                         @if (!Auth::check())
-
-
                             <a href="login.html" class="widget-header mr-4 text-dark m-none">
                                 <div class="icon d-flex align-items-center">
                                     <i class="feather-user h6 mr-2 mb-0"></i> <span>Sign in</span>
@@ -225,15 +228,12 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                   @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/profile">My account</a>
-                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order-history">Order
+                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/user-profile">My account</a>
+                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/history-order">Order
                                         History</a>
                                     <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                     <a class="dropdown-item" href="terms.html">Term of use</a>
                                     <a class="dropdown-item" href="privacy.html">Privacy policy</a>
-
-
-                                      {{-- <form id="logout-form" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" method="POST" style="display: none;"> --}}
                                         <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/logout" class="dropdown-item text-danger">
                                           <i class="fas fa-sign-out-alt"></i>
                                           {{ __('Logout') }}
@@ -303,19 +303,20 @@
                 <input id="pac-input"  class="form-control" type="text"
                     placeholder="Enter your location or drag marker" style="margin: 10px 4%;" />
                 <div id="map" class="map"></div>
-                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                {{-- <form action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store" method="POST"> --}}
-                  <form class="mt-5 mb-4" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store" method="POST">
-                  @else
-                <form action="{{ route('customer.address.store') }}" method="POST">
-                @endif
 
-                    @csrf
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+		            	<form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store">
+		            @else
+                      <form action="{{ route('customer.address.store') }}" method="POST">
+		            @endif
+
+                		@csrf
+                     {{-- {{ csrf_field() }} --}}
+
                     <input type="hidden" id="lang" name="lang" readonly="readonly">
                     <input type="hidden" id="lat" name="lat" readonly="readonly">
                     <input type="hidden" id="selected" name="selected" readonly="readonly" value="1">
-                    <input type="hidden" id="user_id" name="user_id" readonly="readonly"
-                        value="{{ Auth::user()->id }}">
+                    <input type="hidden" id="user_id" name="user_id" readonly="readonly" value="{{ Auth::user()->id }}">
                     <br> <br>
                     <div class="row">
                         <div class="col-md-6">
