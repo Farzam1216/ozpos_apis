@@ -15,12 +15,13 @@
       /**
        * Display a listing of the resource.
        *
+       * @param String $addon_category_id
        * @return Response
        */
-      public function index(): Response
+      public function index(string $addon_category_id): Response
       {
-         $routeParameters = Route::current()->parameters();
-         $addon_category_id = $routeParameters['addon_category_id'];
+//         $routeParameters = Route::current()->parameters();
+//         $addon_category_id = $routeParameters['addon_category_id'];
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
          $Addon = Addon::where([['vendor_id', $Vendor->id], ['addon_category_id', $addon_category_id]])->get();
          return response(['success' => true, 'data' => $Addon]);
@@ -40,9 +41,10 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
+       * @param String $addon_category_id
        * @return Response
        */
-      public function store(Request $request): Response
+      public function store(Request $request, String $addon_category_id): Response
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
@@ -56,10 +58,9 @@
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
    
-         $routeParameters = Route::current()->parameters();
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
-         $data['addon_category_id'] = $routeParameters['addon_category_id'];
+         $data['addon_category_id'] = $addon_category_id;
          
          Addon::create($data);
          return response(['success' => true, 'msg' => 'Addon created.']);
@@ -79,11 +80,13 @@
       /**
        * Show the form for editing the specified resource.
        *
-       * @param Addon $Addon
+       * @param String $addon_category_id
+       * @param String $addon_id
        * @return Response
        */
-      public function edit(Addon $Addon): Response
+      public function edit(string $addon_category_id, string $addon_id): Response
       {
+         $Addon = Addon::find($addon_id);
          return response(['success' => true, 'data' => $Addon]);
       }
       
@@ -91,10 +94,11 @@
        * Update the specified resource in storage.
        *
        * @param Request $request
+       * @param String $addon_category_id
        * @param Addon $Addon
        * @return Response
        */
-      public function update(Request $request, Addon $Addon): Response
+      public function update(Request $request, string $addon_category_id, Addon $Addon): Response
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
@@ -111,10 +115,11 @@
       /**
        * Remove the specified resource from storage.
        *
+       * @param String $addon_category_id
        * @param Addon $Addon
        * @return Response
        */
-      public function destroy(Addon $Addon): Response
+      public function destroy(string $addon_category_id, Addon $Addon): Response
       {
          $Addon->delete();
          return response(['success' => true, 'msg' => 'Addon deleted.']);

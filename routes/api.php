@@ -36,8 +36,7 @@
           'item_category' => Api\Vendor\MenuModule\ItemCategoryController::class,
           'item_size' => Api\Vendor\MenuModule\ItemSizeController::class,
           'addon_category' => Api\Vendor\MenuModule\AddonCategoryController::class,
-//          'addon/{addon_category_id}' => Api\Vendor\MenuModule\AddonController::class,
-//          'addon/{addon_category_id}', Api\Vendor\MenuModule\AddonController::class, ['parameters' => ['{addon_category_id}' => 'optional?']],
+          'addon_category/{addon_category_id}/addon' => Api\Vendor\MenuModule\AddonController::class,
 //          'menu' => Api\Vendor\MenuModule\MenuController::class,
 //          'menu_size' => Api\Vendor\MenuModule\MenuSizeController::class,
 //          'menu_addon' => Api\Vendor\MenuModule\MenuAddonController::class,
@@ -47,10 +46,9 @@
 //          'deals_menu' => Api\Vendor\MenuModule\DealsMenuController::class,
 //          'deals_items' => Api\Vendor\MenuModule\DealsItemsController::class,
       ]);
-//      Route::resource('addon/{addon_category_id}', 'Api\Vendor\MenuModule\AddonController', ['parameters' => ['{addon_category_id}' => 'optional?']]);
-      Route::resource('addon/{addon_category_id}', 'Api\Vendor\MenuModule\AddonController')->parameters([
-          '{addon_category_id}' => 'addon_id'
-      ]);
+//      Route::resource('addon/{addon_category_id}', 'Api\Vendor\MenuModule\AddonController')->parameters([
+//          '{addon_category_id}' => 'addon_id'
+//      ]);
       
       /* ---- Vendor ---- */
       ///////// Add Menu Category /////////
