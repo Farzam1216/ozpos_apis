@@ -7,6 +7,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Addon;
    use App\Models\Vendor;
+   use Illuminate\Support\Facades\Route;
    use Illuminate\Support\Facades\Validator;
 
    class AddonController extends Controller
@@ -16,8 +17,10 @@
        *
        * @return Response
        */
-      public function index($addon_category_id): Response
+      public function index(): Response
       {
+         $routeParameters = Route::current()->parameters();
+         $addon_category_id = $routeParameters['addon_category_id'];
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
          $Addon = Addon::where([['vendor_id', $Vendor->id], ['addon_category_id', $addon_category_id]])->get();
          return response(['success' => true, 'data' => $Addon]);
@@ -53,8 +56,10 @@
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
    
+         $routeParameters = Route::current()->parameters();
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
+         $data['addon_category_id'] = $routeParameters['addon_category_id'];
          
          Addon::create($data);
          return response(['success' => true, 'msg' => 'Addon created.']);
