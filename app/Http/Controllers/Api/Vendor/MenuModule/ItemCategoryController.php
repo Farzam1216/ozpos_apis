@@ -47,8 +47,15 @@
    
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         
          ItemCategory::create($data);
          return response(['success' => true, 'msg' => 'Item category created.']);
       }
