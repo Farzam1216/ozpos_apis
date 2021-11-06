@@ -284,7 +284,9 @@
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
          });
+         console.log(base_url);
          $.ajax({
+
             url: base_url + "/customer/restaurant/tax",
             method: "GET",
             success: function (data) {
