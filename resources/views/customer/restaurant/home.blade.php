@@ -167,8 +167,9 @@ img {vertical-align: middle;}
           <!-- Trending this week -->
           <div class="pt-4 pb-2 title d-flex align-items-center">
               <h5 class="m-0">Deals Menu</h5>
+
               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
@@ -195,7 +196,7 @@ img {vertical-align: middle;}
                       {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                       {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
                       @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                      <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu">
+                      <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list">
                           <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
                       </a>
                       @else
@@ -209,7 +210,7 @@ img {vertical-align: middle;}
                       <div class="list-card-body">
                           <h6 class="mb-1">
                             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
+                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
                             </a>
                             @else
                             <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><strong>{{ ucwords($value->name) }} </strong>
@@ -302,7 +303,7 @@ img {vertical-align: middle;}
           <div class="py-3 title d-flex align-items-center">
               <h5 class="m-0">Half N Half Menu</h5>
               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                 <div class="icon d-flex align-items-center">
                 <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                 </div>
@@ -328,7 +329,7 @@ img {vertical-align: middle;}
                             {{-- <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                             {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
                             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu">
+                            <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list">
                                 <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
                             </a>
                             @else
@@ -342,7 +343,7 @@ img {vertical-align: middle;}
 
                                 <h6 class="mb-1">
                                   @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                                  <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/menu_temp/menu" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
+                                  <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
                                  </a>
                                  @else
                                  <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>

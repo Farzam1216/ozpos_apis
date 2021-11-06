@@ -467,17 +467,24 @@
       Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
 
       ////Single Store Address
-      Route::post('/address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress']);
+      Route::post('/single-address', [App\Http\Controllers\Customer\AddressController::class, 'singleAddAddress']);
       Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
 
-      Route::get('/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+      Route::get('/list', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
       // Order History
       Route::get('/history-order', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
       //Profile
       Route::get('user-profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
-      Route::post('profile-update/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'profileUpdate'])->name('profile.update');
-      Route::post('change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'passwordChange'])->name('password.change');
-   });
+      Route::post('single-profile-update/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singleProfileUpdate'])->name('single.profile.update');
+      Route::post('single-change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singlePasswordChange'])->name('single.password.change');
+
+       /// tax , coupon
+       Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
+      Route::get('/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
+
+    });
+
+
 //    Route::prefix('customer')->name('customer.')->group(function () {
 //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
 //                ->name('home.index');

@@ -98,7 +98,7 @@
                   <div id="edit_profile">
                       <div>
                         @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                        <form  action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/profile-update/{{$user->id}}" method="POST">
+                        <form  action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/single-profile-update/{{$user->id}}" method="POST">
                         {{-- <form action="{{route('customer.profile.update',$user->id)}}" method="POST"> --}}
                         @else
                         <form action="{{route('customer.profile.update',$user->id)}}" method="POST">
@@ -130,7 +130,12 @@
                       </div>
                       <div class="additional">
                           <div class="change_password my-3">
-                            <form action="{{route('customer.password.change',$user->id)}}" method="POST">
+                            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                            <form  action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/single-change-password/{{$user->id}}" method="POST">
+                            {{-- <form action="{{route('customer.profile.update',$user->id)}}" method="POST"> --}}
+                            @else
+                              <form action="{{route('customer.password.change',$user->id)}}" method="POST">
+                            @endif
                               @csrf
 
                                 <div class="form-group">

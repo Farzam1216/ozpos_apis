@@ -506,7 +506,25 @@
          return view('customer.profile', compact('user', 'userAddress', 'selectedAddress'));
       }
 
-      public function profileUpdate(Request $request,$ids,$id)
+      public function profileUpdate(Request $request,$id)
+      {
+        //  dd($id);
+         User::find($id)->update([
+             'name' => $request->name,
+             'phone_code' => '+' . $request->phone_code,
+             'phone' => $request->phone,
+             'email' => $request->name
+         ]);
+         Toastr::success('Successfuly Updated your profile!');
+         if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+          $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
+
+          return redirect($url.'/user-profile');
+       } else {
+          return redirect()->back();
+       }
+      }
+      public function singleProfileUpdate(Request $request,$ids,$id)
       {
         //  dd($id);
          User::find($id)->update([
@@ -535,8 +553,27 @@
 
          User::find($id)->update(['password' => Hash::make($request->new_password)]);
          Toastr::success('Successfuly Changed the Password!');
-         dd('Successfuly Changed the Password!');
+        //  dd('Successfuly Changed the Password!');
          return back();
+      }
+      public function singlePasswordChange(Request $request,$vendor_id,$user_id)
+      {
+         $request->validate([
+             'current_password' => ['required', new MatchOldPassword],
+             'new_password' => ['required'],
+             'new_confirm_password' => ['same:new_password'],
+         ]);
+
+         User::find($user_id)->update(['password' => Hash::make($request->new_password)]);
+         Toastr::success('Successfuly Changed the Password!');
+        //  dd('Successfuly Changed the Password!');
+         if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+          $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
+
+          return redirect($url.'/user-profile');
+       } else {
+          return redirect()->back();
+       }
       }
 
       public function topRest(/* Request $request */)

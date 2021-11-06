@@ -1,11 +1,11 @@
 @extends(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? 'customer.layouts.single.app' : 'customer.layouts.single.app', ['activePage' => 'restaurant'] )
 
-{{-- @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+@if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
    @section('logo',$rest->vendor_logo)
    @section('subtitle','Menu')
    @section('vendor_lat',$rest->lat)
    @section('vendor_lang',$rest->lang)
-@endif --}}
+@endif
 
 @section('title','Restaurants')
 

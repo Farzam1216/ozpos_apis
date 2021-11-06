@@ -168,7 +168,7 @@
                                             {{-- <button class="border-0 btn btn-outline-secondary text-dark bg-white btn-block"><i class="feather-search"></i></button> --}}
                                             {{-- <a class="btn btn-outline-secondary text-dark bg-white btn-block" href="#0"
                                                 data-toggle="modal" data-target="#addModalAddress"> ADD NEW ADDRESS </a> --}}
-                                                <a href="#0" class="btn btn-outline-secondary text-dark bg-white btn-block" data-toggle="modal" data-target="#addModalAddress">ADD NEW ADDRESS </a>
+                                                <a href="#" class="btn btn-outline-secondary text-dark bg-white btn-block" data-toggle="modal" data-target="#addModalAddress">ADD NEW ADDRESS </a>
                                         </div>
 
                                     </div>
@@ -305,14 +305,13 @@
                 <div id="map" class="map"></div>
 
                 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-		            	<form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/address-store">
+                    <form method="post" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/single-address" class="popup-form" id="myLogin">
+                {{-- <form action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/single-address" method="POST"> --}}
 		            @else
-                      <form action="{{ route('customer.address.store') }}" method="POST">
+                    <form action="{{ route('customer.address.store') }}" method="POST">
 		            @endif
-
-                		@csrf
+                  @csrf
                      {{-- {{ csrf_field() }} --}}
-
                     <input type="hidden" id="lang" name="lang" readonly="readonly">
                     <input type="hidden" id="lat" name="lat" readonly="readonly">
                     <input type="hidden" id="selected" name="selected" readonly="readonly" value="1">
