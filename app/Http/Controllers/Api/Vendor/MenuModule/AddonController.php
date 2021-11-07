@@ -9,7 +9,7 @@
    use App\Models\Vendor;
    use Illuminate\Support\Facades\Route;
    use Illuminate\Support\Facades\Validator;
-
+   
    class AddonController extends Controller
    {
       /**
@@ -44,20 +44,20 @@
        * @param String $addon_category_id
        * @return Response
        */
-      public function store(Request $request, String $addon_category_id): Response
+      public function store(Request $request, string $addon_category_id): Response
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
          ]);
-   
+         
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+         
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+         
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+         
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['addon_category_id'] = $addon_category_id;
@@ -103,7 +103,7 @@
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
          ]);
-   
+         
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
          

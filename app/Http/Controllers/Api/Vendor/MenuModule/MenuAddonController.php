@@ -7,6 +7,7 @@
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Vendor;
@@ -16,19 +17,14 @@
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @param String $menu_id
+       * @return Response
        */
-      public function index($menu_id, $menu_size_id = null): View
+      public function index(string $menu_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         $MenuAddon = null;
-         
-         if ($menu_size_id === null)
-            $MenuAddon = MenuAddon::with('Addon')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id]])->get();
-         else
-            $MenuAddon = MenuAddon::with('Addon')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id], ['menu_size_id', $menu_size_id]])->get();
-
-         return view('vendor.menu_module.menu_addon', compact('Vendor', 'MenuAddon', 'menu_id', 'menu_size_id'));
+         $MenuAddon = MenuAddon::with('Addon')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id]])->get();
+         return response(['success' => true, 'data' => $MenuAddon]);
       }
       
       /**
@@ -45,28 +41,39 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @param String $menu_id
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request, string $menu_id): Response
       {
-         $request->validate([
-             'menu_id' => 'required',
-             'addon_id' => 'required',
-             'price' => 'nullable|numeric|between:0,999999.99',
+         $validator = Validator::make($request->all(), [
+             'addon_id' => 'bail|required',
+             'price' => 'bail|required|numeric|between:0,999999.99',
          ]);
          
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+         
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+         
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+         
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_id'] = $menu_id;
+         
          $Addon = Addon::find($data['addon_id']);
          $data['addon_category_id'] = $Addon->addon_category_id;
          
          MenuAddon::create($data);
-         return redirect()->back()->with('msg', 'Menu Addon created.');
+         return response(['success' => true, 'msg' => 'Menu Addon created.']);
       }
       
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -77,11 +84,13 @@
       /**
        * Show the form for editing the specified resource.
        *
-       * @param MenuAddon $MenuAddon
+       * @param String $menu_id
+       * @param String $menu_addon_id
        * @return Response
        */
-      public function edit(MenuAddon $MenuAddon): Response
+      public function edit(string $menu_id, String $menu_addon_id): Response
       {
+         $MenuAddon = MenuAddon::with('Addon')->find($menu_addon_id);
          return response(['success' => true, 'data' => $MenuAddon]);
       }
       
@@ -89,48 +98,39 @@
        * Update the specified resource in storage.
        *
        * @param Request $request
+       * @param String $menu_id
        * @param MenuAddon $MenuAddon
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, MenuAddon $MenuAddon): RedirectResponse
+      public function update(Request $request, string $menu_id, MenuAddon $MenuAddon): Response
       {
-         $request->validate([
-             'menu_id' => 'required',
-             'addon_id' => 'required',
-             'price' => 'nullable|numeric|between:0,999999.99',
+         $validator = Validator::make($request->all(), [
+             'addon_id' => 'bail|required',
+             'price' => 'bail|required|numeric|between:0,999999.99',
          ]);
          
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+         
          $data = $request->all();
+         
          $Addon = Addon::find($data['addon_id']);
          $data['addon_category_id'] = $Addon->addon_category_id;
          
          $MenuAddon->update($data);
-         return redirect()->back()->with('msg', 'Menu Addon updated.');
+         return response(['success' => true, 'msg' => 'Menu Addon updated.']);
       }
       
       /**
        * Remove the specified resource from storage.
        *
+       * @param String $menu_id
        * @param MenuAddon $MenuAddon
        * @return Response
        */
-      public function destroy(MenuAddon $MenuAddon): Response
+      public function destroy(string $menu_id, MenuAddon $MenuAddon): Response
       {
          $MenuAddon->delete();
-         return response(['success' => true]);
-      }
-      
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param Request $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',', $data['ids']);
-         MenuAddon::whereIn('id', $ids)->delete();
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Menu Addon deleted.']);
       }
    }
