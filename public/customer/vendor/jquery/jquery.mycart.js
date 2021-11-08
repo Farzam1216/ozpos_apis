@@ -163,6 +163,7 @@
       var classProductQuantity = 'my-product-quantity';
       var classProductTotal = 'my-product-total';
       var idGrandTotal = 'my-cart-grand-total';
+      var idUrl = 'my-cart-url';
       var idTotal = 'my-cart-total';
       var idTax = 'my-cart-tax';
       var id = 'my-cart-total-input';
@@ -274,7 +275,6 @@
 
 
 
-
          showGrandTotal();
 
          let base_url = window.location.origin;
@@ -285,9 +285,21 @@
             }
          });
          console.log(base_url);
+         if(base_url === "http://ozpos.com")
+         {
+            var originalUrl = base_url+"/customer/restaurant/tax";
+            // console.log(originalUrl);
+         }
+         else
+         {
+            var originalUrl = base_url+'/tax';
+            // console.log(originalUrl);
+         }
+
+
          $.ajax({
 
-            url: base_url + "/customer/restaurant/tax",
+          url:originalUrl,
             method: "GET",
             success: function (data) {
                taxType = data.taxtype;
@@ -309,10 +321,20 @@
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
             });
+            console.log(originalUrl);
+            if(base_url === "http://ozpos.com")
+            {
+              var originalUrl = base_url+"/customer/restaurant/coupon";
+              // console.log(originalUrl);
+            }
+            else
+            {
+              var originalUrl = base_url+'/singleCoupon';
+
+            }
             var coupon = $("#" + idCouponInput).val();
             $.ajax({
-
-               url: base_url + "/customer/restaurant/coupon",
+               url:originalUrl,
                method: "GET",
                data: {coupon: coupon},
                success: function (data) {
@@ -433,10 +455,20 @@
           var products = ProductManager.getAllProducts();
           var jsonProducts = JSON.stringify(products);
           let base_url = window.location.origin;
-          // console.log(iTax);
-          const url = base_url+"/customer/restaurant/checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
+          console.log(base_url);
+          if(base_url === "http://ozpos.com")
+            {
+              window.location.href = base_url+"/customer/restaurant/checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
+              // window.location.href = url;
+            }
+            else
+            {
+              window.location.href = base_url+"/checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
+              // console.log(url);
+              // window.location.href = url;
+            }
 
-         window.location.href = url;
+
 
          //alert('asdasd');
          //if (!products.length) {

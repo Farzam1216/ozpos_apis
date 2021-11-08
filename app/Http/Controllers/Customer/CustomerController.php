@@ -81,7 +81,7 @@
                      $userAddress = UserAddress::where('user_id', auth()->user()->id)->where('selected', 1)->first();
                      // dd($user);
                      if ($userAddress) {
-                        // dd('asdasd');
+
                         Toastr::success('You have set location already exist!');
                         // return redirect()->route('customer.restaurant.index',$customer->id);
                         // return redirect()->route('restaurant.index');
@@ -103,7 +103,7 @@
 
                         // Session::put('vendor_driver', 0);
                      }
-                     // dd('asdsasdasd');
+
 
                      // return back();
                     } else {
@@ -267,8 +267,54 @@
 
          }
       }
+      public function applySingleTax($id)
+      {
+         //  dd($request->all());
+         // $user = Auth::user()->id;
+         //    dd($user);
+         $vendor = Vendor::find($id);
+
+         //  dd($vendor);
+         if ($vendor) {
+            $User = auth()->user();
+            $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+            $orderSettting = OrderSetting::where('vendor_id', $vendor->id)->first();
+
+            $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+            $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+            $googleDistance =
+                file_get_contents(
+                    $googleUrl,
+                );
+            $googleDistance = json_decode($googleDistance);
+
+            $orderSettting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 0;
+
+
+            $taxtype = $vendor->tax_type;
+            $tax = $vendor->tax;
+            return response()->json(['tax' => $tax, 'taxtype' => $taxtype, 'orderSettting' => $orderSettting]);
+
+         }
+      }
 
       public function applyCoupon(Request $request)
+      {
+         //  dd($request->all());
+
+         $coupon = PromoCode::where('promo_code', $request->coupon)->first();
+         if ($coupon) {
+
+            $discountType = $coupon->discountType;
+            $discount = $coupon->discount;
+            return response()->json(['discountType' => $discountType, 'discount' => $discount, 'coupon_id' => $coupon->id]);
+
+         } else {
+            dd('error');
+         }
+
+      }
+      public function applySingleCoupon(Request $request,$id)
       {
          //  dd($request->all());
 
@@ -292,6 +338,19 @@
       {
 
          // dd($request->all());
+         Session::put(['total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
+             'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
+                 ->product]);
+
+         $user = Auth::user()->id;
+         $userAddress = UserAddress::where('user_id', $user)->get();
+         $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
+         return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress'));
+      }
+      public function singleCheckout(Request $request,$id)
+      {
+
+        //  dd($request->all());
          Session::put(['total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
              'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
                  ->product]);

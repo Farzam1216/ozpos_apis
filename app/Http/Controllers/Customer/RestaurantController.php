@@ -155,6 +155,7 @@ class RestaurantController extends Controller
       public function singleVendor($vendor_id)
       {
          $master = array();
+
          $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);

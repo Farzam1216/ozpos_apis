@@ -426,19 +426,21 @@
 
    Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
 
-      Route::get('restaurant/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
-      Route::get('restaurant/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
+     Route::get('/restaurant/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
+     Route::get('/restaurant/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
 
-      Route::post('restaurant/book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('restaurant.payment');
-      Route::get('/restaurant/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('restaurant.order');
-      Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
-      Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
-      Route::post('address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress'])->name('address.store');
-      Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
-      //  Customer Account ////
-      Route::get('profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
-      Route::post('profile-update/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'profileUpdate'])->name('profile.update');
-      Route::post('change-password/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'passwordChange'])->name('password.change');
+     Route::post('restaurant/book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('restaurant.payment');
+     Route::get('/restaurant/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('restaurant.order');
+     Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
+     Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
+     Route::post('address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress'])->name('address.store');
+     Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
+     //  Customer Account ////
+     Route::get('profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
+     Route::post('profile-update/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'profileUpdate'])->name('profile.update');
+     Route::post('change-password/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'passwordChange'])->name('password.change');
+
+     Route::get('/restaurant/checkout', [CustomerController::class, 'checkout'])->name('restaurant.checkout');
 
       ///////// order history///
       Route::get('/order-history', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
@@ -479,8 +481,9 @@
       Route::post('single-change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singlePasswordChange'])->name('single.password.change');
 
        /// tax , coupon
-       Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
-      Route::get('/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
+       Route::get('/singleCoupon', [CustomerController::class, 'applySingleCoupon'])->name('coupon');
+      Route::get('/tax', [CustomerController::class, 'applySingleTax'])->name('tax');
+      Route::get('/checkout', [CustomerController::class, 'singleCheckout'])->name('checkout');
 
     });
 
