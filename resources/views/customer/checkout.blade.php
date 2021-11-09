@@ -30,22 +30,22 @@
                                                     <div class="p-3 bg-white rounded shadow-sm w-100">
                                                         <div class="d-flex align-items-center mb-2">
                                                             <h6 class="mb-0">{{ $getaddress->type }}</h6>
-                                                            <p class="mb-0 badge badge-success ml-auto"><i
-                                                                    class="icofont-check-circled"></i> Default</p>
+                                                            {{-- <p class="mb-0 badge badge-success ml-auto"><i
+                                                                    class="icofont-check-circled"></i> Default</p> --}}
                                                         </div>
                                                         <p class="small text-muted m-0">{{ nl2br($getaddress->address, 20) }}</p>
                                                         {{-- <p class="small text-muted m-0">Redwood City, CA 94063</p> --}}
                                                     </div>
-                                                    <a href="#" data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-block btn-light border-top">Edit</a>
+                                                    {{-- <a href="#" data-toggle="modal" data-target="#exampleModal"
+                                                        class="btn btn-block btn-light border-top">Edit</a> --}}
                                                 </div>
                                             </label>
                                         </div>
                                         @endforeach
 
                                     </div>
-                                    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal"> ADD
-                                        NEW ADDRESS </a>
+                                    {{-- <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal"> ADD
+                                        NEW ADDRESS </a> --}}
                                 </div>
                             </div>
                         </div>
@@ -359,7 +359,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-white p-3 py-3 border-bottom clearfix">
+                        {{-- <div class="bg-white p-3 py-3 border-bottom clearfix">
                             <div class="input-group-sm mb-2 input-group">
                                 <input placeholder="Enter promo code" type="text" class="form-control">
                                 <div class="input-group-append"><button type="button" class="btn btn-primary"><i
@@ -371,7 +371,7 @@
                                 <textarea placeholder="Any suggestions? We will pass it on..." aria-label="With textarea"
                                     class="form-control"></textarea>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="bg-white p-3 clearfix border-bottom">
                             <p class="mb-1">Item Total <span
                                     class="float-right text-dark">${{ Session::get('total') }}</span></p>
@@ -475,7 +475,7 @@ function stripeResponseHandler(status, response)
 
                             setTimeout(function() {
                                 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                                    window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/book");
+                                    window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/history-order");
                                 @else
                                 window.location.replace("{{ url('customer/order-history')}}");
                                 @endif
@@ -506,7 +506,7 @@ function codResponseHandler()
                 },
                 type: "POST",
                 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                    url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/book",
+                    url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/book-order",
                 @else
                 url:"{{ url('customer/restaurant/book-order', request()->route('id')) }}",
                 @endif
@@ -524,7 +524,7 @@ function codResponseHandler()
                         setTimeout(function() {
 
                             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                                window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/3");
+                                window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/history-order");
                             @else
                             window.location.replace("{{ url('customer/order-history')}}");
                             @endif

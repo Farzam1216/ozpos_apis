@@ -48,6 +48,41 @@ class OrderController extends Controller
     $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
     return view('customer.my-order',compact('pendingOrders','cancelOrders','completeOrders','userAddress','selectedAddress'));
   }
+  public function singleOrderHistory($id)
+  {
+    app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+    // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+    $pendingOrders = Order::where('user_id', auth()->user()->id)
+                      ->where(function($q) {
+                        $q->where('order_status','PENDING')
+                      ->orWhere('order_status','APPROVE')
+                      ->orWhere('order_status','ACCEPT')
+                      ->orWhere('order_status','PICKUP')
+                      ->orWhere('order_status','DELIVERED')
+                      ->orWhere('order_status','REJECT');
+                    })->orderBy('id', 'DESC')->get();
+                      // dd($pendingOrders);
+
+    $cancelOrders = Order::where('user_id', auth()->user()->id)
+                      ->where('order_status','CANCEL')->orderBy('id', 'DESC')->get();
+    $completeOrders = Order::where('user_id', auth()->user()->id)
+                      ->where('order_status','COMPLETE')->orderBy('id', 'DESC')->get();
+    // foreach ($orders as $order) {
+    //    if ($order->delivery_person_id != null) {
+    //       $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+    //       $order->delivery_person = [
+    //           'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+    //           'image' => $delivery_person->image,
+    //           'contact' => $delivery_person->contact,
+    //       ];
+    //    }
+    // }
+
+    $user=Auth::user()->id;
+    $userAddress = UserAddress::where('user_id',$user)->get();
+    $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
+    return view('customer.my-order',compact('pendingOrders','cancelOrders','completeOrders','userAddress','selectedAddress'));
+  }
 
   public function getOrderModel($order_id)
   {

@@ -265,9 +265,9 @@
                                 </span>
                             </div>
                         </a>
-                        <a class="toggle" href="#">
+                        {{-- <a class="toggle" href="#">
                             <span></span>
-                        </a>
+                        </a> --}}
                     </div>
                     <!-- widgets-wrap.// -->
                 </div>
