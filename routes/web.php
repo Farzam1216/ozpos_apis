@@ -426,19 +426,18 @@
 
    Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
 
-      Route::get('restaurant/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
-      Route::get('restaurant/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
+     ///// Logout////
+     Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
 
-      Route::post('restaurant/book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('restaurant.payment');
-      Route::get('/restaurant/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('restaurant.order');
-      Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
-      Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
-      Route::post('address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress'])->name('address.store');
-      Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
-      //  Customer Account ////
-      Route::get('profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
-      Route::post('profile-update/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'profileUpdate'])->name('profile.update');
-      Route::post('change-password/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'passwordChange'])->name('password.change');
+     Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
+     Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
+     Route::post('address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress'])->name('address.store');
+     Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
+     //  Customer Account ////
+     Route::get('profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
+     Route::post('profile-update/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'profileUpdate'])->name('profile.update');
+     Route::post('change-password/{id}', [App\Http\Controllers\Customer\CustomerController::class, 'passwordChange'])->name('password.change');
+
 
       ///////// order history///
       Route::get('/order-history', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
@@ -446,43 +445,50 @@
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 
-      //////////////////// Logout ////////////////
-
-      Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
-   });
-
-   /////    /* Single Restaurant Routes */
-   Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
-      Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
-      Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
-      Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+      Route::middleware(['auth'])->prefix('restaurant')->name('restaurant.')->group(function () {
+          Route::get('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
+          Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('coupon');
+          Route::get('/tax', [CustomerController::class, 'applyTax'])->name('tax');
+          Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
+          Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
+    });
 
    });
 
-   Route::prefix('customer/restaurant/{id}')->name('restaurant.')->group(function () {
-      Route::get('/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('login');
-      Route::post('/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
-      Route::get('/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('signup');
-      Route::post('/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
-      Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
-
-      ////Single Store Address
-      Route::post('/single-address', [App\Http\Controllers\Customer\AddressController::class, 'singleAddAddress']);
-      Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
-
-      Route::get('/list', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
-      // Order History
-      Route::get('/history-order', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
-      //Profile
-      Route::get('user-profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
-      Route::post('single-profile-update/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singleProfileUpdate'])->name('single.profile.update');
-      Route::post('single-change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singlePasswordChange'])->name('single.password.change');
-
-       /// tax , coupon
-       Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('restaurant.coupon');
-      Route::get('/tax', [CustomerController::class, 'applyTax'])->name('restaurant.tax');
+    /////    /* Single Restaurant Routes */
+    Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
+        Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
+        Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
+        Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
 
     });
+
+   Route::prefix('customer/restaurant/{id}')->name('restaurant.')->group(function () {
+          Route::get('/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('login');
+          Route::post('/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
+          Route::get('/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('signup');
+          Route::post('/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
+
+     Route::middleware('auth')->group(function(){
+
+        Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
+        Route::post('/single-address', [App\Http\Controllers\Customer\AddressController::class, 'singleAddAddress']);
+        Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
+        Route::get('/list', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+        //Profile
+        Route::get('user-profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
+        Route::post('single-profile-update/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singleProfileUpdate'])->name('single.profile.update');
+        Route::post('single-change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singlePasswordChange'])->name('single.password.change');
+        /// tax , coupon
+        Route::get('/singleCoupon', [CustomerController::class, 'applySingleCoupon'])->name('coupon');
+        Route::get('/tax', [CustomerController::class, 'applySingleTax'])->name('tax');
+        Route::get('/checkout', [CustomerController::class, 'singleCheckout'])->name('checkout');
+        Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
+        Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
+        // Order History
+        Route::get('/history-order', [App\Http\Controllers\Customer\OrderController::class, 'singleOrderHistory'])->name('order.history');
+    });
+  });
 
 
 //    Route::prefix('customer')->name('customer.')->group(function () {

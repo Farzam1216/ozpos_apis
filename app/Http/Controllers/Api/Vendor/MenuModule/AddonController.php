@@ -15,6 +15,7 @@
       /**
        * Display a listing of the resource.
        *
+       * @param String $addon_category_id
        * @return Response
        */
       public function indexAll(): Response
