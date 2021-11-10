@@ -30,6 +30,8 @@
    Route::get('vendor/vendor_setting', 'VendorApiController@apiVendorSetting');
    
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
+   
+      Route::get('addon', [App\Http\Controllers\Api\Vendor\MenuModule\AddonController::class, 'indexAll']);
       
       Route::resources([
          //////////             Menu Module                //////////

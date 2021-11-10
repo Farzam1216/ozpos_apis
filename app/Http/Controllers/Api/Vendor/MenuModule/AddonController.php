@@ -15,6 +15,18 @@
       /**
        * Display a listing of the resource.
        *
+       * @return Response
+       */
+      public function indexAll(): Response
+      {
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+         $Addon = Addon::where([['vendor_id', $Vendor->id]])->get()->makeHidden(['created_at', 'updated_at']);
+         return response(['success' => true, 'data' => $Addon]);
+      }
+      
+      /**
+       * Display a listing of the resource.
+       *
        * @param String $addon_category_id
        * @return Response
        */
