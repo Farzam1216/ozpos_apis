@@ -4,9 +4,9 @@
          <span class="float-right">
             <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenu-{{ $DealsMenu->id }}">Edit</button>
          </span>
-
+         
          @include('customer.restaurant.deals.modals.index')
-
+         
          <div class="media">
             <img src="{{ $DealsMenu->image }}" alt="" class="mr-3 rounded-pill ">
             <div class="media-body">
@@ -22,8 +22,7 @@
                      <p class="text-muted mb-0">
                         <span class="text-decoration-overline">
                            {{ $DealsMenu->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
-                        </span>
-                        &ensp;
+                        </span> &ensp;
                         {{ $DealsMenu->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
                      </p>
                   @endif

@@ -47,7 +47,7 @@
                   </button>
                </div>
                <div class="col-6 m-0 p-0">
-                  <button id="DealsMenuSubmit-{{ $DealsMenu->id }}" type="button" disabled class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="3-{{ $DealsMenu->id }}" data-name="{{ ucwords($DealsMenu->name) }}" data-summary='{
+                  <button id="DealsMenuSubmit-{{ $DealsMenu->id }}" type="button" disabled class="btn btn-primary btn-lg btn-block add-cart-btn" data-vendor="{{ $rest->id }}" data-id="3-{{ $DealsMenu->id }}" data-name="{{ ucwords($DealsMenu->name) }}" data-summary='{
                            "category":"DEALS",
                            "menu_category":{ "id": {{ $DealsMenu->id }} },
                            "menu": [],

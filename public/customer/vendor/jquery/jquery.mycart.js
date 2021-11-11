@@ -59,9 +59,15 @@
       var setAllProducts = function (products) {
          localStorage.products = JSON.stringify(products);
       }
-      var addProduct = function (id, name, summary, price, quantity, image) {
+      var addProduct = function (vendor, id, name, summary, price, quantity, image) {
+         console.log('Adding Products start.');
+         console.log('Implement concept here if products exist get first and check vendor id and process whatever.');
+
          var products = getAllProducts();
+         console.log(products);
+
          products.push({
+            vendor: vendor,
             id: id,
             name: name,
             summary: summary,
@@ -69,6 +75,7 @@
             quantity: quantity,
             image: image
          });
+
          setAllProducts(products);
       }
 
@@ -93,7 +100,11 @@
          setAllProducts(products);
          return true;
       }
-      var setProduct = function (id, name, summary, price, quantity, image) {
+      var setProduct = function (vendor, id, name, summary, price, quantity, image) {
+         if (typeof vendor === "undefined") {
+            console.error("vendor id required")
+            return false;
+         }
          if (typeof id === "undefined") {
             console.error("id required")
             return false;
@@ -117,7 +128,7 @@
          summary = typeof summary === "undefined" ? "" : summary;
 
          if (!updatePoduct(id)) {
-            addProduct(id, name, summary, price, quantity, image);
+            addProduct(vendor, id, name, summary, price, quantity, image);
          }
       }
       var clearProduct = function () {
@@ -274,7 +285,6 @@
          );
 
 
-
          showGrandTotal();
          let base_url = window.location.origin;
 
@@ -284,21 +294,20 @@
             }
          });
          console.log(base_url);
-         if(base_url === "http://ozpos.com")
-         {
-            var originalUrl = base_url+"/customer/restaurant/tax";
+         if (base_url === "http://ozpos.com") {
+            var originalUrl = base_url + "/customer/restaurant/tax";
+            // console.log(originalUrl);
+         } else {
+            var originalUrl = base_url + '/tax';
             // console.log(originalUrl);
          }
-         else
-         {
-            var originalUrl = base_url+'/tax';
-            // console.log(originalUrl);
-         }
+
+         console.log(products);
 
 
          $.ajax({
 
-          url:originalUrl,
+            url: originalUrl,
             method: "GET",
             success: function (data) {
                taxType = data.taxtype;
@@ -321,19 +330,16 @@
                }
             });
             console.log(originalUrl);
-            if(base_url === "http://ozpos.com")
-            {
-              var originalUrl = base_url+"/customer/restaurant/coupon";
-              // console.log(originalUrl);
-            }
-            else
-            {
-              var originalUrl = base_url+'/singleCoupon';
+            if (base_url === "http://ozpos.com") {
+               var originalUrl = base_url + "/customer/restaurant/coupon";
+               // console.log(originalUrl);
+            } else {
+               var originalUrl = base_url + '/singleCoupon';
 
             }
             var coupon = $("#" + idCouponInput).val();
             $.ajax({
-               url:originalUrl,
+               url: originalUrl,
                method: "GET",
                data: {coupon: coupon},
                success: function (data) {
@@ -443,51 +449,46 @@
          $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
 
-  ///////////// store into session ///
-           var iTotal = $("#" + idTotal).data();
-           var iTax    = $("#" + idTax).data();
-           var iCoupons =$("#" + idCoupons).data();
-            var iDelivery  =$("#" + idDelivery).data();
-             var iGrandTotal  =$("#" + idGrandTotal).data();
+         ///////////// store into session ///
+         var iTotal = $("#" + idTotal).data();
+         var iTax = $("#" + idTax).data();
+         var iCoupons = $("#" + idCoupons).data();
+         var iDelivery = $("#" + idDelivery).data();
+         var iGrandTotal = $("#" + idGrandTotal).data();
 
          $("#" + idCheckoutCart).click(function () {
-          var products = ProductManager.getAllProducts();
-          var jsonProducts = JSON.stringify(products);
-          let base_url = window.location.origin;
-          console.log(base_url);
-          if(base_url === "http://ozpos.com")
-            {
-              window.location.href = base_url+"/customer/restaurant/checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
-              // window.location.href = url;
-            }
-            else
-            {
-              window.location.href = base_url+"/checkout?total="+ iTotal.value + "&idTax=" + iTax.value +"&iCoupons=" + iCoupons.value +   "&iDelivery=" + iDelivery.value +  "&iGrandTotal=" + iGrandTotal.value + "&coupon_id="+ couponID + "&product=" +jsonProducts;
-              // console.log(url);
-              // window.location.href = url;
+            var products = ProductManager.getAllProducts();
+            var jsonProducts = JSON.stringify(products);
+            let base_url = window.location.origin;
+            console.log(base_url);
+            if (base_url === "http://ozpos.com") {
+               window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&product=" + jsonProducts;
+               // window.location.href = url;
+            } else {
+               window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&product=" + jsonProducts;
+               // console.log(url);
+               // window.location.href = url;
             }
 
 
+            //alert('asdasd');
+            //if (!products.length) {
+            //$("#" + idEmptyCartMessage).fadeTo('fast', 0.5).fadeTo('fast', 1.0);
+            //return;
+            //}
+            //updateCart();
+            //options.checkoutCart(ProductManager.getAllProducts());
+            //ProductManager.clearProduct();
+            //$cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
+            //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
 
-         //alert('asdasd');
-         //if (!products.length) {
-         //$("#" + idEmptyCartMessage).fadeTo('fast', 0.5).fadeTo('fast', 1.0);
-         //return;
-         //}
-         //updateCart();
-         //options.checkoutCart(ProductManager.getAllProducts());
-         //ProductManager.clearProduct();
-         //$cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
-         //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
-
-       });
+         });
 
       }
 
       var showDiscountPrice = function (products) {
          $("#" + idDiscountPrice).text("$" + options.getDiscountPrice(products));
       }
-
 
 
       /*
@@ -573,8 +574,6 @@
       });
 
 
-
-
       $(document).on('keypress', "." + classProductQuantity, function (evt) {
          if (evt.keyCode == 38 || evt.keyCode == 40) {
             return;
@@ -601,6 +600,7 @@
       $target.click(function () {
          options.clickOnAddToCart($target);
 
+         var vendor = $target.data('vendor');
          var id = $target.data('id');
          var name = $target.data('name');
          var summary = $target.data('summary');
@@ -608,7 +608,7 @@
          var quantity = $target.data('quantity');
          var image = $target.data('image');
 
-         ProductManager.setProduct(id, name, summary, price, quantity, image);
+         ProductManager.setProduct(vendor, id, name, summary, price, quantity, image);
          $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
          $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
       });

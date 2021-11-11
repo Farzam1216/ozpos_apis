@@ -49,7 +49,7 @@
                   </button>
                </div>
                <div class="col-6 m-0 p-0">
-                  <button id="HalfMenuSubmit-{{ $HalfNHalfMenu->id }}" type="button" disabled class="btn btn-primary btn-lg btn-block add-cart-btn" data-id="2-{{ $HalfNHalfMenu->id }}" data-name="{{ ucwords($HalfNHalfMenu->name) }}" data-summary='{
+                  <button id="HalfMenuSubmit-{{ $HalfNHalfMenu->id }}" type="button" disabled class="btn btn-primary btn-lg btn-block add-cart-btn" data-vendor="{{ $rest->id }}" data-id="2-{{ $HalfNHalfMenu->id }}" data-name="{{ ucwords($HalfNHalfMenu->name) }}" data-summary='{
                                                    "category":"HALF_N_HALF",
                                                    "menu": [],
                                                    "size": null,

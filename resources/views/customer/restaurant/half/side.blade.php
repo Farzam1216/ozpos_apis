@@ -15,16 +15,16 @@
       
       <div>
          <div class="p-3 border-bottom menu-list">
-   
+            
             @if($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() !== 0)
                <span class="float-right">
                   <button class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Edit" data-toggle="modal" data-target="#HalfMenuAddon-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}">
                      Edit
                   </button>
                </span>
-            
+               
                @include('customer.restaurant.half.modals.side')
-   
+            
             @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                <span class="float-right">
                   <button id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Pick">
@@ -47,8 +47,7 @@
                         <p class="text-muted mb-0">
                            <span class="text-decoration-overline">
                               {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
-                           </span>
-                           &ensp;
+                           </span> &ensp;
                            {{ $MenuSize->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
                         </p>
                      @endif
