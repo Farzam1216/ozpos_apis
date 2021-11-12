@@ -25,7 +25,7 @@
        * @param String $menu_category_id
        * @return Response
        */
-      public function index($menu_category_id): Response
+      public function index(String $menu_category_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
          $SingleMenu = SingleMenu::with(['Menu', 'SingleMenuItemCategory.ItemCategory'])->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
