@@ -7,7 +7,6 @@
 
 @section('title', $rest->name)
 @section('content')
-
    <div class="offer-section py-4">
       <div class="container position-relative">
          <img alt="#" src="{{ $rest->image }}" class="restaurant-pic">
@@ -20,7 +19,6 @@
                      @for ($i = 0; $i < $rest->rate; $i++)
                         <i class="feather-star text-warning"></i>
                      @endfor
-
                      @for ($i = 5; $i > $rest->rate; $i--)
                         <i class="feather-star"></i>
                      @endfor
@@ -45,7 +43,6 @@
    </div>
    <div class="container backcolor">
       <div class="cat-slider" id="navbar-example2">
-
          @foreach ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
                <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#{{ $item->name }}">

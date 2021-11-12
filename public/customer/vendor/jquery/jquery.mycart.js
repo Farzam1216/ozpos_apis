@@ -449,6 +449,7 @@
 
          $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
+
            console.log(vendorId);
          ///////////// store into session ///
          var iTotal = $("#" + idTotal).data();
@@ -588,9 +589,7 @@
       /*
       PRIVATE
       */
-
-      var $target = $(target);
-
+            var $target = $(target);
       var options = OptionManager.getOptions(userOptions);
       var $cartIconPC = $("." + options.classCartIconPC);
       var $cartIconPhone = $("." + options.classCartIconPhone);
