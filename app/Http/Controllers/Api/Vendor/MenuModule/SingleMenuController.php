@@ -10,23 +10,26 @@
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+   use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Single;
+
    class SingleMenuController extends Controller
    {
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function index($menu_category_id): View
+      public function index($menu_category_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         $SingleMenu = SingleMenu::with('Menu')->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
-         return view('vendor.menu_module.single_menu', compact('Vendor', 'SingleMenu', 'menu_category_id'));
+         $SingleMenu = SingleMenu::with(['Menu', 'SingleMenuItemCategory.ItemCategory'])->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
+         return response(['success' => true, 'data' => $SingleMenu]);
       }
       
       /**
@@ -43,21 +46,36 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request, String $menu_category_id): Response
       {
-         $request->validate([
-             'menu_id' => 'required',
-             'item_categories' => 'required|array',
+         $validator = Validator::make($request->all(), [
+             'menu_id' => 'bail|required',
+             'item_categories' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
-         
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+         $data['item_categories'] = json_decode($request->item_categories);
          
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
+         $validator = Validator::make($data, [
+             'item_categories' => 'array',
+         ]);
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
          
          $SingleMenu = SingleMenu::create($data);
          
@@ -65,14 +83,14 @@
          {
             SingleMenuItemCategory::create(['vendor_id' => $data['vendor_id'], 'single_menu_id' => $SingleMenu->id, 'item_category_id' => $ItemCategory]);
          }
-         
-         return redirect()->back()->with('msg', 'Single Menu created.');
+   
+         return response(['success' => true, 'msg' => 'Single Menu created.']);
       }
       
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -83,18 +101,13 @@
       /**
        * Show the form for editing the specified resource.
        *
-       * @param SingleMenu $SingleMenu
+       * @param String $menu_category_id
+       * @param String $single_menu_id
        * @return Response
        */
-      public function edit(SingleMenu $SingleMenu): Response
+      public function edit(String $menu_category_id, String $single_menu_id): Response
       {
-         $ItemCategories = [];
-         $SingleMenuItemCategory = SingleMenuItemCategory::where('single_menu_id', $SingleMenu->id)->get(['id', 'item_category_id']);
-         
-         foreach ($SingleMenuItemCategory as $ItemCategory)
-            array_push($ItemCategories, $ItemCategory->item_category_id);
-         
-         $SingleMenu['item_categories[]'] = $ItemCategories;
+         $SingleMenu = SingleMenu::with(['Menu', 'SingleMenuItemCategory.ItemCategory'])->find($single_menu_id);
          
          return response(['success' => true, 'data' => $SingleMenu]);
       }
@@ -103,22 +116,37 @@
        * Update the specified resource in storage.
        *
        * @param Request $request
+       * @param String $menu_category_id
        * @param SingleMenu $SingleMenu
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, SingleMenu $SingleMenu): RedirectResponse
+      public function update(Request $request, String $menu_category_id, SingleMenu $SingleMenu): Response
       {
-         $request->validate([
-             'menu_id' => 'required',
-             'item_categories' => 'required|array',
+         $validator = Validator::make($request->all(), [
+             'menu_id' => 'bail|required',
+             'item_categories' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
    
-         $data = $request->all();
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
    
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
+         $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+         $data['item_categories'] = json_decode($request->item_categories);
+   
+         $validator = Validator::make($data, [
+             'item_categories' => 'array',
+         ]);
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
    
          $SingleMenu->update($data);
          SingleMenuItemCategory::where('single_menu_id', $SingleMenu->id)->delete();
@@ -127,33 +155,20 @@
          {
             SingleMenuItemCategory::create(['vendor_id' => $SingleMenu->vendor_id, 'single_menu_id' => $SingleMenu->id, 'item_category_id' => $ItemCategory]);
          }
-         
-         return redirect()->back()->with('msg', 'Single Menu updated.');
+   
+         return response(['success' => true, 'msg' => 'Single Menu updated.']);
       }
       
       /**
        * Remove the specified resource from storage.
        *
+       * @param String $menu_category_id
        * @param SingleMenu $SingleMenu
        * @return Response
        */
-      public function destroy(SingleMenu $SingleMenu): Response
+      public function destroy(String $menu_category_id, SingleMenu $SingleMenu): Response
       {
          $SingleMenu->delete();
-         return response(['success' => true]);
-      }
-      
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param Request $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',', $data['ids']);
-         $SingleMenus = SingleMenu::whereIn('id', $ids)->delete();
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Single Menu deleted.']);
       }
    }
