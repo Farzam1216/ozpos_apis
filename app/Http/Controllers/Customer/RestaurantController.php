@@ -26,10 +26,52 @@ class RestaurantController extends Controller
       */
   public function index()
   {
-    $vendors =  Vendor::all();
-    $user = Auth::user()->id;
-    $userAddress = UserAddress::where('user_id', $user)->get();
-    $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
+    $user = Auth::user();
+    if ($user->roles->contains('title', 'vendor'))
+    {
+      return redirect('vendor/vendor_home');
+    }else
+    {
+        $vendors =  Vendor::all();
+        $userAddress = UserAddress::where('user_id', $user->id)->get();
+        $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
+        return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
+      }
+
+  //   $User = auth()->user();
+  //   $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+
+  //   $Point = new Point($UserAddress->lat, $UserAddress->lang);
+  //   $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
+  //  //  if (!$DeliveryZoneNew)
+  //  //     return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
+
+  //   $radius = GeneralSetting::first()->radius;
+  //   // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+  //   $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+
+  //   foreach ($vendors as $vendor) {
+  //      $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+  //      $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+  //      $googleDistance =
+  //          file_get_contents(
+  //              $googleUrl,
+  //          );
+
+  //      $googleDistance = json_decode($googleDistance);
+
+  //      $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
+  //      $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+  //      // dd($vendor['distance']);
+  //      if (auth()->user() != null) {
+  //         $user = auth()->user();
+
+  //         $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+  //        //  dd(  $vendor['like']);
+  //      } else {
+  //         $vendor['like'] = false;
+  //      }
+  //   }
 
     return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
   }

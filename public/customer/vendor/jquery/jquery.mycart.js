@@ -200,6 +200,7 @@
       var freeDeliveryAmount = '';
       var minOrderValue = '';
       var userDistance = '';
+      var vendorId = '';
 
 
       $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
@@ -448,7 +449,7 @@
 
          $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
-
+           console.log(vendorId);
          ///////////// store into session ///
          var iTotal = $("#" + idTotal).data();
          var iTax = $("#" + idTax).data();
@@ -587,7 +588,9 @@
       /*
       PRIVATE
       */
+
       var $target = $(target);
+
       var options = OptionManager.getOptions(userOptions);
       var $cartIconPC = $("." + options.classCartIconPC);
       var $cartIconPhone = $("." + options.classCartIconPhone);
@@ -601,6 +604,7 @@
          options.clickOnAddToCart($target);
 
          var vendor = $target.data('vendor');
+         vendorId = vendor;
          var id = $target.data('id');
          var name = $target.data('name');
          var summary = $target.data('summary');

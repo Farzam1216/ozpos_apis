@@ -47,7 +47,7 @@ class VendorSettingController extends Controller
 
   public function vendor_confirm_login(Request $request)
   {
-    
+
     $request->validate([
       'email_id' => 'bail|required|email',
       'password' => 'bail|required',

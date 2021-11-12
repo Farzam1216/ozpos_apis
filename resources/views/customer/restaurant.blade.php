@@ -7,7 +7,7 @@
 
 @section('title', $rest->name)
 @section('content')
-   
+
    <div class="offer-section py-4">
       <div class="container position-relative">
          <img alt="#" src="{{ $rest->image }}" class="restaurant-pic">
@@ -20,7 +20,7 @@
                      @for ($i = 0; $i < $rest->rate; $i++)
                         <i class="feather-star text-warning"></i>
                      @endfor
-                     
+
                      @for ($i = 5; $i > $rest->rate; $i--)
                         <i class="feather-star"></i>
                      @endfor
@@ -45,7 +45,7 @@
    </div>
    <div class="container backcolor">
       <div class="cat-slider" id="navbar-example2">
-         
+
          @foreach ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
                <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#{{ $item->name }}">
@@ -54,18 +54,18 @@
                </a>
             </div>
          @endforeach
-      
+
       </div>
    </div>
    <!-- Menu -->
    <div class="container position-relative">
       <div class="row">
          <div class="col-md-12 pt-3">
-            
+
             <div class="shadow-sm rounded bg-white mb-3 overflow-hidden">
                <div class="d-flex item-aligns-center">
                   <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100">Menu</p>
-                  
+
                   <!-- <a class="small text-primary font-weight-bold ml-auto" href="#">View all <i class="feather-chevrons-right"></i></a> -->
                </div>
                <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
@@ -95,14 +95,14 @@
                            </div>
                         </div>
                      </div>
-                  
+
                   @endforeach
                </div>
             </div>
          </div>
       </div>
    </div>
-   
+
    <input type="hidden" name="vendor_id" id="vendor_id" value="{{ $vendor_id }}">
    {{--    @php--}}
    {{--       session()->set($vendor_id);--}}
@@ -110,9 +110,4 @@
 @endsection
 
 
-@section('postScript')
-   
-   <script type="text/javascript">
-      const vendor_id = '{{ $vendor_id }}';
-   </script>
-@append
+
