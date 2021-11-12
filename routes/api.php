@@ -31,9 +31,9 @@
 
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
 
-   
+
       Route::get('addon', [App\Http\Controllers\Api\Vendor\MenuModule\AddonController::class, 'indexAll']);
-      
+
       Route::resources([
          //////////             Menu Module                //////////
           'item_category' => Api\Vendor\MenuModule\ItemCategoryController::class,
@@ -44,7 +44,7 @@
           'menu/{menu_id}/menu_size' => Api\Vendor\MenuModule\MenuSizeController::class,
           'menu/{menu_id}/menu_addon' => Api\Vendor\MenuModule\MenuAddonController::class,
           'menu/{menu_id}/menu_size/{menu_size_id}/menu_addon' => Api\Vendor\MenuModule\MenuSizeAddonController::class,
-          
+
           'menu_category' => Api\Vendor\MenuModule\MenuCategoryController::class,
           'menu_category/{menu_category_id}/single_menu' => Api\Vendor\MenuModule\SingleMenuController::class,
           'menu_category/{menu_category_id}/half_n_half_menu' => Api\Vendor\MenuModule\HalfNHalfMenuController::class,

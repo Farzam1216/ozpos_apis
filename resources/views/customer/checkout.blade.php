@@ -389,7 +389,7 @@
                                     <input type="hidden" name="amount" form="customerPaymentForm" value="{{ Session::get('iGrandTotal') }}">
                                     <input type="hidden" name="tax" form="customerPaymentForm" value="{{ Session::get('idTax') }}">
                                     <input type="hidden" name="delivery_charge" form="customerPaymentForm" value="{{ Session::get('iDelivery') }}">
-                                    <input type="hidden" name="vendor_id" form="customerPaymentForm" value="1">
+                                    <input type="hidden" name="vendor_id" form="customerPaymentForm" value="{{ Session::get('vendorID') }}">
                                     <input type="hidden" name="promocode_id" form="customerPaymentForm" value="{{ Session::get('coupon_id') }}">
                                     <input type="hidden" name="promocode_price" form="customerPaymentForm" value="{{ Session::get('iCoupons') }}">
                         </div>

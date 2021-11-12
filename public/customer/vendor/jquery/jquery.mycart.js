@@ -57,16 +57,22 @@
          return productIndex;
       }
       var setAllProducts = function (products) {
+        console.log(setAllProducts);
          localStorage.products = JSON.stringify(products);
+
       }
       var addProduct = function (vendor, id, name, summary, price, quantity, image) {
          console.log('Adding Products start.');
          console.log('Implement concept here if products exist get first and check vendor id and process whatever.');
 
          var products = getAllProducts();
-         console.log(products);
 
-         products.push({
+        //  if(products[0].vendor != )
+         console.log(products);
+     if( products.length > 0 && products[0].vendor != vendor)
+        {
+          ProductManager.clearProduct();
+          products.push({
             vendor: vendor,
             id: id,
             name: name,
@@ -77,6 +83,22 @@
          });
 
          setAllProducts(products);
+        }
+        else
+        {
+          products.push({
+            vendor: vendor,
+            id: id,
+            name: name,
+            summary: summary,
+            price: price,
+            quantity: quantity,
+            image: image
+         });
+
+         setAllProducts(products);
+           alert('wait something wrong!');
+        }
       }
 
       /*
@@ -302,9 +324,6 @@
             // console.log(originalUrl);
          }
 
-         console.log(products);
-
-
          $.ajax({
 
             url: originalUrl,
@@ -460,15 +479,27 @@
             var products = ProductManager.getAllProducts();
             var jsonProducts = JSON.stringify(products);
             let base_url = window.location.origin;
-            console.log(base_url);
-            if (base_url === "http://ozpos.com") {
-               window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&product=" + jsonProducts;
-               // window.location.href = url;
-            } else {
-               window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&product=" + jsonProducts;
-               // console.log(url);
-               // window.location.href = url;
-            }
+            // console.log(products);
+              //  var test = products[0].vendor;
+
+               if(products != '')
+               {
+                  var vendorId = products[0].vendor;
+
+                if (base_url === "http://ozpos.com") {
+                  window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+                  // window.location.href = url;
+                  } else {
+                      window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+                      // console.log(url);
+                      // window.location.href = url;
+                  }
+               }
+               else
+               {
+                 alert("Cart is empty !");
+               }
+
 
 
             //alert('asdasd');
@@ -477,7 +508,7 @@
             //return;
             //}
             //updateCart();
-            //options.checkoutCart(ProductManager.getAllProducts());
+            options.checkoutCart(ProductManager.getAllProducts());
             //ProductManager.clearProduct();
             //$cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
             //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
@@ -587,7 +618,7 @@
       /*
       PRIVATE
       */
-            var $target = $(target);
+      var $target = $(target);
       var options = OptionManager.getOptions(userOptions);
       var $cartIconPC = $("." + options.classCartIconPC);
       var $cartIconPhone = $("." + options.classCartIconPhone);
@@ -607,6 +638,7 @@
          var price = $target.data('price');
          var quantity = $target.data('quantity');
          var image = $target.data('image');
+
 
          ProductManager.setProduct(vendor, id, name, summary, price, quantity, image);
          $cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());

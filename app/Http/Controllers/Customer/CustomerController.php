@@ -331,7 +331,7 @@ class CustomerController extends Controller
 
     // dd($request->all());
     Session::put([
-      'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
+      'vendorID' => $request->vendorID,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
@@ -346,7 +346,7 @@ class CustomerController extends Controller
 
     //  dd($request->all());
     Session::put([
-      'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
+      'vendorID' => $request->vendorID,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
