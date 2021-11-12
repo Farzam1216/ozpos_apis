@@ -44,11 +44,12 @@
           'menu/{menu_id}/menu_size' => Api\Vendor\MenuModule\MenuSizeController::class,
           'menu/{menu_id}/menu_addon' => Api\Vendor\MenuModule\MenuAddonController::class,
           'menu/{menu_id}/menu_size/{menu_size_id}/menu_addon' => Api\Vendor\MenuModule\MenuSizeAddonController::class,
-//          'menu_category' => Api\Vendor\MenuModule\MenuCategoryController::class,
-//          'single_menu' => Api\Vendor\MenuModule\SingleMenuController::class,
-//          'half_n_half_menu' => Api\Vendor\MenuModule\HalfNHalfMenuController::class,
-//          'deals_menu' => Api\Vendor\MenuModule\DealsMenuController::class,
-//          'deals_items' => Api\Vendor\MenuModule\DealsItemsController::class,
+          
+          'menu_category' => Api\Vendor\MenuModule\MenuCategoryController::class,
+          'menu_category/{menu_category_id}/single_menu' => Api\Vendor\MenuModule\SingleMenuController::class,
+          'menu_category/{menu_category_id}/half_n_half_menu' => Api\Vendor\MenuModule\HalfNHalfMenuController::class,
+          'menu_category/{menu_category_id}/deals_menu' => Api\Vendor\MenuModule\DealsMenuController::class,
+          'menu_category/{menu_category_id}/deals_menu/{deals_menu_id}/deals_items' => Api\Vendor\MenuModule\DealsItemsController::class,
       ]);
 //      Route::resource('addon/{addon_category_id}', 'Api\Vendor\MenuModule\AddonController')->parameters([
 //          '{addon_category_id}' => 'addon_id'

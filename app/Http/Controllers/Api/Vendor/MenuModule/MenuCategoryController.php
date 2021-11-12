@@ -5,6 +5,7 @@
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\MenuCategory;
@@ -15,13 +16,13 @@
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @return Response
        */
-      public function index(): View
+      public function index(): Response
       {
          $Vendor = Vendor::where('user_id',auth()->user()->id)->first();
          $MenuCategory = MenuCategory::where('vendor_id',$Vendor->id)->get();
-         return view('vendor.menu_module.menu_category',compact('Vendor', 'MenuCategory'));
+         return response(['success' => true, 'data' => $MenuCategory]);
       }
 
       /**
@@ -38,16 +39,25 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'type' => 'required|string|in:SINGLE,HALF_N_HALF,DEALS',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
 
          if(isset($data['status']))
             $data['status'] = 1;
@@ -55,13 +65,13 @@
             $data['status'] = 0;
 
          MenuCategory::create($data);
-         return redirect()->back()->with('msg','Menu category created.');
+         return response(['success' => true, 'msg' => 'Menu category created.']);
       }
 
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -85,16 +95,25 @@
        *
        * @param  Request  $request
        * @param  MenuCategory  $MenuCategory
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, MenuCategory $MenuCategory): RedirectResponse
+      public function update(Request $request, MenuCategory $MenuCategory): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'type' => 'required|string|in:SINGLE,HALF_N_HALF,DEALS',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
 
          if(isset($data['status']))
             $data['status'] = 1;
@@ -102,7 +121,7 @@
             $data['status'] = 0;
 
          $MenuCategory->update($data);
-         return redirect()->back()->with('msg','Menu category updated.');
+         return response(['success' => true, 'msg' => 'Menu category updated.']);
       }
 
       /**
@@ -114,20 +133,6 @@
       public function destroy(MenuCategory $MenuCategory): Response
       {
          $MenuCategory->delete();
-         return response(['success' => true]);
-      }
-
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param  Request  $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',',$data['ids']);
-         MenuCategory::whereIn('id',$ids)->delete();
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Menu category deleted.']);
       }
    }
