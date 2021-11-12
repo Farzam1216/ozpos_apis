@@ -60,7 +60,7 @@ class LoginController extends Controller
         else
         {
             $this->performLogout($request);
-            return redirect()->route('customer.home.index');
+            return redirect()->route('vendor.login');
         }
     }
     /* End - Abdullah */

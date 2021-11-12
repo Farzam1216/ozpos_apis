@@ -587,7 +587,7 @@
       /*
       PRIVATE
       */
-      var $target = $(target);
+            var $target = $(target);
       var options = OptionManager.getOptions(userOptions);
       var $cartIconPC = $("." + options.classCartIconPC);
       var $cartIconPhone = $("." + options.classCartIconPhone);

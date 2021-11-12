@@ -100,7 +100,7 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-
+      // alert($vendor_id);
       var goToCartIcon = function ($addTocartBtn) {
           $cartIconPhone = $(".my-cart-icon-phone");
           $cartIconPc = $(".my-cart-icon-pc");
@@ -122,6 +122,7 @@
       }
 
       $('.add-cart-btn').myCart({
+
           currencySymbol: '{{ App\Models\GeneralSetting::first()->currency }}',
           classCartIcon: 'my-cart-icon',
           classCartBadge: 'my-cart-badge',
@@ -149,7 +150,8 @@
               var checkoutString = "Total Price: " + totalPrice + "\nTotal Quantity: " + totalQuantity;
               checkoutString += "\n\n id \t name \t summary \t price \t quantity \t image path";
               $.each(products, function () {
-                  checkoutString += ("\n " + this.id + " \t " + this.name + " \t " + this.summary + " \t " + this.price + " \t " + this.quantity + " \t " + this.image);
+                  checkoutString += ("\n " + this.id + " \t " + this.name + " \t " + this.summary + " \t " + this.price + " \t " + this.quantity + " \t " + this.image+ " \t " + this.vendor);
+
               });
               alert(checkoutString)
               console.log("checking out", products, totalPrice, totalQuantity);
