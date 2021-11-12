@@ -5,11 +5,13 @@
    use App\Http\Controllers\CustomController;
    use App\Models\ItemCategory;
    use App\Models\HalfNHalfMenu;
+
 //   use App\Models\HalfNHalfMenuItemCategory;
    use DB;
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
@@ -20,13 +22,14 @@
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function index($menu_category_id): View
+      public function index(string $menu_category_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
          $HalfNHalfMenu = HalfNHalfMenu::with('ItemCategory')->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
-         return view('vendor.menu_module.half_n_half_menu', compact('Vendor', 'HalfNHalfMenu', 'menu_category_id'));
+         return response(['success' => true, 'data' => $HalfNHalfMenu]);
       }
       
       /**
@@ -43,57 +46,57 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request, string $menu_category_id): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'image' => 'required',
-             'description' => 'required',
-             'item_category_id' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'description' => 'bail|required',
+             'item_category_id' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
          
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+         
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+         
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+         
          $data = $request->all();
-   
-   
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+         
          ////////// image \\\\\\\\\\
-         if ($file = $request->hasfile('image'))
+         if(isset($request->image))
          {
-            $request->validate(
-                ['image' => 'max:1000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
-                ]);
-            $data['image'] = (new CustomController)->uploadImage($request->image);
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
          }
          else
          {
             $data['image'] = 'product_default.jpg';
          }
-   
-   
-         ////////// status \\\\\\\\\\
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
          
          
          HalfNHalfMenu::create($data);
          
-//         foreach ($data['item_categories'] as $ItemCategory)
-//         {
-//            HalfNHalfMenuItemCategory::create(['vendor_id' => $data['vendor_id'], 'half_n_half_menu_id' => $HalfNHalfMenu->id, 'item_category_id' => $ItemCategory]);
-//         }
-         
-         return redirect()->back()->with('msg', 'Half n half Menu created.');
+         return response(['success' => true, 'msg' => 'Half n half Menu created.']);
       }
       
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -104,85 +107,79 @@
       /**
        * Show the form for editing the specified resource.
        *
+       * @param String $menu_category_id
+       * @param String $half_n_half_menu_id
        * @param HalfNHalfMenu $HalfNHalfMenu
        * @return Response
        */
-      public function edit(HalfNHalfMenu $HalfNHalfMenu): Response
+      public function edit(String $menu_category_id, String $half_n_half_menu_id): Response
       {
-         return response(['success' => true , 'data' => $HalfNHalfMenu]);
+         $HalfNHalfMenu = HalfNHalfMenu::with('ItemCategory')->find($half_n_half_menu_id);
+         return response(['success' => true, 'data' => $HalfNHalfMenu]);
       }
       
       /**
        * Update the specified resource in storage.
        *
        * @param Request $request
+       * @param String $menu_category_id
        * @param HalfNHalfMenu $HalfNHalfMenu
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, HalfNHalfMenu $HalfNHalfMenu): RedirectResponse
+      public function update(Request $request, String $menu_category_id, HalfNHalfMenu $HalfNHalfMenu): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'description' => 'required',
-             'item_category_id' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'description' => 'bail|required',
+             'item_category_id' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
    
-         $data = $request->all();
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
    
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
+         $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
    
          ////////// image \\\\\\\\\\
-         if ($request->hasfile('image'))
+         if(isset($request->image))
          {
-            $request->validate(
-                ['image' => 'max:1000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
-                ]);
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $HalfNHalfMenu->id)->value('image'));
-            $data['image'] = (new CustomController)->uploadImage($data['image']);
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
          }
-   
-   
-         ////////// status \\\\\\\\\\
-         if(isset($data['status']))
-            $data['status'] = 1;
          else
-            $data['status'] = 0;
-   
-   
+         {
+            $data['image'] = 'product_default.jpg';
+         }
+         
+         
          $HalfNHalfMenu->update($data);
-         return redirect()->back()->with('msg','Half n half Menu updated.');
+         return response(['success' => true, 'msg' => 'Half n half Menu updated.']);
       }
       
       /**
        * Remove the specified resource from storage.
        *
+       * @param String $menu_category_id
        * @param HalfNHalfMenu $HalfNHalfMenu
        * @return Response
        */
-      public function destroy(HalfNHalfMenu $HalfNHalfMenu): Response
+      public function destroy(String $menu_category_id, HalfNHalfMenu $HalfNHalfMenu): Response
       {
-         (new CustomController)->deleteImage(DB::table('menu')->where('id', $HalfNHalfMenu->id)->value('image'));
+         (new CustomController)->deleteImage(DB::table('half_n_half_menu')->where('id', $HalfNHalfMenu->id)->value('image'));
          $HalfNHalfMenu->delete();
-         return response(['success' => true]);
-      }
-      
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param Request $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',', $data['ids']);
-         $HalfNHalfMenus = HalfNHalfMenu::whereIn('id',$ids)->get();
-         foreach ($HalfNHalfMenus as $HalfNHalfMenu)
-         {
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $HalfNHalfMenu->id)->value('image'));
-            $HalfNHalfMenu->delete();
-         }
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Half n half Menu deleted.']);
       }
    }
