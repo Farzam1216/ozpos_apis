@@ -45,6 +45,7 @@
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
              'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
    
@@ -58,11 +59,6 @@
    
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
-
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
 
          MenuCategory::create($data);
          return response(['success' => true, 'msg' => 'Menu category created.']);
@@ -101,6 +97,7 @@
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
+             'status' => 'bail|required|integer|in:0,1',
              'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
    
@@ -114,11 +111,6 @@
    
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
-
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
 
          $MenuCategory->update($data);
          return response(['success' => true, 'msg' => 'Menu category updated.']);
