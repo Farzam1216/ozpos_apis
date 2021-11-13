@@ -57,7 +57,8 @@
          return productIndex;
       }
       var setAllProducts = function (products) {
-        console.log(setAllProducts);
+        // console.log(setAllProducts);
+        alert('modal');
          localStorage.products = JSON.stringify(products);
 
       }
@@ -71,6 +72,7 @@
          console.log(products);
      if( products.length > 0 && products[0].vendor != vendor)
         {
+          console.log('if');
           ProductManager.clearProduct();
           products.push({
             vendor: vendor,
@@ -86,6 +88,7 @@
         }
         else
         {
+          console.log('else');
           products.push({
             vendor: vendor,
             id: id,
@@ -309,7 +312,7 @@
 
          showGrandTotal();
          let base_url = window.location.origin;
-
+         console.log(products);
          $.ajaxSetup({
             headers: {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
