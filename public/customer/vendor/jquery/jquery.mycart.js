@@ -57,8 +57,8 @@
          return productIndex;
       }
       var setAllProducts = function (products) {
-        // console.log(setAllProducts);
-        alert('modal');
+         // console.log(setAllProducts);
+         alert('modal');
          localStorage.products = JSON.stringify(products);
 
       }
@@ -68,13 +68,12 @@
 
          var products = getAllProducts();
 
-        //  if(products[0].vendor != )
+         //  if(products[0].vendor != )
          console.log(products);
-     if( products.length > 0 && products[0].vendor != vendor)
-        {
-          console.log('if');
-          ProductManager.clearProduct();
-          products.push({
+         if (products.length > 0 && products[0].vendor != vendor)
+            ProductManager.clearProduct();
+
+         products.push({
             vendor: vendor,
             id: id,
             name: name,
@@ -85,23 +84,6 @@
          });
 
          setAllProducts(products);
-        }
-        else
-        {
-          console.log('else');
-          products.push({
-            vendor: vendor,
-            id: id,
-            name: name,
-            summary: summary,
-            price: price,
-            quantity: quantity,
-            image: image
-         });
-
-         setAllProducts(products);
-           alert('wait something wrong!');
-        }
       }
 
       /*
@@ -483,26 +465,22 @@
             var jsonProducts = JSON.stringify(products);
             let base_url = window.location.origin;
             // console.log(products);
-              //  var test = products[0].vendor;
+            //  var test = products[0].vendor;
 
-               if(products != '')
-               {
-                  var vendorId = products[0].vendor;
+            if (products != '') {
+               var vendorId = products[0].vendor;
 
-                if (base_url === "http://ozpos.com") {
+               if (base_url === "http://ozpos.com") {
                   window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
                   // window.location.href = url;
-                  } else {
-                      window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
-                      // console.log(url);
-                      // window.location.href = url;
-                  }
+               } else {
+                  window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+                  // console.log(url);
+                  // window.location.href = url;
                }
-               else
-               {
-                 alert("Cart is empty !");
-               }
-
+            } else {
+               alert("Cart is empty !");
+            }
 
 
             //alert('asdasd');
