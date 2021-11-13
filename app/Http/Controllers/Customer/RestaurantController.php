@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryZoneNew;
 use App\Models\MenuCategory;
 use App\Models\Vendor;
 use App\Models\Menu;
@@ -17,7 +18,7 @@ use App\Models\WorkingHours;
 use Auth;
 use Carbon\Carbon;
 use DB;
-
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 
 class RestaurantController extends Controller
 {
@@ -35,45 +36,46 @@ class RestaurantController extends Controller
         $vendors =  Vendor::all();
         $userAddress = UserAddress::where('user_id', $user->id)->get();
         $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
-        return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
-      }
+        // return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
 
-  //   $User = auth()->user();
-  //   $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
 
-  //   $Point = new Point($UserAddress->lat, $UserAddress->lang);
-  //   $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
-  //  //  if (!$DeliveryZoneNew)
-  //  //     return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
+    $User = auth()->user();
+    $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
 
-  //   $radius = GeneralSetting::first()->radius;
-  //   // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
-  //   $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+    $Point = new Point($UserAddress->lat, $UserAddress->lang);
+    $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->get();
+      //if (!$DeliveryZoneNew)
+      //  return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
+      // dd($DeliveryZoneNew);
+    $radius = GeneralSetting::first()->radius;
+    // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+    $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+    // dd($vendors);
+    foreach ($vendors as $vendor) {
+       $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+       $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+       $googleDistance =
+           file_get_contents(
+               $googleUrl,
+           );
 
-  //   foreach ($vendors as $vendor) {
-  //      $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
-  //      $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
-  //      $googleDistance =
-  //          file_get_contents(
-  //              $googleUrl,
-  //          );
+       $googleDistance = json_decode($googleDistance);
 
-  //      $googleDistance = json_decode($googleDistance);
+       $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
+       $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+      //  dd($vendor['distance']);
+       if (auth()->user() != null) {
+          $user = auth()->user();
 
-  //      $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
-  //      $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
-  //      // dd($vendor['distance']);
-  //      if (auth()->user() != null) {
-  //         $user = auth()->user();
-
-  //         $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
-  //        //  dd(  $vendor['like']);
-  //      } else {
-  //         $vendor['like'] = false;
-  //      }
-  //   }
+          $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+         //  dd(  $vendor['like']);
+       } else {
+          $vendor['like'] = false;
+       }
+    }
 
     return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
+  }
   }
   public function index1($id)
   {
@@ -225,7 +227,6 @@ class RestaurantController extends Controller
     $MenuCategory =
       MenuCategory::with([
         'SingleMenu',
-
         'HalfNHalfMenu',
         'DealsMenu'
       ])

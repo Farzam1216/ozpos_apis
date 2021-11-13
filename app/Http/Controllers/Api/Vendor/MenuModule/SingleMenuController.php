@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use App\Models\ItemCategory;
    use App\Models\SingleMenu;
@@ -31,7 +31,7 @@
          $SingleMenu = SingleMenu::with(['Menu', 'SingleMenuItemCategory.ItemCategory'])->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
          return response(['success' => true, 'data' => $SingleMenu]);
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -41,7 +41,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -56,37 +56,37 @@
              'item_categories' => 'bail|required',
              'status' => 'bail|required|integer|in:0,1',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_category_id'] = $menu_category_id;
          $data['item_categories'] = json_decode($request->item_categories);
-         
+
          $validator = Validator::make($data, [
              'item_categories' => 'array',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $SingleMenu = SingleMenu::create($data);
-         
+
          foreach ($data['item_categories'] as $ItemCategory)
          {
             SingleMenuItemCategory::create(['vendor_id' => $data['vendor_id'], 'single_menu_id' => $SingleMenu->id, 'item_category_id' => $ItemCategory]);
          }
-   
+
          return response(['success' => true, 'msg' => 'Single Menu created.']);
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -95,9 +95,9 @@
        */
       public function show(Request $request): void
       {
-         
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -108,10 +108,10 @@
       public function edit(String $menu_category_id, String $single_menu_id): Response
       {
          $SingleMenu = SingleMenu::with(['Menu', 'SingleMenuItemCategory.ItemCategory'])->find($single_menu_id);
-         
+
          return response(['success' => true, 'data' => $SingleMenu]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -127,38 +127,38 @@
              'item_categories' => 'bail|required',
              'status' => 'bail|required|integer|in:0,1',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_category_id'] = $menu_category_id;
          $data['item_categories'] = json_decode($request->item_categories);
-   
+
          $validator = Validator::make($data, [
              'item_categories' => 'array',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $SingleMenu->update($data);
          SingleMenuItemCategory::where('single_menu_id', $SingleMenu->id)->delete();
-   
+
          foreach ($data['item_categories'] as $ItemCategory)
          {
             SingleMenuItemCategory::create(['vendor_id' => $SingleMenu->vendor_id, 'single_menu_id' => $SingleMenu->id, 'item_category_id' => $ItemCategory]);
          }
-   
+
          return response(['success' => true, 'msg' => 'Single Menu updated.']);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

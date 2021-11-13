@@ -38,13 +38,13 @@
                   <div class="container mt-4 mb-4 p-0">
                       <!-- restaurants nearby -->
                       <div class="row">
-                        @foreach ($vendors as $vendor)
+                        @forelse ($vendors as $vendor)
                         <div class="col-md-3 pb-3">
                           <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
                               <div class="list-card-image">
-                                  <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
-                                  <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div>
-                                  <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
+                                  {{-- <div class="star position-absolute"><span class="badge badge-success"><i class="feather-star"></i> 3.1 (300+)</span></div>
+                                  <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
+                                  {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
                                   <a href="{{route('restaurant.index1',$vendor->id)}}">
                                       <img alt="#" src="{{asset($vendor->image)}}" class="img-fluid item-img w-100" style="height: 20rem">
                                   </a>
@@ -73,7 +73,9 @@
                               </div>
                           </div>
                       </div>
-                        @endforeach
+                      @empty
+                          <div class="d-flex">NO Vendor Exist In Your Area</div>
+                        @endforelse
                       </div>
                   </div>
               </div>

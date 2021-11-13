@@ -138,7 +138,7 @@
                   @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                   <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/" class="brand-wrap mb-0">
                    @else
-                   <a href="{{route('restaurant.index1',1)}}" class="brand-wrap mb-0">
+                   <a href="{{route('restaurant.index')}}" class="brand-wrap mb-0">
                    @endif
                         <img alt="#" class="img-fluid" src="{{ url('/customer/img/logo_web.png') }}">
                     </a>

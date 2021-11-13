@@ -58,20 +58,22 @@
       }
       var setAllProducts = function (products) {
          // console.log(setAllProducts);
-         alert('modal');
          localStorage.products = JSON.stringify(products);
 
       }
       var addProduct = function (vendor, id, name, summary, price, quantity, image) {
          console.log('Adding Products start.');
          console.log('Implement concept here if products exist get first and check vendor id and process whatever.');
+        //  console.log('new product vendor id');
+        //  console.log(vendor);
+        //  console.log('old products');
+        //  console.log(products.length);
 
-         var products = getAllProducts();
-
-         //  if(products[0].vendor != )
-         console.log(products);
-         if (products.length > 0 && products[0].vendor != vendor)
-            ProductManager.clearProduct();
+        var products = getAllProducts();
+         if (products.length > 0 && products[0].vendor != vendor) {
+          products = [];
+          clearProduct();
+         }
 
          products.push({
             vendor: vendor,
@@ -467,9 +469,8 @@
             // console.log(products);
             //  var test = products[0].vendor;
 
-            if (products != '') {
-               var vendorId = products[0].vendor;
 
+               var vendorId = products[0].vendor;
                if (base_url === "http://ozpos.com") {
                   window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
                   // window.location.href = url;
@@ -478,10 +479,6 @@
                   // console.log(url);
                   // window.location.href = url;
                }
-            } else {
-               alert("Cart is empty !");
-            }
-
 
             //alert('asdasd');
             //if (!products.length) {
@@ -489,10 +486,10 @@
             //return;
             //}
             //updateCart();
-            options.checkoutCart(ProductManager.getAllProducts());
+            // options.checkoutCart(ProductManager.getAllProducts());
             //ProductManager.clearProduct();
             //$cartBadgePC.text(ProductManager.getTotalQuantityOfProduct());
-            //  $cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
+            //$cartBadgePhone.text(ProductManager.getTotalQuantityOfProduct());
 
          });
 
