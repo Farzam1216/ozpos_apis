@@ -1,12 +1,12 @@
 
 @extends('customer.home')
-
+@section('title','Customer Sign-In')
 @section('content')
 
 <div class="osahan-signup login-page">
   <video loop autoplay muted id="vid">
-      <source src="img/bg.mp4" type="video/mp4">
-      <source src="img/bg.mp4" type="video/ogg">
+      <source src="{{ asset('customer/img/bg.mp4')}}" type="video/mp4">
+      <source src="{{asset('customer/img/bg.mp4')}}" type="video/ogg">
       Your browser does not support the video tag.
    </video>
   <div class="d-flex align-items-center justify-content-center flex-column vh-100">
@@ -54,15 +54,22 @@
                   <button class="btn btn-primary btn-lg btn-block">
                      SIGN UP
                   </button>
-                  <div class="py-2">
+                  {{-- <div class="py-2">
                       <button class="btn btn-facebook btn-lg btn-block"><i class="feather-facebook"></i> Connect with Facebook</button>
-                  </div>
+                  </div> --}}
               </form>
           </div>
           <div class="new-acc d-flex align-items-center justify-content-center">
+            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+
+              <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/login">
+                  <p class="text-center m-0">Already an account? Sign in</p>
+              </a>
+              @else
               <a href="{{route('customer.login')}}">
                   <p class="text-center m-0">Already an account? Sign in</p>
               </a>
+            @endif
           </div>
       </div>
   </div>

@@ -475,8 +475,13 @@
         Route::post('/single-address', [App\Http\Controllers\Customer\AddressController::class, 'singleAddAddress']);
         Route::get('change-address', [App\Http\Controllers\Customer\AddressController::class, 'changeAddress'])->name('change.address');
         Route::get('/list', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+
+        //Address
+        Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
+        Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
+
         //Profile
-        Route::get('user-profile', [App\Http\Controllers\Customer\CustomerController::class, 'profile'])->name('profile');
+        Route::get('user-profile', [App\Http\Controllers\Customer\CustomerController::class, 'singleProfile'])->name('profile');
         Route::post('single-profile-update/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singleProfileUpdate'])->name('single.profile.update');
         Route::post('single-change-password/{change_name_id}', [App\Http\Controllers\Customer\CustomerController::class, 'singlePasswordChange'])->name('single.password.change');
         /// tax , coupon

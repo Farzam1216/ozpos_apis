@@ -10,6 +10,7 @@
     @section('title',)
 @else
     @section('title','Live Tracking')
+
 @endif
 
 <style>

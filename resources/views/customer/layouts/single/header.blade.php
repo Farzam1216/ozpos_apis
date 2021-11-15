@@ -183,7 +183,7 @@
                                     <h6 class="px-3 py-3 bg-light pb-1 m-0 border-bottom">Choose your country</h6>
 
                                     @foreach ($userAddress as $userAdre)
-                                        <div class="custom-control  border-bottom px-0 custom-radio">
+                                        <div class="custom-control  border-bottom px-0 custom-radio overflow-auto">
                                             <input type="radio" id="customRadio{{ $userAdre->id }}"
                                                 name="user_address" class="custom-control-input"
                                                 value="{{ $userAdre->id }}"

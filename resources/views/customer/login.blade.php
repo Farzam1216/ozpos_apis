@@ -1,13 +1,15 @@
 
 @extends('customer.home')
 
+@section('title','Customer Login')
+
 @section('content')
 
 
 <div class="login-page vh-100">
   <video loop autoplay muted id="vid">
-      <source src="img/bg.mp4" type="video/mp4">
-      <source src="img/bg.mp4" type="video/ogg">
+    <source src="{{ asset('customer/img/bg.mp4')}}" type="video/mp4">
+      <source src="{{asset('customer/img/bg.mp4')}}" type="video/ogg">
       Your browser does not support the video tag.
    </video>
   <div class="d-flex align-items-center justify-content-center vh-100">
@@ -35,17 +37,23 @@
                       <input type="password" placeholder="Enter Password" name="password" class="form-control" id="exampleInputPassword1">
                   </div>
                   <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
-                  <div class="py-2">
+                  {{-- <div class="py-2">
                       <button class="btn btn-lg btn-facebook btn-block"><i class="feather-facebook"></i> Connect with Facebook</button>
-                  </div>
+                  </div> --}}
               </form>
-              <a href="forgot_password.html" class="text-decoration-none">
+              {{-- <a href="forgot_password.html" class="text-decoration-none">
                   <p class="text-center">Forgot your password?</p>
-              </a>
+              </a> --}}
               <div class="d-flex align-items-center justify-content-center">
+                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                  <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/signup">
+                      <p class="text-center m-0">Don't have an account? Sign up</p>
+                  </a>
+                  @else
                   <a href="{{route('customer.signup')}}">
                       <p class="text-center m-0">Don't have an account? Sign up</p>
                   </a>
+                  @endif
               </div>
           </div>
       </div>

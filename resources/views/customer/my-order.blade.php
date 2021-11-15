@@ -5,7 +5,7 @@
 
 @endif
 
-@section('title', 'My Orders')
+@section('title',"Himalaya Falooda & Sweets | My Order")
 
 @section('content')
 

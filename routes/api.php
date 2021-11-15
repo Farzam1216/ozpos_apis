@@ -28,6 +28,8 @@
    Route::post('user_register', 'UserApiController@apiUserRegister');
    Route::post('check_otp', 'UserApiController@apiCheckOtp');
    Route::get('vendor/vendor_setting', 'VendorApiController@apiVendorSetting');
+   // Test Api
+  //  Route::get('vendor/menuCategory','Api\Vendor\MenuModule\MenuCategoryController@menuCategory');
 
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
 
@@ -238,7 +240,7 @@
    Route::post('driver/forgot_password_check_otp', 'DriverApiController@apiForgotPasswordCheckOtp');
    Route::post('driver/forgot_password', 'DriverApiController@apiForgotPassword');
 
-   Route::middleware('auth:driverApi')->prefix('driver')->group(function () {
+      Route::middleware('auth:driverApi')->prefix('driver')->group(function () {
       Route::post('set_location', 'DriverApiController@apiSetLocation');
       Route::get('driver_order', 'DriverApiController@apiDriverOrder');
       Route::post('status_change', 'DriverApiController@apiStatusChange');
@@ -258,3 +260,6 @@
       Route::get('delivery_zone', 'DriverApiController@apiDeliveryZone');
       Route::get('payment_pending', 'DriverApiController@apiPaymentPending');
    });
+
+
+

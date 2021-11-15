@@ -5,7 +5,7 @@
 
 @endif
 
-@section('title','CheckOut')
+@section('title',"Himalaya Falooda & Sweets | Checkout")
 
 @section('content')
 
@@ -258,11 +258,14 @@
                 <div class="col-md-4" style="top: 60px;">
                     <div class="osahan-cart-item rounded rounded shadow-sm overflow-hidden bg-white sticky_sidebar">
                         <div class="d-flex border-bottom osahan-cart-item-profile bg-white p-3">
-                            <img alt="osahan" src="img/starter1.jpg" class="mr-3 rounded-circle img-fluid">
+                            <img alt="osahan" src="{{asset('customer/img/starter1.jpg')}}" class="mr-3 rounded-circle img-fluid">
                             <div class="d-flex flex-column">
-                                <h6 class="mb-1 font-weight-bold">Spice Hut Indian Restaurant</h6>
-                                <p class="mb-0 small text-muted"><i class="feather-map-pin"></i> 2036 2ND AVE, NEW YORK, NY
-                                    10029</p>
+                                @php
+                                $id = Session::get('vendorID');
+                                    $vendor = App\Models\Vendor::find($id);
+                                @endphp
+                                <h6 class="mb-1 font-weight-bold">{{$vendor->name}}</h6>
+                                <p class="mb-0 small text-muted"><i class="feather-map-pin"></i> {{ $vendor->address}}</p>
                             </div>
                         </div>
                         <div class="bg-white border-bottom py-2">

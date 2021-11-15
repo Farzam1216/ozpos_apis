@@ -146,7 +146,11 @@
                 <div class="container conform">
                     <div class="row justify-content-center">
                         <div class="col-md-12">
-                            <form method="post" action="{{ route('customer.delivery.location.store') }}"
+                          @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                          <form class="mt-5 mb-4" action="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/delivery-location/save" method="POST">
+                          @else
+                              <form method="post" action="{{ route('customer.delivery.location.store') }}"
+                          @endif
                                 id="myDeliveryLocation">
                                 @csrf
                                 <input type="hidden" id="lang" name="lang" readonly="readonly">

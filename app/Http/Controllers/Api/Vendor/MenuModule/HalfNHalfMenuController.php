@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use App\Models\ItemCategory;
    use App\Models\HalfNHalfMenu;
@@ -16,7 +16,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+
    class HalfNHalfMenuController extends Controller
    {
       /**
@@ -31,7 +31,7 @@
          $HalfNHalfMenu = HalfNHalfMenu::with('ItemCategory')->where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
          return response(['success' => true, 'data' => $HalfNHalfMenu]);
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -41,7 +41,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -57,19 +57,19 @@
              'item_category_id' => 'bail|required',
              'status' => 'bail|required|integer|in:0,1',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-         
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_category_id'] = $menu_category_id;
-         
+
          ////////// image \\\\\\\\\\
          if(isset($request->image))
          {
@@ -86,13 +86,13 @@
          {
             $data['image'] = 'product_default.jpg';
          }
-         
-         
+
+
          HalfNHalfMenu::create($data);
-         
+
          return response(['success' => true, 'msg' => 'Half n half Menu created.']);
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -101,9 +101,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -117,7 +117,7 @@
          $HalfNHalfMenu = HalfNHalfMenu::with('ItemCategory')->find($half_n_half_menu_id);
          return response(['success' => true, 'data' => $HalfNHalfMenu]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -134,19 +134,19 @@
              'item_category_id' => 'bail|required',
              'status' => 'bail|required|integer|in:0,1',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_category_id'] = $menu_category_id;
-   
+
          ////////// image \\\\\\\\\\
          if(isset($request->image))
          {
@@ -163,12 +163,12 @@
          {
             $data['image'] = 'product_default.jpg';
          }
-         
-         
+
+
          $HalfNHalfMenu->update($data);
          return response(['success' => true, 'msg' => 'Half n half Menu updated.']);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

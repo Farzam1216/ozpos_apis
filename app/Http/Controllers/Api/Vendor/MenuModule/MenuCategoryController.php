@@ -48,15 +48,15 @@
              'status' => 'bail|required|integer|in:0,1',
              'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
 
@@ -100,15 +100,15 @@
              'status' => 'bail|required|integer|in:0,1',
              'type' => 'bail|required|string|in:SINGLE,HALF_N_HALF,DEALS',
          ]);
-   
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-   
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-   
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
 
@@ -127,4 +127,13 @@
          $MenuCategory->delete();
          return response(['success' => true, 'msg' => 'Menu category deleted.']);
       }
+
+      // Test api
+      // public function menuCategory()
+      // {
+
+      //   $Vendor = Vendor::where('user_id',auth()->user()->id)->first();
+      //   $MenuCategory = MenuCategory::where('vendor_id',$Vendor->id)->get();
+      //   return response(['success' => true, 'data' => $MenuCategory]);
+      // }
    }

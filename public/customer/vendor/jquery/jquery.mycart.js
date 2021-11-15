@@ -61,7 +61,7 @@
          localStorage.products = JSON.stringify(products);
 
       }
-      var addProduct = function (vendor, id, name, summary, price, quantity, image) {
+      var addProduct = function (vendor,id,name, summary, price, quantity, image) {
          console.log('Adding Products start.');
          console.log('Implement concept here if products exist get first and check vendor id and process whatever.');
         //  console.log('new product vendor id');

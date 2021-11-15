@@ -2,14 +2,12 @@
 
 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
    @section('logo',$rest->vendor_logo)
-   @section('subtitle','Menu')
+   @section('subtitle','Restaurants')
    @section('vendor_lat',$rest->lat)
    @section('vendor_lang',$rest->lang)
 @endif
 
-@section('title','Restaurants')
-
-
+@section('title',"Himalaya Falooda & Sweets")
 @section('content')
 
 <style>
