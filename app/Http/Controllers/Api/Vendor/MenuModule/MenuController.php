@@ -47,7 +47,6 @@
       {
          $validator = Validator::make($request->all(), [
              'name' => 'bail|required',
-             'image' => 'bail|required',
              'description' => 'bail|required',
              'display_price' => 'nullable|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
@@ -77,14 +76,19 @@
          
          
          ////////// image \\\\\\\\\\
-         if ($file = $request->hasfile('image')) {
-            $request->validate(
-                ['image' => 'max:5000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 5 MegaBytes.',
-                ]);
-            $data['image'] = (new CustomController)->uploadImage($request->image);
-         } else {
+         if(isset($request->image))
+         {
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
+         }
+         else
+         {
             $data['image'] = 'product_default.jpg';
          }
          
@@ -155,14 +159,19 @@
          
          
          ////////// image \\\\\\\\\\
-         if ($file = $request->hasfile('image')) {
-            $request->validate(
-                ['image' => 'max:5000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 5 MegaBytes.',
-                ]);
-            $data['image'] = (new CustomController)->uploadImage($request->image);
-         } else {
+         if(isset($request->image))
+         {
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
+         }
+         else
+         {
             $data['image'] = 'product_default.jpg';
          }
          
