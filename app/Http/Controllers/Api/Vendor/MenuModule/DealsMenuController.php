@@ -10,6 +10,7 @@
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
@@ -20,13 +21,14 @@
       /**
        * Display a listing of the resource.
        *
-       * @return View
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function index($menu_category_id): View
+      public function index(string $menu_category_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
          $DealsMenu = DealsMenu::where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
-         return view('vendor.menu_module.deals_menu', compact('Vendor', 'DealsMenu', 'menu_category_id'));
+         return response(['success' => true, 'data' => $DealsMenu]);
       }
       
       /**
@@ -43,19 +45,47 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @param String $menu_category_id
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request, String $menu_category_id): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'image' => 'required',
-             'description' => 'required',
-             'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'description' => 'bail|required',
+             'display_price' => 'bail|required|numeric|between:0,999999.99',
+             'display_discount_price' => 'bail|nullable|numeric|between:0,999999.99',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
-         
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+   
+         ////////// image \\\\\\\\\\
+         if(isset($request->image))
+         {
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
+         }
+         else
+         {
+            $data['image'] = 'product_default.jpg';
+         }
    
    
          ////////// price \\\\\\\\\\
@@ -65,37 +95,15 @@
             $data['price'] = $data['display_price'];
          
          
-         ////////// image \\\\\\\\\\
-         if ($file = $request->hasfile('image'))
-         {
-            $request->validate(
-                ['image' => 'max:1000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
-                ]);
-            $data['image'] = (new CustomController)->uploadImage($request->image);
-         }
-         else
-         {
-            $data['image'] = 'product_default.jpg';
-         }
-         
-         
-         ////////// status \\\\\\\\\\
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
-         
-         
          DealsMenu::create($data);
-         return redirect()->back()->with('msg', 'Deals Menu created.');
+         
+         return response(['success' => true, 'msg' => 'Deals Menu created.']);
       }
       
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -106,10 +114,11 @@
       /**
        * Show the form for editing the specified resource.
        *
+       * @param String $menu_category_id
        * @param DealsMenu $DealsMenu
        * @return Response
        */
-      public function edit(DealsMenu $DealsMenu): Response
+      public function edit(String $menu_category_id, DealsMenu $DealsMenu): Response
       {
          return response(['success' => true , 'data' => $DealsMenu]);
       }
@@ -118,19 +127,48 @@
        * Update the specified resource in storage.
        *
        * @param Request $request
+       * @param String $menu_category_id
        * @param DealsMenu $DealsMenu
-       * @return RedirectResponse
+       * @return Response
        */
-      public function update(Request $request, DealsMenu $DealsMenu): RedirectResponse
+      public function update(Request $request, String $menu_category_id, DealsMenu $DealsMenu): Response
       {
-         $request->validate([
-             'name' => 'required',
-             'description' => 'required',
-             'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'description' => 'bail|required',
+             'display_price' => 'bail|required|numeric|between:0,999999.99',
+             'display_discount_price' => 'bail|nullable|numeric|between:0,999999.99',
+             'status' => 'bail|required|integer|in:0,1',
          ]);
-         
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+   
+         ////////// image \\\\\\\\\\
+         if(isset($request->image))
+         {
+            $img = $request->image;
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $data1 = base64_decode($img);
+            $Iname = uniqid();
+            $file = public_path('/images/upload/') . $Iname . ".png";
+            $success = file_put_contents($file, $data1);
+            $data['image'] = $Iname . ".png";
+         }
+         else
+         {
+            $data['image'] = 'product_default.jpg';
+         }
    
    
          ////////// price \\\\\\\\\\
@@ -140,59 +178,22 @@
             $data['price'] = $data['display_price'];
          
          
-         ////////// image \\\\\\\\\\
-         if ($request->hasfile('image'))
-         {
-            $request->validate(
-                ['image' => 'max:1000'],
-                [
-                    'image.max' => 'The Image May Not Be Greater Than 1 MegaBytes.',
-                ]);
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsMenu->id)->value('image'));
-            $data['image'] = (new CustomController)->uploadImage($data['image']);
-         }
-         
-         
-         ////////// status \\\\\\\\\\
-         if(isset($data['status']))
-            $data['status'] = 1;
-         else
-            $data['status'] = 0;
-         
-         
          $DealsMenu->update($data);
-         return redirect()->back()->with('msg','Deals Menu updated.');
+         
+         return response(['success' => true, 'msg' => 'Deals Menu updated.']);
       }
       
       /**
        * Remove the specified resource from storage.
        *
+       * @param String $menu_category_id
        * @param DealsMenu $DealsMenu
        * @return Response
        */
-      public function destroy(DealsMenu $DealsMenu): Response
+      public function destroy(String $menu_category_id, DealsMenu $DealsMenu): Response
       {
          (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsMenu->id)->value('image'));
          $DealsMenu->delete();
-         return response(['success' => true]);
-      }
-      
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param Request $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',', $data['ids']);
-         $DealsMenus = DealsMenu::whereIn('id',$ids)->get();
-         foreach ($DealsMenus as $DealsMenu)
-         {
-            (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsMenu->id)->value('image'));
-            $DealsMenu->delete();
-         }
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Deals Menu deleted.']);
       }
    }

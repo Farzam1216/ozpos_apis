@@ -11,6 +11,7 @@
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
+   use Illuminate\Support\Facades\Validator;
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
@@ -21,14 +22,17 @@
       /**
        * Display a listing of the resource.
        *
+       * @param String $menu_category_id
+       * @param String $deals_menu_id
+       * @return Response
        * @return View
        */
-      public function index($deals_menu_id): View
+      public function index(String $menu_category_id, String $deals_menu_id): Response
       {
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         $menu_category_id = DealsMenu::find($deals_menu_id)->menu_category_id;
-         $DealsItems = DealsItems::with(['ItemCategory', 'ItemSize'])->where([['vendor_id', $Vendor->id], ['deals_menu_id', $deals_menu_id]])->get();
-         return view('vendor.menu_module.deals_items', compact('Vendor', 'DealsItems', 'menu_category_id', 'deals_menu_id'));
+//         $menu_category_id = DealsMenu::find($deals_menu_id)->menu_category_id;
+         $DealsItem = DealsItems::with(['ItemCategory', 'ItemSize'])->where([['vendor_id', $Vendor->id], ['deals_menu_id', $deals_menu_id]])->get();
+         return response(['success' => true, 'data' => $DealsItem]);
       }
       
       /**
@@ -45,28 +49,39 @@
        * Store a newly created resource in storage.
        *
        * @param Request $request
-       * @return RedirectResponse
+       * @param String $menu_category_id
+       * @param String $deals_menu_id
+       * @return Response
        */
-      public function store(Request $request): RedirectResponse
+      public function store(Request $request, String $menu_category_id, String $deals_menu_id): Response
       {
-         $request->validate([
-             'menu_category_id' => 'required',
-             'deals_menu_id' => 'required',
-             'name' => 'required',
-             'item_category_id' => 'required',
-             'item_size_id' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'item_category_id' => 'bail|required',
+             'item_size_id' => 'bail|required',
          ]);
-         
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
+         $data['vendor_id'] = $Vendor->id;
+         $data['menu_category_id'] = $menu_category_id;
+         $data['deals_menu_id'] = $deals_menu_id;
          
          DealsItems::create($data);
-         return redirect()->back()->with('msg', 'Deals Items created.');
+         return response(['success' => true, 'msg' => 'Deals Items created.']);
       }
       
       /**
        * Display the specified resource.
        *
-       * @param int $id
+       * @param Request $request
        * @return void
        */
       public function show(Request $request): void
@@ -77,11 +92,14 @@
       /**
        * Show the form for editing the specified resource.
        *
-       * @param DealsItems $DealsItems
+       * @param String $menu_category_id
+       * @param String $deals_menu_id
+       * @param String $deals_items_id
        * @return Response
        */
-      public function edit(DealsItems $DealsItem): Response
+      public function edit(String $menu_category_id, String $deals_menu_id, String $deals_items_id): Response
       {
+         $DealsItem = DealsItems::with(['ItemCategory', 'ItemSize'])->find($deals_items_id);
          return response(['success' => true , 'data' => $DealsItem]);
       }
       
@@ -89,48 +107,45 @@
        * Update the specified resource in storage.
        *
        * @param Request $request
-       * @param DealsItems $DealsItems
-       * @return RedirectResponse
+       * @param String $menu_category_id
+       * @param String $deals_menu_id
+       * @param DealsItems $DealsItem
+       * @return Response
        */
-      public function update(Request $request, DealsItems $DealsItem): RedirectResponse
+      public function update(Request $request, String $menu_category_id, String $deals_menu_id, DealsItems $DealsItem): Response
       {
-         $request->validate([
-             'menu_category_id' => 'required',
-             'deals_menu_id' => 'required',
-             'name' => 'required',
-             'item_category_id' => 'required',
-             'item_size_id' => 'required',
+         $validator = Validator::make($request->all(), [
+             'name' => 'bail|required',
+             'item_category_id' => 'bail|required',
+             'item_size_id' => 'bail|required',
          ]);
-         
+   
+         if ($validator->fails())
+            return response(['success' => false, 'msg' => $validator->messages()->first()]);
+   
+         $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'Vendor not found.']);
+   
          $data = $request->all();
-         
+   
          $DealsItem->update($data);
-         return redirect()->back()->with('msg','Deals Items updated.');
+   
+         return response(['success' => true, 'msg' => 'Deals Items updated.']);
       }
       
       /**
        * Remove the specified resource from storage.
        *
-       * @param DealsItems $DealsItems
+       * @param String $menu_category_id
+       * @param String $deals_menu_id
+       * @param DealsItems $DealsItem
        * @return Response
        */
-      public function destroy(DealsItems $DealsItem): Response
+      public function destroy(String $menu_category_id, String $deals_menu_id, DealsItems $DealsItem): Response
       {
          $DealsItem->delete();
-         return response(['success' => true]);
-      }
-      
-      /**
-       * Remove the specified resource from storage.
-       *
-       * @param Request $request
-       * @return Response
-       */
-      public function selection_destroy(Request $request): Response
-      {
-         $data = $request->all();
-         $ids = explode(',', $data['ids']);
-         $DealsItemss = DealsItems::whereIn('id',$ids)->delete();
-         return response(['success' => true]);
+         return response(['success' => true, 'msg' => 'Deals Items deleted.']);
       }
    }

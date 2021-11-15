@@ -109,7 +109,6 @@
        *
        * @param String $menu_category_id
        * @param String $half_n_half_menu_id
-       * @param HalfNHalfMenu $HalfNHalfMenu
        * @return Response
        */
       public function edit(String $menu_category_id, String $half_n_half_menu_id): Response
