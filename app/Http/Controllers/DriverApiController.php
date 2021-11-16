@@ -448,7 +448,7 @@ class DriverApiController extends Controller
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
                     ->orWhere('order_status','PICKUP');
-            })->orderBy('id','desc')->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
+            })->orderBy('id','desc')->get();
             return response(['success' => true , 'data' => $orders]);
         }
         else
@@ -458,7 +458,7 @@ class DriverApiController extends Controller
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
                     ->orWhere('order_status','PICKUP');
-            })->orderBy('id','desc')->get(['id','address_id','order_id','user_id','payment_status','address_id','order_status','vendor_id','amount','payment_type']);
+            })->orderBy('id','desc')->get();
             return response(['success' => true , 'data' => $orders]);
         }
     }
