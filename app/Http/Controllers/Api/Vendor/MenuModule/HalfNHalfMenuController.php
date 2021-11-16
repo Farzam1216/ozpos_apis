@@ -158,10 +158,6 @@
             $success = file_put_contents($file, $data1);
             $data['image'] = $Iname . ".png";
          }
-         else
-         {
-            $data['image'] = 'product_default.jpg';
-         }
 
 
          $HalfNHalfMenu->update($data);
