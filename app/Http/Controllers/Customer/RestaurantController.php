@@ -43,10 +43,11 @@ class RestaurantController extends Controller
     $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
 
     $Point = new Point($UserAddress->lat, $UserAddress->lang);
+    // dd($Point);
     $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->get();
-      //if (!$DeliveryZoneNew)
+      if (!$DeliveryZoneNew)
       //  return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
-      // dd($DeliveryZoneNew);
+
     $radius = GeneralSetting::first()->radius;
     // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
     $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -63,12 +64,12 @@ class RestaurantController extends Controller
 
        $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
        $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
-      //  dd($vendor['distance']);
+       //dd($vendor['distance']);
        if (auth()->user() != null) {
           $user = auth()->user();
 
           $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
-         //  dd(  $vendor['like']);
+         //dd(  $vendor['like']);
        } else {
           $vendor['like'] = false;
        }

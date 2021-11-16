@@ -38,7 +38,7 @@
               <div class="row mb-3">
                 <div class="col-md-12">
                   <label for="">{{__('minimum order values')}}</label>
-                  <input type="number" min=1 name="min_order_value" required value="{{ $orderData->min_order_value }}" class="form-control">
+                  <input type="number" min=1 name="min_order_value" required value="{{ $orderData->min_order_value ?? ''}}" class="form-control">
                 </div>
               </div>
               <div class="row mb-3">
