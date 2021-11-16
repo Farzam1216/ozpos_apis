@@ -201,6 +201,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/vendor/barryvdh" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vendor/bavix" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kitloong/laravel-migrations-generator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/rap2hpoutre/laravel-log-viewer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

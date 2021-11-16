@@ -193,6 +193,7 @@
       <path value="$PROJECT_DIR$/vendor/vendor/barryvdh" />
       <path value="$PROJECT_DIR$/vendor/vendor/bavix" />
       <path value="$PROJECT_DIR$/vendor/kitloong/laravel-migrations-generator" />
+      <path value="$PROJECT_DIR$/vendor/rap2hpoutre/laravel-log-viewer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

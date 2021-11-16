@@ -44,6 +44,7 @@
    | contains the "web" middleware group. Now create something great!
    |
    */
+   Route::get('dev', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
    Route::get('/clear-cache', function () {
       Artisan::call('cache:clear');
