@@ -448,7 +448,7 @@ class DriverApiController extends Controller
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
                     ->orWhere('order_status','PICKUP');
-            })->orderBy('id','desc')->get(['id','address_id','order_id','user_id','vendor_id','payment_status','address_id','order_status','amount','payment_type']);
+            })->orderBy('id','desc')->get();
             return response(['success' => true , 'data' => $orders]);
         }
         else
@@ -458,7 +458,7 @@ class DriverApiController extends Controller
                     ->where('order_status','APPROVE')
                     ->orWhere('order_status','ACCEPT')
                     ->orWhere('order_status','PICKUP');
-            })->orderBy('id','desc')->get(['id','address_id','order_id','user_id','payment_status','address_id','order_status','vendor_id','amount','payment_type']);
+            })->orderBy('id','desc')->get();
             return response(['success' => true , 'data' => $orders]);
         }
     }
@@ -736,8 +736,8 @@ class DriverApiController extends Controller
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
         $this->driver_cancel_max_order();
-        $orders['complete'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','COMPLETE']])->get(['id','address_id','amount','order_id','user_id','vendor_id','payment_status','order_status']);
-        $orders['cancel'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','DELIVERED']])->get(['id','address_id','amount','order_id','cancel_reason','user_id','vendor_id','payment_status','order_status']);
+        $orders['complete'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','COMPLETE']])->get();
+        $orders['cancel'] = Order::where([['delivery_person_id',auth()->user()->id],['order_status','DELIVERED']])->get();
         return response(['success' => true , 'data' => $orders]);
     }
 
