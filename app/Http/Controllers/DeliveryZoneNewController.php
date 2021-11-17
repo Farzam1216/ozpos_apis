@@ -23,8 +23,20 @@ class DeliveryZoneNewController extends Controller
     public function index()
     {
         abort_if(Gate::denies('delivery_zone_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $zone=DeliveryZoneNew::selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->first();
-        return view('admin.delivery zone.delivery_zone_new',compact('zone'));
+        $vendor = Vendor::where('user_id',Auth::user()->id)->first();
+        $zone=DeliveryZoneNew::selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")
+                                        ->where('vendor_id',$vendor->id)->first();
+                                        // dd($zone);
+          if(isset($zone))
+          {
+            return view('admin.delivery zone.delivery_zone_new',compact('zone'));
+
+          }
+          else
+          {
+            return view('admin.delivery zone.create_delivery_zone_new');
+
+          }
     }
 
     /**
@@ -121,8 +133,9 @@ class DeliveryZoneNewController extends Controller
           $coords = explode(',',$single_array);
           $polygon[] = new Point($coords[0], $coords[1]);
       }
+      $vendor = Vendor::where('user_id',Auth::user()->id)->first();
       $polygon[] = new Point($lastcord[0], $lastcord[1]);
-      $zone=DeliveryZoneNew::findOrFail($id);
+      $zone=DeliveryZoneNew::where(['id'=>$id,'vendor_id' => $vendor->id])->first();
       $zone->name = $request->name;
       $zone->coordinates = new Polygon([new LineString($polygon)]);
 

@@ -73,7 +73,7 @@
                       </div>
                       @empty
                           <div class="d-flex">NO Vendor Exist In Your Area</div>
-                        @endforelse
+                    @endforelse
                       </div>
                   </div>
               </div>

@@ -363,11 +363,10 @@
           'deliveryZone' => Admin\DeliveryZoneController::class,
           'deliveryZoneNew' => DeliveryZoneNewController::class,
 
-
-         //////////             Slider Module                //////////
+           //////////             Slider Module                //////////
           'slider' => Vendor\SliderModule\SliderController::class,
 
-         //////////             Menu Module                //////////
+           //////////             Menu Module                //////////
           'item_category' => Vendor\MenuModule\ItemCategoryController::class,
           'item_size' => Vendor\MenuModule\ItemSizeController::class,
           'addon_category' => Vendor\MenuModule\AddonCategoryController::class,

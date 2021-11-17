@@ -29,8 +29,6 @@
             <div class="card-body">
             <form action="{{ url('vendor/deliveryZoneNew') }}" method="post">
                     @csrf
-
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

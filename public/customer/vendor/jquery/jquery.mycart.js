@@ -625,7 +625,6 @@
 
    }
 
-
    $.fn.myCart = function (userOptions) {
 
       loadMyCartEvent(userOptions);
