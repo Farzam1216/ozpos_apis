@@ -655,17 +655,17 @@
          app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
          $amount = $order->amount;
          
-         $tax = array();
-         if ($vendor->admin_comission_type == 'percentage') {
-            $comm = $amount * $vendor->admin_comission_value;
-            $tax['admin_commission'] = intval($comm / 100);
-            $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
-         }
-         if ($vendor->admin_comission_type == 'amount') {
-            $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
-            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
-         }
-         $order->update($tax);
+//         $tax = array();
+//         if ($vendor->admin_comission_type == 'percentage') {
+//            $comm = $amount * $vendor->admin_comission_value;
+//            $tax['admin_commission'] = intval($comm / 100);
+//            $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
+//         }
+//         if ($vendor->admin_comission_type == 'amount') {
+//            $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
+//            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
+//         }
+//         $order->update($tax);
 
          $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
 
