@@ -446,7 +446,7 @@
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 
       Route::middleware(['auth'])->prefix('restaurant')->name('restaurant.')->group(function () {
-          Route::get('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
+          Route::post('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
           Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('coupon');
           Route::get('/tax', [CustomerController::class, 'applyTax'])->name('tax');
           Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');

@@ -471,6 +471,19 @@
 
 
                var vendorId = products[0].vendor;
+
+                  $.ajax({
+                     type:'POST',
+
+                  url: ( is_HTTP_X_FORWARDED_HOST == true ) ? url_HTTP+"/abc" : url_HTTP+"/abc",
+
+                  data:{vendor_id:vendor_id,extra_status:extra_status,item_id:item_id},
+                  success:function(data){
+
+                  }
+               });
+
+
                if (base_url === "http://ozpos.com") {
                   window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
                   // window.location.href = url;
