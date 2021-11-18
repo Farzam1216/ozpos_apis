@@ -7,7 +7,7 @@
    @section('vendor_lang', $rest->lang)
 @endif
 
-@section('title', $rest->name)
+@section('title',"Himalaya Falooda & Sweets | Profile")
 
 
 @section('content')

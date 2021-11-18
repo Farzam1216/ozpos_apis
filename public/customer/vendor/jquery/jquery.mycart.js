@@ -455,43 +455,49 @@
          $("#" + idGrandTotal).text("$" + parseFloat(localGrandTotal).toFixed(2));
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
 
-         ///////////// store into session ///
+
+
+         $("#" + idCheckoutCart).click(function () {
+            var products = ProductManager.getAllProducts();
+            var jsonProducts = JSON.stringify(products);
+            let base_url = window.location.origin;
+                     ///////////// store into session ///
          var iTotal = $("#" + idTotal).data();
          var iTax = $("#" + idTax).data();
          var iCoupons = $("#" + idCoupons).data();
          var iDelivery = $("#" + idDelivery).data();
          var iGrandTotal = $("#" + idGrandTotal).data();
 
-         $("#" + idCheckoutCart).click(function () {
-            var products = ProductManager.getAllProducts();
-            var jsonProducts = JSON.stringify(products);
-            let base_url = window.location.origin;
-            // console.log(products);
-            //  var test = products[0].vendor;
 
-
+              var   total =iTotal.value;
+              var   iTax =iTax.value;
+              var   iCoupons =iCoupons.value;
+              var   iDelivery =iDelivery.value;
+              var   couponID =couponID;
+              var   product =jsonProducts;
                var vendorId = products[0].vendor;
-
                   $.ajax({
-                     type:'POST',
 
-                  url: ( is_HTTP_X_FORWARDED_HOST == true ) ? url_HTTP+"/abc" : url_HTTP+"/abc",
+                    type:'POST',
+                    url: ( is_HTTP_X_FORWARDED_HOST == true ) ? url_HTTP+"/checkout" : url_HTTP,
+                    data:{vendorId:vendorId,total:total,iTax:iTax,iCoupons:iCoupons,iDelivery:iDelivery,couponID:couponID,product:product},
 
-                  data:{vendor_id:vendor_id,extra_status:extra_status,item_id:item_id},
                   success:function(data){
-
+                    console.log(data);
+                    // window.location.replace('checkout');
+                    location.href = 'checkout';
                   }
                });
 
 
-               if (base_url === "http://ozpos.com") {
-                  window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
-                  // window.location.href = url;
-               } else {
-                  window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
-                  // console.log(url);
-                  // window.location.href = url;
-               }
+              //  if (base_url === "http://ozpos.com") {
+              //     window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+              //     // window.location.href = url;
+              //  } else {
+              //     window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+              //     // console.log(url);
+              //     // window.location.href = url;
+              //  }
 
             //alert('asdasd');
             //if (!products.length) {
