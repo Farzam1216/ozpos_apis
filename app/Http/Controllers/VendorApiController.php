@@ -1627,7 +1627,7 @@ class VendorApiController extends Controller
     {
         $delivery_person_id = $request->driver_id;
         $orders = Order::where([['delivery_person_id',$delivery_person_id],['order_status','DELIVERED']])->update(['order_status' => 'COMPLETE']);
-        $orders->save();
+//        $orders->save();
         return response(['success' => true]);
     }
 
