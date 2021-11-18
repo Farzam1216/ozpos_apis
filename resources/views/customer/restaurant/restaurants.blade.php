@@ -44,12 +44,13 @@
                                   <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="feather-heart"></i></a></div> --}}
                                   {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
                                   <a href="{{route('restaurant.index1',$vendor->id)}}">
-                                      <img alt="#" src="{{asset($vendor->image)}}" class="img-fluid item-img w-100" style="height: 20rem">
+                                  <img alt="#" src="{{asset($vendor->image)}}" class="img-fluid item-img w-100" style="height: 12rem">
                                   </a>
                               </div>
                               <div class="p-3 position-relative">
                                   <div class="list-card-body">
-                                      <h6 class="mb-1"><a href="{{route('restaurant.index1',$vendor->id)}}" class="text-black">{{ $vendor->name}}
+                                      <h6 class="mb-1">
+                                        <a href="{{route('restaurant.index1',$vendor->id)}}" class="text-black">{{ $vendor->name}}
                                    </a>
                                       </h6>
                                       {{-- <p class="text-gray mb-1 small">• North • Hamburgers</p>

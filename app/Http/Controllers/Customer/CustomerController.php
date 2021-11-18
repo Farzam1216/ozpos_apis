@@ -576,7 +576,6 @@ class CustomerController extends Controller
   /////////// Profile /////////////
   public function profile()
   {
-
     $user = Auth::user();
     $userAddress = UserAddress::where('user_id', $user->id)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
@@ -584,7 +583,6 @@ class CustomerController extends Controller
   }
   public function singleProfile($id)
   {
-
     $vendor_id = $id;
     $rest = $this->getRest($id);
     $singleVendor = $this->singleVendor($id);
@@ -597,7 +595,7 @@ class CustomerController extends Controller
 
   public function profileUpdate(Request $request, $id)
   {
-    //  dd($id);
+    //dd($id);
     User::find($id)->update([
       'name' => $request->name,
       'phone_code' => '+' . $request->phone_code,

@@ -86,7 +86,7 @@
        is_HTTP_X_FORWARDED_HOST = true;
       url_HTTP = "{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}";
    @else
-       url_HTTP = "{{ route('customer.restaurant.checkout') }}"
+       url_HTTP = "{{ route('customer.restaurant.checkout') }}";
    @endif
 </script>
 

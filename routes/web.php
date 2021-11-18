@@ -454,7 +454,6 @@
     });
 
    });
-
     /////    /* Single Restaurant Routes */
     Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
         Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
