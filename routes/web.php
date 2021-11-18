@@ -454,7 +454,6 @@
     });
 
    });
-
     /////    /* Single Restaurant Routes */
     Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
         Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
@@ -487,7 +486,7 @@
         /// tax , coupon
         Route::get('/singleCoupon', [CustomerController::class, 'applySingleCoupon'])->name('coupon');
         Route::get('/tax', [CustomerController::class, 'applySingleTax'])->name('tax');
-        Route::get('/checkout', [CustomerController::class, 'singleCheckout'])->name('checkout');
+        Route::post('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
         Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
         Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
         // Order History

@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use DB;
    use Illuminate\Http\Request;
@@ -12,7 +12,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+
    class MenuController extends Controller
    {
       /**
@@ -26,7 +26,7 @@
          $Menu = Menu::where('vendor_id', $Vendor->id)->get();
          return response(['success' => true, 'data' => $Menu]);
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -36,7 +36,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -51,19 +51,19 @@
              'display_price' => 'nullable|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-         
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
-         
-         
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -73,8 +73,8 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+
          ////////// image \\\\\\\\\\
          if(isset($request->image))
          {
@@ -91,12 +91,12 @@
          {
             $data['image'] = 'product_default.jpg';
          }
-         
-         
+
+
          Menu::create($data);
          return response(['success' => true, 'msg' => 'Menu created.']);
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -105,9 +105,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -118,7 +118,7 @@
       {
          return response(['success' => true, 'data' => $Menu]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -134,19 +134,19 @@
              'display_price' => 'nullable|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-         
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
-         
-         
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -156,8 +156,8 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+
          ////////// image \\\\\\\\\\
          if(isset($request->image))
          {
@@ -170,12 +170,12 @@
             $success = file_put_contents($file, $data1);
             $data['image'] = $Iname . ".png";
          }
-         
-         
+
+
          $Menu->update($data);
          return response(['success' => true, 'msg' => 'Menu updated.']);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

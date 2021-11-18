@@ -131,7 +131,7 @@ img {vertical-align: middle;}
       <div class="mySlides fadess">
         <div class="numbertext">1 / 3</div>
         <img src="{{asset($slid->image)}}" style=" width: 100%;height: 50%;">
-        <div class="text" style="color: black"><h5><b>{{$slid->description}}</b></h5></div>
+        <div class="text" style="color: black;background:white"><h5><b>{{$slid->description}}</b></h5></div>
       </div>
       @endforeach
       </div>
@@ -338,11 +338,11 @@ img {vertical-align: middle;}
                             {{-- <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div> --}}
                             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                             <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list">
-                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
+                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 60%;">
                             </a>
                             @else
                             <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
-                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 80%;">
+                                <img alt="#" src="{{asset($halfmenu->image)}}" class="img-fluid item-img w-100" style="height: 60%;">
                             </a>
                             @endif
                         </div>

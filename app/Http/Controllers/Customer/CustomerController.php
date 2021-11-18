@@ -361,31 +361,21 @@ class CustomerController extends Controller
 
     // dd($request->all());
     Session::put([
-      'vendorID' => $request->vendorID,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
+      'vendorID' => $request->vendorId,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
-
+    $vendor = Vendor::find($request->vendorId);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
-    return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress'));
+  //   return response()->json([
+  //   'html' => view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'))->render()
+  // ]);
+     return response()->json(['vendor'=>$vendor,'userAddress'=>$userAddress,'selectedAddress'=>$selectedAddress]);
+    // return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'));
   }
-  public function singleCheckout(Request $request, $id)
-  {
 
-    //  dd($request->all());
-    Session::put([
-      'vendorID' => $request->vendorID,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
-      'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
-        ->product
-    ]);
-
-    $user = Auth::user()->id;
-    $userAddress = UserAddress::where('user_id', $user)->get();
-    $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
-    return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress'));
-  }
 
   //// payment/////////////
   public function bookOrder(Request $request)
@@ -586,7 +576,6 @@ class CustomerController extends Controller
   /////////// Profile /////////////
   public function profile()
   {
-
     $user = Auth::user();
     $userAddress = UserAddress::where('user_id', $user->id)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
@@ -594,7 +583,6 @@ class CustomerController extends Controller
   }
   public function singleProfile($id)
   {
-
     $vendor_id = $id;
     $rest = $this->getRest($id);
     $singleVendor = $this->singleVendor($id);
@@ -607,7 +595,7 @@ class CustomerController extends Controller
 
   public function profileUpdate(Request $request, $id)
   {
-    //  dd($id);
+    //dd($id);
     User::find($id)->update([
       'name' => $request->name,
       'phone_code' => '+' . $request->phone_code,

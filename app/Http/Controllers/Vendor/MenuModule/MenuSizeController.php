@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use App\Models\MenuSize;
    use DB;
@@ -12,7 +12,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+
    class MenuSizeController extends Controller
    {
       /**
@@ -26,7 +26,7 @@
          $MenuSize = MenuSize::with('ItemSize')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id]])->get();
          return view('vendor.menu_module.menu_size', compact('Vendor', 'MenuSize', 'menu_id'));
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -36,7 +36,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -50,10 +50,10 @@
              'display_price' => 'required|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          $data = $request->all();
-         
-         
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -63,12 +63,12 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+
          MenuSize::create($data);
          return redirect()->back()->with('msg', 'Menu Size created.');
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -77,9 +77,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -90,7 +90,7 @@
       {
          return response(['success' => true, 'data' => $MenuSize]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -105,10 +105,10 @@
              'display_price' => 'required|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          $data = $request->all();
-         
-         
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -118,12 +118,12 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+
          $MenuSize->update($data);
          return redirect()->back()->with('msg', 'Menu Size updated.');
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *
@@ -135,7 +135,7 @@
          $MenuSize->delete();
          return response(['success' => true]);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *
