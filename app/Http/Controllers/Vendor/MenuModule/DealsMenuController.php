@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use App\Models\ItemCategory;
    use App\Models\DealsMenu;
@@ -14,7 +14,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+
    class DealsMenuController extends Controller
    {
       /**
@@ -28,7 +28,7 @@
          $DealsMenu = DealsMenu::where([['vendor_id', $Vendor->id], ['menu_category_id', $menu_category_id]])->get();
          return view('vendor.menu_module.deals_menu', compact('Vendor', 'DealsMenu', 'menu_category_id'));
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -38,7 +38,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -52,19 +52,19 @@
              'image' => 'required',
              'description' => 'required',
              'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
          ]);
-         
+
          $data = $request->all();
-   
-   
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_discount_price']))
             $data['price'] = $data['display_discount_price'];
          else
             $data['price'] = $data['display_price'];
-         
-         
+
+
          ////////// image \\\\\\\\\\
          if ($file = $request->hasfile('image'))
          {
@@ -79,19 +79,19 @@
          {
             $data['image'] = 'product_default.jpg';
          }
-         
-         
+
+
          ////////// status \\\\\\\\\\
          if(isset($data['status']))
             $data['status'] = 1;
          else
             $data['status'] = 0;
-         
-         
+
+
          DealsMenu::create($data);
          return redirect()->back()->with('msg', 'Deals Menu created.');
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -100,9 +100,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -113,7 +113,7 @@
       {
          return response(['success' => true , 'data' => $DealsMenu]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -127,19 +127,19 @@
              'name' => 'required',
              'description' => 'required',
              'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
          ]);
-         
+
          $data = $request->all();
-   
-   
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_discount_price']))
             $data['price'] = $data['display_discount_price'];
          else
             $data['price'] = $data['display_price'];
-         
-         
+
+
          ////////// image \\\\\\\\\\
          if ($request->hasfile('image'))
          {
@@ -151,19 +151,19 @@
             (new CustomController)->deleteImage(DB::table('menu')->where('id', $DealsMenu->id)->value('image'));
             $data['image'] = (new CustomController)->uploadImage($data['image']);
          }
-         
-         
+
+
          ////////// status \\\\\\\\\\
          if(isset($data['status']))
             $data['status'] = 1;
          else
             $data['status'] = 0;
-         
-         
+
+
          $DealsMenu->update($data);
          return redirect()->back()->with('msg','Deals Menu updated.');
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *
@@ -176,7 +176,7 @@
          $DealsMenu->delete();
          return response(['success' => true]);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

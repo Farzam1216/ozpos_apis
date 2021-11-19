@@ -49,7 +49,7 @@ class MenuController extends Controller
       'image' => 'required',
       'description' => 'required',
       'display_price' => 'nullable|numeric|between:0,999999.99',
-      'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+      'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
     ]);
 
     $data = $request->all();
@@ -124,7 +124,7 @@ class MenuController extends Controller
       'name' => 'required',
       'description' => 'required',
       'display_price' => 'nullable|numeric|between:0,999999.99',
-      'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+      'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
     ]);
 
     $data = $request->all();

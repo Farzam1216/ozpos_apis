@@ -106,9 +106,6 @@
       </div>
    </div>
 
-   <input type="hidden" name="vendor_id" id="vendor_id" value="{{ $vendor_id }}">
-   {{--    @php--}}
-   {{--       session()->set($vendor_id);--}}
-   {{--    @endphp--}}
+
 @endsection
 

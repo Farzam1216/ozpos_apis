@@ -42,10 +42,13 @@ class AddonCategoryController extends Controller
    */
   public function store(Request $request): RedirectResponse
   {
+
     $request->validate([
       'name' => 'required',
+      'min' => 'required',
+      'max' => 'required|gt:min',
     ]);
-
+    // dd('asdsa');
     $data = $request->all();
     AddonCategory::create($data);
     return redirect()->back()->with('msg','Addon category created.');
@@ -82,10 +85,12 @@ class AddonCategoryController extends Controller
    */
   public function update(Request $request, AddonCategory $AddonCategory): RedirectResponse
   {
+
     $request->validate([
       'name' => 'required',
+      'min' => 'required',
+      'max' => 'required|gt:min',
     ]);
-
     $data = $request->all();
     $AddonCategory->update($data);
     return redirect()->back()->with('msg','Addon category updated.');

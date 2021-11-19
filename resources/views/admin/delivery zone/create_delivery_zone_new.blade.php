@@ -44,7 +44,7 @@
                                     </textarea>
                             </div>
                         </div>
-                        <div class="col-md-6 map-warper" style="height: 300px;">
+                        <div class="col-md-6 map-warper" style="width:300%;height:300px;">
                             <div id="map-canvas" style="height: 100%; margin:0px; padding: 0px;"></div>
                         </div>
                     </div>
@@ -99,7 +99,9 @@
 
         var myOptions = {
             zoom: 13,
-            // center: myLatlng,
+            center:{
+              lat: -34.397, lng: 150.644
+            },
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
         map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
@@ -114,6 +116,7 @@
             editable: true
             }
         });
+        console.log(map);
         drawingManager.setMap(map);
 
 

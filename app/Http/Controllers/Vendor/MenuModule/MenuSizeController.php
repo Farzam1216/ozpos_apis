@@ -48,7 +48,8 @@
          $request->validate([
              'item_size_id' => 'required',
              'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
+
          ]);
 
          $data = $request->all();
@@ -103,7 +104,7 @@
          $request->validate([
              'item_size_id' => 'required',
              'display_price' => 'required|numeric|between:0,999999.99',
-             'display_discount_price' => 'nullable|numeric|between:0,999999.99',
+             'display_discount_price' => 'nullable|numeric|between:0,999999.99|lte:display_price',
          ]);
 
          $data = $request->all();
