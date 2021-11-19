@@ -235,6 +235,7 @@ class CustomerController extends Controller
   {
     Toastr::warning('Please Select Your Location on the Map!');
     Toastr::success('Successfully Logged in!');
+
     return view('customer.map-select');
   }
 
@@ -258,7 +259,7 @@ class CustomerController extends Controller
     // return redirect()->route('restaurant.index');
   }
   else
-  {
+   {
       Toastr::success('Delivery Zone added successfully!');
       return redirect()->route('restaurant.index');
 
@@ -272,7 +273,6 @@ class CustomerController extends Controller
     // $user = Auth::user()->id;
     //    dd($user);
     $vendor = Vendor::find(1);
-
     //  dd($vendor);
     if ($vendor) {
       $User = auth()->user();
