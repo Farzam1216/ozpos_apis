@@ -546,7 +546,24 @@
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
-         $Setting = OrderSetting::where('vendor_id', $vendor_id)->first();
+//         $Setting = OrderSetting::where('vendor_id', $vendor_id)->first();
+         $Setting = OrderSetting::firstOrCreate([
+             'vendor_id' => $vendor_id,
+         ], [
+             'vendor_id' => $vendor_id,
+             'free_delivery' => 0,
+             'free_delivery_distance' => 10,
+             'free_delivery_amount' => 0,
+             'min_order_value' => '100',
+             'order_commission' => 0,
+             'order_assign_manually' => '0',
+             'orderRefresh' => '5',
+             'order_dashboard_default_time' => '7days',
+             'vendor_order_max_time' => '60',
+             'driver_order_max_time' => '60',
+             'delivery_charge_type' => 'order_amount',
+             'charges' => '[]',
+         ]);
 
 
          $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';

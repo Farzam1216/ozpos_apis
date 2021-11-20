@@ -482,7 +482,24 @@ class VendorSettingController extends Controller
   {
     $vendor = Vendor::where('user_id',auth()->user()->id)->first();
     $currency_symbol = GeneralSetting::first()->currency_symbol;
-    $orderData = OrderSetting::where('vendor_id',$vendor->id)->first();
+//    $orderData = OrderSetting::where('vendor_id',$vendor->id)->first();
+    $orderData = OrderSetting::firstOrCreate([
+        'vendor_id' => $vendor->id,
+    ], [
+        'vendor_id' => $vendor_id,
+        'free_delivery' => 0,
+        'free_delivery_distance' => 10,
+        'free_delivery_amount' => 0,
+        'min_order_value' => '100',
+        'order_commission' => 0,
+        'order_assign_manually' => '0',
+        'orderRefresh' => '5',
+        'order_dashboard_default_time' => '7days',
+        'vendor_order_max_time' => '60',
+        'driver_order_max_time' => '60',
+        'delivery_charge_type' => 'order_amount',
+        'charges' => '[]',
+    ]);
     return view('vendor.setting.order_setting', compact('currency_symbol', 'orderData'));
   }
 
