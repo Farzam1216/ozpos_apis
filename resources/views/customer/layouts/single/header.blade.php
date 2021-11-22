@@ -145,8 +145,8 @@
                     <!-- brand-wrap.// -->
                 </div>
 
-                <div class="col-3 d-flex align-items-center m-none">
-                    <div class="dropdown mr-3">
+                <div class="col-3 d-flex align-items-center m-none ">
+                    <div class="dropdown mr-3 ">
                         <a class="text-dark dropdown-toggle d-flex align-items-center py-3" href="#" id="navbarDropdown"
                             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div><i class="feather-map-pin mr-2 bg-light rounded-pill p-2 icofont-size"></i></div>
@@ -160,7 +160,7 @@
 
                             </div>
                         </a>
-                        <div class="dropdown-menu p-0 drop-loc" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu p-0 drop-loc " aria-labelledby="navbarDropdown">
                             <div class="osahan-country">
                                 <div class="search_location bg-primary p-3 text-right">
                                     <div class="input-group rounded shadow-sm overflow-hidden">
@@ -173,17 +173,17 @@
 
                                     </div>
                                 </div>
-                                <div class="p-3 border-bottom">
+                                {{-- <div class="p-3 border-bottom">
                                     <a href="home.html" class="text-decoration-none">
                                         <p class="font-weight-bold text-primary m-0"><i class="feather-navigation"></i>
                                             New York, USA</p>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <div class="filter">
                                     <h6 class="px-3 py-3 bg-light pb-1 m-0 border-bottom">Choose your country</h6>
 
                                     @foreach ($userAddress as $userAdre)
-                                        <div class="custom-control  border-bottom px-0 custom-radio overflow-auto">
+                                        <div class="custom-control  border-bottom px-0 custom-radio overflow-y">
                                             <input type="radio" id="customRadio{{ $userAdre->id }}"
                                                 name="user_address" class="custom-control-input"
                                                 value="{{ $userAdre->id }}"
@@ -229,7 +229,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                   @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                     <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/user-profile">My account</a>
-                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/history-order">Order
+                                    <a class="dropdown-item" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order-history">Order
                                         History</a>
                                     <a class="dropdown-item" href="contact-us.html">Contant us</a>
                                     <a class="dropdown-item" href="terms.html">Term of use</a>

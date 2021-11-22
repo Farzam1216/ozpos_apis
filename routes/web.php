@@ -446,29 +446,29 @@
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 
       Route::middleware(['auth'])->prefix('restaurant')->name('restaurant.')->group(function () {
-          Route::post('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
-          Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('coupon');
-          Route::get('/tax', [CustomerController::class, 'applyTax'])->name('tax');
-          Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
-          Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
-    });
+        Route::post('/checkout', [CustomerController::class, 'checkout'])->name('checkout');
+        Route::get('/coupon', [CustomerController::class, 'applyCoupon'])->name('coupon');
+        Route::get('/tax', [CustomerController::class, 'applyTax'])->name('tax');
+        Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
+        Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
+      });
 
-   });
+    });
     /////    /* Single Restaurant Routes */
     Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
-        Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
-        Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
-        Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
+      Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
+      Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
+      Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
 
     });
 
-   Route::prefix('customer/restaurant/{id}')->name('restaurant.')->group(function () {
-          Route::get('/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('login');
-          Route::post('/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
-          Route::get('/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('signup');
-          Route::post('/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
+    Route::prefix('customer/restaurant/{id}')->name('restaurant.')->group(function () {
+      Route::get('/login', [App\Http\Controllers\Customer\CustomerController::class, 'login'])->name('login');
+      Route::post('/login-verify', [App\Http\Controllers\Customer\CustomerController::class, 'loginVerify'])->name('login.verify');
+      Route::get('/signup', [App\Http\Controllers\Customer\CustomerController::class, 'signup'])->name('signup');
+      Route::post('/signup-verify', [App\Http\Controllers\Customer\CustomerController::class, 'signUpVerify'])->name('signup.verify');
 
-     Route::middleware('auth')->group(function(){
+      Route::middleware('auth')->group(function(){
 
         Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
         Route::post('/single-address', [App\Http\Controllers\Customer\AddressController::class, 'singleAddAddress']);
@@ -490,16 +490,19 @@
         Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
         Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
         // Order History
-        Route::get('/history-order', [App\Http\Controllers\Customer\OrderController::class, 'singleOrderHistory'])->name('order.history');
+        Route::get('/order-history', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
+        Route::get('/get-orderModel/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'singleGetOrderModel'])->name('order.history');
+        Route::get('/get-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'singleGetOrder'])->name('order.get');
+        Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'singleTrackOrder'])->name('order.track');
+      });
     });
-  });
 
 
-//    Route::prefix('customer')->name('customer.')->group(function () {
-//    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
-//                ->name('home.index');
-//
-//    Route::get('/restaurants', [App\Http\Controllers\Frontend\RestaurantController::class , 'index'])
+    //    Route::prefix('customer')->name('customer.')->group(function () {
+      //    Route::get('/', [App\Http\Controllers\Frontend\HomeController::class , 'index'])
+      //                ->name('home.index');
+      //
+        //    Route::get('/restaurants', [App\Http\Controllers\Frontend\RestaurantController::class , 'index'])
 //                    ->name('restaurant.index');
 //
 //    Route::prefix('restaurant/{id}')->name('restaurant.')->group(function () {

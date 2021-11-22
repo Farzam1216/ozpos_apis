@@ -1,4 +1,5 @@
 <div>
+
    @foreach($MenuCategory->SingleMenu()->get() as $SingleMenuIDX=>$SingleMenu)
       @php
          /** @var mixed $SingleMenu */

@@ -51,7 +51,7 @@
 
          @foreach ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
-               <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#{{ $item->name }}">
+               <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="#{{ucwords($item->name)}}">
                   <img alt="#" src="{{ asset('customer/img/icons/Fries.png') }}" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
                </a>
@@ -67,7 +67,7 @@
 
             <div class="shadow-sm rounded bg-white mb-3 overflow-hidden">
                <div class="d-flex item-aligns-center">
-                  <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100">Menu</p>
+                  <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100"><b>Menu</b></p>
 
                   <!-- <a class="small text-primary font-weight-bold ml-auto" href="#">View all <i class="feather-chevrons-right"></i></a> -->
                </div>

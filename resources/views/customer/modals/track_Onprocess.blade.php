@@ -13,7 +13,13 @@
                           @if($order->order_status == 'PENDING')
                           <span class="ml-auto"><h6 class="font-weight-bold" style="color: #007bff">Order Pending</h6></span>
                           @else
-                          <span class="ml-auto"><a href="{{ url('customer/track-order',$order->id)}}" class="btn btn-primary">Track on map</a></span>
+                              @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+
+                              <span class="ml-auto"><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/track-order/{{$order->id}}" class="btn btn-primary">Track on map</a></span>
+                              @else
+
+                              <span class="ml-auto"><a href="{{ url('customer/track-order',$order->id)}}" class="btn btn-primary">Track on map</a></span>
+                              @endif
                           @endif
                       </div>
                       <div class="tracking-wrap">

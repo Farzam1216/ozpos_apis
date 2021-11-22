@@ -52,7 +52,7 @@
         <div class="container">
             <ul>
                 @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                    <li><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}">{{ $rest->name }}</a></li>
+                    {{-- <li><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}">{{ $order->name }}</a></li> --}}
                     <li>Live Tracking</li>
                 @else
                     {{-- <li><a href="{{ route('customer.home.index')}}">Home</a></li> --}}
@@ -101,7 +101,7 @@
                     $.ajax({
                         type:'GET',
                         @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/{$order->id}/get",
+                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/{$order->id}",
                         @else
                         url:"{{ url('customer/get-order', $order->id) }}",
                         @endif
@@ -129,7 +129,6 @@
                     });
                 });
             }
-
             setInterval( trackSingleStatus, 3000 );
         });
     </script>
