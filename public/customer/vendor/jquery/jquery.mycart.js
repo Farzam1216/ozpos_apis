@@ -470,6 +470,7 @@
 
             var total = iTotal.value;
             var iTax = iTax.value;
+            var iGrandTotal = iGrandTotal.value;
             var iCoupons = iCoupons.value;
             var iDelivery = iDelivery.value;
             var couponID = couponID;
@@ -480,10 +481,12 @@
             var checkoutForm = '<form action="'+checkoutUrl+'" method="post">';
             checkoutForm += '<input type="text" name="vendorId" value="'+vendorId+'">';
             checkoutForm += '<input type="text" name="total" value="'+total+'">';
+            checkoutForm += '<input type="text" name="iGrandTotal" value="'+iGrandTotal+'">';
             checkoutForm += '<input type="text" name="iTax" value="'+iTax+'">';
             checkoutForm += '<input type="text" name="iCoupons" value="'+iCoupons+'">';
             checkoutForm += '<input type="text" name="iDelivery" value="'+iDelivery+'">';
             checkoutForm += '<input type="text" name="couponID" value="'+couponID+'">';
+
             checkoutForm += '<input type="text" name="product" value=\''+product+'\'>';
 
             $(checkoutForm).appendTo('body').submit();

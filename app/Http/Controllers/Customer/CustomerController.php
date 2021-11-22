@@ -359,9 +359,9 @@ class CustomerController extends Controller
   public function checkout(Request $request)
   {
 
-     dd($request->all());
+    //  dd($request->all());
     Session::put([
-      'vendorID' => $request->vendorId,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
+      'vendorID' => $request->vendorId,'total' => $request->total, 'idTax' => $request->iTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
@@ -372,15 +372,15 @@ class CustomerController extends Controller
   //   return response()->json([
   //   'html' => view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'))->render()
   // ]);
-     return response()->json(['vendor'=>$vendor,'userAddress'=>$userAddress,'selectedAddress'=>$selectedAddress]);
-    // return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'));
+    //  return response()->json(['vendor'=>$vendor,'userAddress'=>$userAddress,'selectedAddress'=>$selectedAddress]);
+    return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'));
   }
 
 
   //// payment/////////////
   public function bookOrder(Request $request)
   {
-    // dd( Session::get('product'));
+    // dd($request->all());
 
 
     $validation = $request->validate([

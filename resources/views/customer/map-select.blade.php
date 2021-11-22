@@ -212,7 +212,8 @@
     // };
 
     const defaultLatLong = {
-      lat: 40.749933, lng: -73.98633
+        lat: 40.749933,
+        lng: -73.98633
     };
 
 

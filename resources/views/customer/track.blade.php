@@ -17,8 +17,8 @@
   .map
   {
       position:absolute;
-    overflow: show;
-    height: 400px
+      overflow: show;
+      height: 400px
   }
 </style>
 @section('content')
