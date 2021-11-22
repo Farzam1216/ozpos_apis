@@ -486,7 +486,7 @@ class VendorSettingController extends Controller
     $orderData = OrderSetting::firstOrCreate([
         'vendor_id' => $vendor->id,
     ], [
-        'vendor_id' => $vendor_id,
+        'vendor_id' => $vendor->id,
         'free_delivery' => 0,
         'free_delivery_distance' => 10,
         'free_delivery_amount' => 0,

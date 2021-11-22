@@ -477,7 +477,6 @@
               var   product =jsonProducts;
                var vendorId = products[0].vendor;
                   $.ajax({
-
                     type:'POST',
                     url: ( is_HTTP_X_FORWARDED_HOST == true ) ? url_HTTP+"/checkout" : url_HTTP,
                     data:{vendorId:vendorId,total:total,iTax:iTax,iCoupons:iCoupons,iDelivery:iDelivery,couponID:couponID,product:product},

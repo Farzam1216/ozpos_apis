@@ -151,7 +151,7 @@ class CustomerController extends Controller
     {
         $input = $request->all();
 
-        session(['delivery_location' => array( 'lat'=>$input['lat'], 'lang'=>$input['lang'] )]);
+        session(['delivery_location' => array('lat'=>$input['lat'],'lang'=>$input['lang'] )]);
 
         return redirect()->back()->with('success', 'Picked delivery location.');
     }
@@ -178,7 +178,6 @@ class CustomerController extends Controller
         $input['user_id'] = auth()->user()->id;
         $insert = UserAddress::create($input);
         session(['user_address' => $insert->id]);
-
         return redirect()->back()->with('success', 'Successfully added address.')->withInput();
         // return response()->json(['success'=>1]);
     }
