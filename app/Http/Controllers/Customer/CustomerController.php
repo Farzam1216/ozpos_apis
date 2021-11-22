@@ -359,7 +359,7 @@ class CustomerController extends Controller
   public function checkout(Request $request)
   {
 
-    // dd($request->all());
+     dd($request->all());
     Session::put([
       'vendorID' => $request->vendorId,'total' => $request->total, 'idTax' => $request->idTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request

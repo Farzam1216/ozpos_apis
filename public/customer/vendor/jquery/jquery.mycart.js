@@ -61,18 +61,18 @@
          localStorage.products = JSON.stringify(products);
 
       }
-      var addProduct = function (vendor,id,name, summary, price, quantity, image) {
+      var addProduct = function (vendor, id, name, summary, price, quantity, image) {
          console.log('Adding Products start.');
          console.log('Implement concept here if products exist get first and check vendor id and process whatever.');
-        //  console.log('new product vendor id');
-        //  console.log(vendor);
-        //  console.log('old products');
-        //  console.log(products.length);
+         //  console.log('new product vendor id');
+         //  console.log(vendor);
+         //  console.log('old products');
+         //  console.log(products.length);
 
-        var products = getAllProducts();
+         var products = getAllProducts();
          if (products.length > 0 && products[0].vendor != vendor) {
-          products = [];
-          clearProduct();
+            products = [];
+            clearProduct();
          }
 
          products.push({
@@ -456,48 +456,46 @@
          $("#" + idGrandTotal).data('value', parseFloat(localGrandTotal).toFixed(2));
 
 
-
          $("#" + idCheckoutCart).click(function () {
             var products = ProductManager.getAllProducts();
             var jsonProducts = JSON.stringify(products);
             let base_url = window.location.origin;
-                     ///////////// store into session ///
-         var iTotal = $("#" + idTotal).data();
-         var iTax = $("#" + idTax).data();
-         var iCoupons = $("#" + idCoupons).data();
-         var iDelivery = $("#" + idDelivery).data();
-         var iGrandTotal = $("#" + idGrandTotal).data();
+            ///////////// store into session ///
+            var iTotal = $("#" + idTotal).data();
+            var iTax = $("#" + idTax).data();
+            var iCoupons = $("#" + idCoupons).data();
+            var iDelivery = $("#" + idDelivery).data();
+            var iGrandTotal = $("#" + idGrandTotal).data();
 
 
-              var   total =iTotal.value;
-              var   iTax =iTax.value;
-              var   iCoupons =iCoupons.value;
-              var   iDelivery =iDelivery.value;
-              var   couponID =couponID;
-              var   product =jsonProducts;
-               var vendorId = products[0].vendor;
-                  $.ajax({
+            var total = iTotal.value;
+            var iTax = iTax.value;
+            var iCoupons = iCoupons.value;
+            var iDelivery = iDelivery.value;
+            var couponID = couponID;
+            var product = jsonProducts;
+            var vendorId = products[0].vendor;
 
-                    type:'POST',
-                    url: ( is_HTTP_X_FORWARDED_HOST == true ) ? url_HTTP+"/checkout" : url_HTTP,
-                    data:{vendorId:vendorId,total:total,iTax:iTax,iCoupons:iCoupons,iDelivery:iDelivery,couponID:couponID,product:product},
+            var checkoutUrl = (is_HTTP_X_FORWARDED_HOST == true) ? url_HTTP + "/checkout" : url_HTTP;
+            var checkoutForm = '<form action="'+checkoutUrl+'" method="post">';
+            checkoutForm += '<input type="text" name="vendorId" value="'+vendorId+'">';
+            checkoutForm += '<input type="text" name="total" value="'+total+'">';
+            checkoutForm += '<input type="text" name="iTax" value="'+iTax+'">';
+            checkoutForm += '<input type="text" name="iCoupons" value="'+iCoupons+'">';
+            checkoutForm += '<input type="text" name="iDelivery" value="'+iDelivery+'">';
+            checkoutForm += '<input type="text" name="couponID" value="'+couponID+'">';
+            checkoutForm += '<input type="text" name="product" value=\''+product+'\'>';
 
-                  success:function(data){
-                    console.log(data);
-                    // window.location.replace('checkout');
-                    location.href = 'checkout';
-                  }
-               });
+            $(checkoutForm).appendTo('body').submit();
 
-
-              //  if (base_url === "http://ozpos.com") {
-              //     window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
-              //     // window.location.href = url;
-              //  } else {
-              //     window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
-              //     // console.log(url);
-              //     // window.location.href = url;
-              //  }
+            //  if (base_url === "http://ozpos.com") {
+            //     window.location.href = base_url + "/customer/restaurant/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+            //     // window.location.href = url;
+            //  } else {
+            //     window.location.href = base_url + "/checkout?total=" + iTotal.value + "&idTax=" + iTax.value + "&iCoupons=" + iCoupons.value + "&iDelivery=" + iDelivery.value + "&iGrandTotal=" + iGrandTotal.value + "&coupon_id=" + couponID + "&vendorID=" + vendorId + "&product=" + jsonProducts;
+            //     // console.log(url);
+            //     // window.location.href = url;
+            //  }
 
             //alert('asdasd');
             //if (!products.length) {
