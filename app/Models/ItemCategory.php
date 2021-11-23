@@ -32,7 +32,7 @@ class ItemCategory extends Eloquent
 
     protected $table = 'item_category';
 
-    protected $fillable = ['vendor_id', 'name'];
+    protected $fillable = ['vendor_id', 'name','image'];
 
     public function SingleMenuItemCategory() {
         return $this->hasMany('App\Models\SingleMenuItemCategory');

@@ -62,7 +62,6 @@
             <!-- <a href="#0" class="search-overlay-menu-btn"><i class="icon-search-6"></i> Search</a> -->
         </div>
     </div><!-- Position -->
-
     <div class="" id="collapseMap">
         <div id="track-map" class="map"></div>
     </div><!-- End Map -->
@@ -113,7 +112,7 @@
                                 // toastr.success("Order#"+order.id+" Order has been "+order.order_status+", redirecting...");
                                 setTimeout(function() {
                                     @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                                    window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/orders");
+                                      window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/orders");
                                     @else
                                     // window.location.replace("{{ url('customer/order-history') }}");
                                     @endif
@@ -122,7 +121,7 @@
 
                             if(order.order_status == 'PICKUP' && !alerted)
                             {
-                                // toastr.success('Order#'+order.id+' status updated.', 'Status Update');
+                                //toastr.success('Order#'+order.id+' status updated.', 'Status Update');
                                 alerted = true;
                             }
                         }

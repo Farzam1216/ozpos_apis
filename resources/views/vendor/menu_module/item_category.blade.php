@@ -65,6 +65,7 @@
                         <input name="select_all" value="1" id="master" type="checkbox"/> <label for="master"></label>
                      </th>
                      <th>SR.</th>
+                     <th>Image</th>
                      <th>Name</th>
                      <th>Action</th>
                   </tr>
@@ -77,6 +78,7 @@
                            <label for="{{$item->id}}"></label>
                         </td>
                         <td>{{ $idx+1 }}</td>
+                        <td><img src="{{ asset('/images/upload/'.$item->image) }}" class="rounded" width="50" height="50" alt=""></td>
                         <td>{{$item->name}}</td>
                         <td>
                            <button type="button" onclick="updateData('vendor/item_category',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
@@ -112,6 +114,17 @@
                   </button>
                </div>
                <div class="modal-body">
+                <div class="form-group">
+                  <div class="custom-file">
+                     <input type="file" class="custom-file-input" name="image" accept=".png, .jpg, .jpeg, .svg" id="customFileLang1" lang="en">
+                     <label class="custom-file-label" for="customFileLang1">{{__('Select file')}}</label>
+                  </div>
+                  @error('image')
+                  <span class="custom_error" role="alert">
+                     <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+               </div>
                   <div class="form-group">
                      <label class="form-control-label">Name<span class="text-danger">&nbsp;*</span></label>
                      <input class="form-control @error('name') is-invalid @enderror" name="name" type="text" placeholder="{{ $title }} Name" required value="{{ old('name') }}">
@@ -148,6 +161,21 @@
                   </button>
                </div>
                <div class="modal-body">
+                <div class="text-center">
+                  <img src="" id="update_image" width="200" height="200" class="rounded-lg p-2"/>
+                </div>
+                <div class="form-group mt-3">
+                  <div class="custom-file">
+                    <input type="file" class="populate custom-file-input" name="image" accept=".png, .jpg, .jpeg, .svg"
+                           id="customFileLang" lang="en" value="{{ old('image') }}">
+                    <label class="custom-file-label" for="customFileLang">{{__('Select file')}}</label>
+                  </div>
+                  @error('image')
+                  <span class="custom_error" role="alert">
+                    <strong>{{ $message }}</strong>
+                   </span>
+                  @enderror
+                </div>
                   <div class="form-group">
                      <label class="form-control-label">Name<span class="text-danger">&nbsp;*</span></label>
                      <input class="populate form-control @error('name') is-invalid @enderror" name="name" type="text" placeholder="{{ $title }} Name" required value="{{ old('name') }}">
