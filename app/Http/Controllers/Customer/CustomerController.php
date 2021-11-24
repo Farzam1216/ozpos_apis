@@ -365,6 +365,7 @@ class CustomerController extends Controller
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
+
     $vendor = Vendor::find($request->vendorId);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();

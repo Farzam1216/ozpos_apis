@@ -74,7 +74,7 @@ var userMarker = new google.maps.Marker({
 });
 
 get(child(driverDataRef, `${driverID}`)).then((snapshot) => {
-  // console.log(snapshot.exists());
+  console.log(snapshot.exists());
     if (snapshot.exists()) {
         driverLat = snapshot.val().driverLat;
         driverLang = snapshot.val().driverLang;
@@ -156,6 +156,5 @@ function calcRoute() {
             console.log("Directions Request from " + userMarker.toUrlValue(6) + " to " + vendorMarker.toUrlValue(6) + " failed: " + status);
         }
     });
-
     // console.log('Calculated');
 }

@@ -266,8 +266,7 @@
                             </div>
                         </div>
                         <div class="bg-white border-bottom py-2">
-                            <div
-                                class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                            <div class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
                                 <div class="media align-items-center">
                                     <div class="mr-2 text-danger">&middot;</div>
                                     <div class="media-body">

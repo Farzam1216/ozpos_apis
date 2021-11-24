@@ -39,10 +39,16 @@
   </div>
 </div>
     <!-- SubHeader =============================================== -->
+
     <section class="parallax-window" id="short" data-parallax="scroll" data-image-src="{{ url('/images/restaurant_cover_blur_10.jpg')}}" data-natural-width="1400" data-natural-height="350">
         <div id="subheader">
             <div id="sub_content">
-                <h1>Live Tracking</h1>
+                <h1>Live Tracking  <span><a  href="{{ url()->previous() }}" class="btn btn-danger btn-sm">
+                  <i class="fa fa-arrow-circle-o-left"></i>
+                  <span>Back</span>
+              </a></span></h1>
+
+              </a>
             </div><!-- End sub_content -->
         </div><!-- End subheader -->
     </section><!-- End section -->
@@ -99,12 +105,12 @@
 
                     $.ajax({
                         type:'GET',
-                        @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/order/{$order->id}",
-                        @else
-                        url:"{{ url('customer/get-order', $order->id) }}",
-                        @endif
-                        data:{},
+                            @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                            url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/get-order/{{$order->id}}",
+                            @else
+                            url:"{{ url('customer/get-order', $order->id) }}",
+                            @endif
+                           data:{},
                         success:function(order){
                             order = JSON.parse(order);
                             if(order.order_status != 'ACCEPT' && order.order_status != 'PICKUP')
@@ -114,7 +120,7 @@
                                     @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                       window.location.replace("{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/orders");
                                     @else
-                                    // window.location.replace("{{ url('customer/order-history') }}");
+                                    window.location.replace("{{ url('customer/order-history') }}");
                                     @endif
                                 }, 1000);
                             }

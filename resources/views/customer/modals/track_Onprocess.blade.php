@@ -5,17 +5,24 @@
               <div class="osahan-status">
                   <!-- status complete -->
                   <div class="p-3 status-order border-bottom bg-white">
-                      <p class="small m-0"><i class="feather-calendar text-primary"></i> 16 June, 11:30AM</p>
+                      <p class="small m-0"><i class="feather-calendar text-primary"></i> 16 June, 11:30AM <span> <a  href="{{ url()->previous() }}" class="btn btn-warning btn-sm">
+                        <i class="fa fa-arrow-circle-o-left"></i>
+                        <span>Back</span>
+                    </a></span> </p>
                   </div>
                   <div class="p-3 border-bottom">
                       <div class="d-flex">
                           <h6 class="font-weight-bold">Order Status</h6>
+
                           @if($order->order_status == 'PICKUP' || $order->order_status == 'ACCEPT')
                               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                 <span class="ml-auto"><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/track-order/{{$order->id}}" class="btn btn-primary">Track on map</a></span>
                               @else
                                 <span class="ml-auto"><a href="{{ url('customer/track-order',$order->id)}}" class="btn btn-primary">Track on map</a></span>
                               @endif
+                          @elseif($order->order_status == 'DELIVERED' || $order->order_status == 'COMPLETE')
+
+                          <span class="ml-auto"><h6 class="font-weight-bold"><i class="badge badge-success">Completed</i> </h6></span>
                           @else
                               <span class="ml-auto"><h6 class="font-weight-bold" style="color: #007bff">Order Pending</h6></span>
                           @endif
