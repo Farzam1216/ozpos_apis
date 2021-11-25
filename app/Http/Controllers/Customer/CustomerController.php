@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Vendor;
+use App\Models\WorkingHours;
 use App\Rules\MatchOldPassword;
 use Auth;
 use Brian2694\Toastr\Facades\Toastr;
@@ -365,16 +366,24 @@ class CustomerController extends Controller
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
         ->product
     ]);
-
+    $data = json_decode($request->product);
+    // dd($data);
     $vendor = Vendor::find($request->vendorId);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
-  //   return response()->json([
-  //   'html' => view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'))->render()
-  // ]);
-    //  return response()->json(['vendor'=>$vendor,'userAddress'=>$userAddress,'selectedAddress'=>$selectedAddress]);
-    return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'));
+
+    $setting = GeneralSetting::first();
+    $start_time = carbon::now()->format('h:i a');
+
+    $current_day = carbon::today()->format('l');
+
+    $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day]])->first();
+     $time = json_decode($timePeriod->period_list);
+     dd($time[0]->start_time);
+    // dd($start_time >= $time[0]->start_time && $start_time <= $time[0]->end_time);
+    return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'
+                                      ,'data','timePeriod','start_time','time','current_day'));
   }
 
 

@@ -93,7 +93,7 @@
                                     <div class="col-md-3 p-0">
                                         <select name="phone_code" required class="form-control select2">
                                             @foreach ($phone_codes as $phone_code)
-                                                <option value="+{{ $phone_code->phonecode }}">+{{ $phone_code->phonecode }}</option>
+                                                <option value="+{{ $phone_code->phonecode }}" {{$phone_code->phonecode == '61' ? 'selected':  ''}}>+{{ $phone_code->phonecode }}</option>
                                             @endforeach
                                         </select>
                                     </div>
