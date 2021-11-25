@@ -204,6 +204,7 @@
       Route::get('single/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiSingleMenu']);
       Route::get('deals/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiDealsMenu']);
       Route::get('half_n_half/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiHalfnhalfMenu']);
+      Route::get('in_range/{vendor_id}', [App\Http\Controllers\Api\User\VendorController::class, 'apiInRange']);
 
    });
 
