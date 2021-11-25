@@ -380,7 +380,7 @@ class CustomerController extends Controller
 
     $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day]])->first();
      $time = json_decode($timePeriod->period_list);
-     dd($time[0]->start_time);
+    //  dd($time[0]->start_time);
     // dd($start_time >= $time[0]->start_time && $start_time <= $time[0]->end_time);
     return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'
                                       ,'data','timePeriod','start_time','time','current_day'));

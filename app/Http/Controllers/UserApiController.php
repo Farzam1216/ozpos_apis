@@ -671,7 +671,7 @@
 //        $this->sendUserNotification($bookData['user_id'],$order->id);
          app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
          $amount = $order->amount;
-         
+
          $tax = array();
          if ($vendor->admin_comission_type == 'percentage') {
             $comm = $amount * $vendor->admin_comission_value;
