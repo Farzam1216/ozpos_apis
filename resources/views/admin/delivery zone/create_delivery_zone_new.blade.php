@@ -98,7 +98,7 @@
     function initialize() {
 
         var myOptions = {
-            zoom: 13,
+            zoom: 2,
             center:{
               lat: -34.397, lng: 150.644
             },

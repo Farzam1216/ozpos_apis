@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Vendor;
+use App\Models\VendorDiscount;
 use App\Models\WorkingHours;
 use App\Rules\MatchOldPassword;
 use Auth;
@@ -378,12 +379,63 @@ class CustomerController extends Controller
 
     $current_day = carbon::today()->format('l');
 
-    $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day]])->first();
-     $time = json_decode($timePeriod->period_list);
-    //  dd($time[0]->start_time);
+    // $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day]])->first();
+    //  $time = json_decode($timePeriod->period_list);
+    // //  dd($time[0]->start_time);
+    //  $pieces = explode(" ", $time[0]->start_time);
+    //  dd($pieces[0]);
     // dd($start_time >= $time[0]->start_time && $start_time <= $time[0]->end_time);
+    // $master['vendor_discount'] = VendorDiscount::where('vendor_id', $vendor->id)->orderBy('id', 'desc')->first(['id', 'type', 'discount', 'min_item_amount', 'max_discount_amount', 'start_end_date']);
+    // $master['delivery_timeslot'] = WorkingHours::where([['type', 'delivery_time'], ['vendor_id', $vendor->id]])->get(['id', 'day_index', 'period_list', 'status']);
+    // $master['pick_up_timeslot'] = WorkingHours::where([['type', 'pick_up_time'], ['vendor_id', $vendor->id]])->get(['id', 'day_index', 'period_list', 'status']);
+    // $master['selling_timeslot'] = WorkingHours::where([['type', 'selling_timeslot'], ['vendor_id', $vendor->id]])->get(['id', 'day_index', 'period_list', 'status']);
+
+    // $now = Carbon::now();
+    // $today = Carbon::createFromFormat('H:i', '21:00');
+    // $dayname = $now->format('l');
+
+    // foreach ($master['delivery_timeslot'] as $value) {
+    //    $arr = json_decode($value['period_list'], true);
+    //    if ($dayname == $value['day_index']) {
+    //       foreach ($arr as $key => $a) {
+    //          $Hour1 = strtotime($a['start_time']);
+    //          $Hour2 = strtotime($a['end_time']);
+    //          $startofday = strtotime("01:00 am");
+
+    //          $seconds = $Hour2 - $Hour1;
+
+    //          $hours = $seconds / 60 / 60;
+
+    //          $hours = abs($hours);
+    //          $tts = date("H", $Hour1);
+
+    //          $seconds = $Hour2 - $Hour1;
+    //          $hours = $seconds / 60 / 60;
+    //          $beadded = 0;
+
+    //          if ($hours < 0) {
+
+    //             $remainDay = 24 - $tts;
+    //             $nextday = $Hour2 - $startofday;
+    //             $d = $nextday / 60 / 60;
+    //             // $d + 1;
+    //             $beadded = $remainDay + $d + 1;
+    //          } else {
+    //             $beadded = $hours;
+
+    //          }
+    //          $today = Carbon::createFromFormat('H:i', date("H:i", $Hour1));
+    //          $arr[$key]['new_start_time'] = $today->copy()->toDateTimeString();
+    //          $arr[$key]['new_end_time'] = $today->addHours($beadded)->toDateTimeString();
+
+    //       }
+    //    }
+    //    $value['period_list'] = $arr;
+    //   //  dd($arr);
+    // }
+
     return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'
-                                      ,'data','timePeriod','start_time','time','current_day'));
+                                      ,'data'));
   }
 
 

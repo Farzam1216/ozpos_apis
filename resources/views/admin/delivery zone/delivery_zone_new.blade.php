@@ -112,7 +112,7 @@
         var myLatlng = new google.maps.LatLng({{trim(explode(' ',$zone->center)[1], 'POINT()')}}, {{trim(explode(' ',$zone->center)[0], 'POINT()')}});
 
         var myOptions = {
-            zoom: 13,
+            zoom: 2,
             center: myLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
