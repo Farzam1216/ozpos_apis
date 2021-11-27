@@ -67,7 +67,6 @@
       {
          $User = auth()->user();
          $UserAddress = UserAddress::find($address_id);
-
          Log::info("aaa".$address_id);
          if($UserAddress === null)
             return response(['success' => false, 'msg' => 'Address not found.']);

@@ -81,12 +81,16 @@
    let
        is_HTTP_X_FORWARDED_HOST = false,
        url_HTTP = null;
+       url_HTTP_TAX = null;
+       url_HTTP_COUPON = null;
 
    @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
        is_HTTP_X_FORWARDED_HOST = true;
        url_HTTP = "{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}";
    @else
        url_HTTP = "{{url('customer/restaurant/checkout')}}";
+       url_HTTP_TAX = "{{url('customer/restaurant/tax')}}";
+       url_HTTP_COUPON = "{{url('customer/restaurant/coupon')}}";
    @endif
 </script>
 

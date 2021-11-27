@@ -255,6 +255,10 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                  <label for="tax">{{__('Map Api Key')}}<span class="text-danger">&nbsp;*</span></label>
+                                  <input type="text" required name="map_api_key" value="{{ $vendor->map_api_key }}" placeholder="{{__('map api key')}}" class="form-control">
+                                  </div>
                             </div>
 
                             <div class="row">

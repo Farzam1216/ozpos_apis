@@ -57,65 +57,117 @@
                         </div>
 
                         {{-- Delivery Type --}}
-                        {{-- @if ($current_day == $timePeriod->day_index && $start_time <= $time[0]->start_time && $start_time <= $time[0]->end_time)
-                            <p>true</p>
-                           @else
-                            <p>false</p>
-                          @endif --}}
-                        <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">
-                            <div class="osahan-cart-item-profile bg-white p-3">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-3 font-weight-bold">Delivery Type</h6>
-                                    <div class="row">
+                         @if ($timeSlot == "true")
+                           {{-- <p>asdasd</p> --}}
+                           <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">
+                               <div class="osahan-cart-item-profile bg-white p-3">
+                                   <div class="d-flex flex-column">
+                                       <h6 class="mb-3 font-weight-bold">Delivery Type</h6>
+                                       <div class="row">
 
-                                        <div
-                                            class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
-                                            <input type="radio" id="customRadioInline1" name="delivery_type"
-                                                form="customerPaymentForm" class="custom-control-input" checked
-                                                value="DELIVERY">
-                                            <label class="custom-control-label w-100" for="customRadioInline1">
-                                                <div>
-                                                    <div class="p-3 bg-white rounded shadow-sm w-100">
-                                                        <div class="d-flex align-items-center mb-2">
-                                                            <h6 class="mb-0">DELIVERY</h6>
-                                                            <p class="mb-0 badge badge-success ml-auto"><i
-                                                                    class="icofont-check-circled"></i> <i
-                                                                    class="fas fa-shipping-fast"></i></p>
-                                                        </div>
-                                                        {{-- <img src="{{ url('/customer/img/truck.svg') }}" width="50"
-                                                        height="29"> --}}
-                                                    </div>
+                                           <div class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
+                                               <input type="radio" id="customRadioInline1" name="delivery_type"
+                                                   form="customerPaymentForm" class="custom-control-input" checked
+                                                   value="DELIVERY">
+                                               <label class="custom-control-label w-100" for="customRadioInline1">
+                                                   <div>
+                                                       <div class="p-3 bg-white rounded shadow-sm w-100">
+                                                           <div class="d-flex align-items-center mb-2">
+                                                               <h6 class="mb-0">DELIVERY</h6>
+                                                               <p class="mb-0 badge badge-success ml-auto"><i
+                                                                       class="icofont-check-circled"></i> <i
+                                                                       class="fas fa-shipping-fast"></i></p>
+                                                           </div>
+                                                           {{-- <img src="{{ url('/customer/img/truck.svg') }}" width="50"
+                                                           height="29"> --}}
+                                                       </div>
 
-                                                </div>
-                                            </label>
-                                        </div>
+                                                   </div>
+                                               </label>
+                                           </div>
 
-                                        <div
-                                            class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
-                                            <input type="radio" id="customRadioInline2" name="delivery_type"
-                                                form="customerPaymentForm" class="custom-control-input" value="TAKE AWAY">
-                                            <label class="custom-control-label w-100" for="customRadioInline2">
-                                                <div>
-                                                    <div class="p-3 bg-white rounded shadow-sm w-100">
-                                                        <div class="d-flex align-items-center mb-2">
-                                                            <h6 class="mb-0">TAKE AWAY</h6>
-                                                            <p class="mb-0 badge badge-success ml-auto"><i
-                                                                    class="icofont-check-circled"></i> </p>
-                                                        </div>
+                                           <div
+                                               class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
+                                               <input type="radio" id="customRadioInline2" name="delivery_type"
+                                                   form="customerPaymentForm" class="custom-control-input" value="TAKE AWAY">
+                                               <label class="custom-control-label w-100" for="customRadioInline2">
+                                                   <div>
+                                                       <div class="p-3 bg-white rounded shadow-sm w-100">
+                                                           <div class="d-flex align-items-center mb-2">
+                                                               <h6 class="mb-0">TAKE AWAY</h6>
+                                                               <p class="mb-0 badge badge-success ml-auto"><i
+                                                                       class="icofont-check-circled"></i> </p>
+                                                           </div>
 
 
-                                                    </div>
+                                                       </div>
 
-                                                </div>
-                                            </label>
-                                        </div>
+                                                   </div>
+                                               </label>
+                                           </div>
 
 
-                                    </div>
+                                       </div>
 
-                                </div>
-                            </div>
-                        </div>
+                                   </div>
+                               </div>
+                           </div>
+                         @else
+
+                         <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">
+                             <div class="osahan-cart-item-profile bg-white p-3">
+                                 <div class="d-flex flex-column">
+                                     <h6 class="mb-3 font-weight-bold">Delivery Type</h6>
+                                     <div class="row">
+
+                                         <div class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
+                                             <input type="radio" id="customRadioInline1" name="delivery_type"
+                                                 form="customerPaymentForm" title="Delivery Out" class="custom-control-input" disabled
+                                                 value="DELIVERY">
+                                             <label class="custom-control-label w-100" for="customRadioInline1">
+                                                 <div>
+                                                     <div class="p-3 bg-danger rounded shadow-sm w-100">
+                                                         <div class="d-flex align-items-center mb-2">
+                                                             <h6 class="mb-0" style="color: white">DELIVERY OUT</h6>
+                                                             <p class="mb-0 badge badge-success ml-auto"><i
+                                                                     class="icofont-check-circled"></i> <i
+                                                                     class="fas fa-shipping-fast"></i></p>
+                                                         </div>
+                                                         {{-- <img src="{{ url('/customer/img/truck.svg') }}" width="50"
+                                                         height="29"> --}}
+                                                     </div>
+
+                                                 </div>
+                                             </label>
+                                         </div>
+
+                                         <div
+                                             class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
+                                             <input type="radio" id="customRadioInline2" name="delivery_type"
+                                                 form="customerPaymentForm" class="custom-control-input" value="TAKE AWAY" checked disabled>
+                                             <label class="custom-control-label w-100" for="customRadioInline2">
+                                                 <div>
+                                                     <div class="p-3 bg-white rounded shadow-sm w-100">
+                                                         <div class="d-flex align-items-center mb-2">
+                                                             <h6 class="mb-0">TAKE AWAY</h6>
+                                                             <p class="mb-0 badge badge-success ml-auto"><i
+                                                                     class="icofont-check-circled"></i> </p>
+                                                         </div>
+
+
+                                                     </div>
+
+                                                 </div>
+                                             </label>
+                                         </div>
+
+
+                                     </div>
+
+                                 </div>
+                             </div>
+                         </div>
+                          @endif
 
                         <div class="accordion mb-3 rounded shadow-sm bg-white overflow-hidden" id="accordionExample">
                             <div class="osahan-card bg-white overflow-hidden">
@@ -284,80 +336,7 @@
                                     </div>
                                 </div>
                             @endforeach
-                            {{-- <div
-                                class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-                                <div class="media align-items-center">
-                                    <div class="mr-2 text-danger">&middot;</div>
-                                    <div class="media-body">
-                                        <p class="m-0">Methi Chicken Dry
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="count-number float-right"><button type="button"
-                                            class="btn-sm left dec btn btn-outline-secondary"> <i
-                                                class="feather-minus"></i> </button><input class="count-number-input"
-                                            type="text" readonly="" value="2"><button type="button"
-                                            class="btn-sm right inc btn btn-outline-secondary"> <i
-                                                class="feather-plus"></i> </button></span>
-                                    <p class="text-gray mb-0 float-right ml-2 text-muted small">$628</p>
-                                </div>
-                            </div>
-                            <div
-                                class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-                                <div class="media align-items-center">
-                                    <div class="mr-2 text-danger">&middot;</div>
-                                    <div class="media-body">
-                                        <p class="m-0">Reshmi Kebab
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="count-number float-right"><button type="button"
-                                            class="btn-sm left dec btn btn-outline-secondary"> <i
-                                                class="feather-minus"></i> </button><input class="count-number-input"
-                                            type="text" readonly="" value="2"><button type="button"
-                                            class="btn-sm right inc btn btn-outline-secondary"> <i
-                                                class="feather-plus"></i> </button></span>
-                                    <p class="text-gray mb-0 float-right ml-2 text-muted small">$628</p>
-                                </div>
-                            </div>
-                            <div
-                                class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-                                <div class="media align-items-center">
-                                    <div class="mr-2 text-success">&middot;</div>
-                                    <div class="media-body">
-                                        <p class="m-0">Lemon Cheese Dry
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="count-number float-right"><button type="button"
-                                            class="btn-sm left dec btn btn-outline-secondary"> <i
-                                                class="feather-minus"></i> </button><input class="count-number-input"
-                                            type="text" readonly="" value="2"><button type="button"
-                                            class="btn-sm right inc btn btn-outline-secondary"> <i
-                                                class="feather-plus"></i> </button></span>
-                                    <p class="text-gray mb-0 float-right ml-2 text-muted small">$628</p>
-                                </div>
-                            </div> --}}
-                            {{-- <div class="gold-members d-flex align-items-center justify-content-between px-3 py-2">
-                                <div class="media align-items-center">
-                                    <div class="mr-2 text-success">&middot;</div>
-                                    <div class="media-body">
-                                        <p class="m-0">Rara Paneer</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="count-number float-right"><button type="button"
-                                            class="btn-sm left dec btn btn-outline-secondary"> <i
-                                                class="feather-minus"></i> </button><input class="count-number-input"
-                                            type="text" readonly="" value="2"><button type="button"
-                                            class="btn-sm right inc btn btn-outline-secondary"> <i
-                                                class="feather-plus"></i> </button></span>
-                                    <p class="text-gray mb-0 float-right ml-2 text-muted small">$628</p>
-                                </div>
-                            </div> --}}
+
                         </div>
                         {{-- <div class="bg-white p-3 py-3 border-bottom clearfix">
                             <div class="input-group-sm mb-2 input-group">

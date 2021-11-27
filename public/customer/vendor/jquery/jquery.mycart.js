@@ -302,14 +302,16 @@
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
          });
-         console.log(base_url);
-         if (base_url === "http://ozpos.com") {
-            var originalUrl = base_url + "/customer/restaurant/tax";
-            // console.log(originalUrl);
-         } else {
-            var originalUrl = base_url + '/tax';
-            // console.log(originalUrl);
-         }
+        //  let url_HTTPs = "/customer/restaurant/tax";
+        //  console.log(base_url);
+        var originalUrl = (is_HTTP_X_FORWARDED_HOST == true) ? url_HTTP + "/tax" : url_HTTP_TAX;
+        //  if (base_url === "http://ozpos.com") {
+        //     var originalUrl = base_url + "/customer/restaurant/tax";
+        //     // console.log(originalUrl);
+        //  } else {
+        //     var originalUrl = base_url + '/tax';
+        //     // console.log(originalUrl);
+        //  }
 
          $.ajax({
 
@@ -335,14 +337,11 @@
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
             });
-            console.log(originalUrl);
-            if (base_url === "http://ozpos.com") {
-               var originalUrl = base_url + "/customer/restaurant/coupon";
-               // console.log(originalUrl);
-            } else {
-               var originalUrl = base_url + '/singleCoupon';
+            // console.log(originalUrl);
+            // let url_HTTPs = "/customer/restaurant/coupon";
+            //  console.log(base_url);
+            var originalUrl = (is_HTTP_X_FORWARDED_HOST == true) ? url_HTTP + "/singleCoupon" : url_HTTP_COUPON;
 
-            }
             var coupon = $("#" + idCouponInput).val();
             $.ajax({
                url: originalUrl,
