@@ -314,7 +314,6 @@
         //  }
 
          $.ajax({
-
             url: originalUrl,
             method: "GET",
             success: function (data) {

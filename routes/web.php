@@ -451,15 +451,18 @@
         Route::get('/tax', [CustomerController::class, 'applyTax'])->name('tax');
         Route::post('book-order', [App\Http\Controllers\Customer\CustomerController::class, 'bookOrder'])->name('payment');
         Route::get('/order/success', [App\Http\Controllers\Customer\CustomerController::class, 'completeBookOrder'])->name('order');
+
       });
 
     });
+
+
     /////    /* Single Restaurant Routes */
     Route::middleware(['auth'])->prefix('customer')->name('restaurant.')->group(function () {
       Route::get('/restaurants', [App\Http\Controllers\Customer\RestaurantController::class, 'index'])->name('index');
       Route::get('/restaurant/{id}', [App\Http\Controllers\Customer\RestaurantController::class, 'index1'])->name('index1');
       Route::get('/restaurant/{id}/menu', [App\Http\Controllers\Customer\RestaurantController::class, 'menu'])->name('menu');
-
+      Route::get('/restaurant/{id}/itemCategory/{category_id}',[App\Http\Controllers\Customer\RestaurantController::class,'itemCategory'])->name('itemCategory');
     });
 
     Route::prefix('customer/restaurant/{id}')->name('restaurant.')->group(function () {

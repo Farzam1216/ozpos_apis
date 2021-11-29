@@ -29,12 +29,12 @@ class DeliveryZoneNewController extends Controller
                                         // dd($zone);
           if(isset($zone))
           {
-            return view('admin.delivery zone.delivery_zone_new',compact('zone'));
+            return view('admin.delivery zone.delivery_zone_new',compact('zone','vendor'));
 
           }
           else
           {
-            return view('admin.delivery zone.create_delivery_zone_new');
+            return view('admin.delivery zone.create_delivery_zone_new',compact('vendor'));
 
           }
     }

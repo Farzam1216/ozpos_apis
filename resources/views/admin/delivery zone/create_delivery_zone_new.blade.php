@@ -56,7 +56,7 @@
 </section>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=drawing&v=3"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{$vendor->map_api_key}}&libraries=drawing&v=3"></script>
 
 <script>
     var map; // Global declaration of the map

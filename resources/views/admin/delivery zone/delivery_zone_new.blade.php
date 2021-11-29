@@ -57,8 +57,8 @@
     </div>
 </section>
 
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c&libraries=drawing&v=3"></script>
+{{-- @dd($vendor->map_api_key); --}}
+<script src="https://maps.googleapis.com/maps/api/js?key={{$vendor->map_api_key}}&libraries=drawing&v=3"></script>
 <script>
     auto_grow();
     function auto_grow() {
