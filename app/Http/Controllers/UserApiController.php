@@ -413,6 +413,16 @@
          return response(['success' => true, 'data' => $master]);
       }
 
+      public function apiSimpleVendor($vendor_id)
+      {
+         $Vendor = Vendor::where('id', $vendor_id)->first();
+         if ($Vendor->tax == null) {
+            $Vendor->tax = strval(5);
+         }
+         
+         return response(['success' => true, 'data' => $Vendor]);
+      }
+
       /**
        * @throws \JsonException
        */
