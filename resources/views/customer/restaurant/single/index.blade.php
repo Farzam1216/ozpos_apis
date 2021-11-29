@@ -18,7 +18,7 @@
             @include('customer.restaurant.single.modals.addons')
          @else
             <span class="float-right">
-               <button class="btn btn-primary btn-sm add-cart-btn" data-vendor="{{ $rest->id }}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="summary 2" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">Add</button>
+               <button class="btn btn-primary btn-sm add-cart-btn" data-vendor="{{ $rest->id }}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}" data-summary="{ 'category':'SINGLE', 'menu': [ { 'id':{{ $Menu->id }}, 'name':'{{ ucwords($Menu->name) }}', 'price':'{{ $Menu->price }}', 'addons':[] } ], 'size': null, 'total_price': '{{ $Menu->price }}' }" data-price="{{ $Menu->price }}" data-quantity="1" data-image="{{ $Menu->image }}">Add</button>
             </span>
          @endif
          <div class="media">

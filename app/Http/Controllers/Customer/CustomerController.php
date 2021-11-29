@@ -287,8 +287,8 @@ class CustomerController extends Controller
         file_get_contents(
           $googleUrl,
         );
-      $googleDistance = json_decode($googleDistance);
-
+       \Log::critical($googleDistance);
+       $googleDistance = json_decode($googleDistance);
       $orderSettting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 0;
 
 

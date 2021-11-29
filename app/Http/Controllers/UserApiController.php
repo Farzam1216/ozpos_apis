@@ -572,6 +572,7 @@
              file_get_contents(
                  $googleUrl,
              );
+         \Log::critical($googleDistance);
          $googleDistance = json_decode($googleDistance);
 
          $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 'no route found';
