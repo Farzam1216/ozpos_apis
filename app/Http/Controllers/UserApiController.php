@@ -583,6 +583,16 @@
          return response(['success' => true, 'data' => $Setting]);
       }
 
+      public function apiVendorStatus($vendor_id)
+      {
+         $Vendor = Vendor::select('id', 'vendor_status', 'delivery_status', 'pickup_status')->find($vendor_id)->makeHidden('image', 'vendor_logo', 'cuisine', 'rate', 'review');
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'vendor not found.']);
+   
+         return response(['success' => true, 'data' => $Vendor]);
+      }
+
       public function apiPaymentSetting()
       {
          $setting = PaymentSetting::first();
