@@ -36,7 +36,7 @@ class RestaurantController extends Controller
         $vendors =  Vendor::all();
         $userAddress = UserAddress::where('user_id', $user->id)->get();
         $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
-        // return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
+        //return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress', 'vendors'));
 
 
     $User = auth()->user();

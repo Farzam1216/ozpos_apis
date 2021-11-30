@@ -40,6 +40,9 @@
    </style>
 </head>
 <style>
+  html{
+  scroll-behavior: smooth;
+}
     #overlay {
         position: fixed;
         z-index: 99999;
@@ -330,7 +333,7 @@
          data: {address_id: address_id},
          success: function (data) {
 
-            window.location.reload();
+            window.location.href = "{{route('restaurant.index')}}";
          }
       });
 

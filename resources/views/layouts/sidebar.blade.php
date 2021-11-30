@@ -366,6 +366,7 @@
                     </a>
                     <ul class="dropdown-menu" style="display: none;">
                         <li class="{{ $activePage == 'delivery_timeslot' ? 'active' : ''}}"><a href="{{ url('vendor/vendor/delivery_timeslot') }}">{{__('delivery timeslots')}}</a></li>
+                        <li class="{{ $activePage == 'vendor_timeslot' ? 'active' : ''}}"><a href="{{ url('vendor/vendor/vendor_timeslot') }}">{{__('vendor timeslots')}}</a></li>
                         <li class="{{ $activePage == 'pickup_timeslot' ? 'active' : ''}}"><a href="{{ url('vendor/vendor/pickup_timeslot') }}">{{__('Pick up timeslots')}}</a></li>
                         <li class="{{ $activePage == 'selling_timeslot' ? 'active' : ''}}"><a href="{{ url('vendor/vendor/selling_timeslot') }}">{{__('selling timeslots')}}</a></li>
                     </ul>

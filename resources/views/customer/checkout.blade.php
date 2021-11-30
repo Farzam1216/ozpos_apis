@@ -188,7 +188,7 @@
 
                                         <div class="payment_select nomargin form-check">
                                             <label class="form-check-label">
-                                                <input type="radio" value="COD" name="payment_type"
+                                                <input type="radio" value="COD" name="payment_type" id="cashOnDelivery"
                                                     class=".icheck form-check-input" form="customerPaymentForm" checked>
                                                 <b>Cash on Delivery</b></label>
                                             <i class="icon_wallet"></i>
@@ -221,7 +221,7 @@
                                         <div class="payment_select form-check">
                                             <label class="form-check-label"><input type="radio" value="STRIPE"
                                                     name="payment_type" class=".icheck form-check-input"
-                                                    form="customerPaymentForm">
+                                                    form="customerPaymentForm" id="stripe-check">
                                                 <b>Stripe</b></label>
                                             <i class="icon_creditcard"></i>
                                         </div>
@@ -380,8 +380,11 @@
                                 value="{{ Session::get('iCoupons') }}">
                         </div>
                         <div class="p-3">
-                            <button type="button" class="btn btn-success btn-block btn-lg" id="submit_final_order"
-                                form="customerPaymentForm">PAY
+                            <button type="button" class="btn btn-success btn-block btn-lg cashPay" id="submit_final_order"
+                                form="customerPaymentForm" >Cash on Delivery
+                                ${{ Session::get('iGrandTotal') }}<i class="feather-arrow-right"></i></button>
+                            <button type="button" class="btn btn-success btn-block btn-lg stripePay" id="submit_final_order"
+                                form="customerPaymentForm" style="display: none">Stripe
                                 ${{ Session::get('iGrandTotal') }}<i class="feather-arrow-right"></i></button>
                         </div>
                     </div>
@@ -402,6 +405,29 @@
     {!! Toastr::message() !!}
 
     <script>
+
+       $(document).ready(function(){
+
+         $('.form-check-input').click(function() {
+            if($("#stripe-check").is(':checked'))
+              {
+                console.log($("#stripe-check").is(':checked'));
+
+                 $(".cashPay").hide();
+                 $(".stripePay").show();
+              }
+              else if($("#cashOnDelivery").is(":checked"))
+              {
+
+                 $(".cashPay").show();
+                 $(".stripePay").hide();
+              }
+            });
+
+      });
+    </script>
+    <script>
+
         $(document).on('click', '#submit_final_order', function(e) {
 
 
@@ -495,7 +521,7 @@
                 success: function(result) {
                     if (result.success == true) {
                         console.log(result);
-                        toastr.success("Payment was successfull, redirecting...");
+                        toastr.warning("Payment was Pendding, redirecting...");
 
                         setTimeout(function() {
 

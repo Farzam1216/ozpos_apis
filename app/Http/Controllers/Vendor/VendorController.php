@@ -150,7 +150,74 @@ class VendorController extends Controller
     {
         //
     }
+      public function vendor_timeslot()
+      {
+        $user_id = auth()->user()->id;
+        $vendor = Vendor::where('user_id', $user_id)->first();
+        // $setting = GeneralSetting::first();
+        // $start_time = carbon::parse($setting["start_time"])->format('h:i a');
+        // $end_time = carbon::parse($setting["end_time"])->format('h:i a');
+        // $data = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time']])->get();
+        return view('vendor.vendor.edit_vendor_time', compact('vendor'));
+      }
+      public function vendor_status(Request $request)
+    {
+      //  dd($request);
+        $vendor = Vendor::find($request->id);
 
+        if(isset($request->vendor_status))
+        {
+             if($vendor->vendor_status == 0)
+             {
+                $vendor->vendor_status = 1;
+                $vendor->save();
+                return response(['success' => true]);
+             }
+             else if($vendor->vendor_status == 1)
+             {
+              $vendor->vendor_status = 0;
+              $vendor->pickup_status = 0;
+              $vendor->delivery_status = 0;
+              $vendor->save();
+              return response(['success' => true]);
+             }
+        }
+
+        /// Delivery Status
+        if(isset($request->delivery_status))
+        {
+             if($vendor->delivery_status == 0)
+             {
+                $vendor->delivery_status = 1;
+                $vendor->save();
+                return response(['success' => true]);
+             }
+             else if($vendor->delivery_status == 1)
+             {
+              $vendor->delivery_status = 0;
+              $vendor->save();
+              return response(['success' => true]);
+             }
+        }
+        /// Pickup status
+        if(isset($request->pickup_status))
+        {
+             if($vendor->pickup_status == 0)
+             {
+                $vendor->pickup_status = 1;
+                $vendor->save();
+                return response(['success' => true]);
+             }
+             else if($vendor->pickup_status == 1)
+             {
+              $vendor->pickup_status = 0;
+
+              $vendor->save();
+              return response(['success' => true]);
+             }
+        }
+
+    }
     public function delivery_timeslot()
     {
         $user_id = auth()->user()->id;

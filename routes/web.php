@@ -278,6 +278,7 @@
    Route::post('vendor/check_otp', [VendorSettingController::class, 'check_otp']);
 
    Route::middleware(['auth'])->prefix('vendor')->group(function () {
+
       Route::get('user_report', [App\Http\Controllers\Vendor\ReportController::class, 'user_report']);
       Route::post('user_report', [App\Http\Controllers\Vendor\ReportController::class, 'user_report']);
 
@@ -298,6 +299,8 @@
       Route::get('vendor/vendor_finance_details', [App\Http\Controllers\Vendor\VendorDiscountController::class, 'vendor_finance_details']);
       Route::get('vendor/delivery_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'delivery_timeslot']);
       Route::get('vendor/pickup_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'pickup_timeslot']);
+      Route::get('vendor/vendor_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'vendor_timeslot']);
+      Route::post('vendor_status', [App\Http\Controllers\Vendor\VendorController::class, 'vendor_status']);
 
       Route::get('vendor/selling_timeslot', [App\Http\Controllers\Vendor\VendorController::class, 'selling_timeslot']);
       Route::get('order/transaction/{duration}', [App\Http\Controllers\Vendor\VendorController::class, 'transaction']);
@@ -311,7 +314,7 @@
       Route::post('add_vendor_bank_details', [App\Http\Controllers\Vendor\VendorController::class, 'add_vendor_bank_details']);
       Route::post('edit_vendor_bank_details/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'edit_vendor_bank_details']);
 
-//    Route::get('twillo',[App\Http\Controllers\Vendor\VendorController::class,'twillo']);
+  //Route::get('twillo',[App\Http\Controllers\Vendor\VendorController::class,'twillo']);
 
       Route::post('cart', [App\Http\Controllers\Vendor\OrderController::class, 'cart']);
       Route::get('DispCustimization/{submenu_id}', [App\Http\Controllers\Vendor\OrderController::class, 'custimization']);
@@ -428,7 +431,6 @@
 
      ///// Logout////
      Route::get('/logout', [App\Http\Controllers\Customer\CustomerController::class, 'logout'])->name('logout');
-
      Route::get('/delivery-location', [CustomerController::class, 'deliveryLocation'])->name('delivery.location.index');
      Route::match(['post', 'get'], '/delivery-location/save', [CustomerController::class, 'storeDeliveryLocation'])->name('delivery.location.store');
      Route::post('address-store', [App\Http\Controllers\Customer\AddressController::class, 'addAddress'])->name('address.store');

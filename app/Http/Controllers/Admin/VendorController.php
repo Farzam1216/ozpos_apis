@@ -680,4 +680,5 @@ class VendorController extends Controller
         }
         return response(['success' => true , 'data' => $settle , 'currency' => $currency]);
     }
+
 }

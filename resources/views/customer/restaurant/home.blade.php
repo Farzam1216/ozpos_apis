@@ -85,12 +85,43 @@ img {vertical-align: middle;}
 {
   height: auto ! important;
 }
+.carousel-inner img {
+    width: 100%;
+
+  }
 </style>
 @section('content')
 
-<div class="offer-section py-4">
-  <div class="container position-relative">
-     <img alt="#" src="{{ $rest->image }}" class="restaurant-pic">
+<div id="demo" class="carousel slide" data-ride="carousel">
+
+  <!-- Indicators -->
+  <ul class="carousel-indicators">
+    @foreach ($slider as $key=>$slid)
+      <li data-target="#demo" data-slide-to="{{$key}}" class="active dot" ></li>
+    @endforeach
+  </ul>
+
+  <!-- The slideshow -->
+  <div class="carousel-inner">
+
+    @foreach ($slider as $slid)
+    <div class="carousel-item active">
+      <div class="mySlides fadess">
+      <img src="{{asset($slid->image)}}" alt="Los Angeles" width="1100" height="500">
+    </div>
+    </div>
+    @endforeach
+    {{-- <div class="carousel-item">
+      <img src="chicago.jpg" alt="Chicago" width="1100" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="ny.jpg" alt="New York" width="1100" height="500">
+    </div> --}}
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+
      <div class="pt-3 text-white">
         <h2 class="font-weight-bold">{{ $rest->name }}</h2>
         <p class="text-white m-0">{{ $rest->address }}</p>
@@ -106,9 +137,38 @@ img {vertical-align: middle;}
                  @endfor
               </li>
            </ul>
-           {{--                    <p class="label-rating text-white ml-2 small"> (245 Reviews)</p>--}}
         </div>
      </div>
+  </a>
+  {{-- <a class="carousel-control-prev" href="#demo" data-slide="prev">
+    <span ><h2 class="font-weight-bold">{{ $rest->name }}</h2>
+      <p class="text-white m-0">{{ $rest->address }}</p> </span>
+  </a> --}}
+  <a class="carousel-control-next" href="#demo" data-slide="next">
+    <span style="background-color: white"><img alt="#" src="{{ $rest->image }}" class="restaurant-pic"></span>
+  </a>
+</div>
+
+{{-- <div class="offer-section py-4"> --}}
+  {{-- <div class="container position-relative"> --}}
+     {{-- <img alt="#" src="{{ $rest->image }}" class="restaurant-pic">
+     <div class="pt-3 text-white">
+        <h2 class="font-weight-bold">{{ $rest->name }}</h2>
+        <p class="text-white m-0">{{ $rest->address }}</p>
+        <div class="rating-wrap d-flex align-items-center mt-2">
+           <ul class="rating-stars list-unstyled">
+              <li>
+                 @for ($i = 0; $i < $rest->rate; $i++)
+                    <i class="feather-star text-warning"></i>
+                 @endfor
+
+                 @for ($i = 5; $i > $rest->rate; $i--)
+                    <i class="feather-star"></i>
+                 @endfor
+              </li>
+           </ul>
+        </div>
+     </div> --}}
      {{--            <div class="pb-4">--}}
      {{--                <div class="row">--}}
      {{--                    <div class="col-6 col-md-2">--}}
@@ -121,11 +181,11 @@ img {vertical-align: middle;}
      {{--                    </div>--}}
      {{--                </div>--}}
      {{--            </div>--}}
-  </div>
-</div>
+  {{-- </div>
+</div> --}}
     <div class="osahan-home-page">
 
-    <div class="container">
+    {{-- <div class="container">
     <div class="slideshow-container">
       @foreach ($slider as $slid)
       <div class="mySlides fadess">
@@ -142,7 +202,7 @@ img {vertical-align: middle;}
         <span class="dot"></span>
         @endforeach
       </div>
-      </div>
+      </div> --}}
 
 
       <!-- Filters -->
@@ -356,7 +416,6 @@ img {vertical-align: middle;}
                                  @else
                                  <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
                                 </a>
-
                                  @endif
                                 </h6>
                                 {{-- <p class="text-gray mb-1 small">• North • Hamburgers</p>
