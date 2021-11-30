@@ -32,8 +32,10 @@
   //  Route::get('vendor/menuCategory','Api\Vendor\MenuModule\MenuCategoryController@menuCategory');
 
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
-
-
+   
+      Route::get('status', [App\Http\Controllers\Api\Vendor\VendorSettingApiController::class, 'status_get']);
+      Route::post('status', [App\Http\Controllers\Api\Vendor\VendorSettingApiController::class, 'status_update']);
+      
       Route::get('addon', [App\Http\Controllers\Api\Vendor\MenuModule\AddonController::class, 'indexAll']);
 
       Route::resources([
@@ -156,6 +158,7 @@
    /******  User ********/
    Route::middleware('auth:api')->group(function () {
       Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
+      Route::get('vendor_status/{vendor_id}', 'UserApiController@apiVendorStatus');
       Route::post('book_order', 'UserApiController@apiBookOrder');
       Route::get('show_order', 'UserApiController@apiShowOrder');
       Route::post('update_user', 'UserApiController@apiUpdateUser');
@@ -219,6 +222,7 @@
    Route::get('cuisine', 'UserApiController@apiCuisine');
    Route::post('vendor', 'UserApiController@apiVendor');
    Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
+   Route::get('simple_vendor/{vendor_id}', 'UserApiController@apiSimpleVendor');
    Route::get('single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'UserApiController@apiSingleVendorRetrieveSizes');
    Route::get('single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'UserApiController@apiSingleVendorRetrieveSize');
    Route::get('menu/{vendor_id}', 'UserApiController@apiMenu');

@@ -413,6 +413,16 @@
          return response(['success' => true, 'data' => $master]);
       }
 
+      public function apiSimpleVendor($vendor_id)
+      {
+         $Vendor = Vendor::where('id', $vendor_id)->first();
+         if ($Vendor->tax == null) {
+            $Vendor->tax = strval(5);
+         }
+         
+         return response(['success' => true, 'data' => $Vendor]);
+      }
+
       /**
        * @throws \JsonException
        */
@@ -572,6 +582,7 @@
              file_get_contents(
                  $googleUrl,
              );
+         \Log::critical($googleDistance);
          $googleDistance = json_decode($googleDistance);
 
          $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 'no route found';
@@ -580,6 +591,16 @@
          $Setting['tax'] = $Vendor->tax;
 
          return response(['success' => true, 'data' => $Setting]);
+      }
+
+      public function apiVendorStatus($vendor_id)
+      {
+         $Vendor = Vendor::select('id', 'vendor_status', 'delivery_status', 'pickup_status')->find($vendor_id)->makeHidden('image', 'vendor_logo', 'cuisine', 'rate', 'review');
+   
+         if (!$Vendor)
+            return response(['success' => false, 'msg' => 'vendor not found.']);
+   
+         return response(['success' => true, 'data' => $Vendor]);
       }
 
       public function apiPaymentSetting()
