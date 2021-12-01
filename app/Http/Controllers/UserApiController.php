@@ -11,6 +11,7 @@
    use App\Models\Cuisine;
    use App\Models\DeliveryPerson;
    use App\Models\HalfNHalfMenu;
+   use App\Models\ItemCategory;
    use App\Models\ItemSize;
    use App\Models\MenuCategory;
    use App\Models\WalletPayment;
@@ -262,7 +263,7 @@
       public function apiSingleVendor($vendor_id)
       {
          $master = array();
-         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax_type', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'lat', 'lang', 'cuisine_id'])->makeHidden(['vendor_logo']);
+         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first();
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
          }
@@ -285,6 +286,9 @@
 //        $master['menu'] = $menus;
          $MenuCategory =
              MenuCategory::with([
+                 'SingleMenu' => function($query) {
+                    $query->where('single_menu.status',1);
+                 },
                  'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
                  'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
                  'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
@@ -297,47 +301,6 @@
                  ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
                  ->get();
 
-//         $MenuCategoryFormatted = array();
-//         foreach($MenuCategory as $MenuCategoryValue)
-//         {
-//            $SingleMenuArr = [];
-//            foreach($MenuCategoryValue->SingleMenu as $SingleMenuIDX=>$SingleMenu)
-//            {
-//               $GroupMenuAddonArr = [];
-//               $MenuSizeArr = [];
-//               foreach($SingleMenu->Menu->GroupMenuAddon as $GroupMenuAddon)
-//               {
-//                  foreach($GroupMenuAddonArr as $GroupMenuAddonFormatted)
-//                  {
-//                     if($GroupMenuAddon->addon_category_id === $GroupMenuAddonFormatted->addon_category_id)
-//                        continue 2;
-//                  }
-//                  array_push($GroupMenuAddonArr, $GroupMenuAddon );
-//               }
-//               foreach($SingleMenu->Menu->MenuSize as $MenuSize)
-//               {
-//                  $GroupMenuSizeAddonArr = [];
-//                  foreach($MenuSize->GroupMenuAddon as $GroupMenuSizeAddon)
-//                  {
-//                     foreach($GroupMenuSizeAddonArr as $GroupMenuSizeAddonFormatted)
-//                     {
-//                        if($GroupMenuAddon->addon_category_id === $GroupMenuSizeAddonFormatted->addon_category_id)
-//                           continue 2;
-//                     }
-//                     array_push($GroupMenuSizeAddonArr, $GroupMenuSizeAddon );
-//                  }
-//                  $MenuSize->GroupMenuAddon = $GroupMenuSizeAddonArr;
-//                  array_push($MenuSizeArr, $MenuSize );
-//               }
-//               $SingleMenu->Menu->GroupMenuAddon = $GroupMenuAddonArr;
-//               $SingleMenu->Menu->MenuSize = $MenuSizeArr;
-//               array_push($SingleMenuArr, $SingleMenu );
-//            }
-//            $MenuCategoryValue->SingleMenu = $SingleMenuArr;
-//            array_push($MenuCategoryFormatted, $MenuCategoryValue);
-//         }
-
-//         $master['MenuCategory'] = $MenuCategoryFormatted;
          $master['MenuCategory'] = $MenuCategory;
          $master['vendor_discount'] = VendorDiscount::where('vendor_id', $vendor_id)->orderBy('id', 'desc')->first(['id', 'type', 'discount', 'min_item_amount', 'max_discount_amount', 'start_end_date']);
          $master['delivery_timeslot'] = WorkingHours::where([['type', 'delivery_time'], ['vendor_id', $vendor_id]])->get(['id', 'day_index', 'period_list', 'status']);
@@ -409,7 +372,7 @@
             }
             $pvalue['period_list'] = $parr;
          }
-         Log::info(json_encode(['success' => true, 'data' => $master], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+//         Log::info(json_encode(['success' => true, 'data' => $master], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $master]);
       }
 
@@ -421,6 +384,13 @@
          }
          
          return response(['success' => true, 'data' => $Vendor]);
+      }
+
+      public function apiItemCategoriesVendor($vendor_id)
+      {
+         $ItemCategory = ItemCategory::where('vendor_id', $vendor_id)->get();
+         
+         return response(['success' => true, 'data' => $ItemCategory]);
       }
 
       /**
@@ -437,7 +407,7 @@
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where('vendor_id', $vendor_id)->get();
 
-         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+//         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
 
@@ -457,7 +427,7 @@
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where([['id', $item_size_id], ['vendor_id', $vendor_id]])->first();
 
-         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+//         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
 
