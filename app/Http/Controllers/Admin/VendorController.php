@@ -68,6 +68,7 @@ class VendorController extends Controller
     */
     public function store(Request $request)
     {
+      // dd($request->all());
         $data = $request->all();
         $request->validate([
             'name' => 'required',
@@ -138,6 +139,11 @@ class VendorController extends Controller
         $data['isExplorer'] = $request->has('isExplorer') ? 1 : 0;
         $data['vendor_own_driver'] = $request->has('vendor_own_driver') ? 1 : 0;
         $data['user_id'] = $user->id;
+        // $splitPhone = intval(ltrim($request->contact, '0'));
+        // // dd($splitPhone);
+        // $phone = $request->phone_code."".$splitPhone;
+        // $split = explode('+', $phone);
+        $data['contact'] =$request->contact;
         $vendor = Vendor::create($data);
         $role_id = Role::where('title','vendor')->orWhere('title','Vendor')->first();
         $user->roles()->sync($role_id);
@@ -244,9 +250,14 @@ class VendorController extends Controller
             'time_slot' => 'required',
         ]);
         $data = $request->all();
+
         $data['cuisine_id'] = implode(',',$request->cuisine_id);
         $user = User::find($vendor->user_id);
-        $user->phone_code = $request->phone_code;
+        // $splitPhone = intval(ltrim($request->contact, '0'));
+        // $phone = $request->phone_code."".$splitPhone;
+        // $split = explode('+', $request->contact);
+        // $data['contact'] =$split[1];
+        // $user->phone_code = $request->phone_code;
         $user->phone = $request->phone;
         $user->save();
         if ($file = $request->hasfile('image'))

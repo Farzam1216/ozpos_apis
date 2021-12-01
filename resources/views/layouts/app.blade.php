@@ -54,6 +54,15 @@
             --site_color: <?php echo $color; ?>;
             --hover_color: <?php echo $color.'c7'; ?>;
         }
+        .vendorStatus {
+    margin-right: 50px;
+
+}
+span.vendorColor {
+    color: white;
+    margin-right: 13px;
+}
+
     </style>
 
     <!-- Template CSS -->

@@ -76,13 +76,13 @@
                             <div class="col-md-6 mb-5">
                                 <label for="{{__('contact')}}">{{__('Contact')}}<span class="text-danger">&nbsp;*</span></label>
                                 <div class="row">
-                                    <div class="col-md-3 p-0">
+                                    {{-- <div class="col-md-3 p-0">
                                         <select name="phone_code" required class="form-control select2">
                                             @foreach ($phone_codes as $phone_code)
                                                 <option value="+{{ $phone_code->phonecode }}" {{ $user->phone_code == $phone_code->phonecode ? 'selected' : '' }}>+{{ $phone_code->phonecode }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-9 p-0">
                                         <input type="number" value="{{ $vendor->contact }}" name="contact" value="{{ old('contact') }}" required class="form-control  @error('contact') is_invalide @enderror">
                                         @error('contact')
@@ -257,7 +257,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                   <label for="tax">{{__('Map Api Key')}}<span class="text-danger">&nbsp;*</span></label>
-                                  <input type="text" required name="map_api_key" value="{{ $vendor->map_api_key }}" placeholder="{{__('map api key')}}" class="form-control">
+                                  <input type="text"  name="map_api_key" value="{{ $vendor->map_api_key }}" placeholder="{{__('map api key')}}" class="form-control">
                                   </div>
                             </div>
 

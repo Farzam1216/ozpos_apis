@@ -83,13 +83,13 @@
                         <div class="col-md-6 mb-5">
                             <label for="{{__('contact')}}">{{__('Contact')}}<span class="text-danger">&nbsp;*</span></label>
                             <div class="row">
-                                <div class="col-md-3 p-0">
+                                {{-- <div class="col-md-3 p-0">
                                     <select name="phone_code" required class="form-control select2">
                                         @foreach ($phone_codes as $phone_code)
                                             <option value="+{{ $phone_code->phonecode }}">+{{ $phone_code->phonecode }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-9 p-0">
                                     <input type="number" value="{{ old('contact') }}" name="contact" value="{{ old('contact') }}" required class="form-control  @error('contact') is_invalide @enderror">
                                     @error('contact')

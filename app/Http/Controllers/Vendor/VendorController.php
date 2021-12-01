@@ -92,6 +92,7 @@ class VendorController extends Controller
      */
     public function update(Request $request, $id)
     {
+      // dd($request);
         $vendor = Vendor::find($id);
         $request->validate([
             'name' => 'required',
@@ -106,7 +107,13 @@ class VendorController extends Controller
             'contact' => 'required|max:15'
         ]);
         $data = $request->all();
+
         $data['cuisine_id'] = implode(',', $request->cuisine_id);
+        // $phone = intval(ltrim($request->contact, '0'));
+        // $phone = $request->phone_code."".$phone;
+        // $split = explode('+', $phone);
+        // $data['contact'] =$request->contact;
+
         $user = User::find($vendor->user_id);
         $user->phone_code = $request->phone_code;
         $user->phone = $request->phone;
@@ -184,38 +191,45 @@ class VendorController extends Controller
         }
 
         /// Delivery Status
-        if(isset($request->delivery_status))
+        if($vendor->vendor_status == 1)
         {
-             if($vendor->delivery_status == 0)
-             {
-                $vendor->delivery_status = 1;
+          if(isset($request->delivery_status))
+          {
+              if($vendor->delivery_status == 0)
+              {
+                  $vendor->delivery_status = 1;
+                  $vendor->save();
+                  return response(['success' => true]);
+              }
+              else if($vendor->delivery_status == 1)
+              {
+                $vendor->delivery_status = 0;
                 $vendor->save();
                 return response(['success' => true]);
-             }
-             else if($vendor->delivery_status == 1)
-             {
-              $vendor->delivery_status = 0;
-              $vendor->save();
-              return response(['success' => true]);
-             }
-        }
+              }
+          }
+      }
         /// Pickup status
-        if(isset($request->pickup_status))
+        if($vendor->vendor_status == 1)
         {
-             if($vendor->pickup_status == 0)
-             {
-                $vendor->pickup_status = 1;
-                $vendor->save();
-                return response(['success' => true]);
-             }
-             else if($vendor->pickup_status == 1)
-             {
-              $vendor->pickup_status = 0;
+          if(isset($request->pickup_status))
+            {
+                if($vendor->pickup_status == 0)
+                {
+                    $vendor->pickup_status = 1;
+                    $vendor->save();
+                    return response(['success' => true]);
+                }
+                else if($vendor->pickup_status == 1)
+                {
+                  $vendor->pickup_status = 0;
 
-              $vendor->save();
-              return response(['success' => true]);
-             }
+                  $vendor->save();
+                  return response(['success' => true]);
+                }
+            }
         }
+        return response()->json(['data']);
 
     }
     public function delivery_timeslot()

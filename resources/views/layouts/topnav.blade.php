@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg main-navbar">
     <form class="form-inline mr-auto" action="">
         <ul class="navbar-nav mr-3">
@@ -13,16 +14,57 @@
     </form>
 
     <ul class="navbar-nav navbar-right">
-        @if(Auth::user()->load('roles')->roles->contains('title', 'vendor'))
+        @if (Auth::user()->load('roles')->roles->contains('title', 'vendor'))
             @php
-                $vendor = App\Models\Vendor::where('user_id',auth()->user()->id)->first();
-                $toDay = App\Models\Notification::where([['user_type','vendor'],['user_id',$vendor->id]])->whereBetween('created_at', [Carbon\Carbon::now()->format('Y-m-d')." 00:00:00",  Carbon\Carbon::now()->format('Y-m-d')." 23:59:59"])->get();
-                $notifications = App\Models\Notification::where([['user_type','vendor'],['user_id',$vendor->id]])->get()->take(5);
+                $vendor = App\Models\Vendor::where('user_id', auth()->user()->id)->first();
+                $toDay = App\Models\Notification::where([['user_type', 'vendor'], ['user_id', $vendor->id]])
+                    ->whereBetween('created_at', [Carbon\Carbon::now()->format('Y-m-d') . ' 00:00:00', Carbon\Carbon::now()->format('Y-m-d') . ' 23:59:59'])
+                    ->get();
+                $notifications = App\Models\Notification::where([['user_type', 'vendor'], ['user_id', $vendor->id]])
+                    ->get()
+                    ->take(5);
             @endphp
-            <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg" aria-expanded="false"><i class="far fa-bell"><span class="notification-counter">{{ count($toDay) }}</span></i></a>
+
+
+        <span class="vendorColor">Vendor Status</span>
+           <div class="vendorStatus">
+                <label class="switch">
+                    <input type="checkbox" name="vendor_status" id="vendor_status"
+                        onclick="vendor_status({{ $vendor->id }})"
+                        {{ $vendor->vendor_status == 1 ? 'checked' : '' }}>
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+
+            <span class="vendorColor">Delivery Status</span>
+            <div class="vendorStatus">
+                <label class="switch">
+                    <input type="checkbox" name="delivery_status" id="delivery_status"
+                        onclick="delivery_status({{ $vendor->id }})"
+                        {{ $vendor->delivery_status == 1 ? 'checked' : '' }}>
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+
+           <span class="vendorColor">Pickup Status</span>
+            <div class="vendorStatus">
+                <label class="switch">
+                    <input type="checkbox" name="pickup_status" id="pickup_status"
+                        onclick="pickup_status({{ $vendor->id }})"
+                        {{ $vendor->pickup_status == 1 ? 'checked' : '' }}>
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+            <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg"
+                aria-expanded="false"><i class="far fa-bell"><span
+                        class="notification-counter">{{ count($toDay) }}</span></i></a>
             <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                <div class="dropdown-header">{{__('Notifications')}}</div>
-                <div class="dropdown-list-content dropdown-list-icons" tabindex="2" style="overflow: hidden; outline: none;">
+                <div class="dropdown-header">{{ __('Notifications') }}</div>
+                <div class="dropdown-list-content dropdown-list-icons" tabindex="2"
+                    style="overflow: hidden; outline: none;">
                     @if (count($notifications) > 0)
                         @foreach ($notifications as $notification)
                             <a href="javascript:void(0);" class="dropdown-item">
@@ -31,16 +73,18 @@
                                 </div>
                                 <div class="dropdown-item-desc">
                                     {{ $notification->message }}
-                                    <div class="time">{{ $notification->created_at->diffForHumans() }}</div>
+                                    <div class="time">{{ $notification->created_at->diffForHumans() }}
+                                    </div>
                                 </div>
                             </a>
                         @endforeach
                     @else
-                        <h6 class="text-center">{{__('No notifications found for today')}}</h6>
+                        <h6 class="text-center">{{ __('No notifications found for today') }}</h6>
                     @endif
                 </div>
                 <div class="dropdown-footer text-center">
-                    <a href="{{ url('vendor/notification') }}">{{__('View all')}}<i class="fas fa-chevron-right"></i></a>
+                    <a href="{{ url('vendor/notification') }}">{{ __('View all') }}<i
+                            class="fas fa-chevron-right"></i></a>
                 </div>
                 <div id="ascrail2001" class="nicescroll-rails nicescroll-rails-vr"
                     style="width: 9px; z-index: 1000; cursor: default; position: absolute; top: 58px; left: 341px; height: 350px; opacity: 0.3; display: block;">
@@ -56,17 +100,14 @@
                 </div>
             </div>
         @endif
-        @if(Auth::user()->load('roles')->roles->contains('title', 'admin'))
+        @if (Auth::user()->load('roles')->roles->contains('title', 'admin'))
             @php
-                $lans = App\Models\Language::where('status',1)->get();
-                $icon = \App\Models\Language::where('name',session('locale'))->first();
-                if($icon)
-                {
+                $lans = App\Models\Language::where('status', 1)->get();
+                $icon = \App\Models\Language::where('name', session('locale'))->first();
+                if ($icon) {
                     $lang_image = $icon->image;
-                }
-                else
-                {
-                    $lang_image="/images/upload/english.png";
+                } else {
+                    $lang_image = '/images/upload/english.png';
                 }
             @endphp
             <ul class="navbar-nav navbar-right">
@@ -74,72 +115,172 @@
                     <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle">
                         <img src="{{ url($lang_image) }}" width="40px" height="20px" alt="">
                     </a>
-                <div class="dropdown-menu dropdown-list dropdown-menu-right w-auto">
-                    <div class="dropdown-list-content dropdown-list-message h-auto">
-                        @foreach ($lans as $lan)
-                        <a href="{{ url('admin/change_language/'.$lan->name) }}" class="dropdown-item">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="{{ $lan->image }}" class="rounded-lg">
+                    <div class="dropdown-menu dropdown-list dropdown-menu-right w-auto">
+                        <div class="dropdown-list-content dropdown-list-message h-auto">
+                            @foreach ($lans as $lan)
+                                <a href="{{ url('admin/change_language/' . $lan->name) }}" class="dropdown-item">
+                                    <div class="dropdown-item-avatar">
+                                        <img alt="image" src="{{ $lan->image }}" class="rounded-lg">
+                                    </div>
+                                    <div class="dropdown-item-desc">
+                                        <b>{{ $lan->name }}</b>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
-                        <div class="dropdown-item-desc">
-                            <b>{{ $lan->name }}</b>
-                        </div>
-                        </a>
-                        @endforeach
                     </div>
-                </div>
                 </li>
             </ul>
         @endif
 
         <li class="dropdown">
-            <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <div class="d-sm-none d-lg-inline-block">{{__('Hi, ')}}
-                    @if(Auth::user()->load('roles')->roles->contains('title', 'admin'))
+            <a href="javascript:void(0);" data-toggle="dropdown"
+                class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                <div class="d-sm-none d-lg-inline-block">{{ __('Hi, ') }}
+                    @if (Auth::user()->load('roles')->roles->contains('title', 'admin'))
                         {{ Auth::user()->name }}
                     @else
-                        {{$vendor->name}}
+                        {{ $vendor->name }}
                     @endif
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-title">{{__('Welcome, ')}}{{ Auth::user()->name }}</div>
-                @if(Auth::user()->load('roles')->roles->contains('title', 'admin'))
+                <div class="dropdown-title">{{ __('Welcome, ') }}{{ Auth::user()->name }}</div>
+                @if (Auth::user()->load('roles')->roles->contains('title', 'admin'))
                     @can('admin_profile_access')
                         <a href="{{ url('admin/admin_profile') }}" class="dropdown-item has-icon">
-                            <i class="far fa-user"></i> {{__('Profile Settings')}}
+                            <i class="far fa-user"></i> {{ __('Profile Settings') }}
                         </a>
                     @endcan
                 @endif
 
                 @php
-                    $vendor = App\Models\Vendor::where('user_id',auth()->user()->id)->first();
+                    $vendor = App\Models\Vendor::where('user_id', auth()->user()->id)->first();
                 @endphp
 
-                @if(Auth::user()->load('roles')->roles->contains('title', 'vendor'))
-                <a href="{{ url('vendor/update_vendor') }}" class="dropdown-item has-icon">
-                    <i class="far fa-user"></i> {{__('Profile Settings')}}
-                </a>
-                <a href="{{ url('vendor/printer_setting') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-print"></i> {{__('Printer Settings')}}
-                </a>
-                <a href="{{ url('vendor/order_setting') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-sort"></i> Order Settings
-                </a>
-                <a href="{{ url('vendor/slider') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-list"></i> Slider
-                </a>
-                <a href="{{ url('vendor/change_password') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-key"></i> {{__('Change password')}}
-                </a>
+                @if (Auth::user()->load('roles')->roles->contains('title', 'vendor'))
+                    <a href="{{ url('vendor/update_vendor') }}" class="dropdown-item has-icon">
+                        <i class="far fa-user"></i> {{ __('Profile Settings') }}
+                    </a>
+                    <a href="{{ url('vendor/printer_setting') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-print"></i> {{ __('Printer Settings') }}
+                    </a>
+                    <a href="{{ url('vendor/order_setting') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-sort"></i> Order Settings
+                    </a>
+                    <a href="{{ url('vendor/slider') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-list"></i> Slider
+                    </a>
+                    <a href="{{ url('vendor/change_password') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-key"></i> {{ __('Change password') }}
+                    </a>
                 @endif
 
                 <div class="dropdown-divider"></div>
-                <a href="{{ route('logout') }}" class="dropdown-item text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="{{ route('logout') }}" class="dropdown-item text-danger"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt"></i>
-                    {{__('Logout')}}
+                    {{ __('Logout') }}
                 </a>
             </div>
         </li>
     </ul>
 </nav>
+<script>
+    function vendor_status(id) {
+
+        if ($("#vendor_status").is(":checked")) {
+            var vendor_status = '1';
+        } else {
+            var vendor_status = '0';
+        }
+
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "{{ url('vendor/vendor_status') }}",
+            data: {
+                id: id,
+                vendor_status: vendor_status
+            },
+            success: function(result) {
+                iziToast.success({
+                    message: 'Change status successfully..!!',
+                    position: 'topRight',
+                })
+                location.reload();
+            },
+            error: function(err) {
+
+            }
+        });
+    }
+
+    function pickup_status(id) {
+
+
+        if ($("#pickup_status").is(':checked')) {
+
+            var pickup_status = '1';
+        } else {
+            var pickup_status = '0';
+        }
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "{{ url('vendor/vendor_status') }}",
+            data: {
+                id: id,
+                pickup_status: pickup_status
+            },
+            success: function(result) {
+                iziToast.success({
+                    message: 'Change status successfully..!!',
+                    position: 'topRight',
+                })
+                location.reload();
+            },
+            error: function(err) {
+
+            }
+        });
+    }
+
+    function delivery_status(id) {
+
+
+        if ($("#delivery_status").is(":checked")) {
+            var delivery_status = '1';
+        } else {
+            var delivery_status = '0';
+        }
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "{{ url('vendor/vendor_status') }}",
+            data: {
+                id: id,
+                delivery_status: delivery_status
+            },
+            success: function(result) {
+                console.log(result);
+                iziToast.success({
+                    message: 'Change status successfully..!!',
+                    position: 'topRight',
+                })
+                location.reload();
+            },
+            error: function(err) {
+
+            }
+        });
+    }
+</script>
