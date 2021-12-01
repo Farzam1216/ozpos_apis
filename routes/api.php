@@ -223,6 +223,7 @@
    Route::post('vendor', 'UserApiController@apiVendor');
    Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
    Route::get('simple_vendor/{vendor_id}', 'UserApiController@apiSimpleVendor');
+   Route::get('item_categories_vendor/{vendor_id}', 'UserApiController@apiItemCategoriesVendor');
    Route::get('single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'UserApiController@apiSingleVendorRetrieveSizes');
    Route::get('single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'UserApiController@apiSingleVendorRetrieveSize');
    Route::get('menu/{vendor_id}', 'UserApiController@apiMenu');

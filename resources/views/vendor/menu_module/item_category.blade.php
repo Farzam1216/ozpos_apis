@@ -78,7 +78,7 @@
                            <label for="{{$item->id}}"></label>
                         </td>
                         <td>{{ $idx+1 }}</td>
-                        <td><img src="{{ asset('/images/upload/'.$item->image) }}" class="rounded" width="50" height="50" alt=""></td>
+                        <td><img src="{{ $item->image }}" class="rounded" width="50" height="50" alt=""></td>
                         <td>{{$item->name}}</td>
                         <td>
                            <button type="button" onclick="updateData('vendor/item_category',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
