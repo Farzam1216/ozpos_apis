@@ -52,7 +52,7 @@
          @foreach ($itemCategory as $item)
             <div class="cat-item px-1 py-3">
                <a class="bg-white rounded d-block p-2 text-center shadow-sm active" href="{{route('restaurant.itemCategory',[$vendor_id,$item->id])}}">
-                  <img alt="#" src="{{asset('/images/upload/'.$item->image) }}" style="height:35px"  class="img-fluid mb-2">
+                  <img alt="#" src="{{asset($item->image) }}" style="height:35px"  class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
                </a>
             </div>

@@ -212,7 +212,7 @@ img {vertical-align: middle;}
             <div class="cat-item px-1 py-3">
               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                 <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list">
-                  <img alt="#" src="{{asset('/images/upload/'.$item->image) }}" style="height:35px" class="img-fluid mb-2">
+                  <img alt="#" src="{{asset($item->image) }}" style="height:35px" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
               </a>
 

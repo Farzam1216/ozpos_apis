@@ -174,6 +174,14 @@ class VendorController extends Controller
 
         if(isset($request->vendor_status))
         {
+          // if($vendor->pickup_status == 0 && $vendor->delivery_status == 0)
+          //       {
+          //         $vendor->vendor_status = 0;
+          //         $vendor->pickup_status = 0;
+          //         $vendor->delivery_status = 0;
+          //         $vendor->save();
+          //         return response(['success' => true]);
+          //       }
              if($vendor->vendor_status == 0)
              {
                 $vendor->vendor_status = 1;
@@ -195,6 +203,14 @@ class VendorController extends Controller
         {
           if(isset($request->delivery_status))
           {
+            if($vendor->pickup_status == 0 && $request->delivery_status == 0)
+                {
+                  $vendor->vendor_status = 0;
+                  $vendor->pickup_status = 0;
+                  $vendor->delivery_status = 0;
+                  $vendor->save();
+                  return response(['success' => true]);
+                }
               if($vendor->delivery_status == 0)
               {
                   $vendor->delivery_status = 1;
@@ -214,16 +230,25 @@ class VendorController extends Controller
         {
           if(isset($request->pickup_status))
             {
+                if($request->pickup_status == 0 && $vendor->delivery_status == 0)
+                {
+                  $vendor->vendor_status = 0;
+                  $vendor->pickup_status = 0;
+                  $vendor->delivery_status = 0;
+                  $vendor->save();
+                  return response(['success' => true]);
+                }
+
                 if($vendor->pickup_status == 0)
                 {
                     $vendor->pickup_status = 1;
                     $vendor->save();
                     return response(['success' => true]);
                 }
+
                 else if($vendor->pickup_status == 1)
                 {
                   $vendor->pickup_status = 0;
-
                   $vendor->save();
                   return response(['success' => true]);
                 }

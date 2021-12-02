@@ -444,6 +444,8 @@
       ///////// order history///
       Route::get('/order-history', [App\Http\Controllers\Customer\OrderController::class, 'orderHistory'])->name('order.history');
       Route::get('/get-orderModel/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrderModel']);
+      //menuSize Modal
+      Route::post('/get-menuSizeModel', [App\Http\Controllers\Customer\OrderController::class, 'getMenuSizeModel']);
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 

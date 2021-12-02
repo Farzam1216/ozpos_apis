@@ -362,6 +362,7 @@ class CustomerController extends Controller
   {
 
     //  dd($request->all());
+
     Session::put([
       'vendorID' => $request->vendorId,'total' => $request->total, 'idTax' => $request->iTax, 'iCoupons' => $request->iCoupons,
       'iDelivery' => $request->iDelivery, 'iGrandTotal' => $request->iGrandTotal, 'coupon_id' => $request->coupon_id, 'product' => $request
@@ -370,24 +371,30 @@ class CustomerController extends Controller
     $data = json_decode($request->product);
     // dd($data);
     $vendor = Vendor::find($request->vendorId);
+    // dd($request->vendorId);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
 
-    $setting = GeneralSetting::first();
-    $start_time = carbon::now()->format('h:i a');
-    $currentTime = date("H:i", strtotime($start_time));
+    // $setting = GeneralSetting::first();
+    // $start_time = carbon::now()->format('h:i a');
+    // $currentTime = date("H:i", strtotime($start_time));
 
-    $current_day = carbon::today()->format('l');
+    // $current_day = carbon::today()->format('l');
 
-    $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day],['status',1]])->first();
+    // $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day],['status',1]])->first();
       $timeSlot = array();
-      if(isset($timePeriod))
+      if(isset($vendor))
       {
-        $time = json_decode($timePeriod->period_list);
-        $newStartTime = date("H:i", strtotime($time[0]->start_time));
-        $newEndTime = date("H:i", strtotime($time[0]->end_time));
-        if($currentTime >= $newStartTime && $currentTime <= $newEndTime)
+        // dd($vendor);
+        // $time = json_decode($timePeriod->period_list);
+        // $newStartTime = date("H:i", strtotime($time[0]->start_time));
+        // $newEndTime = date("H:i", strtotime($time[0]->end_time));
+        if($vendor->vendor_status == 1 && $vendor->delivery_status == 1)
+        {
+          $timeSlot = "true";
+        }
+        else if($vendor->vendor_status == 1 && $vendor->pickup_status == 1)
         {
           $timeSlot = "true";
         }
@@ -400,7 +407,7 @@ class CustomerController extends Controller
     {
       $timeSlot = "false";
     }
-// dd($data);
+    // dd($data);
 
     return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress','vendor'
                                       ,'data','timeSlot'));

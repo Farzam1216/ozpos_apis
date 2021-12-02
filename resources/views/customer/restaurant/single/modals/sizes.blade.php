@@ -1,5 +1,5 @@
-@section('custom_modals')
-   <div class="modal fade" id="SingleMenu-{{ $SingleMenu->id }}" tabindex="-1" role="dialog" aria-labelledby="SingleMenuModal-{{ $SingleMenu->id }}" aria-hidden="true">
+{{--
+   <div class="modal fade" id="SingleMenu" tabindex="-1" role="dialog" aria-labelledby="SingleMenuModal" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
             <div class="modal-header">
@@ -7,8 +7,8 @@
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                </button>
-            </div>
-            <div class="modal-body">
+            </div> --}}
+
                <div class="container">
                   <h6 class="font-weight-bold mt-4">Pick Size</h6>
                   <ul class="nav nav-pills">
@@ -24,7 +24,7 @@
                               <b>
                                  {{ $MenuSize->ItemSize()->get()->first()->name }}
                               </b>
-                              
+
                               <br>
                               @if($MenuSize->display_discount_price === NULL)
                                  {{ $MenuSize->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
@@ -37,7 +37,7 @@
                               @endif
                            </a>
                         </li>
-                        @include('customer.restaurant.single.scripts.sizes')
+                        {{-- @include('customer.restaurant.single.scripts.sizes') --}}
                      @endforeach
                   </ul>
                   <div class="tab-content">
@@ -51,7 +51,7 @@
                                        {{ $GroupMenuAddon->AddonCategory()->get()->first()->name }}
                                        <span class="text-muted"> ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}) </span>
                                     </h6>
-                                    
+
                                     @foreach($MenuSize->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
                                        <div class="custom-control custom-radio border-bottom py-2">
                                           <input type="checkbox" id="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }} SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $MenuSize->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name }}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
@@ -68,7 +68,7 @@
                      @endforeach
                   </div>
                </div>
-            </div>
+
             <div class="modal-footer p-0 border-0">
                <div class="col-6 m-0 p-0">
                   <button type="button" class="btn border-top btn-lg btn-block" data-dismiss="modal">Close
@@ -84,7 +84,7 @@
                   </button>
                </div>
             </div>
-         </div>
+         {{-- </div>
       </div>
-   </div>
-@append
+   </div> --}}
+

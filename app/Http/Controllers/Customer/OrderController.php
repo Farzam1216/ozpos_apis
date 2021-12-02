@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryPerson;
+use App\Models\Menu;
 use App\Models\Order;
+use App\Models\SingleMenu;
 use App\Models\UserAddress;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -155,6 +157,17 @@ class OrderController extends Controller
       $selectedAddress = UserAddress::where(['user_id'=>$user,'selected'=> 1])->first();
 
       return view('customer/track',compact('order', 'trackData','userAddress','selectedAddress'));
+  }
+
+  public function getMenuSizeModel(Request $request)
+  {
+    // dd($request);
+     $SingleMenu = SingleMenu::find($request->singleMenu_id);
+     $rest = Vendor::find($request->vendorId);
+     $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.single.modals.sizes',compact('Menu','SingleMenu','rest'));
+    //  return response()->json(['menu'=> $Menu]);
+    // $singleMenu =  Menu::where('id')
   }
 
 }
