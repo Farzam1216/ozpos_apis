@@ -2,11 +2,12 @@
    @foreach($MenuCategory->DealsMenu()->get() as $DealsMenuIDX=>$DealsMenu)
       <div class="p-3 border-bottom menu-list">
          <span class="float-right">
-            <button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#DealsMenu-{{ $DealsMenu->id }}">Edit</button>
+            <button class="btn btn-outline-secondary btn-sm"
+              onclick="DealsMenu('{{ $DealsMenu->id }}','{{ $rest->id }}')">Edit</button>
          </span>
-         
-         @include('customer.restaurant.deals.modals.index')
-         
+
+         {{-- @include('customer.restaurant.deals.modals.index') --}}
+
          <div class="media">
             <img src="{{ $DealsMenu->image }}" alt="" class="mr-3 rounded-pill ">
             <div class="media-body">
@@ -23,7 +24,7 @@
                         <span class="text-decoration-overline">
                            {{ $DealsMenu->display_price }} {{ App\Models\GeneralSetting::first()->currency }}
                         </span> &ensp;
-                        {{ $DealsMenu->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
+                          {{ $DealsMenu->display_discount_price }} {{ App\Models\GeneralSetting::first()->currency }}
                      </p>
                   @endif
                @endif
@@ -32,3 +33,49 @@
       </div>
    @endforeach
 </div>
+
+{{-- Menu Menu Modal --}}
+<div id="dealMenu" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+      <div class="modal-content" id="dealMenus">
+
+
+      </div>
+  </div>
+</div>
+{{-- end Menu Single Menu --}}
+<script>
+
+  function DealsMenu(id, vendor_id) {
+
+
+      $.ajax({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+          },
+          type: "POST",
+          @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+              url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-dealsMenu",
+          @else
+              url: "{{ url('customer/get-dealsMenu') }}",
+          @endif
+          data: {
+            dealsMenu_id: id,vendorId:vendor_id
+
+          },
+          beforeSend: function() {
+              $("#loading-image").show();
+          },
+          success: function(data) {
+              console.log(data);
+              $("#dealMenu").modal('show');
+              $("#dealMenus").html(data);
+              $("#loading-image").hide()
+          },
+          error: function(err) {
+
+          }
+      });
+  }
+  // });
+</script>

@@ -4,10 +4,10 @@
          let thisData = $(this).data();
          let masterData = $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data();
          masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
-         let generateId = "{{ $unique_id }}-{{ $DealsMenu->id }}";
-         
-         
-         
+         let generateId = "{{ $DealsMenu->id }}";
+
+
+
 
 
          // if($(this).data('deal') in data.Deals)
@@ -36,7 +36,7 @@
                generateId += "-" + $(this).id;
             });
          });
-         
+
          $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).removeClass("btn-outline-secondary");
          $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).addClass("btn-primary");
          $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).html("Picked");
@@ -44,7 +44,7 @@
          $("#DealsMenuSubmit-{{ $DealsMenu->id }}").prop('disabled',
              ( masterData.summary.menu.filter(Boolean).length === parseInt(masterData.required) ) ? false : true
          );
-         
+
          $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data(masterData);
          console.log($("#DealsMenuSubmit-{{ $DealsMenu->id }}").data());
       });

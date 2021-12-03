@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\DealsItems;
+use App\Models\DealsMenu;
 use App\Models\DeliveryPerson;
 use App\Models\Menu;
+use App\Models\MenuSize;
 use App\Models\Order;
 use App\Models\SingleMenu;
 use App\Models\UserAddress;
@@ -166,8 +169,50 @@ class OrderController extends Controller
      $rest = Vendor::find($request->vendorId);
      $Menu = $SingleMenu->Menu()->get()->first();
      return view('customer.restaurant.single.modals.sizes',compact('Menu','SingleMenu','rest'));
-    //  return response()->json(['menu'=> $Menu]);
-    // $singleMenu =  Menu::where('id')
+
+  }
+  public function getMenuAddonModel(Request $request)
+  {
+    // dd($request);
+     $SingleMenu = SingleMenu::find($request->singleMenu_id);
+     $rest = Vendor::find($request->vendorId);
+     $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.single.modals.addons',compact('Menu','SingleMenu','rest'));
+
+  }
+  public function getDealsMenu(Request $request)
+  {
+    // dd($request);
+     $DealsMenu = DealsMenu::find($request->dealsMenu_id);
+     $rest = Vendor::find($request->vendorId);
+      // dd($DealsMenu);
+    //  $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.deals.modals.index',compact('DealsMenu','rest'));
+
+  }
+  public function dealsMenuItems(Request $request)
+  {
+    // dd($request);
+     $DealsItems = DealsItems::where([['deals_menu_id',$request->dealsMenuId],['vendor_id',$request->vendorId],['id',$request->dealsItemsId]])->first();
+     $rest = Vendor::find($request->vendorId);
+     $DealsMenu = DealsMenu::find($request->dealsMenuId);
+      // dd($DealsItems);
+    //  $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.deals.modals.items',compact('DealsItems','DealsMenu','rest'));
+
+  }
+  public function dealsMenuAddon(Request $request)
+  {
+    // dd($request);
+     $DealsItems = DealsItems::find($request->dealsItems_id);
+     $rest = Vendor::find($request->vendorId);
+     $DealsMenu = DealsMenu::find($request->dealMenu_id);
+     $Menu = Menu::find($request->menu_id);
+     $MenuSize = MenuSize::find($request->menuSize_id);
+      // dd($DealsItems);
+    //  $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.deals.modals.addons',compact('DealsItems','DealsMenu','MenuSize','Menu','rest'));
+
   }
 
 }

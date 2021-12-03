@@ -1,6 +1,6 @@
-@section('custom_modals')
-   <div class="modal fade" id="SingleMenu-{{ $SingleMenu->id }}" tabindex="-1" role="dialog" aria-labelledby="SingleMenuModal-{{ $SingleMenu->id }}" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+
+   {{-- <div class="modal fade" id="SingleMenu-{{ $SingleMenu->id }}" tabindex="-1" role="dialog" aria-labelledby="SingleMenuModal-{{ $SingleMenu->id }}" aria-hidden="true">
+      {{-- <div class="modal-dialog modal-dialog-centered"> --}}
          <div class="modal-content">
             <div class="modal-header">
                <h5 class="modal-title">{{ ucwords($Menu->name) }}</h5>
@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                <div class="container">
-                  @include('customer.restaurant.single.scripts.addons')
+                  {{-- @include('customer.restaurant.single.scripts.addons') --}}
                   <div class="tab-content">
                      <form>
                         <!-- extras body -->
@@ -20,7 +20,7 @@
                                  {{ $GroupMenuAddon->AddonCategory()->get()->first()->name ?? ''}}
                                  <span class="text-muted"> ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}) </span>
                               </h6>
-                              
+
                               @foreach($Menu->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
                                  <div class="custom-control custom-radio border-bottom py-2">
                                     <input type="checkbox" id="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input SingleMenuCheckbox-{{ $SingleMenu->id }} SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name ?? ''}}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
@@ -53,6 +53,6 @@
                </div>
             </div>
          </div>
-      </div>
+      {{-- </div>
    </div>
-@append
+@append --}}

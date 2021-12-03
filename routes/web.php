@@ -446,6 +446,10 @@
       Route::get('/get-orderModel/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrderModel']);
       //menuSize Modal
       Route::post('/get-menuSizeModel', [App\Http\Controllers\Customer\OrderController::class, 'getMenuSizeModel']);
+      Route::post('/get-menuAddonModel', [App\Http\Controllers\Customer\OrderController::class, 'getMenuAddonModel']);
+      Route::post('/get-dealsMenu', [App\Http\Controllers\Customer\OrderController::class, 'getDealsMenu']);
+      Route::post('/get-dealsMenuItems', [App\Http\Controllers\Customer\OrderController::class, 'dealsMenuItems']);
+      Route::post('/get-dealsMenuAddon', [App\Http\Controllers\Customer\OrderController::class, 'dealsMenuAddon']);
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 

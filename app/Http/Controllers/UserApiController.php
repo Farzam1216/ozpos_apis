@@ -382,14 +382,14 @@
          if ($Vendor->tax == null) {
             $Vendor->tax = strval(5);
          }
-         
+
          return response(['success' => true, 'data' => $Vendor]);
       }
 
       public function apiItemCategoriesVendor($vendor_id)
       {
          $ItemCategory = ItemCategory::where('vendor_id', $vendor_id)->get();
-         
+
          return response(['success' => true, 'data' => $ItemCategory]);
       }
 
@@ -416,6 +416,7 @@
        */
       public function apiSingleVendorRetrieveSize($vendor_id, $item_category_id, $item_size_id)
       {
+
 //         Log::info($item_category_id);
 //         Log::info($item_size_id);
          $data = ItemSize::with([
@@ -426,6 +427,7 @@
              'MenuSize.GroupMenuAddon.AddonCategory',
              'MenuSize.MenuAddon.Addon.AddonCategory',
          ])->where([['id', $item_size_id], ['vendor_id', $vendor_id]])->first();
+
 
 //         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
@@ -566,10 +568,10 @@
       public function apiVendorStatus($vendor_id)
       {
          $Vendor = Vendor::select('id', 'vendor_status', 'delivery_status', 'pickup_status')->find($vendor_id)->makeHidden('image', 'vendor_logo', 'cuisine', 'rate', 'review');
-   
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'vendor not found.']);
-   
+
          return response(['success' => true, 'data' => $Vendor]);
       }
 

@@ -1,7 +1,7 @@
-@section('custom_modals')
+{{-- @section('custom_modals')
    <div class="modal fade" id="DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}" tabindex="-1" role="dialog" aria-labelledby="DealsMenuAddonModal-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}" aria-hidden="true" style="z-index: 1061">
       <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content">
+         <div class="modal-content"> --}}
             <div class="modal-header">
                <h5 class="modal-title">{{ ucwords($Menu->name) }}</h5>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -17,14 +17,15 @@
                               {{ $GroupMenuAddon->AddonCategory()->get()->first()->name }}
                               <span class="text-muted"> ({{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}-{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}) </span>
                            </h6>
-                           
+
                            @foreach($MenuSize->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
                               <div class="custom-control custom-radio border-bottom py-2">
                                  <input type="checkbox" id="DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }} DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name }}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
                                  <label class="custom-control-label" for="DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}">
                                     {{ $MenuAddon->Addon()->get()->first()->name }}
                                     <span class="text-muted"> +{{ $MenuAddon->price }} {{ App\Models\GeneralSetting::first()->currency }}
-                                    </span> </label>
+                                    </span>
+                                  </label>
                               </div>
                            @endforeach
                         @endforeach
@@ -51,7 +52,7 @@
                   @append
                </div>
             </div>
-         </div>
+         {{-- </div>
       </div>
    </div>
-@append
+@append --}}

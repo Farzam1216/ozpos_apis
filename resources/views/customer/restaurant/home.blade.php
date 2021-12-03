@@ -218,7 +218,7 @@ img {vertical-align: middle;}
 
                 @else
               <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
-                  <img alt="#" src="{{asset('/images/upload/'.$item->image) }}" style="height:35px" class="img-fluid mb-2">
+                  <img alt="#" src="{{asset($item->image) }}" style="height:35px" class="img-fluid mb-2">
                   <p class="m-0 small">{{ $item->name }}</p>
               </a>
               @endif
