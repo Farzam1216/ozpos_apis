@@ -74,7 +74,7 @@ class Menu extends Model
   public function GroupMenuAddon()
   {
     return $this->hasMany('App\Models\MenuAddon');
-//       return $this->hasMany('App\Models\MenuAddon')->groupBy('addon_category_id');
+      // return $this->hasMany('App\Models\MenuAddon')->groupBy('addon_category_id');
   }
 
   public function SingleMenu()

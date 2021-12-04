@@ -1,10 +1,10 @@
 <?php
-   
+
    namespace App\Models;
-   
+
    use Illuminate\Database\Eloquent\Factories\HasFactory;
    use Illuminate\Database\Eloquent\Model;
-   
+
    /**
     * App\Models\MenuSize
     *
@@ -35,32 +35,32 @@
    class MenuSize extends Model
    {
       use HasFactory;
-      
+
       protected $table = 'menu_size';
-      
+
       protected $fillable = ['vendor_id', 'menu_id', 'item_size_id', 'price', 'display_price', 'display_discount_price'];
-      
+
       protected $casts = [
           'price' => 'decimal:2',
           'display_price' => 'decimal:2',
           'display_discount_price' => 'decimal:2',
       ];
-      
+
       public function Menu()
       {
          return $this->belongsTo('App\Models\Menu');
       }
-      
+
       public function MenuAddon()
       {
          return $this->hasMany('App\Models\MenuAddon');
       }
-      
+
       public function GroupMenuAddon()
       {
-         return $this->hasMany('App\Models\MenuAddon');
+        return $this->hasMany('App\Models\MenuAddon');
       }
-      
+
       public function ItemSize()
       {
          return $this->belongsTo('App\Models\ItemSize');

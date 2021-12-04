@@ -32,10 +32,10 @@
   //  Route::get('vendor/menuCategory','Api\Vendor\MenuModule\MenuCategoryController@menuCategory');
 
    Route::middleware('auth:api')->prefix('vendor')->group(function () {
-   
+
       Route::get('status', [App\Http\Controllers\Api\Vendor\VendorSettingApiController::class, 'status_get']);
       Route::post('status', [App\Http\Controllers\Api\Vendor\VendorSettingApiController::class, 'status_update']);
-      
+
       Route::get('addon', [App\Http\Controllers\Api\Vendor\MenuModule\AddonController::class, 'indexAll']);
 
       Route::resources([

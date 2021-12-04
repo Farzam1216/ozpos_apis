@@ -45,6 +45,7 @@
                         <div id="SingleMenuSize-{{ $SingleMenu->id }}-{{ $MenuSize->id }}" class="tab-pane fade @if( $MenuSizeIDX === 0 ) show in active @endif">
                            <form>
                               <!-- extras body -->
+                              {{-- ->groupBy('addon_category_id') --}}
                               <div class="recepie-body">
                                  @foreach($MenuSize->GroupMenuAddon()->groupBy('addon_category_id')->get() as $GroupMenuAddonIDX=>$GroupMenuAddon)
                                     <h6 class="font-weight-bold mt-4">

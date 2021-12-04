@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DealsItems;
 use App\Models\DealsMenu;
 use App\Models\DeliveryPerson;
+use App\Models\HalfNHalfMenu;
 use App\Models\Menu;
 use App\Models\MenuSize;
 use App\Models\Order;
@@ -212,6 +213,20 @@ class OrderController extends Controller
       // dd($DealsItems);
     //  $Menu = $SingleMenu->Menu()->get()->first();
      return view('customer.restaurant.deals.modals.addons',compact('DealsItems','DealsMenu','MenuSize','Menu','rest'));
+
+  }
+  public function halfNHalfMenu(Request $request)
+  {
+    // dd($request);
+    //  $DealsItems = DealsItems::find($request->dealsItems_id);
+     $rest = Vendor::find($request->vendorId);
+    //  $DealsMenu = DealsMenu::find($request->dealMenu_id);
+    //  $Menu = Menu::find($request->menu_id);
+    //  $MenuSize = MenuSize::find($request->menuSize_id);
+     $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenu_id);
+      // dd($DealsItems);
+    //  $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.half.modals.index',compact('HalfNHalfMenu','rest'));
 
   }
 
