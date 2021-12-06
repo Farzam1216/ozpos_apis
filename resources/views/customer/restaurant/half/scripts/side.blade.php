@@ -40,7 +40,7 @@
          //    data["Menu{{$prefix}}"].TotalPrice += $(this).data('price');
          //    data["Menu{{$prefix}}"].DataID += "-" + $(this).data('id');
          // });
-         
+
          $('.HalfMenuCheckbox-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}:checked').each(function (i, obj) {
             masterData.summary.menu[prefixIndex].addons.push({
                "id": $(this).data('id'),
@@ -50,7 +50,7 @@
             masterData.summary.menu[prefixIndex].data_id += "-" + $(this).data('id');
             masterData.summary.menu[prefixIndex].total_price = ( parseFloat( masterData.summary.menu[prefixIndex].total_price ) + parseFloat( $(this).data('price') ) ).toString();
          });
-   
+
          if (prefixIndex === 0 && masterData.summary.menu[1] == null) {
             masterData.price = masterData.summary.menu[prefixIndex].total_price;
             masterData.id = generateId + "_" + masterData.summary.menu[prefixIndex].data_id + "_";
@@ -64,7 +64,7 @@
             masterData.id = generateId + "_" + masterData.summary.menu[0].data_id + "_" + masterData.summary.menu[1].data_id;
          }
 
-         $("#HalfMenuSubmit-{{ $HalfNHalfMenu->id }}").prop('disabled', 
+         $("#HalfMenuSubmit-{{ $HalfNHalfMenu->id }}").prop('disabled',
             ( masterData.summary.menu.filter(Boolean).length === 2 ) ? false : true
          );
 
@@ -79,12 +79,12 @@
             .removeClass("btn-outline-secondary")
             .addClass("btn-primary")
             .html("Picked");
-            
+
          $("#HalfMenuSubmit-{{ $HalfNHalfMenu->id }}").data(masterData);
          console.log($("#HalfMenuSubmit-{{ $HalfNHalfMenu->id }}").data());
       });
 
-      
+
       $(".HalfMenuCheckbox-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}").change(function () {
          let groupMenuAddonId = $(this).data('group_menu_addon_id');
          let checkedCheckBox = $('.HalfMenuCheckbox-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}-'+groupMenuAddonId+':checked');

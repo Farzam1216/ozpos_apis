@@ -51,9 +51,11 @@
 
                 success: function(data) {
                     console.log(data);
-                    $("#halfNHalfMenus").modal('show');
-                    $("#halfNHalfMenu").html(data);
 
+                    $("#halfNHalfMenus").modal('show');
+
+                    $("#halfNHalfMenu").html(data);
+                    alert('Select Item category');
                 },
                 error: function(err) {
 

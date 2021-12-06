@@ -1,10 +1,10 @@
-<div id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}" class="tab-pane fade @if($prefix=='First') show in active @endif ">
+{{-- <div id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize }}" class="tab-pane fade @if($prefix=='First') show in active @endif "> --}}
    @foreach($HalfNHalfMenu->ItemCategory()->get()->first()->SingleMenuItemCategory()->get() as $SingleMenuItemCategoryIDX=>$SingleMenuItemCategory)
 
       @php
          $SingleMenu = $SingleMenuItemCategory->SingleMenu()->get()->first();
          $Menu = $SingleMenu->Menu()->get()->first();
-         $MenuSize = $Menu->MenuSize()->where('item_size_id', $ItemSize->id )->get()->first();
+         $MenuSize = $Menu->MenuSize()->where('item_size_id', $ItemSize )->get()->first();
          if(!$MenuSize) continue;
          $Menu = App\Models\Menu::where('id', $MenuSize->menu_id )->get()->first();
 
@@ -12,22 +12,22 @@
       @endphp
 
       {{-- @include('customer.restaurant.half.scripts.side') --}}
-
       <div>
          <div class="p-3 border-bottom menu-list">
 
             @if($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() !== 0)
                <span class="float-right">
-                  <button class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Edit" data-toggle="modal" data-target="#HalfMenuAddon-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}">
+                  <button class="btn btn-outline-secondary btn-sm "
+                     onclick="HalfMenuAddon('{{ $prefix }}','{{ $HalfNHalfMenu->id }}','{{ $ItemSize }}','{{ $Menu->id }}')">
                      Edit
                   </button>
                </span>
 
-               @include('customer.restaurant.half.modals.side')
+               {{-- @include('customer.restaurant.half.modals.side') --}}
 
             @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                <span class="float-right">
-                  <button id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}-{{ $Menu->id }}" data-name="Pick">
+                  <button id="HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize }}-{{ $Menu->id }}" class="btn btn-outline-secondary btn-sm HalfMenu-{{ $HalfNHalfMenu->id }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize }} HalfMenu-{{ $prefix }}-{{ $HalfNHalfMenu->id }}-{{ $ItemSize }}-{{ $Menu->id }}" data-name="Pick">
                      Pick
                   </button>
                </span>
@@ -57,4 +57,48 @@
          </div>
       </div>
    @endforeach
+   {{-- Menu Menu Modal --}}
+<div id="halfMenuAddons" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+      <div class="modal-content" id="halfMenuAddon">
+
+
+      </div>
+  </div>
 </div>
+{{-- end Menu Single Menu --}}
+{{-- </div> --}}
+<script>
+function HalfMenuAddon(prefix,HalfNHalfMenuId, ItemSizeId, vendorId) {
+  console.log(vendorId);
+  $.ajax({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+      },
+      type: "POST",
+      @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+          url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-halfMenuAddon",
+      @else
+          url: "{{ url('customer/get-halfMenuAddon') }}",
+      @endif
+      data: {
+          HalfNHalfMenuId: HalfNHalfMenuId,
+          ItemSizeId: ItemSizeId,
+          vendorId: vendorId,
+          prefix: prefix,
+      },
+
+      success: function(data) {
+          console.log(data);
+          $("#halfMenuAddons").modal('show');
+          $("#halfMenuAddon").html(data);
+          // $(".halfNHalfSide").html(data);
+
+      },
+      error: function(err) {
+
+      }
+  });
+}
+// });
+</script>

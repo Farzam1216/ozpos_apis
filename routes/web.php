@@ -451,6 +451,10 @@
       Route::post('/get-dealsMenuItems', [App\Http\Controllers\Customer\OrderController::class, 'dealsMenuItems']);
       Route::post('/get-dealsMenuAddon', [App\Http\Controllers\Customer\OrderController::class, 'dealsMenuAddon']);
       Route::post('/get-halfNHalfMenu', [App\Http\Controllers\Customer\OrderController::class, 'halfNHalfMenu']);
+      Route::post('/get-halfMenuSize', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuSize']);
+      Route::post('/get-halfMenuFirst', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuFirst']);
+      Route::post('/get-halfMenuSecond', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuSecond']);
+      Route::post('/get-halfMenuAddon', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuAddon']);
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 

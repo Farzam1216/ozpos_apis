@@ -1,3 +1,9 @@
+
+  <script>
+    $( function() {
+      $( "#tabs" ).tabs();
+    } );
+    </script>
 <div class="modal-header">
     <h5 class="modal-title">{{ ucwords($HalfNHalfMenu->name) }}</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -11,38 +17,18 @@
         @endphp
         <h6 class="font-weight-bold mt-4">Pick Size</h6>
         <ul class="nav nav-pills">
-            <li>
+            <li id="tabs">
                 @foreach ($ItemSizeObj as $ItemSizeIDX => $ItemSize)
                     <a id="HalfMenuSizeBtn-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}"
-                        class="btn btn-outline-primary btn-sm mb-3 mr-3 @if ($ItemSizeIDX == 0) active @endif " data-toggle="pill"
-                        href="#HalfMenuSize-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}">
+                        class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
+                        onclick="HalfMenuSize('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}')">
                         {{ $ItemSize->name }}
                     </a>
                 @endforeach
             </li>
         </ul>
-        <div class="tab-content">
-            @foreach ($ItemSizeObj as $ItemSizeIDX => $ItemSize)
-                <div id="HalfMenuSize-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}"
-                    class="tab-pane fade @if ($ItemSizeIDX === 0) show in active @endif ">
-                    <h6 class="font-weight-bold mt-4">
-                        Pick Side</h6>
-                    <ul class="nav nav-pills">
-                        <li>
-                            <a id="" class="btn btn-outline-primary btn-sm mb-3 mr-3 active" data-toggle="pill"
-                                href="#HalfMenu-First({{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}">
-                                First Half </a>
-                            <a id="" class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
-                                href="#HalfMenu-Second-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}">
-                                Second Half </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        @include('customer.restaurant.half.side', ['prefix'=>'First'])
-                        @include('customer.restaurant.half.side', ['prefix'=>'Second'])
-                    </div>
-                </div>
-            @endforeach
+        <div class="tab-content" id="HalfMenuSize">
+
         </div>
     </div>
 </div>
@@ -65,3 +51,39 @@
         </button>
     </div>
 </div>
+
+
+<script>
+  function HalfMenuSize(HalfNHalfMenuId,ItemSizeId,vendorId) {
+
+      $.ajax({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+          },
+          type: "POST",
+          @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+              url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-halfMenuSize",
+          @else
+              url: "{{ url('customer/get-halfMenuSize') }}",
+          @endif
+          data: {
+              HalfNHalfMenuId: HalfNHalfMenuId,
+              ItemSizeId: ItemSizeId,
+              vendorId: vendorId,
+
+          },
+
+          success: function(data) {
+              console.log(data);
+
+              $("#HalfMenuSize").html(data);
+
+
+          },
+          error: function(err) {
+
+          }
+      });
+  }
+  </script>
+
