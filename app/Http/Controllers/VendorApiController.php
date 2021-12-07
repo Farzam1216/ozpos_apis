@@ -1061,7 +1061,9 @@ class VendorApiController extends Controller
         if($order_status == 'NewOrders') {
             $orders = Order::where('vendor_id', $vendor->id)->where(function ($query) {
                 $query->where('order_status', 'PENDING')
-                    ->orWhere('order_status', 'APPROVE');
+                    ->orWhere('order_status', 'APPROVE')
+                    ->orWhere('order_status', 'PREPARING FOOD')
+                    ->orWhere('order_status', 'READY TO PICKUP');
             })->orderBy('id', 'desc')->get()->each->setAppends(['orderItems'])->makeHidden(['created_at', 'updated_at']);
         }
         else if ($order_status == 'PICKUP') {

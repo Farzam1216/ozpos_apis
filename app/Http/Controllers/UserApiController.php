@@ -343,7 +343,7 @@
          ])->where([['id', $item_size_id], ['vendor_id', $vendor_id]])->first();
 
 
-//         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
       }
 
