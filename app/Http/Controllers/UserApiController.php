@@ -274,11 +274,6 @@
                     $query->where('single_menu.status',1);
                  },
 
-                  'SingleMenu.Menu.GroupMenuAddon.AddonCategory' => function($query)
-                  {
-                    $query->groupBy('addon_category_id');
-                 },
-
                  'SingleMenu.Menu.MenuAddon.Addon.AddonCategory',
                  'SingleMenu.Menu.GroupMenuAddon.AddonCategory',
                  'SingleMenu.Menu.MenuSize.GroupMenuAddon.AddonCategory',
@@ -292,7 +287,6 @@
                  ->get();
 
          $master['MenuCategory'] = $MenuCategory;
-
          return response(['success' => true, 'data' => $master]);
       }
 

@@ -74,6 +74,7 @@
     </div>
 </div>
 {{-- end Menu Single Menu --}}
+
 {{-- MenuAddon Modal --}}
 <div id="MenuAddon" class="modal fade" tabindex="-1">
     <div class="modal-dialog">

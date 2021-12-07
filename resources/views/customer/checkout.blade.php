@@ -6,9 +6,24 @@
 @endif
 
 @section('title', 'Himalaya Falooda & Sweets | Checkout')
-
 @section('content')
+    <style>
+        label.custom-control-label.now {
+            width: 111% !important;
+        }
 
+        label.custom-control-label.delivery {
+            width: 116% !important;
+        }
+
+        .col-lg-1.or {
+            top: 20px;
+            left: 2px;
+            font-weight: bold;
+
+        }
+
+    </style>
     <div class="osahan-checkout">
 
         <!-- checkout -->
@@ -82,7 +97,6 @@
                                                             {{-- <img src="{{ url('/customer/img/truck.svg') }}" width="50"
                                                            height="29"> --}}
                                                         </div>
-
                                                     </div>
                                                 </label>
                                             </div>
@@ -349,18 +363,136 @@
                             @endif
                         </div>
                         {{-- <div class="bg-white p-3 py-3 border-bottom clearfix">
-                            <div class="input-group-sm mb-2 input-group">
-                                <input placeholder="Enter promo code" type="text" class="form-control">
-                                <div class="input-group-append"><button type="button" class="btn btn-primary"><i
-                                            class="feather-percent"></i> APPLY</button></div>
-                            </div>
-                            <div class="mb-0 input-group">
+
+                            <div class="accordion mb-3 rounded shadow-sm bg-white overflow-hidden" id="accordionExample"> --}}
+                        {{-- <div class="osahan-card bg-white overflow-hidden">
+
+                                    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body border-top">
+                                            <div class="payment_select nomargin form-check">
+                                                <label class="form-check-label" for="delivery_time1">
+                                                    <input type="radio"  name="deliveryTime" id="delivery_time1"
+                                                        class=".icheck form-check-input" form="customerPaymentForm"
+                                                        checked>
+                                                    <b>Delivery Now</b></label>
+                                                <i class="icon_wallet"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="osahan-card bg-white border-bottom overflow-hidden">
+                                    <div class="osahan-card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button class="d-flex p-3 align-items-center btn btn-link w-100" type="button"
+                                                data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+                                                aria-controls="collapseOne">
+                                                <input type="radio" name="deliveryTime" id="delivery_time2" hidden>
+                                                <label for="delivery_time2">
+                                                <i class="feather-credit-card mr-3"></i> Select Delivery Time
+                                                <i class="feather-chevron-down ml-auto"></i></label>
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse " aria-labelledby="headingOne"
+                                        data-parent="#accordionExample">
+                                        <div class="osahan-card-body border-top p-3">
+
+                                            <div class="form-group">
+                                                <label for="scheduling">Delivery Time</label>
+                                                <input type="datetime-local" id="scheduling" name="scheduling"
+                                                    class="form-control" form="customerPaymentForm">
+                                            </div>
+                                            <br>
+
+                                        </div>
+                                    </div>
+                                </div> --}}
+
+                        {{-- </div>
+                        </div> --}}
+
+                        {{-- <div class="input-group-sm mb-2 input-group"> --}}
+
+                        {{-- <input placeholder="Enter promo code" type="text" class="form-control"> --}}
+                        {{-- <div class="form-group">
+                                  <label for="scheduling">Delivery Time</label>
+                                  <input type="datetime-local" id="scheduling" name="scheduling" class="form-control" form="customerPaymentForm">
+                                </div>
+                            </div> --}}
+                        {{-- <div class="mb-0 input-group">
                                 <div class="input-group-prepend"><span class="input-group-text"><i
                                             class="feather-message-square"></i></span></div>
                                 <textarea placeholder="Any suggestions? We will pass it on..." aria-label="With textarea"
                                     class="form-control"></textarea>
+                            </div> --}}
+                        {{-- </div> --}}
+                        <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">
+                            <div class="osahan-cart-item-profile bg-white p-3">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-3 font-weight-bold">Delivery Schedule</h6>
+                                    <div class="row">
+
+                                        <div
+                                            class="custom-control col-lg-5 custom-radio mb-3 position-relative border-custom-radio">
+                                            <input type="radio" id="customRadioInline3" name="deliveryTime"
+                                                form="customerPaymentForm" class="custom-control-input" checked
+                                                value="DELIVERY">
+                                            <label class="custom-control-label now" for="customRadioInline3"
+                                                onclick="deliveryNowTime()">
+                                                <div>
+                                                    <div class="p-3 bg-white rounded shadow-sm">
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <p class="mb-0">DELIVERY NOW</p>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </label>
+
+                                        </div>
+                                        <div class="col-lg-1 or">
+                                            OR
+                                        </div>
+                                        <div
+                                            class="custom-control col-lg-5 custom-radio mb-3 position-relative border-custom-radio">
+
+                                            <input type="radio" id="deliveryTime" name="deliveryTime"
+                                                form="customerPaymentForm" class="custom-control-input"
+                                                value="deliveryTime">
+                                            <label class="custom-control-label delivery" for="deliveryTime"
+                                                onclick="deliveryTime()">
+                                                <div>
+                                                    <div class="p-3 bg-white rounded shadow-sm">
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <p class="mb-0">SCHEDULE TIME</p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </label>
+
+                                        </div>
+
+                                        <div class="bg-white p-3 py-3 border-bottom clearfix" id="scheduleTime"
+                                            style="display: none">
+                                            <div class="input-group-sm mb-2 input-group">
+                                                <div class="form-group">
+                                                    <label for="scheduling">Delivery Time</label>
+                                                    <input type="datetime-local" id="scheduling" name="delivery_time"
+                                                        class="form-control" form="customerPaymentForm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div> --}}
+                        </div>
+
+
                         <div class="bg-white p-3 clearfix border-bottom">
                             <p class="mb-1">Item Total <span
                                     class="float-right text-dark">${{ Session::get('total') }}</span></p>
@@ -414,7 +546,25 @@
 
     {!! Toastr::message() !!}
 
+    <script language="javascript">
+        $(document).ready(function() {
+            elem = document.getElementById("scheduling")
+            var iso = new Date().toISOString();
+            var minDate = iso.substring(0, iso.length - 1);
+            elem.value = minDate
+            elem.min = minDate
+        });
+    </script>
+
     <script>
+        function deliveryTime() {
+            $("#scheduleTime").show();
+        }
+
+        function deliveryNowTime() {
+            $("#scheduling").val('');
+            $("#scheduleTime").hide();
+        }
         $(document).ready(function() {
 
             $('.form-check-input').click(function() {
