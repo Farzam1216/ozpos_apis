@@ -49,17 +49,16 @@
             <div>
                 <div class="p-3 border-bottom menu-list">
                     @if ($MenuSize !== null &&
-                             $MenuSize->MenuAddon()->get()->count() !== 0)
+    $MenuSize->MenuAddon()->get()->count() !== 0)
                         <span class="float-right">
                             <button class="btn btn-outline-secondary btn-sm"
-                                onclick="DealsMenuAddon('{{$MenuSize->id}}','{{ $DealsMenu->id }}','{{ $DealsItems->id }}','{{ $Menu->id }}','{{$rest->id}}')">
+                                onclick="DealsMenuAddon('{{ $MenuSize->id }}','{{ $DealsMenu->id }}','{{ $DealsItems->id }}','{{ $Menu->id }}','{{ $rest->id }}')">
                                 Edit
                             </button>
                         </span>
 
 
                         {{-- @include('customer.restaurant.deals.modals.addons') --}}
-
 
                     @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                         <span class="float-right">
@@ -119,47 +118,47 @@
 
 {{-- Menu Menu Modal --}}
 <div id="dealsMenuAddons" class="modal fade" tabindex="-1">
-  <div class="modal-dialog">
-      <div class="modal-content" id="dealsMenuAddon">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dealsMenuAddon">
 
 
-      </div>
-  </div>
+        </div>
+    </div>
 </div>
 {{-- end Menu Single Menu --}}
 <script>
-  function DealsMenuAddon(menuSize_id,dealMenu_id, dealsItems_id, menu_id,vendorId) {
-      $.ajax({
-          headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
-          },
-          type: "POST",
-          @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-              url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-dealsMenuAddon",
-          @else
-              url: "{{ url('customer/get-dealsMenuAddon') }}",
-          @endif
-          data: {
-            menuSize_id: menuSize_id,
-            dealMenu_id: dealMenu_id,
-            dealsItems_id: dealsItems_id,
-            menu_id: menu_id,
-            vendorId: vendorId
+    function DealsMenuAddon(menuSize_id, dealMenu_id, dealsItems_id, menu_id, vendorId) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+            },
+            type: "POST",
+            @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-dealsMenuAddon",
+            @else
+                url: "{{ url('customer/get-dealsMenuAddon') }}",
+            @endif
+            data: {
+                menuSize_id: menuSize_id,
+                dealMenu_id: dealMenu_id,
+                dealsItems_id: dealsItems_id,
+                menu_id: menu_id,
+                vendorId: vendorId
 
-          },
-          beforeSend: function() {
-              $("#loading-image").show();
-          },
-          success: function(data) {
-              console.log(data);
-              $("#dealsMenuAddons").modal('show');
-              $("#dealsMenuAddon").html(data);
-              $("#loading-image").hide()
-          },
-          error: function(err) {
+            },
+            beforeSend: function() {
+                $("#loading-image").show();
+            },
+            success: function(data) {
+                console.log(data);
+                $("#dealsMenuAddons").modal('show');
+                $("#dealsMenuAddon").html(data);
+                $("#loading-image").hide()
+            },
+            error: function(err) {
 
-          }
-      });
-  }
-  // });
+            }
+        });
+    }
+    // });
 </script>

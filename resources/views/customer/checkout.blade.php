@@ -554,6 +554,7 @@
             elem.value = minDate
             elem.min = minDate
         });
+
     </script>
 
     <script>

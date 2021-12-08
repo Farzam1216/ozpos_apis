@@ -1,7 +1,4 @@
-{{-- @section('custom_modals')
-   <div class="modal fade" id="DealsMenuAddon-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}" tabindex="-1" role="dialog" aria-labelledby="DealsMenuAddonModal-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}" aria-hidden="true" style="z-index: 1061">
-      <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content"> --}}
+
             <div class="modal-header">
                <h5 class="modal-title">{{ ucwords($Menu->name) }}</h5>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -52,7 +49,3 @@
                   @append
                </div>
             </div>
-         {{-- </div>
-      </div>
-   </div>
-@append --}}

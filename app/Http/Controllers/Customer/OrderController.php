@@ -276,5 +276,13 @@ class OrderController extends Controller
      return view('customer.restaurant.half.modals.side',compact('HalfNHalfMenu','rest','prefix','ItemSize','Menu','MenuSize'));
 
   }
+  public function itemModal(Request $request)
+  {
+
+     $Menu = Menu::find($request->MenuId);
+
+     return view('customer.restaurant.half.modals.itemModal',compact('Menu'));
+
+  }
 
 }

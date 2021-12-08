@@ -48,7 +48,7 @@
             </div>
 
 
-           <span class="vendorColor">Pickup Status</span>
+           <span class="vendorColor">Take Away Status</span>
             <div class="vendorStatus">
                 <label class="switch">
                     <input type="checkbox" name="pickup_status" id="pickup_status"

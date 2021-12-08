@@ -174,17 +174,18 @@ class VendorController extends Controller
 
         if(isset($request->vendor_status))
         {
-          // if($vendor->pickup_status == 0 && $vendor->delivery_status == 0)
-          //       {
-          //         $vendor->vendor_status = 0;
-          //         $vendor->pickup_status = 0;
-          //         $vendor->delivery_status = 0;
-          //         $vendor->save();
-          //         return response(['success' => true]);
-          //       }
+            // if($vendor->pickup_status == 0 && $vendor->delivery_status == 0)
+            //       {
+            //         $vendor->vendor_status = 0;
+            //         $vendor->pickup_status = 0;
+            //         $vendor->delivery_status = 0;
+            //         $vendor->save();
+            //         return response(['success' => true]);
+            //       }
              if($vendor->vendor_status == 0)
              {
                 $vendor->vendor_status = 1;
+                $vendor->delivery_status = 1;
                 $vendor->save();
                 return response(['success' => true]);
              }

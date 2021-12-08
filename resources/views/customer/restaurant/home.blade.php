@@ -89,6 +89,60 @@ img {vertical-align: middle;}
     width: 100%;
 
   }
+  .carousel-control
+  {
+    position: absolute;
+    /* top: 0;
+    bottom: 200; */
+    /* z-index: 1; */
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: auto;
+    color: #fff;
+    text-align: center;
+    top: 200px;
+    left: 57px;
+
+
+  }
+  .pt-3.text-white {
+    background: #e23744;
+    opacity: .8;
+
+}
+.carousel-control-logo{
+  position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 110000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    opacity: .7;
+}
+.restaurant-logo {
+  position: absolute;
+  bottom: 240px;
+    height: 121px;
+    left: 1000px;
+    border-radius: 4px;
+    margin: 9px 0;
+    background: white;
+
+}
+.rating-wrap.d-flex.align-items-center.mt-2 {
+    align-content: center;
+
+    align-items: center;
+    justify-content: center;
+}
 </style>
 @section('content')
 
@@ -97,7 +151,7 @@ img {vertical-align: middle;}
   <!-- Indicators -->
   <ul class="carousel-indicators">
     @foreach ($slider as $key=>$slid)
-      <li data-target="#demo" data-slide-to="{{$key}}" class="active dot" ></li>
+      <li data-target="#demo" data-slide-to="{{$key}}" class="active dot" style="display: none;"></li>
     @endforeach
   </ul>
 
@@ -107,7 +161,7 @@ img {vertical-align: middle;}
     @foreach ($slider as $slid)
     <div class="carousel-item active">
       <div class="mySlides fadess">
-      <img src="{{asset($slid->image)}}" alt="Los Angeles" width="1100" height="500">
+      <img src="{{asset($slid->image)}}" alt="Slider" width="1100" height="500">
     </div>
     </div>
     @endforeach
@@ -120,7 +174,7 @@ img {vertical-align: middle;}
   </div>
 
   <!-- Left and right controls -->
-  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+  <a class="carousel-control" href="#demo" data-slide="prev">
 
      <div class="pt-3 text-white">
         <h2 class="font-weight-bold">{{ $rest->name }}</h2>
@@ -144,8 +198,8 @@ img {vertical-align: middle;}
     <span ><h2 class="font-weight-bold">{{ $rest->name }}</h2>
       <p class="text-white m-0">{{ $rest->address }}</p> </span>
   </a> --}}
-  <a class="carousel-control-next" href="#demo" data-slide="next">
-    <span style="background-color: white"><img alt="#" src="{{ $rest->image }}" class="restaurant-pic"></span>
+  <a class="carousel-control-logo" >
+    <span style="background-color: white"><img alt="#" src="{{ $rest->image }}" class="restaurant-logo"></span>
   </a>
 </div>
 

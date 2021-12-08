@@ -455,6 +455,7 @@
       Route::post('/get-halfMenuFirst', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuFirst']);
       Route::post('/get-halfMenuSecond', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuSecond']);
       Route::post('/get-halfMenuAddon', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuAddon']);
+      Route::post('/get-itemModal', [App\Http\Controllers\Customer\OrderController::class, 'itemModal']);
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 
