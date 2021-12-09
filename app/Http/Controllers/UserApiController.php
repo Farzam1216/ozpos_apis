@@ -615,7 +615,8 @@
                ];
             }
          }
-         //  \Log::info($orders);
+         \Log::info("apiShowOrder()");
+         \Log::info(response(['success' => true, 'data' => $orders]));
          //  return;
          return response(['success' => true, 'data' => $orders]);
       }
