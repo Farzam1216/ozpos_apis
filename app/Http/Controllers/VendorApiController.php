@@ -1671,6 +1671,7 @@ class VendorApiController extends Controller
     {
         $order = Order::find($request->order_id);
         $order->delivery_person_id = $request->driver_id;
+        $order->order_status = 'READY TO PICKUP';
         $order->save();
         $driver = DeliveryPerson::find($request->driver_id);
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();

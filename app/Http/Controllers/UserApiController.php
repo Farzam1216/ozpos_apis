@@ -263,7 +263,7 @@
       public function apiSingleVendor($vendor_id)
       {
          $master = array();
-         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
+         $master['vendor'] = Vendor::where('id', $vendor_id)->first();
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
          }
@@ -519,9 +519,31 @@
          $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
          $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
          $bookData['address_id'] = 32;
+         
+         Log::info('$bookData[\'delivery_date\']');
+         Log::info($bookData['delivery_date']);
+         Log::info('$bookData[\'delivery_time\']');
+         Log::info($bookData['delivery_time']);
+   
+         if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
+         {
+            $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
+            $dateTime = $bookData['delivery_date'] .' '.$bookData['delivery_time'];
+            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
+            Log::info('$bookData[\'delivery_time\']');
+            Log::info($bookData['delivery_time']);
+         }
+         
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
+         
+         if ($vendor->vendor_status == 0)
+            return response(['success' => false, 'data' => "Vendor is offline."]);
+         if ($bookData['delivery_type'] = 'HOME' && $vendor->delivery_status == 0)
+            return response(['success' => false, 'data' => "Vendor delivery status is offline."]);
+         if ($bookData['delivery_type'] = 'SHOP' && $vendor->pickup_status == 0)
+            return response(['success' => false, 'data' => "Vendor pickup status is offline."]);
 
          if ($bookData['payment_type'] == 'STRIPE') {
             $paymentSetting = PaymentSetting::find(1);
@@ -558,6 +580,7 @@
          $bookData['order_id'] = '#' . rand(100000, 999999);
          $bookData['vendor_id'] = $vendor->id;
          $bookData['order_data'] = $bookData['item'];
+         $bookData['delivery_time'] = $bookData['delivery_time'];
          $order = Order::create($bookData);
 //         if ($bookData['payment_type'] == 'WALLET') {
 //            $user->withdraw($bookData['amount'], [$order->id]);
@@ -615,7 +638,8 @@
                ];
             }
          }
-         //  \Log::info($orders);
+         \Log::info("apiShowOrder()");
+         \Log::info(response(['success' => true, 'data' => $orders]));
          //  return;
          return response(['success' => true, 'data' => $orders]);
       }

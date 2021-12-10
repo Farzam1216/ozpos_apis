@@ -81,7 +81,7 @@
 
       protected $table = 'order';
 
-      protected $fillable = ['order_id', 'tax', 'vendor_id', 'user_id', 'payment_token', 'delivery_person_id', 'date', 'time', 'amount', 'payment_type', 'payment_status', 'vendor_discount', 'promocode_id', 'promocode_price', 'address_id', 'order_status', 'delivery_charge', 'order_start_time', 'order_end_time', 'delivery_type', 'admin_commission', 'vendor_amount', 'printable', 'order_data', 'sub_total'];
+      protected $fillable = ['order_id', 'tax', 'vendor_id', 'user_id', 'payment_token', 'delivery_person_id', 'date', 'time', 'amount', 'payment_type', 'payment_status', 'vendor_discount', 'promocode_id', 'promocode_price', 'address_id', 'order_status', 'delivery_charge', 'order_start_time', 'order_end_time', 'delivery_type', 'admin_commission', 'vendor_amount', 'printable', 'order_data', 'sub_total', 'delivery_time'];
 
       protected $appends = ['vendor', 'user', 'orderItems', 'user_address'];
 
@@ -104,7 +104,7 @@
             if ($item->category === 'SINGLE')
                array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => $item->menu[0]->name, 'price' => $item->menu[0]->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
             else
-               array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => $item->menu_category[0]->name, 'price' => $item->menu_category->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
+               array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => $item->menu_category->name, 'price' => $item->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
          }
 
          return $OrderItems;
