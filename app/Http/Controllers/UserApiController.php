@@ -263,7 +263,7 @@
       public function apiSingleVendor($vendor_id)
       {
          $master = array();
-         $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
+         $master['vendor'] = Vendor::where('id', $vendor_id)->first();
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
          }
@@ -522,6 +522,13 @@
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
+         
+         if ($vendor->vendor_status == 0)
+            return response(['success' => false, 'data' => "Vendor is offline."]);
+         if ($bookData['delivery_type'] = 'HOME' && $vendor->delivery_status == 0)
+            return response(['success' => false, 'data' => "Vendor delivery status is offline."]);
+         if ($bookData['delivery_type'] = 'SHOP' && $vendor->pickup_status == 0)
+            return response(['success' => false, 'data' => "Vendor pickup status is offline."]);
 
          if ($bookData['payment_type'] == 'STRIPE') {
             $paymentSetting = PaymentSetting::find(1);
