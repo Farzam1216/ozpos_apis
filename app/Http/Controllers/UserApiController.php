@@ -519,6 +519,21 @@
          $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
          $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
          $bookData['address_id'] = 32;
+         
+         Log::info('$bookData[\'delivery_date\']');
+         Log::info($bookData['delivery_date']);
+         Log::info('$bookData[\'delivery_time\']');
+         Log::info($bookData['delivery_time']);
+   
+         if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
+         {
+            $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
+            $dateTime = $bookData['delivery_date'] .' '.$bookData['delivery_time'];
+            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
+            Log::info('$bookData[\'delivery_time\']');
+            Log::info($bookData['delivery_time']);
+         }
+         
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
@@ -565,6 +580,7 @@
          $bookData['order_id'] = '#' . rand(100000, 999999);
          $bookData['vendor_id'] = $vendor->id;
          $bookData['order_data'] = $bookData['item'];
+         $bookData['delivery_time'] = $bookData['delivery_time'];
          $order = Order::create($bookData);
 //         if ($bookData['payment_type'] == 'WALLET') {
 //            $user->withdraw($bookData['amount'], [$order->id]);
