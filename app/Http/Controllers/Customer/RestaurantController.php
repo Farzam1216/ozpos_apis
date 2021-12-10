@@ -45,13 +45,15 @@ class RestaurantController extends Controller
     $Point = new Point($UserAddress->lat, $UserAddress->lang);
     // dd($Point);
     $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->get();
+
       if (!$DeliveryZoneNew)
-      //  return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
+       return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
 
     $radius = GeneralSetting::first()->radius;
+
     // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
     $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type','map_api_key'])->makeHidden(['vendor_logo']);
-    // dd($vendors);
+
 
     foreach ($vendors as $vendor) {
 
@@ -63,10 +65,11 @@ class RestaurantController extends Controller
            );
 
        $googleDistance = json_decode($googleDistance);
-
+      //  dd($googleDistance->rows[0]->elements[0]->distance->text);
        $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
+
        $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
-       //dd($vendor['distance']);
+
        if (auth()->user() != null) {
           $user = auth()->user();
 

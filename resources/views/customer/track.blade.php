@@ -20,6 +20,7 @@
       overflow: show;
       height: 400px
   }
+
 </style>
 @section('content')
 <div class="offer-section py-4">

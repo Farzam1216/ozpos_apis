@@ -9,6 +9,7 @@
          {{-- @include('customer.restaurant.deals.modals.index') --}}
 
          <div class="media">
+          <a href="javascript:void(0)" onclick="DealMenuModal('{{ $DealsMenu->id }}','{{ $rest->id }}')">
             <img src="{{ $DealsMenu->image }}" alt="" class="mr-3 rounded-pill ">
             <div class="media-body">
                <h6 class="mb-1">{{ ucwords($DealsMenu->name) }}
@@ -29,6 +30,7 @@
                   @endif
                @endif
             </div>
+          </a>
          </div>
       </div>
    @endforeach
@@ -42,6 +44,15 @@
 
       </div>
   </div>
+</div>
+{{-- end Menu Single Menu --}}
+{{-- Menu Menu Modal --}}
+<div class="modal fade" id="dealMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog " >
+    <div class="modal-content" id="dealMenusModal">
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
 </div>
 {{-- end Menu Single Menu --}}
 <script>
@@ -68,6 +79,7 @@
           },
           success: function(data) {
               console.log(data);
+              $("#dealMenuModal").modal('hide');
               $("#dealMenu").modal('show');
               $("#dealMenus").html(data);
               $("#loading-image").hide()
@@ -77,5 +89,37 @@
           }
       });
   }
+  function DealMenuModal(id, vendor_id) {
+
+
+      $.ajax({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+          },
+          type: "POST",
+          @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+              url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-dealMenuModal",
+          @else
+              url: "{{ url('customer/get-dealMenuModal') }}",
+          @endif
+          data: {
+            dealsMenu_id: id,vendorId:vendor_id
+          },
+          beforeSend: function() {
+              $("#loading-image").show();
+          },
+          success: function(data) {
+              console.log(data);
+              $("#dealMenu").modal('hide');
+              $("#dealMenuModal").modal('show');
+              $("#dealMenusModal").html(data);
+              $("#loading-image").hide()
+          },
+          error: function(err) {
+
+          }
+      });
+  }
   // });
 </script>
+

@@ -70,7 +70,6 @@
 <script>
     function DealsMenuItems(dealMenu_id, dealsItems_id, vendorId) {
 
-
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')

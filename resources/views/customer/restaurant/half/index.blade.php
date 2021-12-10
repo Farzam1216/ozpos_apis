@@ -9,12 +9,14 @@
             {{-- @include('customer.restaurant.half.modals.index') --}}
 
             <div class="media">
+              <a href="javascript:void(0)" onclick="HalfNHalfMenuModal('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}')">
                 <img src="{{ $HalfNHalfMenu->image }}" alt="" class="mr-3 rounded-pill ">
                 <div class="media-body">
                     <h6 class="mb-1">{{ ucwords($HalfNHalfMenu->name) }}
                         <span class="badge badge-danger">Customizable Half n Half</span>
                     </h6>
                 </div>
+              </a>
             </div>
         </div>
     @endforeach
@@ -29,6 +31,14 @@
     </div>
 </div>
 
+<div id="halfNHalfMenuModals" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="halfNHalfMenuModal">
+
+
+        </div>
+    </div>
+</div>
 
 
     <script>
@@ -52,10 +62,39 @@
                 success: function(data) {
                     console.log(data);
 
+                    $("#halfNHalfMenuModals").modal('hide');
                     $("#halfNHalfMenus").modal('show');
-
                     $("#halfNHalfMenu").html(data);
                     alert('Select Item category');
+                },
+                error: function(err) {
+
+                }
+            });
+        }
+        function HalfNHalfMenuModal(halfMenu_id, vendorId) {
+            console.log(vendorId);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"').attr('content')
+                },
+                type: "POST",
+                @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                    url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-halfNHalfMenuModal",
+                @else
+                    url: "{{ url('customer/get-halfNHalfMenuModal') }}",
+                @endif
+                data: {
+                    HalfNHalfMenu_id: halfMenu_id,
+                    vendorId: vendorId
+                },
+
+                success: function(data) {
+                    console.log(data);
+
+                    $("#halfNHalfMenuModals").modal('show');
+                    $("#halfNHalfMenuModal").html(data);
+                      //  alert('Select Item category');
                 },
                 error: function(err) {
 

@@ -32,7 +32,7 @@
         @endif
 
         <div class="media">
-            <a href="#1 " onclick="itemModal('{{ $Menu->id }}','{{ $SingleMenu->id }}')">
+            <a href="javascript:void(0)" onclick="itemModal('{{ $Menu->id }}','{{ $SingleMenu->id }}','{{ $rest->id }}')">
                 <img src="{{ $Menu->image }}" alt="" class="mr-3 rounded-pill ">
                 <div class="media-body">
                     <h6 class="mb-1" style="font-weight: 600;">{{ ucwords($Menu->name) }}
@@ -64,9 +64,8 @@
 @endforeach
 
 {{-- Menu Single Modal --}}
-<div id="myModal" class="modal fade" tabindex="-1" style="background: white;">
+<div id="singleModal" class="modal fade" tabindex="-1" style="background: white; ">
     <div class="modal-dialog">
-
         <div class="modal-content" id="singleMenu">
 
 
@@ -77,8 +76,8 @@
 {{-- end Menu Single Menu --}}
 
 {{-- MenuAddon Modal --}}
-<div id="MenuAddon" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+<div id="MenuAddons" class="modal fade" tabindex="-1" >
+    <div class="modal-dialog ">
       <button type="button" class="close " data-dismiss="modal" aria-label="Close">
         <i class="fas fa-times"></i>
     </button>
@@ -92,8 +91,8 @@
 
 
 <div class="modal fade" id="ItemMenus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" id="ItemMenu">
+  <div class="modal-dialog " >
+    <div class="modal-content" id="ItemMenu" >
 
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -123,9 +122,9 @@
                 },
                 success: function(data) {
                     console.log(data);
-                    $("#myModal").modal('show');
-                    $("#singleMenu").html(data);
-                    $("#loading-image").hide()
+                    $("#ItemMenus").modal('hide');
+                    $("#MenuAddons").modal('show');
+                    $("#menuAddon").html(data);
                 },
                 error: function(err) {
 
@@ -157,9 +156,10 @@
                 },
                 success: function(data) {
                     console.log(data);
-                    $("#myModal").modal('show');
+                    $("#ItemMenus").modal('hide');
+                    $("#singleModal").modal('show');
                     $("#singleMenu").html(data);
-                    $("#loading-image").hide()
+                    $("#loading-image").hide();
                 },
                 error: function(err) {
 
@@ -167,7 +167,7 @@
             });
         }
 
-        function itemModal(MenuId, SingleMenuId) {
+        function itemModal(MenuId, SingleMenuId,vendorId) {
 
 
             $.ajax({
@@ -182,6 +182,7 @@
                 @endif
                 data: {
                     SingleMenuId: SingleMenuId,
+                    vendorId: vendorId,
                     MenuId: MenuId
                 },
                 beforeSend: function() {
@@ -191,7 +192,7 @@
                     console.log(data);
                     $("#ItemMenus").modal('show');
                     $("#ItemMenu").html(data);
-                    $("#loading-image").hide()
+
                 },
                 error: function(err) {
 
@@ -201,43 +202,4 @@
         // });
     </script>
 @endsection
-<style>
-  div#ItemMenus {
-    width: 620px;
-    left: 390px;
-    top: 100px;
 
-}
-div#ItemMenu {
-    height: auto !important;
-    min-height: -webkit-fill-available;
-    max-height: -webkit-fill-available;
-}
-*, :after, :before {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-shadow: 1px 1px 1px rgb(0 0 0 / 4%);
-}
-.modal button.close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.875rem;
-    border: none;
-    border-radius: 50px;
-    background-color: transparent;
-}
-h1#dish-name {
-    font-weight: 400;
-    font-family: Poppins,sans-serif;
-    line-height: 1.5;
-}
-button.close.btn {
-    padding: 6px;
-    background: red;
-    border-radius: 8px;
-    border: 1px solid darkred;
-    color: white;
-}
-</style>

@@ -92,10 +92,7 @@ img {vertical-align: middle;}
   .carousel-control
   {
     position: absolute;
-    /* top: 0;
-    bottom: 200; */
-    /* z-index: 1; */
-    display: -ms-flexbox;
+
     display: flex;
     -ms-flex-align: center;
     align-items: center;
@@ -104,37 +101,46 @@ img {vertical-align: middle;}
     width: auto;
     color: #fff;
     text-align: center;
-    top: 200px;
+    bottom: 2px;
     left: 57px;
 
 
   }
   .pt-3.text-white {
-    background: #e23744;
-    opacity: .8;
+    /* background: #e23744; */
+    background: hsl(337 93%  43% / 0.7);
+    /* background:linear-gradient(hsl(337 93%  43% / 0),hsl(337 93%  43% / 1)) ; */
+
+    padding: 8px 8px 0;
+    border-radius: 20px 20px 0px 2px;
+    color: whitesmoke !important;
 
 }
 .carousel-control-logo{
   position: absolute;
     top: 0;
     bottom: 0;
-    z-index: 110000;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     color: #fff;
     text-align: center;
-    opacity: .7;
+
 }
 .restaurant-logo {
   position: absolute;
-  bottom: 240px;
+    bottom: -6px;
     height: 121px;
-    left: 1000px;
-    border-radius: 4px;
+    left: 970px;
+
     margin: 9px 0;
-    background: white;
+    padding: 9px 0;
+    background: hsl(0 0% 0% / 0.7);
+
+    padding: 2px 6px 0px 10px;
+    border-radius: 16px 16px 0px 2px;
+    color: whitesmoke !important;
 
 }
 .rating-wrap.d-flex.align-items-center.mt-2 {
@@ -171,6 +177,7 @@ img {vertical-align: middle;}
     <div class="carousel-item">
       <img src="ny.jpg" alt="New York" width="1100" height="500">
     </div> --}}
+
   </div>
 
   <!-- Left and right controls -->

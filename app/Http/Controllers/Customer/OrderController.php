@@ -265,7 +265,6 @@ class OrderController extends Controller
   public function halfMenuAddon(Request $request)
   {
     // dd($request);
-
      $prefix = "Second";
      $ItemSize =$request->ItemSizeId;
      $MenuSize = MenuSize::where('item_size_id', $ItemSize )->first();
@@ -280,8 +279,28 @@ class OrderController extends Controller
   {
 
      $Menu = Menu::find($request->MenuId);
+     $rest = Vendor::find($request->vendorId);
+     $SingleMenu = SingleMenu::find($request->SingleMenuId);
 
-     return view('customer.restaurant.half.modals.itemModal',compact('Menu'));
+     return view('customer.restaurant.half.modals.itemModal',compact('Menu','SingleMenu','rest'));
+
+  }
+  public function dealMenuModal(Request $request)
+  {
+
+
+     $rest = Vendor::find($request->vendorId);
+     $dealsMenu = DealsMenu::find($request->dealsMenu_id);
+     return view('customer.restaurant.half.modals.dealMenuModal',compact('dealsMenu','rest'));
+
+  }
+  public function halfNHalfMenuModal(Request $request)
+  {
+
+
+     $rest = Vendor::find($request->vendorId);
+     $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenu_id);
+     return view('customer.restaurant.half.modals.halfNHalfMenuModal',compact('HalfNHalfMenu','rest'));
 
   }
 

@@ -411,8 +411,6 @@
 
       // change status
       Route::post('promo_code/change_status', [PromoCodeController::class, 'change_status']);
-
-
    });
 
    Route::post('saveEnvData', [AdminController::class, 'saveEnvData']);
@@ -456,6 +454,8 @@
       Route::post('/get-halfMenuSecond', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuSecond']);
       Route::post('/get-halfMenuAddon', [App\Http\Controllers\Customer\OrderController::class, 'halfMenuAddon']);
       Route::post('/get-itemModal', [App\Http\Controllers\Customer\OrderController::class, 'itemModal']);
+      Route::post('/get-dealMenuModal', [App\Http\Controllers\Customer\OrderController::class, 'dealMenuModal']);
+      Route::post('/get-halfNHalfMenuModal', [App\Http\Controllers\Customer\OrderController::class, 'halfNHalfMenuModal']);
       Route::get('/get-order/{id}', [App\Http\Controllers\Customer\OrderController::class, 'getOrder'])->name('order.get');
       Route::get('/track-order/{order_id}', [App\Http\Controllers\Customer\OrderController::class, 'trackOrder'])->name('order.track');
 

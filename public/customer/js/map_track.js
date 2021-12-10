@@ -45,7 +45,7 @@ var map = new google.maps.Map(document.getElementById('track-map'), {
 
     zoom: 2,
     mapTypeId: 'roadmap',
-    // fullscreenControl: false,
+    fullscreenControl: false,
 
     mapTypeControl: false,
     streetViewControl: false,
