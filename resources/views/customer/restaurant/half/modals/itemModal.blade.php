@@ -94,7 +94,7 @@
         margin-top: 330px;
         background: #0000008a;
         padding: 6px;
-        border-radius: 4px;
+        border-radius:6px 6px 0px 0px  ;
     }
 
     button.close.btn {
@@ -115,7 +115,7 @@
         -webkit-box-orient: vertical;
         background: #0000008a;
         padding: 6px;
-        border-radius: 4px;
+        border-radius: 0px 0px 6px 6px ;
     }
 
     @media (max-width: 600px) {

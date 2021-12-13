@@ -7,7 +7,7 @@
         X
     </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" style="background: white;padding: 1rem !important;">
   <span class="float-right">
     <button class="btn btn-outline-secondary btn-sm"
         onclick="HalfNHalfMenu('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}')">Edit</button>
@@ -37,11 +37,16 @@
         max-width: 100ch;
 
   }
+  .modal {
+        position: fixed !important;
+
+    }
 
   div#halfNHalfMenuModal {
-      height: auto !important;
-      min-height: -webkit-fill-available;
-      max-height: -webkit-fill-available;
+        height: auto !important;
+        background-color: transparent !important;
+        min-height: -webkit-fill-available;
+        max-height: -webkit-fill-available;
   }
 
   *,
@@ -55,26 +60,87 @@
   }
 
   .modal button.close {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.875rem;
-      border: none;
-      border-radius: 50px;
-      background-color: transparent;
+    position: absolute;
+        top: 1.5rem;
+        right: 1.875rem;
+        border: none;
+        border-radius: 50px;
+        background-color: transparent;
   }
 
   h1#dish-name {
-      font-weight: 400;
-      font-family: Poppins, sans-serif;
-      line-height: 1.5;
+    font-weight: 400;
+        font-family: Poppins, sans-serif;
+        line-height: 1.5;
+        margin-top: 330px;
+        background: #0000008a;
+        padding: 6px;
+        border-radius:6px 6px 0px 0px  ;
   }
 
   button.close.btn {
-      padding: 6px;
-      background: red;
-      border-radius: 8px;
-      border: 1px solid darkred;
-      color: white;
+    padding: 6px;
+        background: red;
+        border-radius: 8px;
+        border: 1px solid darkred;
+        color: white;
   }
+  #dish-desc {
+        margin-bottom: 0;
+        /* color: #838f9b; */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        background: #0000008a;
+        padding: 6px;
+        border-radius: 0px 0px  6px 6px;
+    }
+
+    @media (max-width: 600px) {
+        div#halfNHalfMenuModals {
+            left: 1rem;
+            top: 5rem;
+            position: fixed;
+            align-content: center;
+            justify-content: center;
+            max-width: 60ch;
+        }
+    }
+
+
+    @media screen and (min-width: 600px) and (max-width: 768px) {
+        div#halfNHalfMenuModals {
+            left: 2.5rem;
+            top: 5rem;
+            position: fixed;
+            align-content: center;
+            justify-content: center;
+            max-width: 75ch;
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        div#halfNHalfMenuModals {
+            left: 4.5rem;
+            top: 5rem;
+            position: fixed;
+            align-content: center;
+            justify-content: center;
+            max-width: 85ch;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        div#halfNHalfMenuModals {
+            left: 18rem;
+            top: 3rem;
+            position: fixed;
+            align-content: center;
+            justify-content: center;
+            max-width: 104ch;
+        }
+    }
 
 </style>

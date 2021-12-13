@@ -167,19 +167,21 @@ class OrderController extends Controller
   public function getMenuSizeModel(Request $request)
   {
     // dd($request);
+    $unique_id = $request->unique_id;
      $SingleMenu = SingleMenu::find($request->singleMenu_id);
      $rest = Vendor::find($request->vendorId);
      $Menu = $SingleMenu->Menu()->get()->first();
-     return view('customer.restaurant.single.modals.sizes',compact('Menu','SingleMenu','rest'));
+     return view('customer.restaurant.single.modals.sizes',compact('Menu','SingleMenu','rest','unique_id'));
 
   }
   public function getMenuAddonModel(Request $request)
   {
-    // dd($request);
+    // dd($request->all());
+    $unique_id = $request->unique_id;
      $SingleMenu = SingleMenu::find($request->singleMenu_id);
      $rest = Vendor::find($request->vendorId);
      $Menu = $SingleMenu->Menu()->get()->first();
-     return view('customer.restaurant.single.modals.addons',compact('Menu','SingleMenu','rest'));
+     return view('customer.restaurant.single.modals.addons',compact('Menu','SingleMenu','rest','unique_id'));
 
   }
   public function getDealsMenu(Request $request)

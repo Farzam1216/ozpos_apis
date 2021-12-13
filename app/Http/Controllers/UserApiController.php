@@ -519,12 +519,12 @@
          $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
          $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
          $bookData['address_id'] = 32;
-         
+
          Log::info('$bookData[\'delivery_date\']');
          Log::info($bookData['delivery_date']);
          Log::info('$bookData[\'delivery_time\']');
          Log::info($bookData['delivery_time']);
-   
+
          if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
          {
             $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
@@ -533,16 +533,16 @@
             Log::info('$bookData[\'delivery_time\']');
             Log::info($bookData['delivery_time']);
          }
-         
+
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
-         
+
          if ($vendor->vendor_status == 0)
             return response(['success' => false, 'data' => "Vendor is offline."]);
-         if ($bookData['delivery_type'] = 'HOME' && $vendor->delivery_status == 0)
+         if ($bookData['delivery_type'] == 'TAKEAWAY' && $vendor->delivery_status == 0)
             return response(['success' => false, 'data' => "Vendor delivery status is offline."]);
-         if ($bookData['delivery_type'] = 'SHOP' && $vendor->pickup_status == 0)
+         if ($bookData['delivery_type'] == 'DELIVERY' && $vendor->pickup_status == 0)
             return response(['success' => false, 'data' => "Vendor pickup status is offline."]);
 
          if ($bookData['payment_type'] == 'STRIPE') {

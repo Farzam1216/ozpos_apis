@@ -624,7 +624,8 @@
       /*
       EVENT
       */
-      $target.click(function () {
+      $target.on('click', function () {
+        alert(11);
          options.clickOnAddToCart($target);
 
          var vendor = $target.data('vendor');

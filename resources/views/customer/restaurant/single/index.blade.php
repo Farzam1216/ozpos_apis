@@ -14,12 +14,12 @@
         @if ($Menu->MenuSize()->get()->count() !== 0)
             <span class="float-right">
                 <button class="btn btn-outline-secondary btn-sm"
-                    onclick="MenuSize('{{ $SingleMenu->id }}','{{ $rest->id }}')">Edit</button>
+                    onclick="MenuSize('{{ $SingleMenu->id }}','{{ $rest->id }}','{{$unique_id}}')">Edit</button>
             </span>
         @elseif($Menu->MenuAddon()->get()->count() !== 0)
             <span class="float-right">
                 <button class="btn btn-outline-secondary btn-sm"
-                    onclick="MenuAddon('{{ $SingleMenu->id }}','{{ $rest->id }}')">Edit</button>
+                    onclick="MenuAddon('{{ $SingleMenu->id }}','{{ $rest->id }}','{{$unique_id}}')">Edit</button>
             </span>
         @else
             <span class="float-right">
@@ -103,7 +103,7 @@
 
 @section('postScript')
     <script>
-        function MenuAddon(id, vendorId) {
+        function MenuAddon(id, vendorId,unique_id) {
 
             console.log(vendorId);
             $.ajax({
@@ -118,7 +118,8 @@
                 @endif
                 data: {
                     singleMenu_id: id,
-                    vendorId: vendorId
+                    vendorId: vendorId,
+                    unique_id: unique_id
                 },
                 beforeSend: function() {
                     $("#loading-image").show();
@@ -137,7 +138,7 @@
         // });
     </script>
     <script>
-        function MenuSize(id, vendorId) {
+        function MenuSize(id, vendorId,unique_id) {
 
             console.log(vendorId);
             $.ajax({
@@ -152,7 +153,8 @@
                 @endif
                 data: {
                     singleMenu_id: id,
-                    vendorId: vendorId
+                    vendorId: vendorId,
+                    unique_id: unique_id
                 },
                 beforeSend: function() {
                     $("#loading-image").show();

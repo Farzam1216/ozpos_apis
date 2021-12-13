@@ -93,7 +93,7 @@
 
             _.initials = {
                 animating: false,
-                dragging: false,
+                dragging: true,
                 autoPlayTimer: null,
                 currentDirection: 0,
                 currentLeft: null,
