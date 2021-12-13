@@ -34,12 +34,15 @@
         <div class="media">
             <a href="javascript:void(0)" onclick="itemModal('{{ $Menu->id }}','{{ $SingleMenu->id }}','{{ $rest->id }}')">
                 <img src="{{ $Menu->image }}" alt="" class="mr-3 rounded-pill ">
-                <div class="media-body">
+            </a>
+                <div class="media-body" >
+                  <a href="javascript:void(0)" onclick="itemModal('{{ $Menu->id }}','{{ $SingleMenu->id }}','{{ $rest->id }}')">
                     <h6 class="mb-1" style="font-weight: 600;">{{ ucwords($Menu->name) }}
                         @if ($Menu->price === null)
                             <span class="badge badge-danger">Customizable</span>
                         @endif
                     </h6>
+                  </a>
                     @if ($Menu->price !== null)
                         @if ($Menu->display_discount_price === null)
                             <p class="text-muted mb-0">
@@ -56,7 +59,7 @@
                         @endif
                     @endif
                 </div>
-            </a>
+            {{-- </a> --}}
         </div>
 
         {{-- ///Ajax --}}

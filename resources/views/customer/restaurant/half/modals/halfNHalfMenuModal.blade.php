@@ -1,5 +1,4 @@
-<div class="modal-header" style="display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: 300px; background: url('{{ $HalfNHalfMenu->image }}') no-repeat center/cover">
+<div class="modal-header head" style=" background: url('{{ $HalfNHalfMenu->image }}') no-repeat center/cover">
     <div style="position: relative; z-index: 1;">
         <h1 class="modal-title text-white" id="dish-name">{{ $HalfNHalfMenu->name }}</h1>
         <p id="dish-desc" class="text-white">{{ $HalfNHalfMenu->description }}</p>
@@ -16,10 +15,26 @@
 </div>
 
 <style>
+   .modal-header.head {
+        display: grid;
+        /* flex-direction: column; */
+        place-items: center;
+        /* justify-content: flex-end; */
+        min-height: 50vh;
+        line-height: 1.6;
+        border-radius: 13px 13px 0 0;
+        background: #00000087;
+
+  }
+
+
   div#halfNHalfMenuModals {
-      width: 620px;
-      left: 390px;
-      top: 100px;
+        left: 18rem;
+        top: 5rem;
+        position: fixed;
+        align-content: center;
+        justify-content: center;
+        max-width: 100ch;
 
   }
 

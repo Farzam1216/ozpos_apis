@@ -11,11 +11,14 @@
             <div class="media">
               <a href="javascript:void(0)" onclick="HalfNHalfMenuModal('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}')">
                 <img src="{{ $HalfNHalfMenu->image }}" alt="" class="mr-3 rounded-pill ">
+              </a>
+              <a href="javascript:void(0)" onclick="HalfNHalfMenuModal('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}')">
                 <div class="media-body">
                     <h6 class="mb-1">{{ ucwords($HalfNHalfMenu->name) }}
                         <span class="badge badge-danger">Customizable Half n Half</span>
                     </h6>
                 </div>
+
               </a>
             </div>
         </div>

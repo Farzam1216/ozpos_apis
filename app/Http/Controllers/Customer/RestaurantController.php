@@ -118,6 +118,7 @@ class RestaurantController extends Controller
   {
     $vendor_id = Vendor::find($id)->id;
     $itemCategory = ItemCategory::where('vendor_id', $id)->get();
+    $slider = Slider::where('vendor_id', $id)->get();
     $rest = $this->getRest($id);
     $singleVendor = $this->singleVendor($id);
 
@@ -127,7 +128,7 @@ class RestaurantController extends Controller
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
-    return view('customer/restaurant', compact('vendor_id', 'rest', 'singleVendor', 'page', 'userAddress', 'selectedAddress', 'itemCategory'));
+    return view('customer/restaurant', compact('vendor_id','slider', 'rest', 'singleVendor', 'page', 'userAddress', 'selectedAddress', 'itemCategory'));
   }
 
   public function itemCategory($id,$category_id)

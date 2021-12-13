@@ -11,7 +11,9 @@
          <div class="media">
           <a href="javascript:void(0)" onclick="DealMenuModal('{{ $DealsMenu->id }}','{{ $rest->id }}')">
             <img src="{{ $DealsMenu->image }}" alt="" class="mr-3 rounded-pill ">
+          </a>
             <div class="media-body">
+              <a href="javascript:void(0)" onclick="DealMenuModal('{{ $DealsMenu->id }}','{{ $rest->id }}')">
                <h6 class="mb-1">{{ ucwords($DealsMenu->name) }}
                   <span class="badge badge-danger">Customizable Deals</span>
                </h6>
@@ -29,8 +31,8 @@
                      </p>
                   @endif
                @endif
+              </a>
             </div>
-          </a>
          </div>
       </div>
    @endforeach
