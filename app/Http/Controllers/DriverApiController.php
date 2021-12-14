@@ -412,9 +412,13 @@ class DriverApiController extends Controller
     public function apiDriverOrder()
     {
         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+
         $this->driver_cancel_max_order();
+
         $vendor_driver = $this->isVendorDriver();
+        // dd('asd');
         $driver = auth()->user();
+
         if(!$vendor_driver)
         {
             $delivery_zone_areas = DeliveryZoneArea::where('delivery_zone_id',$driver->delivery_zone_id)->get();

@@ -390,13 +390,17 @@ class CustomerController extends Controller
         // $time = json_decode($timePeriod->period_list);
         // $newStartTime = date("H:i", strtotime($time[0]->start_time));
         // $newEndTime = date("H:i", strtotime($time[0]->end_time));
-        if($vendor->vendor_status == 1 && $vendor->delivery_status == 1)
+        if($vendor->vendor_status == 1 && $vendor->delivery_status == 1 && $vendor->delivery_status == 1)
         {
           $timeSlot = "true";
         }
-        else if($vendor->vendor_status == 1 && $vendor->pickup_status == 1)
+        else if($vendor->vendor_status == 1 && $vendor->pickup_status == 0 && $vendor->delivery_status == 1)
         {
           $timeSlot = "true";
+        }
+        else if($vendor->vendor_status == 1 && $vendor->pickup_status == 1 && $vendor->delivery_status == 0)
+        {
+          $timeSlot = "false";
         }
         else
         {
@@ -534,6 +538,11 @@ class CustomerController extends Controller
           // dd($addo->id);
         }
       }
+
+      // if($request->deliveryTime = "DELIVERY")
+      // {
+      //   $bookData['delivery_time'] = '';
+      // }
       // if(isset($item->summary->size))
       //   {
       //     foreach($item->summary->size as $siz)

@@ -3,7 +3,7 @@
       <div class="p-3 border-bottom menu-list">
          <span class="float-right">
             <button class="btn btn-outline-secondary btn-sm"
-              onclick="DealsMenu('{{ $DealsMenu->id }}','{{ $rest->id }}')">Edit</button>
+              onclick="DealsMenu('{{ $DealsMenu->id }}','{{ $rest->id }}','{{$unique_id}}')">Edit</button>
          </span>
 
          {{-- @include('customer.restaurant.deals.modals.index') --}}
@@ -59,7 +59,7 @@
 {{-- end Menu Single Menu --}}
 <script>
 
-  function DealsMenu(id, vendor_id) {
+  function DealsMenu(id, vendor_id,unique_id) {
 
 
       $.ajax({
@@ -73,7 +73,7 @@
               url: "{{ url('customer/get-dealsMenu') }}",
           @endif
           data: {
-            dealsMenu_id: id,vendorId:vendor_id
+            dealsMenu_id: id,vendorId:vendor_id,unique_id:unique_id
 
           },
           beforeSend: function() {

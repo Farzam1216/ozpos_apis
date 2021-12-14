@@ -1669,6 +1669,7 @@ class VendorApiController extends Controller
 
     public function apiDriverAssign(Request $request)
     {
+      // dd($request->all());
         $order = Order::find($request->order_id);
         $order->delivery_person_id = $request->driver_id;
         $order->order_status = 'READY TO PICKUP';

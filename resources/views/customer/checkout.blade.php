@@ -138,10 +138,10 @@
 
                                             <div
                                                 class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
-                                                <input type="radio" id="customRadioInline1" name="delivery_type"
+                                                <input type="radio" id="customRadioInline3" name="delivery_type"
                                                     form="customerPaymentForm" title="Delivery Out"
                                                     class="custom-control-input" disabled value="DELIVERY">
-                                                <label class="custom-control-label w-100" for="customRadioInline1">
+                                                <label class="custom-control-label w-100" for="customRadioInline3">
                                                     <div>
                                                         <div class="p-3 bg-danger rounded shadow-sm w-100">
                                                             <div class="d-flex align-items-center mb-2">
@@ -161,10 +161,10 @@
 
                                             <div
                                                 class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
-                                                <input type="radio" id="customRadioInline2" name="delivery_type"
+                                                <input type="radio" id="customRadioInline4" name="delivery_type"
                                                     form="customerPaymentForm" class="custom-control-input"
-                                                    value="TAKE AWAY" checked disabled>
-                                                <label class="custom-control-label w-100" for="customRadioInline2">
+                                                    value="TAKE AWAY" checked>
+                                                <label class="custom-control-label w-100" for="customRadioInline4">
                                                     <div>
                                                         <div class="p-3 bg-white rounded shadow-sm w-100">
                                                             <div class="d-flex align-items-center mb-2">
@@ -436,10 +436,10 @@
 
                                         <div
                                             class="custom-control col-lg-5 custom-radio mb-3 position-relative border-custom-radio">
-                                            <input type="radio" id="customRadioInline3" name="deliveryTime"
+                                            <input type="radio" id="deliveryTime1" name="deliveryTime"
                                                 form="customerPaymentForm" class="custom-control-input" checked
                                                 value="DELIVERY">
-                                            <label class="custom-control-label now" for="customRadioInline3"
+                                            <label class="custom-control-label now" for="deliveryTime1"
                                                 onclick="deliveryNowTime()">
                                                 <div>
                                                     <div class="p-3 bg-white rounded shadow-sm">
@@ -459,10 +459,10 @@
                                         <div
                                             class="custom-control col-lg-5 custom-radio mb-3 position-relative border-custom-radio">
 
-                                            <input type="radio" id="deliveryTime" name="deliveryTime"
+                                            <input type="radio" id="deliveryTime2" name="deliveryTime"
                                                 form="customerPaymentForm" class="custom-control-input"
                                                 value="deliveryTime">
-                                            <label class="custom-control-label delivery" for="deliveryTime"
+                                            <label class="custom-control-label delivery" for="deliveryTime2"
                                                 onclick="deliveryTime()">
                                                 <div>
                                                     <div class="p-3 bg-white rounded shadow-sm">

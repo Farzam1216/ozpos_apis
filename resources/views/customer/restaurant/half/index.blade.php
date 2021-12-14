@@ -3,7 +3,7 @@
         <div class="p-3 border-bottom menu-list">
             <span class="float-right">
                 <button class="btn btn-outline-secondary btn-sm"
-                    onclick="HalfNHalfMenu('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}')">Edit</button>
+                    onclick="HalfNHalfMenu('{{ $HalfNHalfMenu->id }}','{{ $rest->id }}',{{$unique_id}})">Edit</button>
             </span>
 
             {{-- @include('customer.restaurant.half.modals.index') --}}
@@ -45,7 +45,7 @@
 
 
     <script>
-        function HalfNHalfMenu(halfMenu_id, vendorId) {
+        function HalfNHalfMenu(halfMenu_id, vendorId,unique_id) {
             console.log(vendorId);
             $.ajax({
                 headers: {
@@ -59,7 +59,8 @@
                 @endif
                 data: {
                     HalfNHalfMenu_id: halfMenu_id,
-                    vendorId: vendorId
+                    vendorId: vendorId,
+                    unique_id: unique_id
                 },
 
                 success: function(data) {

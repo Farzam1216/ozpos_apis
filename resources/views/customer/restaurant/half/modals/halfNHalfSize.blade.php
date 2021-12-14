@@ -1,16 +1,16 @@
 
 @foreach ($ItemSizeObj as $ItemSizeIDX => $ItemSize)
     <div id="HalfMenuSize-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}"
-        class="tab-pane fade @if ($ItemSizeIDX === 0) show in active @endif ">
+        class="tab-pane fade @if ($ItemSizeIDX === 0) show in active @endif " style="background: white;">
         <h6 class="font-weight-bold mt-4">
             Pick Side</h6>
         <ul class="nav nav-pills">
             <li>
                 <a class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
-                    onclick="HalfMenuFirst('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}')">
+                    onclick="HalfMenuFirst('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{$unique_id}}')">
                     First Half </a>
                 <a class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
-                    onclick="HalfMenuSecond('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}')">
+                    onclick="HalfMenuSecond('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{$unique_id}}')">
                     Second Half </a>
             </li>
         </ul>
@@ -25,7 +25,7 @@
 
 
 <script>
-    function HalfMenuFirst(HalfNHalfMenuId, ItemSizeId, vendorId) {
+    function HalfMenuFirst(HalfNHalfMenuId, ItemSizeId, vendorId,unique_id) {
         console.log(vendorId);
         $.ajax({
             headers: {
@@ -40,7 +40,8 @@
             data: {
                 HalfNHalfMenuId: HalfNHalfMenuId,
                 ItemSizeId: ItemSizeId,
-                vendorId: vendorId
+                vendorId: vendorId,
+                unique_id: unique_id
             },
 
             success: function(data) {
@@ -56,7 +57,7 @@
         });
     }
 
-    function HalfMenuSecond(HalfNHalfMenuId, ItemSizeId, vendorId) {
+    function HalfMenuSecond(HalfNHalfMenuId, ItemSizeId, vendorId,unique_id) {
         console.log(vendorId);
         $.ajax({
             headers: {
@@ -71,7 +72,8 @@
             data: {
                 HalfNHalfMenuId: HalfNHalfMenuId,
                 ItemSizeId: ItemSizeId,
-                vendorId: vendorId
+                vendorId: vendorId,
+                unique_id: unique_id
             },
 
             success: function(data) {

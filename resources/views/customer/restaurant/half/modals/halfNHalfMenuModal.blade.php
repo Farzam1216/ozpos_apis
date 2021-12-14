@@ -23,7 +23,7 @@
         min-height: 50vh;
         line-height: 1.6;
         border-radius: 13px 13px 0 0;
-        background: #00000087;
+        /* background: #00000087; */
 
   }
 

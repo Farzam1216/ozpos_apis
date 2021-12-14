@@ -186,12 +186,13 @@ class OrderController extends Controller
   }
   public function getDealsMenu(Request $request)
   {
-    // dd($request);
+    // dd($request->all());
+    $unique_id = $request->unique_id;
      $DealsMenu = DealsMenu::find($request->dealsMenu_id);
      $rest = Vendor::find($request->vendorId);
-      // dd($DealsMenu);
-    //  $Menu = $SingleMenu->Menu()->get()->first();
-     return view('customer.restaurant.deals.modals.index',compact('DealsMenu','rest'));
+       // dd($DealsMenu);
+      // $Menu = $SingleMenu->Menu()->get()->first();
+     return view('customer.restaurant.deals.modals.index',compact('DealsMenu','rest','unique_id'));
 
   }
   public function dealsMenuItems(Request $request)
@@ -220,24 +221,24 @@ class OrderController extends Controller
   }
   public function halfNHalfMenu(Request $request)
   {
-    // dd($request);
-
+    // dd($request->all());
+     $unique_id = $request->unique_id;
      $rest = Vendor::find($request->vendorId);
-
+     $unique_id = $request->unique_id;
      $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenu_id);
-     return view('customer.restaurant.half.modals.index',compact('HalfNHalfMenu','rest'));
+     return view('customer.restaurant.half.modals.index',compact('HalfNHalfMenu','rest','unique_id'));
 
   }
   public function halfMenuSize(Request $request)
   {
-    // dd($request);
-
+    // dd($request->all());
+    $unique_id = $request->unique_id;
      $rest = Vendor::find($request->vendorId);
      $ItemSizeId =$request->ItemSizeId;
      $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenuId);
      $ItemSizeObj = ItemSize::where([['id',$ItemSizeId],['vendor_id', $HalfNHalfMenu->vendor_id]])->get();
     //  dd($HalfNHalfMenu->id);
-     return view('customer.restaurant.half.modals.halfNHalfSize',compact('HalfNHalfMenu','rest','ItemSizeId','ItemSizeObj'));
+     return view('customer.restaurant.half.modals.halfNHalfSize',compact('HalfNHalfMenu','rest','ItemSizeId','ItemSizeObj','unique_id'));
 
   }
   public function halfMenuFirst(Request $request)
@@ -245,12 +246,15 @@ class OrderController extends Controller
 
 
      $prefix = "Single";
-     $ItemSize =$request->ItemSizeId;
+     $unique_id = $request->unique_id;
+    //  $ItemSize =$request->ItemSizeId;
+    $ItemSize = ItemSize::find($request->ItemSizeId);
+    // dd($ItemSize);
      $rest = Vendor::find($request->vendorId);
      $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenuId);
      $ItemSizeObj = ItemSize::where([['id',$ItemSize],['vendor_id', $HalfNHalfMenu->vendor_id]])->get();
     //  dd($HalfNHalfMenu->id);
-     return view('customer.restaurant.half.side',compact('HalfNHalfMenu','rest','prefix','ItemSize','ItemSizeObj'));
+     return view('customer.restaurant.half.side',compact('HalfNHalfMenu','rest','prefix','ItemSize','ItemSizeObj','unique_id'));
 
   }
   public function halfMenuSecond(Request $request)
@@ -258,10 +262,13 @@ class OrderController extends Controller
     // dd($request);
 
      $prefix = "Second";
-     $ItemSize =$request->ItemSizeId;
+     $unique_id = $request->unique_id;
+    //  $ItemSize =$request->ItemSizeId;
+     $ItemSize = ItemSize::find($request->ItemSizeId);
+    //  dd($ItemSize);
      $rest = Vendor::find($request->vendorId);
      $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenuId);
-     return view('customer.restaurant.half.side',compact('HalfNHalfMenu','rest','prefix','ItemSize'));
+     return view('customer.restaurant.half.side',compact('HalfNHalfMenu','rest','prefix','ItemSize','unique_id'));
 
   }
   public function halfMenuAddon(Request $request)
@@ -269,9 +276,10 @@ class OrderController extends Controller
     // dd($request);
      $prefix = "Second";
      $ItemSize =$request->ItemSizeId;
-     $MenuSize = MenuSize::where('item_size_id', $ItemSize )->first();
+    //  dd($ItemSize);
+     $MenuSize = MenuSize::where('item_size_id', $ItemSize)->first();
      $Menu = Menu::where('id', $MenuSize->menu_id )->first();
-    //  dd($Menu);
+    //dd($Menu);
      $rest = Vendor::find($request->vendorId);
      $HalfNHalfMenu = HalfNHalfMenu::find($request->HalfNHalfMenuId);
      return view('customer.restaurant.half.modals.side',compact('HalfNHalfMenu','rest','prefix','ItemSize','Menu','MenuSize'));
@@ -289,8 +297,6 @@ class OrderController extends Controller
   }
   public function dealMenuModal(Request $request)
   {
-
-
      $rest = Vendor::find($request->vendorId);
      $dealsMenu = DealsMenu::find($request->dealsMenu_id);
      return view('customer.restaurant.half.modals.dealMenuModal',compact('dealsMenu','rest'));
