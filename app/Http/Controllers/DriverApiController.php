@@ -416,12 +416,14 @@ class DriverApiController extends Controller
         $this->driver_cancel_max_order();
 
         $vendor_driver = $this->isVendorDriver();
-        // dd('asd');
         $driver = auth()->user();
 
+  //  dd($driver);
         if(!$vendor_driver)
         {
+
             $delivery_zone_areas = DeliveryZoneArea::where('delivery_zone_id',$driver->delivery_zone_id)->get();
+          //  dd($vendor_driver);
             $users = array();
             $vendors = array();
             foreach ($delivery_zone_areas as $delivery_zone_area)

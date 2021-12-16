@@ -142,12 +142,12 @@
                                                     <span class="badge badge-pill complete">{{__('COMPLETE')}}</span>
                                                 @endif
 
-                                                @if ($order->order_status == 'PREPARE_FOR_ORDER')
-                                                    <span class="badge badge-pill preparre-food">{{__('PREPARE FOR ORDER')}}</span>
+                                                @if ($order->order_status == 'READY TO PICKUP')
+                                                    <span class="badge badge-pill preparre-food">{{__('READY TO PICKUP')}}</span>
                                                 @endif
 
-                                                @if ($order->order_status == 'READY_FOR_ORDER')
-                                                    <span class="badge badge-pill ready_for_food">{{__('READY FOR ORDER')}}</span>
+                                                @if ($order->order_status == 'PREPARING FOOD')
+                                                    <span class="badge badge-pill ready_for_food">{{__('PREPARING FOOD')}}</span>
                                                 @endif
                                             </td>
                                             <td>{{ $currency }}{{ $order->amount }}</td>
@@ -175,14 +175,15 @@
                                                                 <option value="REJECT" {{ $order->order_status == 'REJECT' ? 'selected' : '' }}>{{__('Reject')}}</option>
                                                             </select>
                                                         @endif
-                                                        @if ($order->order_status == 'APPROVE' || $order->order_status == 'PREPARE_FOR_ORDER' || $order->order_status == 'READY_FOR_ORDER' || $order->order_status == 'COMPLETE')
+                                                        @if ($order->order_status == 'APPROVE' || $order->order_status == 'READY TO PICKUP' || $order->order_status == 'PREPARING FOOD' || $order->order_status == 'COMPLETE')
                                                             <select class="form-control w-auto" onchange="order_status({{$order->id}})" id="status{{$order->id}}">
                                                                 <option value="APPROVE" {{ $order->order_status == 'APPROVE' ? 'selected' : '' }} disabled>{{__('Approve')}}</option>
-                                                                <option value="PREPARE_FOR_ORDER" {{ $order->order_status == 'PREPARE_FOR_ORDER' ? 'selected' : '' }} >{{__('Prepare for order')}}</option>
-                                                                <option value="READY_FOR_ORDER" {{ $order->order_status == 'READY_FOR_ORDER' ? 'selected' : '' }}>{{__('Ready for order')}}</option>
+                                                                <option value="READY TO PICKUP" {{ $order->order_status == 'READY TO PICKUP' ? 'selected' : '' }} >{{__('Prepare for order')}}</option>
+
                                                                 <option value="COMPLETE" {{ $order->order_status == 'COMPLETE' ? 'selected' : '' }}>{{__('Complete')}}</option>
                                                             </select>
                                                         @endif
+
                                                     @endif
                                                 @else
                                                     @if ($order->order_status == 'COMPLETE' || $order->order_status == 'CANCEL')
@@ -202,7 +203,23 @@
                                                         @if ($order->order_status == 'APPROVE' || $order->order_status == 'PICKUP' || $order->order_status == 'DELIVERED' || $order->order_status == 'COMPLETE')
                                                             <select class="form-control w-auto" onchange="order_status({{$order->id}})" name="order_status_change" id="status{{$order->id}}">
                                                                 <option value="APPROVE" disabled {{ $order->order_status == 'APPROVE' ? 'selected' : '' }}>{{__('Approve')}}</option>
-                                                                <option value="PICKUP" {{ $order->order_status == 'PICKUP' ? 'selected' : '' }}>{{__('pickup')}}</option>
+                                                                {{-- <option value="PICKUP" {{ $order->order_status == 'PICKUP' ? 'selected' : '' }}>{{__('pickup')}}</option> --}}
+                                                                <option value="PREPARING FOOD" {{ $order->order_status == 'PREPARING FOOD' ? 'selected' : '' }}>{{__('Prepare food')}}</option>
+                                                                <option value="DELIVERED" {{ $order->order_status == 'DELIVERED' ? 'selected' : '' }}>{{__('Delivered')}}</option>
+                                                                <option value="COMPLETE" {{ $order->order_status == 'COMPLETE' ? 'selected' : '' }}>{{__('Complete')}}</option>
+                                                            </select>
+                                                        @endif
+                                                        @if ($order->order_status == 'PREPARING FOOD')
+                                                        <select class="form-control w-auto" onchange="order_status({{$order->id}})" id="status{{$order->id}}">
+                                                          <option value="PREPARING FOOD" {{ $order->order_status == 'PREPARING FOOD' ? 'selected' : '' }} disabled>{{__('Prepare food')}}</option>
+                                                          <option value="READY TO PICKUP" {{ $order->order_status == 'READY TO PICKUP' ? 'selected' : '' }} >{{__('Ready for order')}}</option>
+                                                          {{-- <option value="COMPLETE" {{ $order->order_status == 'COMPLETE' ? 'selected' : '' }}>{{__('Complete')}}</option> --}}
+                                                        </select>
+                                                        @endif
+                                                        @if ($order->order_status == 'APPROVE' || $order->order_status == 'READY TO PICKUP' || $order->order_status == 'DELIVERED' || $order->order_status == 'COMPLETE')
+                                                            <select class="form-control w-auto" onchange="order_status({{$order->id}})" name="order_status_change" id="status{{$order->id}}">
+                                                                <option value="READY TO PICKUP" disabled {{ $order->order_status == 'READY TO PICKUP' ? 'selected' : '' }} >{{__('Ready for order')}}</option>
+                                                                {{-- <option value="PICKUP" {{ $order->order_status == 'PICKUP' ? 'selected' : '' }}>{{__('pickup')}}</option> --}}
                                                                 <option value="DELIVERED" {{ $order->order_status == 'DELIVERED' ? 'selected' : '' }}>{{__('Delivered')}}</option>
                                                                 <option value="COMPLETE" {{ $order->order_status == 'COMPLETE' ? 'selected' : '' }}>{{__('Complete')}}</option>
                                                             </select>

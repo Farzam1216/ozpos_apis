@@ -45,25 +45,7 @@
             @endphp
 
             {{-- @include('customer.restaurant.deals.scripts.addons') --}}
-            <script type="text/javascript">
-              $(".DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}").change(function () {
-                 let groupMenuAddonId = $(this).data('group_menu_addon_id');
-                 let checkedCheckBox = $('.DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}-'+groupMenuAddonId+':checked');
-                 let checked = checkedCheckBox.length;
-                 let maxAllowed = $(this).data('max');
 
-                 if (maxAllowed == 1) {
-                    checkedCheckBox.each(function (i, obj) {
-                       $(this).prop('checked', false);
-                    });
-                    $(this).prop('checked', true);
-                 }
-                 else if (checked > maxAllowed) {
-                    $(this).prop('checked', false);
-                    return;
-                 }
-              });
-           </script>
 
             <div>
                 <div class="p-3 border-bottom menu-list">
@@ -180,4 +162,51 @@
         });
     }
     // });
+</script>
+<script type="text/javascript">
+    $(".DealsMenuPick-{{ $DealsMenu->id }}").click(function() {
+        let thisData = $(this).data();
+        let masterData = $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data();
+        masterData.summary = JSON.parse(JSON.stringify(masterData.summary));
+        let generateId = "{{ $unique_id }}-{{ $DealsMenu->id }}";
+        masterData.summary.menu[thisData.deals] = {};
+        masterData.summary.menu[thisData.deals].id = $(this).data('id');
+        masterData.summary.menu[thisData.deals].data_id = $(this).data('id');
+        masterData.summary.menu[thisData.deals].name = $(this).data('name');
+        masterData.summary.menu[thisData.deals].total_addons_price = 0;
+        masterData.summary.menu[thisData.deals].addons = [];
+
+        $('.DealsMenuAddon-{{ $DealsMenu->id }}-' + $(this).data('deals') + '-' + $(this).data('menu') +
+            ':checked').each(function(i, obj) {
+            masterData.summary.menu[thisData.deals].addons.push({
+                "id": $(this).data('id'),
+                "name": $(this).data('name'),
+                "price": $(this).data('price').toString()
+            });
+            masterData.summary.menu[thisData.deals].total_addons_price += parseFloat($(this).data(
+                'price'));
+        });
+
+
+        $.each(masterData.summary.menu, function(key, menu) {
+            generateId += "_" + $(this).id;
+
+            $.each($(this).addons, function(key, addon) {
+                generateId += "-" + $(this).id;
+            });
+        });
+
+        $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).removeClass(
+            "btn-outline-secondary");
+        $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).addClass("btn-primary");
+        $('#DealsMenuItemsBtn-{{ $DealsMenu->id }}-' + $(this).data('deals')).html("Picked");
+
+        $("#DealsMenuSubmit-{{ $DealsMenu->id }}").prop('disabled',
+            (masterData.summary.menu.filter(Boolean).length === parseInt(masterData.required)) ? false :
+            true
+        );
+
+        $("#DealsMenuSubmit-{{ $DealsMenu->id }}").data(masterData);
+        console.log($("#DealsMenuSubmit-{{ $DealsMenu->id }}").data());
+    });
 </script>

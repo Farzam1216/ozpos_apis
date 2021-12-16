@@ -14,7 +14,7 @@
                       <div class="d-flex">
                           <h6 class="font-weight-bold">Order Status</h6>
 
-                          @if($order->order_status == 'PICKUP' || $order->order_status == 'ACCEPT')
+                          @if($order->order_status == 'PICKUP' )
                               @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                 <span class="ml-auto"><a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/track-order/{{$order->id}}" class="btn btn-primary">Track on map</a></span>
                               @else
@@ -23,6 +23,15 @@
                           @elseif($order->order_status == 'DELIVERED' || $order->order_status == 'COMPLETE')
 
                           <span class="ml-auto"><h6 class="font-weight-bold"><i class="badge badge-success">Completed</i> </h6></span>
+
+
+                          @elseif($order->delivery_type == "DELIVERY" && $order->order_status == 'READY TO PICKUP'  )
+
+                          <span class="ml-auto"><h6 class="font-weight-bold"><i class="badge badge-warning">Waiting For Driver To Pick Up </i> </h6></span>
+
+                          @elseif($order->delivery_type == "TAKE AWAY" && $order->order_status == 'READY TO PICKUP'  )
+                          <span class="ml-auto"><h6 class="font-weight-bold"><i class="badge badge-primary">Waiting For User To Pick Up </i> </h6></span>
+
                           @else
                               <span class="ml-auto"><h6 class="font-weight-bold" style="color: #007bff">Order Pending</h6></span>
                           @endif
@@ -35,6 +44,18 @@
                           <div class="my-1 step"><span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Delivered</span> </div>
                           @elseif($order->order_status == 'APPROVE')
                           <div class="my-1 step active"><span class="icon text-success"><i class="feather-check-circle"></i></span><span class="text small">Preparing order</span> </div>
+                          <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Driver assigned</span></div>
+                          <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span> <span class="text small">Picked by driver</span></div>
+                          <div class="my-1 step"><span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Delivered Order</span> </div>
+                          @elseif($order->order_status == 'PREPARING FOOD')
+                          <div class="my-1 step active"><span class="icon text-success"><i class="feather-check-circle"></i></span><span class="text small">PREPARING FOOD</span> </div>
+                          <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">READY TO PICKUP</span></div>
+                          <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Driver assigned</span></div>
+                          <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span> <span class="text small">Picked by driver</span></div>
+                          <div class="my-1 step"><span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Delivered Order</span> </div>
+                          @elseif($order->order_status == 'READY TO PICKUP')
+                          <div class="my-1 step active"><span class="icon text-success"><i class="feather-check-circle"></i></span><span class="text small">PREPARING FOOD</span> </div>
+                          <div class="my-1 step active"> <span class="icon text-success"><i class="feather-check-circle"></i></span><span class="text small">READY TO PICKUP</span></div>
                           <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Driver assigned</span></div>
                           <div class="my-1 step"> <span class="icon text-danger"><i class="feather-x-circle"></i></span> <span class="text small">Picked by driver</span></div>
                           <div class="my-1 step"><span class="icon text-danger"><i class="feather-x-circle"></i></span><span class="text small">Delivered Order</span> </div>

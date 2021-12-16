@@ -31,6 +31,8 @@ class OrderController extends Controller
                       ->orWhere('order_status','ACCEPT')
                       ->orWhere('order_status','PICKUP')
                       ->orWhere('order_status','DELIVERED')
+                      ->orWhere('order_status','READY TO PICKUP')
+                      ->orWhere('order_status','PREPARING FOOD')
                       ->orWhere('order_status','REJECT');
                     })->orderBy('id', 'DESC')->get();
                       // dd($pendingOrders);
@@ -198,12 +200,13 @@ class OrderController extends Controller
   public function dealsMenuItems(Request $request)
   {
     // dd($request);
+    $unique_id = $request->unique_id;
      $DealsItems = DealsItems::where([['deals_menu_id',$request->dealsMenuId],['vendor_id',$request->vendorId],['id',$request->dealsItemsId]])->first();
      $rest = Vendor::find($request->vendorId);
      $DealsMenu = DealsMenu::find($request->dealsMenuId);
       // dd($DealsItems);
     //  $Menu = $SingleMenu->Menu()->get()->first();
-     return view('customer.restaurant.deals.modals.items',compact('DealsItems','DealsMenu','rest'));
+     return view('customer.restaurant.deals.modals.items',compact('DealsItems','DealsMenu','rest','unique_id'));
 
   }
   public function dealsMenuAddon(Request $request)

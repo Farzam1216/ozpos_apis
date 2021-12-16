@@ -5,7 +5,7 @@
 
 @endif
 
-@section('title',"Himalaya Falooda & Sweets | My Order")
+@section('title', 'Himalaya Falooda & Sweets | My Order')
 
 @section('content')
 
@@ -203,12 +203,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 type: "get",
-                @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                        url:"{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/get-orderModel/"+order_id,
-                    @else
+                @if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+                    url:"{{ isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' }}://{{ $_SERVER['HTTP_X_FORWARDED_HOST'] }}/get-orderModel/"+order_id,
+                @else
                     // url:"{{ url('customer/restaurant/book-order', request()->route('id')) }}",
                     url: "{{ url('customer/get-orderModel') }}/" + order_id,
-                    @endif
+                @endif
                 success: function(result) {
                     $("#track-order").html(result)
                 },

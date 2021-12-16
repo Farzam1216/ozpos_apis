@@ -1,4 +1,3 @@
-
 @foreach ($ItemSizeObj as $ItemSizeIDX => $ItemSize)
     <div id="HalfMenuSize-{{ $HalfNHalfMenu->id }}-{{ $ItemSize->id }}"
         class="tab-pane fade @if ($ItemSizeIDX === 0) show in active @endif " style="background: white;">
@@ -7,14 +6,14 @@
         <ul class="nav nav-pills">
             <li>
                 <a class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
-                    onclick="HalfMenuFirst('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{$unique_id}}')">
+                    onclick="HalfMenuFirst('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{ $unique_id }}')">
                     First Half </a>
                 <a class="btn btn-outline-primary btn-sm mb-3 mr-3" data-toggle="pill"
-                    onclick="HalfMenuSecond('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{$unique_id}}')">
+                    onclick="HalfMenuSecond('{{ $HalfNHalfMenu->id }}','{{ $ItemSize->id }}','{{ $rest->id }}','{{ $unique_id }}')">
                     Second Half </a>
             </li>
         </ul>
-         <div class="tab-content halfNHalfSide" id="halfNHalfSide">
+        <div class="tab-content halfNHalfSide" id="halfNHalfSide">
 
         </div>
     </div>
@@ -25,7 +24,7 @@
 
 
 <script>
-    function HalfMenuFirst(HalfNHalfMenuId, ItemSizeId, vendorId,unique_id) {
+    function HalfMenuFirst(HalfNHalfMenuId, ItemSizeId, vendorId, unique_id) {
         console.log(vendorId);
         $.ajax({
             headers: {
@@ -49,7 +48,6 @@
 
                 $("#halfNHalfSide").html(data);
 
-
             },
             error: function(err) {
 
@@ -57,7 +55,7 @@
         });
     }
 
-    function HalfMenuSecond(HalfNHalfMenuId, ItemSizeId, vendorId,unique_id) {
+    function HalfMenuSecond(HalfNHalfMenuId, ItemSizeId, vendorId, unique_id) {
         console.log(vendorId);
         $.ajax({
             headers: {
