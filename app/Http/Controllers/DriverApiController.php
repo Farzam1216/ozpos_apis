@@ -573,7 +573,7 @@ class DriverApiController extends Controller
                 $order->cancel_by = 'driver';
                 $order->cancel_reason = $request->cancel_reason;
                 $order->delivery_person_id = NULL;
-                $order->order_status = 'APPROVE';
+                // $order->order_status = 'APPROVE';
                 $order->save();
 
                 /* Notification Start */

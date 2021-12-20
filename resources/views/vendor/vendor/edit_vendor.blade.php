@@ -260,16 +260,30 @@
                                   <input type="text"  name="map_api_key" value="{{ $vendor->map_api_key }}" placeholder="{{__('map api key')}}" class="form-control">
                                   </div>
                             </div>
+                            <div class="row" style="    margin-bottom: 10px;">
+                              <div class="col-md-6">
+                                <label for="{{__('Start Time')}}">{{__('Start Time')}}</label>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="{{__('status')}}">{{__('Status')}}</label><br>
-                                    <label class="switch">
-                                        <input type="checkbox" name="status" {{ $vendor->status == 1 ? 'checked' : '' }}>
-                                        <div class="slider"></div>
-                                    </label>
-                                </div>
+                                <input type="time" name="start_time" class="form-control" value="{{ $vendor->start_time }}" >
+
+                              </div>
+
+                              <div class="col-md-6">
+                                <label for="{{__('Close Time')}}">{{__('Close Time')}}</label>
+                                <input type="time" name="close_time" class="form-control" value="{{ $vendor->close_time }}" >
+                              </div>
                             </div>
+
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label for="{{__('status')}}">{{__('Status')}}</label><br>
+                                                                <label class="switch">
+                                                                    <input type="checkbox" name="status" {{ $vendor->status == 1 ? 'checked' : '' }}>
+                                                                    <div class="slider"></div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary" type="submit">{{__('Update Vendor')}}</button>
                             </div>

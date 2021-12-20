@@ -33,7 +33,7 @@
         "razorpay/razorpay": "2.*",
         "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-http-logger": "^1.7",
-        "stripe/stripe-php": "^7.66",
+        "stripe/stripe-php": "^7.107",
         "tanmuhittin/laravel-google-translate": "^2.0",
         "twilio/sdk": "^6.13"
     },

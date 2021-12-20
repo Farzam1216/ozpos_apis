@@ -124,9 +124,9 @@
 
     .pt-3.text-white {
         /* background: #e23744; */
-        background: hsl(337 93% 43% / 0.7);
+        /* background: hsl(337 93% 43% / 0.7); */
         /* background:linear-gradient(hsl(337 93%  43% / 0),hsl(337 93%  43% / 1)) ; */
-
+        background: hsl(0 0% 0% / 0.7);
         padding: 8px 8px 0;
         border-radius: 20px 20px 0px 2px;
         color: whitesmoke !important;
@@ -134,7 +134,7 @@
     }
 
     .carousel-control-logo {
-        position: absolute;
+        /* position: absolute; */
         top: 0;
         bottom: 0;
         display: flex;
@@ -168,7 +168,23 @@
         align-items: center;
         justify-content: center;
     }
+    a.carousel-control-contact {
+    position: absolute;
 
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+}
+p.font-weight-bold.contacts {
+    background: hsl(0 0% 0% / 0.7);
+    padding: 10px 10px 10px;
+    border-radius: 8px 9px 0px 2px;
+    color: whitesmoke !important;
+}
 </style>
 
 @section('content')
@@ -208,6 +224,7 @@
             <div class="pt-3 text-white">
                 <h2 class="font-weight-bold">{{ $rest->name }}</h2>
                 <p class="text-white m-0">{{ $rest->address }}</p>
+
                 <div class="rating-wrap d-flex align-items-center mt-2">
                     <ul class="rating-stars list-unstyled">
                         <li>
@@ -227,6 +244,18 @@
     <span ><h2 class="font-weight-bold">{{ $rest->name }}</h2>
       <p class="text-white m-0">{{ $rest->address }}</p> </span>
   </a> --}}
+  @php
+    $startTime = $rest->start_time;
+   $newStartTime = date('h:i A', strtotime($startTime));
+    $closeTime = $rest->close_time;
+   $newCloseTime = date('h:i A', strtotime($closeTime));
+  @endphp
+        <a class="carousel-control-contact">
+
+              <p class="font-weight-bold contacts">  <i class="feather-phone-call"></i>   {{ $rest->contact ?? 'no number yet'}}<br>
+              Open Timing  :   {{  $newStartTime ?? 'start time not set yet'}}<br>
+              Close Timing  :  {{ $newCloseTime ?? 'close time not set yet'}} </p>
+        </a>
         <a class="carousel-control-logo">
             <span style="background-color: white"><img alt="#" src="{{ $rest->image }}" class="restaurant-logo"></span>
         </a>
