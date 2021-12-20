@@ -4,9 +4,9 @@
          <span class="float-right">
             <button class="btn btn-outline-secondary btn-sm" onclick="DealsMenu('{{ $DealsMenu->id }}','{{ $rest->id }}','{{$unique_id}}')">Edit</button>
          </span>
-         
+
          {{-- @include('customer.restaurant.deals.modals.index') --}}
-         
+
          <div class="media">
             <a href="javascript:void(0)" onclick="DealMenuModal('{{ $DealsMenu->id }}','{{ $rest->id }}')">
                <img src="{{ $DealsMenu->image }}" alt="" class="mr-3 rounded-pill "> </a>
@@ -40,14 +40,14 @@
 <div id="dealMenu" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dealMenuModal" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content" id="dealMenus">
-      
+
       </div>
    </div>
 </div>{{-- end Menu Single Menu --}}{{-- Menu Menu Modal --}}
 <div class="modal fade" id="dealMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog ">
       <div class="modal-content" id="dealMenusModal">
-      
+
       </div><!-- /.modal-content -->
    </div><!-- /.modal-dialog -->
 </div>{{-- end Menu Single Menu --}}

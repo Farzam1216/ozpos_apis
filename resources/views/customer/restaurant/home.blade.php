@@ -7,7 +7,6 @@
 @section('title',$rest->name)
 
 <style>
-<<<<<<< HEAD
  .mySlides {display: none;}
 
 img {vertical-align: middle;}
@@ -279,197 +278,11 @@ p.font-weight-bold.contacts {
         <div class="numbertext">1 / 3</div>
         <img src="{{asset($slid->image)}}" style=" width: 100%;height: 50%;">
         <div class="text" style="color: black;background:white"><h5><b>{{$slid->description}}</b></h5></div>
-=======
-    .mySlides {
-        display: none;
-    }
-
-    img {
-        vertical-align: middle;
-    }
-
-    /* Slideshow container */
-    .slideshow-container {
-
-        position: relative;
-        margin: auto;
-    }
-
-    /* Caption text */
-    .text {
-        color: #f2f2f2;
-        font-size: 15px;
-        padding: 8px 12px;
-        position: absolute;
-        bottom: 8px;
-        width: 100%;
-        text-align: center;
-    }
-
-    /* Number text (1/3 etc) */
-    .numbertext {
-        color: #f2f2f2;
-        font-size: 12px;
-        padding: 8px 12px;
-        position: absolute;
-        top: 0;
-    }
-
-    /* The dots/bullets/indicators */
-    .dot {
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: inline-block;
-        transition: background-color 0.6s ease;
-    }
-
-    /* .active {
-      background-color: #717171;
-    } */
-
-    /* Fading animation */
-    .fadess {
-        -webkit-animation-name: fadess;
-        -webkit-animation-duration: 1.5s;
-        animation-name: fadess;
-        animation-duration: 1.5s;
-    }
-
-    @-webkit-keyframes fadess {
-        from {
-            opacity: .4
-        }
-        to {
-            opacity: 1
-        }
-    }
-
-    @keyframes fadess {
-        from {
-            opacity: .4
-        }
-        to {
-            opacity: 1
-        }
-    }
-
-    /* On smaller screens, decrease text size */
-    @media only screen and (max-width: 300px) {
-        .text {
-            font-size: 11px
-        }
-    }
-
-    .slick-slide {
-        height: auto ! important;
-    }
-
-    .carousel-inner img {
-        width: 100%;
-
-    }
-
-    .carousel-control {
-        position: absolute;
-
-        display: flex;
-        -ms-flex-align: center;
-        align-items: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        width: auto;
-        color: #fff;
-        text-align: center;
-        bottom: 2px;
-        left: 57px;
-
-
-    }
-
-    .pt-3.text-white {
-        /* background: #e23744; */
-        background: hsl(337 93% 43% / 0.7);
-        /* background:linear-gradient(hsl(337 93%  43% / 0),hsl(337 93%  43% / 1)) ; */
-
-        padding: 8px 8px 0;
-        border-radius: 20px 20px 0px 2px;
-        color: whitesmoke !important;
-
-    }
-
-    .carousel-control-logo {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        color: #fff;
-        text-align: center;
-
-    }
-
-    .restaurant-logo {
-        position: absolute;
-        bottom: -6px;
-        height: 121px;
-        left: 970px;
-
-        margin: 9px 0;
-        padding: 9px 0;
-        background: hsl(0 0% 0% / 0.7);
-
-        padding: 2px 6px 0px 10px;
-        border-radius: 16px 16px 0px 2px;
-        color: whitesmoke !important;
-
-    }
-
-    .rating-wrap.d-flex.align-items-center.mt-2 {
-        align-content: center;
-
-        align-items: center;
-        justify-content: center;
-    }
-</style>
-@section('content')
-   
-   <div id="demo" class="carousel slide" data-ride="carousel">
-      
-      <!-- Indicators -->
-      <ul class="carousel-indicators">
-         @foreach ($slider as $key=>$slid)
-            <li data-target="#demo" data-slide-to="{{$key}}" class="active dot" style="display: none;"></li>
-         @endforeach
-      </ul>
-      
-      <!-- The slideshow -->
-      <div class="carousel-inner">
-         
-         @foreach ($slider as $slid)
-            <div class="carousel-item active">
-               <div class="mySlides fadess">
-                  <img src="{{asset($slid->image)}}" alt="Slider" width="1100" height="500">
-               </div>
-            </div>
-         @endforeach
-         {{-- <div class="carousel-item">
-           <img src="chicago.jpg" alt="Chicago" width="1100" height="500">
-         </div>
-         <div class="carousel-item">
-           <img src="ny.jpg" alt="New York" width="1100" height="500">
-         </div> --}}
-      
->>>>>>> origin/master
       </div>
-      
+
       <!-- Left and right controls -->
       <a class="carousel-control" href="#demo" data-slide="prev">
-         
+
          <div class="pt-3 text-white">
             <h2 class="font-weight-bold">{{ $rest->name }}</h2>
             <p class="text-white m-0">{{ $rest->address }}</p>
@@ -479,7 +292,7 @@ p.font-weight-bold.contacts {
                      @for ($i = 0; $i < $rest->rate; $i++)
                         <i class="feather-star text-warning"></i>
                      @endfor
-                     
+
                      @for ($i = 5; $i > $rest->rate; $i--)
                         <i class="feather-star"></i>
                      @endfor
@@ -492,11 +305,11 @@ p.font-weight-bold.contacts {
         <span ><h2 class="font-weight-bold">{{ $rest->name }}</h2>
           <p class="text-white m-0">{{ $rest->address }}</p> </span>
       </a> --}}
-      <a class="carousel-control-logo">
+      {{-- <a class="carousel-control-logo">
          <span style="background-color: white"><img alt="#" src="{{ $rest->image }}" class="restaurant-logo"></span>
-      </a>
+      </a> --}}
    </div>
-   
+
    {{-- <div class="offer-section py-4"> --}}
    {{-- <div class="container position-relative"> --}}
    {{-- <img alt="#" src="{{ $rest->image }}" class="restaurant-pic">
@@ -532,7 +345,7 @@ p.font-weight-bold.contacts {
    {{-- </div>
  </div> --}}
    <div class="osahan-home-page">
-   
+
    {{-- <div class="container">
    <div class="slideshow-container">
      @foreach ($slider as $slid)
@@ -551,8 +364,8 @@ p.font-weight-bold.contacts {
        @endforeach
      </div>
      </div> --}}
-   
-   
+
+
    <!-- Filters -->
       <div class="container">
          <div class="cat-slider">
@@ -563,7 +376,7 @@ p.font-weight-bold.contacts {
                         <img alt="#" src="{{asset($item->image) }}" style="height:35px" class="img-fluid mb-2">
                         <p class="m-0 small">{{ $item->name }}</p>
                      </a>
-                  
+
                   @else
                      <a class="bg-white rounded d-block p-2 text-center shadow-sm" href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
                         <img alt="#" src="{{asset($item->image) }}" style="height:35px" class="img-fluid mb-2">
@@ -572,24 +385,24 @@ p.font-weight-bold.contacts {
                   @endif
                </div>
             @empty
-            
+
             @endforelse
-         
+
          </div>
       </div>
-      
+
       <div class="container">
          <!-- Trending this week -->
          <div class="pt-4 pb-2 title d-flex align-items-center">
             <h5 class="m-0">Deals Menu</h5>
-            
+
             @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                   <div class="icon d-flex align-items-center">
                      <i class="feather-disc h6 mr-2 mb-0"></i> <span>Menu</span>
                   </div>
                </a>
-            
+
             @else
                <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}" class="font-weight-bold ml-auto text-white btn bg-primary m-none">
                   <div class="icon d-flex align-items-center">
@@ -601,7 +414,7 @@ p.font-weight-bold.contacts {
          </div>
          <!-- slider -->
          <div class="trending-slider">
-            
+
             @foreach ($deals as $deal)
                @foreach ($deal->DealsMenu as $value)
                   <div class="osahan-slider-item">
@@ -618,7 +431,7 @@ p.font-weight-bold.contacts {
                               <a href="{{url('customer/restaurant/'.$vendor_id.'/menu' ) }}">
                                  <img alt="#" src="{{asset($value->image)}}" class="img-fluid item-img w-100" style="height: 40%;">
                               </a>
-                           
+
                            @endif
                         </div>
                         <div class="p-3 position-relative">
@@ -645,7 +458,7 @@ p.font-weight-bold.contacts {
                   </div>
                @endforeach
             @endforeach
-            
+
             {{-- <div class="osahan-slider-item">
                 <div class="list-card bg-white  rounded overflow-hidden position-relative shadow-sm">
                     <div class="list-card-image">
@@ -714,7 +527,7 @@ p.font-weight-bold.contacts {
                     </div>
                 </div>
             </div> --}}
-         
+
          </div>
          <!-- Most popular -->
          <div class="py-3 title d-flex align-items-center">
@@ -757,7 +570,7 @@ p.font-weight-bold.contacts {
                            </div>
                            <div class="p-3 position-relative">
                               <div class="list-card-body">
-                                 
+
                                  <h6 class="mb-1">
                                     @if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                                        <a href="{{( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ) ? 'https' : 'http')}}://{{$_SERVER['HTTP_X_FORWARDED_HOST']}}/list" class="text-black"><b> {{ ucwords($halfmenu->name) }}</b>
@@ -789,7 +602,7 @@ p.font-weight-bold.contacts {
                      </div>
                   @endforeach
                @endforeach
-               
+
                {{ $halfNhalf->links()}}
             </div>
             {{-- <div class="row">

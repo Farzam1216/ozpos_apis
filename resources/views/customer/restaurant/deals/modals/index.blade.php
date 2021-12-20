@@ -11,19 +11,19 @@
              'Menu' => [],
          ];
       @endphp
-      
+
       @foreach ($DealsMenu->DealsItems()->get() as $DealsItemsIDX => $DealsItems)
          <div>
             <div class="p-3 border-bottom menu-list">
-               
+
                <span class="float-right">
                   <button id="DealsMenuItemsBtn-{{ $DealsMenu->id }}-{{ $DealsItems->id }}" class="btn btn-outline-secondary btn-sm" onclick="DealsMenuItems('{{ $DealsMenu->id }}','{{ $DealsItems->id }}','{{ $rest->id }}','{{ $unique_id }}')">
                      Browse
                   </button>
                </span>
-               
+
                {{-- @include('customer.restaurant.deals.modals.items') --}}
-               
+
                <div class="media">
                   <div class="media-body">
                      <h6 class="mb-1">{{ ucwords($DealsItems->name) }}
@@ -55,7 +55,7 @@
 <div id="dealMenuItems" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dealsMenuItemsModal" aria-hidden="true" style="z-index: 1060">
    <div class="modal-dialog">
       <div class="modal-content" id="dealMenuItem">
-      
+
       </div>
    </div>
 </div>{{-- end Menu Single Menu --}}

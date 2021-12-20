@@ -10,7 +10,7 @@
 </div>
 <div class="modal-body">
    <div class="container">
-      
+
       @foreach ($DealsItems->ItemCategory()->get()->first()->SingleMenuItemCategory()->get()
   as $SingleMenuItemCategoryIDX => $SingleMenuItemCategory)
          @php
@@ -43,7 +43,7 @@
                 'Addons' => [],
             ];
          @endphp
-         
+
          {{-- @include('customer.restaurant.deals.scripts.addons') --}}
          <script type="text/javascript">
             $(document).on('change', ".DealsMenuCheckbox-{{ $DealsMenu->id }}-{{ $DealsItems->id }}-{{ $Menu->id }}", function () {
@@ -64,7 +64,7 @@
                }
             });
          </script>
-         
+
          <div>
             <div class="p-3 border-bottom menu-list">
                @if ($MenuSize !== null &&
@@ -74,10 +74,10 @@ $MenuSize->MenuAddon()->get()->count() !== 0)
                         Edit
                      </button>
                   </span>
-                  
-                  
+
+
                   {{-- @include('customer.restaurant.deals.modals.addons') --}}
-               
+
                @elseif($MenuSize !== NULL && $MenuSize->MenuAddon()->get()->count() === 0)
                   <span class="float-right">
                      <button onclick="$('#dealMenuItems').modal('hide');" class="btn btn-primary btn-sm DealsMenuPick-{{ $DealsMenu->id }}" data-deals="{{ $DealsItems->id }}" data-menu="{{ $Menu->id }}" data-id="{{ $Menu->id }}" data-name="{{ ucwords($Menu->name) }}">
@@ -101,18 +101,18 @@ $MenuSize->MenuAddon()->get()->count() !== 0)
                         @endif
                      </h6>
                      @if ($Menu->price != null)
-                        
+
                         <p class="text-muted mb-0">{{ $Menu->price }}
                            {{ App\Models\GeneralSetting::first()->currency }}</p>
-                     
+
                      @endif
                   </div>
                </div>
             </div>
          </div>
-      
+
       @endforeach
-   
+
    </div>
 
 </div>
@@ -131,7 +131,7 @@ $MenuSize->MenuAddon()->get()->count() !== 0)
 <div id="dealsMenuAddons" class="modal fade" tabindex="-1">
    <div class="modal-dialog">
       <div class="modal-content" id="dealsMenuAddon">
-      
+
       </div>
    </div>
 </div>{{-- end Menu Single Menu --}}
