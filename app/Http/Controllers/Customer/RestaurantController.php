@@ -95,8 +95,9 @@ class RestaurantController extends Controller
     $slider = Slider::where('vendor_id', $id)->get();
     $deals = MenuCategory::with('DealsMenu')->where([['type', 'DEALS'], ['vendor_id', $id]])->get();
     $halfNhalf = MenuCategory::with('HalfNHalfMenu')->where([['type', 'HALF_N_HALF'], ['vendor_id', $id]])->paginate(4);
+    $singleMenu = Menu::where('vendor_id', $id)->get();
 
-    // dd($halfNhalf);
+    // dd($singleMenu);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
@@ -111,7 +112,7 @@ class RestaurantController extends Controller
       'userAddress',
       'selectedAddress',
       'itemCategory',
-      'deals'
+      'deals','singleMenu'
     ));
   }
   public function menu($id)

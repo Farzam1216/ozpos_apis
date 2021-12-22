@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers;
-   
+
    use App\Mail\Verification;
    use App\Mail\ForgotPassword;
    use App\Mail\StatusChange;
@@ -33,7 +33,7 @@
    use Log;
    use OneSignal;
    use Config;
-   
+
    class DriverApiController extends Controller
    {
       public function apiDriverLogin(Request $request)
@@ -42,12 +42,12 @@
              'email_id' => 'bail|required|email',
              'password' => 'required|min:6'
          ]);
-         
+
          $user = ([
              'email_id' => $request->email_id,
              'password' => $request->password,
          ]);
-         
+
          if (Auth::guard('driver')->attempt($user)) {
             $user = Auth::guard('driver')->user();
             if ($user->status == 1) {
@@ -64,23 +64,23 @@
                   $admin_verify_user = GeneralSetting::find(1)->verification;
                   if ($admin_verify_user == 1) {
                      $otp = mt_rand(1000, 9999);
-                     
+
                      $sms_verification = GeneralSetting::first()->verification_phone;
                      $mail_verification = GeneralSetting::first()->verification_email;
-                     
+
                      $verification_content = NotificationTemplate::where('title', 'verification')->first();
-                     
+
                      $msg_content = $verification_content->notification_content;
                      $mail_content = $verification_content->mail_content;
-                     
+
                      $sid = GeneralSetting::first()->twilio_acc_id;
                      $token = GeneralSetting::first()->twilio_auth_token;
-                     
+
                      $detail['otp'] = $otp;
                      $detail['user_name'] = $user->name;
                      $detail['app_name'] = GeneralSetting::first()->business_name;
                      $data = ["{otp}", "{user_name}"];
-                     
+
                      $user->otp = $otp;
                      $user->save();
                      $user['national_identity'] = url('images/upload') . '/' . $user->national_identity;
@@ -119,14 +119,14 @@
             return response(['success' => false, 'data' => 'this crediantial does not match our record']);
          }
       }
-      
+
       public function apiDriverCheckOtp(Request $request)
       {
          $request->validate([
              'driver_id' => 'bail|required',
              'otp' => 'bail|required|min:4',
          ]);
-         
+
          $user = DeliveryPerson::find($request->driver_id);
          if ($user) {
             if ($user->otp == $request->otp) {
@@ -141,7 +141,7 @@
             return response(['success' => false, 'data' => 'Oops...user not found..!!']);
          }
       }
-      
+
       public function apiDriverRegister(Request $request)
       {
          $request->validate([
@@ -152,14 +152,14 @@
              'phone' => 'bail|required|numeric|digits_between:6,12',
              'phone_code' => 'bail|required'
          ]);
-         
+
          $admin_verify_user = GeneralSetting::find(1)->verification;
          if ($admin_verify_user == 1) {
             $is_verified = 0;
          } else {
             $is_verified = 1;
          }
-         
+
          $delivery_person = DeliveryPerson::create([
              'first_name' => $request->first_name,
              'last_name' => $request->last_name,
@@ -173,7 +173,7 @@
              'is_verified' => $is_verified,
              'password' => Hash::make($request->password),
          ]);
-         
+
          if ($delivery_person['is_verified'] == 1) {
             $delivery_person['token'] = $delivery_person->createToken('food delivery')->accessToken;
             return response()->json(['success' => true, 'data' => $delivery_person, 'msg' => 'account created successfully..!!'], 200);
@@ -181,23 +181,23 @@
             $admin_verify_user = GeneralSetting::find(1)->verification;
             if ($admin_verify_user == 1) {
                $otp = mt_rand(1000, 9999);
-               
+
                $sms_verification = GeneralSetting::first()->verification_phone;
                $mail_verification = GeneralSetting::first()->verification_email;
-               
+
                $verification_content = NotificationTemplate::where('title', 'verification')->first();
-               
+
                $msg_content = $verification_content->notification_content;
                $mail_content = $verification_content->mail_content;
-               
+
                $sid = GeneralSetting::first()->twilio_acc_id;
                $token = GeneralSetting::first()->twilio_auth_token;
-               
+
                $detail['otp'] = $otp;
                $detail['user_name'] = $delivery_person->name;
                $detail['app_name'] = GeneralSetting::first()->business_name;
                $data = ["{otp}", "{user_name}"];
-               
+
                $delivery_person->otp = $otp;
                $delivery_person->save();
                if ($mail_verification == 1) {
@@ -228,19 +228,19 @@
             }
          }
       }
-      
+
       public function apiForgotPasswordOtp(Request $request)
       {
          $request->validate([
              'email_id' => 'bail|required|email',
          ]);
-         
+
          $user = DeliveryPerson::where('email_id', $request->email_id)->first();
          if ($user) {
             $otp = mt_rand(1000, 9999);
             $verification_content = NotificationTemplate::where('title', 'verification')->first();
             $mail_content = $verification_content->mail_content;
-            
+
             $detail['otp'] = $otp;
             $detail['user_name'] = $user->name;
             $detail['app_name'] = GeneralSetting::first()->business_name;
@@ -258,14 +258,14 @@
             return response(['success' => false, 'data' => 'Oops.. driver not found...!!']);
          }
       }
-      
+
       public function apiForgotPasswordCheckOtp(Request $request)
       {
          $request->validate([
              'driver_id' => 'bail|required',
              'otp' => 'bail|required|min:4',
          ]);
-         
+
          $user = DeliveryPerson::find($request->driver_id);
          if ($user) {
             if ($user->otp == $request->otp) {
@@ -275,7 +275,7 @@
             }
          }
       }
-      
+
       public function apiForgotPassword(Request $request)
       {
          $request->validate([
@@ -291,7 +291,7 @@
             return response(['success' => true, 'data' => 'Password Update Successfully...!!']);
          }
       }
-      
+
       /****** send otp & forgot password ***/
       public function apiReSendOtp(Request $request)
       {
@@ -305,9 +305,9 @@
             $user->otp = $otp;
             $user->save();
             $verification_content = NotificationTemplate::where('title', 'verification')->first();
-            
+
             $mail_content = $verification_content->mail_content;
-            
+
             $detail['otp'] = $otp;
             $detail['user_name'] = $user->name;
             $detail['app_name'] = GeneralSetting::first()->business_name;
@@ -323,7 +323,7 @@
             return response(['success' => false, 'data' => 'Ooops user not found..!!']);
          }
       }
-      
+
       public function apiDeliveryZone()
       {
          $vendor_driver = $this->isVendorDriver();
@@ -334,7 +334,7 @@
             return response(['success' => true, 'data' => 'not a global driver']);
          }
       }
-      
+
       public function apiSetLocation(Request $request)
       {
          $vendor_driver = $this->isVendorDriver();
@@ -347,19 +347,19 @@
             return response(['success' => false, 'data' => 'vendor driver']);
          }
       }
-      
+
       public function apiDriverOrder()
       {
          app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
-         
+
          $this->driver_cancel_max_order();
-         
+
          $vendor_driver = $this->isVendorDriver();
          $driver = auth()->user();
-         
+
          //  dd($driver);
          if (!$vendor_driver) {
-            
+
             $delivery_zone_areas = DeliveryZoneArea::where('delivery_zone_id', $driver->delivery_zone_id)->get();
             //  dd($vendor_driver);
             $users = array();
@@ -375,7 +375,7 @@
                         }
                      }
                   }
-                  
+
                   $near_users = DB::select(DB::raw('SELECT user_id, ( 3959 * acos( cos( radians(' . $delivery_zone_area->lat . ') ) * cos( radians( lat ) ) * cos( radians( lang ) - radians(' . $delivery_zone_area->lang . ') ) + sin( radians(' . $delivery_zone_area->lat . ') ) * sin( radians(lat) ) ) ) AS distance FROM user_address HAVING distance < ' . $delivery_zone_area->radius . ' ORDER BY distance'));
                   foreach ($near_users as $near_user) {
                      array_push($users, $near_user->user_id);
@@ -398,13 +398,13 @@
                    ->orWhere('order_status', 'PICKUP')
                    ->orWhere('order_status', 'READY TO PICKUP');
             })->orderBy('id', 'desc')->get();
-            
+
             Log::info($driver);
             Log::info($orders);
             return response(['success' => true, 'data' => $orders]);
          }
       }
-      
+
       public function apiStatusChange(Request $request)
       {
          app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
@@ -413,28 +413,28 @@
              'order_id' => 'required',
              'order_status' => 'required',
          ]);
-         
+
          $reqData = $request->all();
          $order = Order::find($reqData['order_id']);
          if (!$order)
             return response(['success' => false, 'data' => 'Order not found']);
-         
+
          $vendor = Vendor::find($order->vendor_id);
          if (!$order)
             return response(['success' => false, 'data' => 'Vendor not found']);
-         
+
          $vendorUser = User::find($vendor->user_id);
          if (!$order)
             return response(['success' => false, 'data' => 'Vendor account not found']);
-         
+
          $driver = auth()->user();
          $vendor_driver = $this->isVendorDriver();
          $vendor_notification = GeneralSetting::first()->vendor_notification;
-         
+
          $order->order_status = $reqData['order_status'];
          $order->save();
-         
-         
+
+
          switch ($reqData['order_status']) {
             case 'ACCEPT':
                if (!$vendor_driver) {
@@ -455,11 +455,11 @@
                         $earn = $earning->charge;
                      }
                   }
-                  
+
                   if ($earn == 0) {
                      $earn = max(array_column($earnings, 'charge'));
                   }
-                  
+
                   $settle = array();
                   $settle['vendor_id'] = $vendor->id;
                   $settle['order_id'] = $order->id;
@@ -490,7 +490,7 @@
                   $settle['vendor_earning'] = $order->vendor_amount;
                   $settle['driver_earning'] = 0;
                   Settle::create($settle);
-                  
+
                   $order->order_status = 'COMPLETE';
                   $order->save();
                }
@@ -546,13 +546,13 @@
                         Log::error($th);
                      }
                   }
-                  
+
                   try {
                      Mail::to($vendor->email_id)->send(new StatusChange($mail));
                   } catch (\Throwable $th) {
                      Log::error($th);
                   }
-               }
+
                $notification = array();
                $notification['user_id'] = $vendor->id;
                $notification['user_type'] = 'vendor';
@@ -560,11 +560,11 @@
                $notification['message'] = $message1;
                Notification::create($notification);
                /* Notification End */
-               
-               
+
+
                break;
          }
-         
+
          /* Notification Start */
          if ($reqData['order_status'] != 'CANCEL') {
             $user = User::find($order->user_id);
@@ -582,7 +582,7 @@
             $detail['order_status'] = $order->order_status;
             $detail['company_name'] = GeneralSetting::find(1)->business_name;
             $data = ["{user_name}", "{order_id}", "{date}", "{order_status}", "{company_name}"];
-            
+
             $message1 = str_replace($data, $detail, $notification_content);
             $mail = str_replace($data, $detail, $mail_content);
             if (GeneralSetting::find(1)->customer_notification == 1) {
@@ -604,7 +604,7 @@
                      Log::error($th);
                   }
                }
-               
+
                try {
                   Mail::to($user->email_id)->send(new StatusChange($mail));
                } catch (\Throwable $th) {
@@ -619,14 +619,14 @@
             Notification::create($notification);
          }
          /* Notification End */
-         
+
          $order = Order::find($reqData['order_id']);
          $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
          $order = $order->id;
-         
+
          return response(['success' => true, 'data' => $order, 'msg' => 'status changed']);
       }
-      
+
       public function apiDriver()
       {
          $id = auth()->user();
@@ -634,7 +634,7 @@
          $id->licence_doc = url('images/upload') . '/' . $id->licence_doc;
          return response(['success' => true, 'data' => $id]);
       }
-      
+
       public function apiUpdateDriver(Request $request)
       {
          $data = $request->all();
@@ -646,7 +646,7 @@
          $id->update($data);
          return response(['success' => true, 'data' => 'Update Successfully']);
       }
-      
+
       public function apiDriverImage(Request $request)
       {
          $request->validate([
@@ -666,7 +666,7 @@
          $id->update($data);
          return response(['success' => true, 'data' => 'image updated succssfully..!!']);
       }
-      
+
       public function apiOrderHistory()
       {
          app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
@@ -675,13 +675,13 @@
          $orders['cancel'] = Order::where([['delivery_person_id', auth()->user()->id], ['order_status', 'DELIVERED']])->get();
          return response(['success' => true, 'data' => $orders]);
       }
-      
+
       public function apiPaymentPending()
       {
          $paymentPending = Order::where([['delivery_person_id', auth()->user()->id], ['order_status', 'DELIVERED']])->sum('amount');
          return response(['success' => true, 'data' => $paymentPending]);
       }
-      
+
       public function apiOrderEarning()
       {
          $vendor_driver = $this->isVendorDriver();
@@ -703,7 +703,7 @@
             return response(['success' => false, 'data' => 'This feature is limited for glolabal drivers']);
          }
       }
-      
+
       public function apiEarningHistory()
       {
          app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
@@ -716,7 +716,7 @@
             $data['week_earning'] = Settle::where('driver_id', auth()->user()->id)->whereBetween('created_at', [Carbon::now()->subDays(7)->format('Y-m-d') . " 00:00:00", Carbon::now()->format('Y-m-d') . " 23:59:59"])->sum('driver_earning');
             $data['yearliy_earning'] = Settle::where('driver_id', auth()->user()->id)->whereYear('created_at', date('Y'))->sum('driver_earning');
             $data['total_amount'] = Settle::where('driver_id', auth()->user()->id)->sum('driver_earning');
-            
+
             $setting = GeneralSetting::first();
             $now = Carbon::today();
             $g_data = [];
@@ -739,14 +739,14 @@
                array_push($g_data, $temp);
                $now = $now->subMonth();
             }
-            
+
             $data['graph'] = $g_data;
             return response(['success' => true, 'data' => $data]);
          } else {
             return response(['success' => false, 'data' => 'This feature is limited for glolabal drivers']);
          }
       }
-      
+
       public function distance($lat1, $lang1, $lat2, $lang2)
       {
          $lat1 = $lat1;
@@ -771,10 +771,10 @@
                $distance = $miles;
             }
          }
-         
+
          return $distance;
       }
-      
+
       public function apiDeliveryPersonChangePassword(Request $request)
       {
          $request->validate([
@@ -796,18 +796,18 @@
             return response(['success' => false, 'data' => 'Old password does not match']);
          }
       }
-      
+
       public function apiDriverFaq()
       {
          $data = Faq::where('type', 'driver')->get();
          return response(['success' => true, 'data' => $data]);
       }
-      
+
       public function apiUpdateVehical(Request $request)
       {
          $data = $request->all();
          $id = auth()->user();
-         
+
          if (isset($request->national_identity)) {
             $img = $request->national_identity;
             $img = str_replace('data:image/png;base64,', '', $img);
@@ -831,7 +831,7 @@
          $id->update($data);
          return response(['success' => true, 'data' => 'update successfully.!!']);
       }
-      
+
       public function apiDriverSetting()
       {
          $setting = GeneralSetting::where('id', 1)->first(['driver_notification', 'driver_vehical_type', 'is_driver_accept_multipleorder', 'driver_app_id', 'driver_auth_key', 'driver_api_key', 'driver_accept_multiple_order_count', 'company_white_logo', 'company_black_logo', 'driver_auto_refrese', 'cancel_reason']);
@@ -841,13 +841,13 @@
          }
          return response(['success' => true, 'data' => $setting]);
       }
-      
+
       public function apiDriverNotification()
       {
          $data = Notification::where([['user_type', 'driver'], ['user_id', auth()->user()->id]])->get();
          return response(['success' => true, 'data' => $data]);
       }
-      
+
       public function apiUpdateLatLang(Request $request)
       {
          $request->validate([
@@ -857,7 +857,7 @@
          auth()->user()->update($request->all());
          return response(['success' => true, 'data' => 'update successfully..!']);
       }
-      
+
       public function driver_cancel_max_order()
       {
          $date = new DateTime();
@@ -879,7 +879,7 @@
          }
          return true;
       }
-      
+
       public function isVendorDriver()
       {
          // 1 for global driver , 0 for vendor driver

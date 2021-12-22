@@ -18,12 +18,12 @@
                     <ul class="nav nav-tabsa custom-tabsa border-0 flex-column bg-white rounded overflow-hidden shadow-sm p-2 c-t-order"
                         id="myTab" role="tablist">
                         <li class="nav-item border-top" role="presentation">
-                            <a class="nav-link border-0 text-dark py-3 " id="progress-tab" data-toggle="tab" href="#progress"
+                            <a class="nav-link border-0 text-dark py-3 active" id="progress-tab" data-toggle="tab" href="#progress"
                                 role="tab" aria-controls="progress" aria-selected="true">
                                 <i class="feather-clock mr-2 text-warning mb-0"></i> On Progress</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link border-0 text-dark py-3 active" id="completed-tab" data-toggle="tab"
+                            <a class="nav-link border-0 text-dark py-3 " id="completed-tab" data-toggle="tab"
                                 href="#completed" role="tab" aria-controls="completed" aria-selected="false">
                                 <i class="feather-check mr-2 text-success mb-0"></i> Completed</a>
                         </li>
@@ -36,7 +36,7 @@
                     </ul>
                 </div>
                 <div class="tab-content col-md-9" id="myTabContent" style="top: 60px;">
-                    <div class="tab-pane fade show active" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                    <div class="tab-pane fade show " id="completed" role="tabpanel" aria-labelledby="completed-tab">
                         <div class="order-body">
 
                             @forelse ($completeOrders as $complete)
@@ -87,7 +87,7 @@
 
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab"
+                    <div class="tab-pane fade show active" id="progress" role="tabpanel" aria-labelledby="progress-tab"
                         style="top: 60px;">
                         <div class="order-body" id="track-order">
 
