@@ -438,10 +438,11 @@ class CustomerController extends Controller
       // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
       'tax' => 'required',
     ]);
-    //         \Log::critical($request);
-    //         return;
+    //\Log::critical($request);
+    //return;
 
     // foreach($data as )
+
     $bookData = $request->all();
     $bookData['date'] = Carbon::now()->format('Y-m-d');
     $bookData['time'] = Carbon::now()->format('g:i A');
@@ -492,7 +493,7 @@ class CustomerController extends Controller
     $daiterm = Session::get('product');
 
     $data = json_decode($daiterm);
-    // dd($data);
+
     $finalData = [];
     $cart = array();
     $menu = array();
@@ -502,6 +503,7 @@ class CustomerController extends Controller
     $finalData['cart'] = [];
     // array_push($finalData,['vendor_id'=>$vendor->id]);
     $idx = -1;
+    if(isset($data)){
     foreach ($data as $key => $item) {
       $idx++;
       $finalData['cart'][$idx] = [
@@ -562,7 +564,7 @@ class CustomerController extends Controller
       // dd();
 
     }
-
+  }
     // dd(json_encode($finalData));
     $order_data = json_encode($finalData);
     $bookData['order_id'] = '#' . rand(100000, 999999);

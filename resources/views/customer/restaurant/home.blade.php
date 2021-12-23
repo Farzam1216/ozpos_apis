@@ -364,6 +364,9 @@ p.font-weight-bold.contacts {
          </div>
          <!-- slider -->
          <div class="trending-slider">
+            @if (isset($singleMenu))
+
+
 
             @foreach ($singleMenu as $value)
 
@@ -408,7 +411,7 @@ p.font-weight-bold.contacts {
                   </div>
 
             @endforeach
-
+            @endif
 
          </div>
          <div class="pt-4 pb-2 title d-flex align-items-center">
@@ -432,7 +435,7 @@ p.font-weight-bold.contacts {
          </div>
          <!-- slider -->
          <div class="trending-slider">
-
+          @if (isset($deals))
             @foreach ($deals as $deal)
                @foreach ($deal->DealsMenu as $value)
                   <div class="osahan-slider-item">
@@ -477,7 +480,7 @@ p.font-weight-bold.contacts {
                @endforeach
             @endforeach
 
-
+                    @endif
          </div>
          <!-- Most popular -->
          <div class="py-3 title d-flex align-items-center">
@@ -500,6 +503,7 @@ p.font-weight-bold.contacts {
          <!-- Most popular -->
          <div class="most_popular">
             <div class="row">
+              @if (isset($halfNhalf))
                @foreach ($halfNhalf as $half)
                   @foreach ($half->HalfNHalfMenu as $halfmenu)
                      <div class="col-md-3 pb-3">
@@ -554,6 +558,7 @@ p.font-weight-bold.contacts {
                @endforeach
 
                {{ $halfNhalf->links()}}
+               @endif
             </div>
 
       </div>

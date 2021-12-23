@@ -1358,6 +1358,7 @@ class VendorApiController extends Controller
     }
 
     public function apiUpdateProfile(Request $request){
+
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
         $request->validate([
             'name' => 'required',
