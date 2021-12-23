@@ -528,8 +528,16 @@
          if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
          {
             $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
+            $bookData['delivery_time'] = Carbon::createFromFormat('g:i A', $bookData['delivery_time'])->format('H:i:s');
+            Log::info('$bookData[\'delivery_date\']');
+            Log::info($bookData['delivery_date']);
+            Log::info('$bookData[\'delivery_time\']');
+            Log::info($bookData['delivery_time']);
             $dateTime = $bookData['delivery_date'] .' '.$bookData['delivery_time'];
-            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
+            Log::info('$dateTime');
+            Log::info($dateTime);
+//            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
+            $bookData['delivery_time'] = $dateTime;
             Log::info('$bookData[\'delivery_time\']');
             Log::info($bookData['delivery_time']);
          }

@@ -1384,7 +1384,7 @@ class VendorApiController extends Controller
             $success = file_put_contents($file, $data1);
             $data['image'] = $Iname . ".png";
         }
-        if ($file = $request->hasfile('vendor_logo'))
+        if (isset($request->vendor_logo))
         {
             $img = $request->vendor_logo;
             $img = str_replace('data:image/png;base64,', '', $img);
@@ -1725,7 +1725,7 @@ class VendorApiController extends Controller
                 Log::error($th);
             }
         }
-        // $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+         $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
         return response(['success' => true]);
     }
 
