@@ -8,7 +8,8 @@
    use App\Mail\VendorOrder;
    use App\Mail\DriverOrder;
    use App\Models\Banner;
-   use App\Models\Cuisine;
+use App\Models\BusinessSetting;
+use App\Models\Cuisine;
    use App\Models\DeliveryPerson;
    use App\Models\HalfNHalfMenu;
    use App\Models\ItemCategory;
@@ -620,6 +621,21 @@
             $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
             $tax['admin_commission'] = $amount - $tax['vendor_amount'];
          }
+
+         $notification = BusinessSetting::where([['vendor_id',$vendor->id],['key','0']])->first();
+    if($notification)
+    {
+      $notification->vendor_id = $vendor->id;
+        $notification->key = '1';
+        $notification->update();
+    }
+    else
+    {
+      $notification = new BusinessSetting;
+      $notification->vendor_id = $vendor->id;
+      $notification->key = '1';
+      $notification->save();
+    }
          $order->update($tax);
 
          $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);

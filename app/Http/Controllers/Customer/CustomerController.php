@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessSetting;
 use App\Models\GeneralSetting;
 use App\Models\MenuCategory;
 use App\Models\Order;
@@ -493,7 +494,7 @@ class CustomerController extends Controller
     $daiterm = Session::get('product');
 
     $data = json_decode($daiterm);
-
+// dd($data);
     $finalData = [];
     $cart = array();
     $menu = array();
@@ -503,7 +504,7 @@ class CustomerController extends Controller
     $finalData['cart'] = [];
     // array_push($finalData,['vendor_id'=>$vendor->id]);
     $idx = -1;
-    if(isset($data)){
+    // if(isset($data)){
     foreach ($data as $key => $item) {
       $idx++;
       $finalData['cart'][$idx] = [
@@ -515,8 +516,10 @@ class CustomerController extends Controller
       ];
       $idx2 = -1;
       foreach ($item->summary->menu as $key2 => $value) {
+        // dd($value);
         $idx2++;
         $finalData['cart'][$idx]['menu'][$idx2] = [
+
           'id' => $value->id,
           'name' => $value->name,
           'image' => $item->image,
@@ -564,12 +567,27 @@ class CustomerController extends Controller
       // dd();
 
     }
-  }
+  // }
     // dd(json_encode($finalData));
     $order_data = json_encode($finalData);
     $bookData['order_id'] = '#' . rand(100000, 999999);
     $bookData['vendor_id'] = $vendor->id;
     $bookData['order_data'] = $order_data;
+
+    $notification = BusinessSetting::where([['vendor_id',$vendor->id],['key','0']])->first();
+    if($notification)
+    {
+      $notification->vendor_id = $vendor->id;
+        $notification->key = '1';
+        $notification->update();
+    }
+    else
+    {
+      $notification = new BusinessSetting;
+      $notification->vendor_id = $vendor->id;
+      $notification->key = '1';
+      $notification->save();
+    }
     $order = Order::create($bookData);
 
     //         if ($bookData['payment_type'] == 'WALLET') {

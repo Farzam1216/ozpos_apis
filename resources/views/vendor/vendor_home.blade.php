@@ -15,7 +15,7 @@
                     position: 'topRight'
                 });
                 console.log(msg);
-        });
+            });
         </script>
     @endif
     <div class="section-header">

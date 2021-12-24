@@ -7,6 +7,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
 
     @php
+        $vendor = App\Models\Vendor::where('user_id',Auth::user()->id)->first();
         $GeneralSetting = App\Models\GeneralSetting::first();
         $title = $GeneralSetting->business_name;
         $favicon = $GeneralSetting->favicon;
@@ -113,6 +114,26 @@ span.vendorColor {
         </div>
     </div>
 
+    <div class="modal fade" id="popup-modal">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-12">
+                          <center>
+                              <h2 style="color: rgba(96,96,96,0.68)">
+                                  <i class="tio-shopping-cart-outlined"></i> You have new order, Check Please.
+                              </h2>
+                              <hr>
+                              <button onclick="check_order()" class="btn btn-primary">Ok, let me check</button>
+                          </center>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
     <script src="{{ asset('/js/app.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
@@ -194,6 +215,47 @@ span.vendorColor {
     <script src="{{ asset('js/forms-advanced-forms.js') }}"></script>
 
     <script src="{{ asset('js/custom.js') }}"></script>
+
+
+    <audio id="myAudio">
+      <source src="{{asset('/customer/vendor/sound/notification.mp3')}}" type="audio/mpeg">
+  </audio>
+
+  <script>
+      var audio = document.getElementById("myAudio");
+
+      function playAudio() {
+          audio.play();
+      }
+
+      function pauseAudio() {
+          audio.pause();
+      }
+  </script>
+  <script>
+      @php($admin_order_notification=\App\Models\BusinessSetting::where([['vendor_id',$vendor->id],['key','1']])->first())
+
+      @if($admin_order_notification)
+      setInterval(function () {
+
+          $.get({
+              url: '{{route('vendor.get-order-notification')}}',
+              dataType: 'json',
+              success: function (response) {
+                  let data = response.data;
+                  if (data.new_order > 0) {
+                      playAudio();
+                      $('#popup-modal').appendTo("body").modal('show');
+                  }
+              },
+          });
+      }, 10000);
+
+      function check_order() {
+          location.href = '{{route('vendor.order.list')}}';
+      }
+      @endif
+  </script>
 </body>
 
 </html>
