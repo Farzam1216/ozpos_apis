@@ -291,7 +291,7 @@
       public function halfMenuAddon(Request $request)
       {
          // dd($request);
-         $prefix = "Second";
+         $prefix = $request->prefix;
          $ItemSize = $request->ItemSizeId;
          //  dd($ItemSize);
          $MenuSize = MenuSize::where('item_size_id', $ItemSize)->first();
