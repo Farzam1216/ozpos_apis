@@ -23,6 +23,9 @@ use Carbon\Carbon;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use OneSignal;
+use Config;
 use Session;
 use Stripe\Coupon;
 
@@ -37,7 +40,23 @@ class CustomerController extends Controller
 
   public function login()
   {
-    if (Auth::check()) {
+     Config::set('onesignal.app_id', '76795e1b-2303-4b78-a0cf-00c01e61c18d');
+     Config::set('onesignal.rest_api_key', 'NmY1ZWFjZTctYWM4OS00NWNiLWI3ODAtNmFjOGI3Y2YxMWI2');
+     Config::set('onesignal.user_auth_key', 'YzFmZjBhZTctZTIzNC00OTg1LWJmMTgtNzViZmI2OTE5NGJm');
+     try {
+        OneSignal::sendNotificationToAll(
+            'test message',
+            $url = null,
+            $data = null,
+            $buttons = null,
+            $schedule = null,
+            'Temp test message'
+        );
+     } catch (\Throwable $th) {
+        Log::error($th);
+     }
+   
+     if (Auth::check()) {
       if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
         $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
 
