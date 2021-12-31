@@ -456,7 +456,11 @@
 
          $("#" + idCheckoutCart).click(function () {
             var products = ProductManager.getAllProducts();
-            var jsonProducts = JSON.stringify(products);
+            // products.forEach()
+            var jsonProducts = encodeURIComponent((JSON.stringify(products)));
+            // console.log(products);
+            // console.log(jsonProducts);
+            // return;
             let base_url = window.location.origin;
             ///////////// store into session ///
             var iTotal = $("#" + idTotal).data();
@@ -485,8 +489,10 @@
             checkoutForm += '<input type="text" name="iDelivery" value="'+iDelivery+'">';
             checkoutForm += '<input type="text" name="couponID" value="'+couponID+'">';
 
-            checkoutForm += '<input type="text" name="product" value=\''+product+'\'>';
+            checkoutForm += '<input type="text" name="product" value='+jsonProducts+'>';
 
+            // $(checkoutForm).appendTo('body');
+            // return;
             $(checkoutForm).appendTo('body').submit();
 
             //  if (base_url === "http://ozpos.com") {

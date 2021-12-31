@@ -31,45 +31,45 @@
             <div class="py-5 row">
                 <div class="col-md-8 mb-3" style="top: 60px;">
                     <div>
-                        <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">
-                            <div class="osahan-cart-item-profile bg-white p-3">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-3 font-weight-bold">Delivery Address</h6>
-                                    <div class="row">
-                                        @foreach ($userAddress as $getaddress)
-                                            <div
-                                                class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">
-                                                <input type="radio" id="customRadioInline{{ $getaddress->id }}"
-                                                    name="address_id" form="customerPaymentForm"
-                                                    class="custom-control-input"
-                                                    {{ $getaddress->selected == 1 ? 'checked' : '' }}
-                                                    value="{{ $getaddress->id }}" onchange="changeAddress(this)">
-                                                <label class="custom-control-label w-100"
-                                                    for="customRadioInline{{ $getaddress->id }}">
-                                                    <div>
-                                                        <div class="p-3 bg-white rounded shadow-sm w-100">
-                                                            <div class="d-flex align-items-center mb-2">
-                                                                <h6 class="mb-0">{{ $getaddress->type }}</h6>
-                                                                {{-- <p class="mb-0 badge badge-success ml-auto"><i
-                                                                    class="icofont-check-circled"></i> Default</p> --}}
-                                                            </div>
-                                                            <p class="small text-muted m-0">
-                                                                {{ nl2br($getaddress->address, 20) }}</p>
-                                                            {{-- <p class="small text-muted m-0">Redwood City, CA 94063</p> --}}
-                                                        </div>
-                                                        {{-- <a href="#" data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-block btn-light border-top">Edit</a> --}}
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        @endforeach
+{{--                        <div class="osahan-cart-item mb-3 rounded shadow-sm bg-white overflow-hidden">--}}
+{{--                            <div class="osahan-cart-item-profile bg-white p-3">--}}
+{{--                                <div class="d-flex flex-column">--}}
+{{--                                    <h6 class="mb-3 font-weight-bold">Delivery Address</h6>--}}
+{{--                                    <div class="row">--}}
+{{--                                        @foreach ($userAddress as $getaddress)--}}
+{{--                                            <div--}}
+{{--                                                class="custom-control col-lg-6 custom-radio mb-3 position-relative border-custom-radio">--}}
+{{--                                                <input type="radio" id="customRadioInline{{ $getaddress->id }}"--}}
+{{--                                                    name="address_id" form="customerPaymentForm"--}}
+{{--                                                    class="custom-control-input"--}}
+{{--                                                    {{ $getaddress->selected == 1 ? 'checked' : '' }}--}}
+{{--                                                    value="{{ $getaddress->id }}" onchange="changeAddress(this)">--}}
+{{--                                                <label class="custom-control-label w-100"--}}
+{{--                                                    for="customRadioInline{{ $getaddress->id }}">--}}
+{{--                                                    <div>--}}
+{{--                                                        <div class="p-3 bg-white rounded shadow-sm w-100">--}}
+{{--                                                            <div class="d-flex align-items-center mb-2">--}}
+{{--                                                                <h6 class="mb-0">{{ $getaddress->type }}</h6>--}}
+{{--                                                                --}}{{-- <p class="mb-0 badge badge-success ml-auto"><i--}}
+{{--                                                                    class="icofont-check-circled"></i> Default</p> --}}
+{{--                                                            </div>--}}
+{{--                                                            <p class="small text-muted m-0">--}}
+{{--                                                                {{ nl2br($getaddress->address, 20) }}</p>--}}
+{{--                                                            --}}{{-- <p class="small text-muted m-0">Redwood City, CA 94063</p> --}}
+{{--                                                        </div>--}}
+{{--                                                        --}}{{-- <a href="#" data-toggle="modal" data-target="#exampleModal"--}}
+{{--                                                        class="btn btn-block btn-light border-top">Edit</a> --}}
+{{--                                                    </div>--}}
+{{--                                                </label>--}}
+{{--                                            </div>--}}
+{{--                                        @endforeach--}}
 
-                                    </div>
-                                    {{-- <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal"> ADD
-                                        NEW ADDRESS </a> --}}
-                                </div>
-                            </div>
-                        </div>
+{{--                                    </div>--}}
+{{--                                    --}}{{-- <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal"> ADD--}}
+{{--                                        NEW ADDRESS </a> --}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
                         {{-- Delivery Type --}}
                         @if ($timeSlot == 'true')
