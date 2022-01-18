@@ -81,7 +81,7 @@
 
       protected $table = 'order';
 
-      protected $fillable = ['order_id', 'tax', 'vendor_id', 'user_id', 'payment_token', 'delivery_person_id', 'date', 'time', 'amount', 'payment_type', 'payment_status', 'vendor_discount', 'promocode_id', 'promocode_price', 'address_id', 'order_status', 'delivery_charge', 'order_start_time', 'order_end_time', 'delivery_type', 'admin_commission', 'vendor_amount', 'printable', 'order_data', 'sub_total', 'delivery_time'];
+      protected $fillable = ['order_id', 'tax', 'vendor_id', 'user_id', 'payment_token', 'delivery_person_id', 'date', 'time', 'amount', 'payment_type', 'payment_status', 'vendor_discount', 'promocode_id', 'promocode_price', 'address_id', 'order_status', 'delivery_charge', 'order_start_time', 'order_end_time', 'delivery_type', 'admin_commission', 'vendor_amount', 'printable', 'order_data', 'sub_total', 'delivery_time', 'table_no'];
 
       protected $appends = ['vendor', 'user', 'orderItems', 'user_address'];
 
