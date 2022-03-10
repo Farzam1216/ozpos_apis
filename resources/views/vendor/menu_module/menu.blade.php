@@ -72,6 +72,7 @@
               <th>Image</th>
               <th>Name</th>
               <th>Price - Discount Price</th>
+              <th>Dining Price</th>
               <th>Action</th>
             </tr>
             </thead>
@@ -94,6 +95,12 @@
                     {{ $currency_symbol }} {{ $item->display_price }}
                   @endif
                 </td>
+                <td>
+                    @if(isset($item->dining_price ))
+                      $ {{ $item->dining_price }}
+                    @else
+                    -
+                    @endif</td>
                 <td>
                   <button type="button" onclick="updateData('vendor/menu',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
                     <i class="fas fa-pencil-alt"></i>
@@ -199,6 +206,12 @@
                 @error('display_discount_price')
                 <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                 @enderror
+
+                <label class="form-control-label">Dining Price</label>
+                <input class="form-control @error('dining_price') is-invalid @enderror" id="dining_price" name="dining_price" type="text" placeholder="{{ $title }} Dining Price" >
+                @error('display_discount_price')
+                <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+                @enderror
               </div>
 
             </div>
@@ -294,6 +307,13 @@
                 @error('display_discount_price')
                 <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                 @enderror
+
+                <label class="form-control-label">Dining Price</label>
+                <input class="populate form-control @error('dining_price') is-invalid @enderror" id="dining_price" name="dining_price" type="text" placeholder="{{ $title }} Dining Price" value="{{ old('display_discount_price') }}">
+                @error('display_discount_price')
+                <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+                @enderror
+
               </div>
 
             </div>

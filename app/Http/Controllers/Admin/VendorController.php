@@ -59,7 +59,7 @@ class VendorController extends Controller
         $phone_codes = Country::get();
         return view('admin.vendor.create_vendor',compact('cuisines','languages','phone_codes'));
     }
-
+//
     /**
      * Store a newly created resource in storage.
      *

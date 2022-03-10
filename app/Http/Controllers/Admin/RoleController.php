@@ -30,7 +30,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('title')->get();
         return view('admin.role.create_role',compact('permissions'))->with('msg','role created successfully..!!');
     }
 

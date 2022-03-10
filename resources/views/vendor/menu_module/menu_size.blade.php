@@ -9,7 +9,7 @@
 @section('title',$title)
 
 @section('content')
-   
+
    <section class="section">
       @if (Session::has('msg'))
          <script>
@@ -22,7 +22,7 @@
             });
          </script>
       @endif
-      
+
       @if (old('old_value') == "add")
          <script type="text/javascript">
             $(function () {
@@ -31,7 +31,7 @@
             });
          </script>
       @endif
-      
+
       @if (old('old_value') == "update")
          <script type="text/javascript">
             window.onload = () => {
@@ -39,7 +39,7 @@
             }
          </script>
       @endif
-      
+
       <div class="section-header">
          <h1>{{ $title }}</h1>
          <div class="section-header-breadcrumb">
@@ -51,7 +51,7 @@
             </div>
          </div>
       </div>
-      
+
       <div class="section-body">
          <h2 class="section-title">{{ $title }} Management</h2>
          {{--         <p class="section-lead">{{__('Add, and categorize the menu adding sub-menus. (Add,Edit & Manage Menu Categories )')}}</p>--}}
@@ -72,6 +72,7 @@
                      <th>SR.</th>
                      <th>Name</th>
                      <th>Price - Discount Price</th>
+                     <th>Dining Price</th>
                      <th>Action</th>
                   </tr>
                   </thead>
@@ -92,6 +93,13 @@
                            @endif
                         </td>
                         <td>
+                          @if(isset($item->size_dining_price))
+                          $ {{$item->size_dining_price}}
+                          @else
+                          -
+                          @endif
+                      </td>
+                        <td>
                            <button type="button" onclick="updateData('vendor/menu_size',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
                               <i class="fas fa-pencil-alt"></i>
                            </button>
@@ -110,9 +118,9 @@
             </div>
          </div>
       </div>
-   
+
    </section>
-   
+
    <div class="modal right fade" id="insert_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -139,7 +147,7 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
                   <div class="form-group">
                      <label class="form-control-label">Price<span class="text-danger">&nbsp;*</span></label>
                      <input class="form-control @error('display_price') is-invalid @enderror" name="display_price" type="text" placeholder="{{ $title }} Price" value="{{ old('display_price') }}">
@@ -147,7 +155,7 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
                   <div class="form-group">
                      <label class="form-control-label">Discount Price</label>
                      <input class="form-control @error('display_discount_price') is-invalid @enderror" name="display_discount_price" type="text" placeholder="{{ $title }} Discount Price" value="{{ old('display_discount_price') }}">
@@ -155,9 +163,17 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
+                  <div class="form-group">
+                    <label class="form-control-label">Dining Price</label>
+                    <input class="form-control @error('size_dining_price') is-invalid @enderror" name="size_dining_price" type="text" placeholder="{{ $title }} Dining Price" value="{{ old('size_dining_price') }}">
+                    @error('size_dining_price')
+                    <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+                    @enderror
+                 </div>
+
                   <hr class="my-3">
-                  
+
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                      <input type="submit" value="{{__('Save')}}" class="btn btn-primary">
@@ -167,7 +183,7 @@
          </div>
       </div>
    </div>
-   
+
    <div class="modal right fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -184,8 +200,8 @@
                   </button>
                </div>
                <div class="modal-body">
-   
-   
+
+
                   <div class="form-group">
                      <label class="form-control-label">Item Size<span class="text-danger">&nbsp;*</span></label>
                      <select class="populate form-control @error('item_size_id') is-invalid @enderror" name="item_size_id">
@@ -197,7 +213,7 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-   
+
                   <div class="form-group">
                      <label class="form-control-label">Price<span class="text-danger">&nbsp;*</span></label>
                      <input class="populate form-control @error('display_price') is-invalid @enderror" name="display_price" type="text" placeholder="{{ $title }} Price" value="{{ old('display_price') }}">
@@ -205,7 +221,7 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-   
+
                   <div class="form-group">
                      <label class="form-control-label">Discount Price</label>
                      <input class="populate form-control @error('display_discount_price') is-invalid @enderror" name="display_discount_price" type="text" placeholder="{{ $title }} Discount Price" value="{{ old('display_discount_price') }}">
@@ -213,7 +229,15 @@
                      <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
                      @enderror
                   </div>
-                  
+
+                  <div class="form-group">
+                    <label class="form-control-label">Dining Price</label>
+                    <input class="populate form-control @error('size_dining_price') is-invalid @enderror" name="size_dining_price" type="text" placeholder="{{ $title }} Dining Price" value="{{ old('size_dining_price') }}">
+                    @error('size_dining_price')
+                    <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+                    @enderror
+                 </div>
+
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                      <input type="submit" value="{{__('Update')}}" class="btn btn-primary">

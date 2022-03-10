@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Vendor\MenuModule;
-   
+
    use Illuminate\Http\Request;
    use Illuminate\Http\RedirectResponse;
    use Illuminate\Http\Response;
@@ -9,7 +9,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\ItemSize;
    use App\Models\Vendor;
-   
+
    class ItemSizeController extends Controller
    {
       /**
@@ -23,7 +23,7 @@
          $ItemSize = ItemSize::where('vendor_id',$Vendor->id)->get();
          return view('vendor.menu_module.item_size',compact('Vendor', 'ItemSize'));
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -33,7 +33,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -45,12 +45,12 @@
          $request->validate([
              'name' => 'required',
          ]);
-         
+
          $data = $request->all();
          ItemSize::create($data);
          return redirect()->back()->with('msg','Item size created.');
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -59,9 +59,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -72,7 +72,7 @@
       {
          return response(['success' => true , 'data' => $ItemSize]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -85,12 +85,12 @@
          $request->validate([
              'name' => 'required',
          ]);
-         
+
          $data = $request->all();
          $ItemSize->update($data);
          return redirect()->back()->with('msg','Item size updated.');
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *
@@ -102,7 +102,7 @@
          $ItemSize->delete();
          return response(['success' => true]);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

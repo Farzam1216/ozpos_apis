@@ -86,14 +86,14 @@
                             <td>{{$menu->name}}</td>
                             <td>
                                 <label class="switch">
-                                    <input type="checkbox" name="status" onclick="change_status('admin/menu',{{ $menu->id }})" {{($menu->status == 1) ? 'checked' : ''}}>
+                                    <input type="checkbox" name="status" onclick="change_status('menu',{{ $menu->id }})" {{($menu->status == 1) ? 'checked' : ''}}>
                                     <div class="slider"></div>
                                 </label>
                             </td>
                             <td>
                                 <button type="button" onclick="update_menu({{$menu->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal"><i class="fas fa-pencil-alt"></i></button>
                                 @can('vendor_submenu_access')
-                                    <a href="{{ url('vendor/vendor_menu/'.$menu->id) }}" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" data-original-title="{{__('Add menu')}}">
+                                    <a href="{{ url('vendor/vendor_menu/'.$menu->id) }}" class="btn btn-primary btn-action" data-toggle="tooltip" data-original-title="{{__('Add menu')}}">
                                         <i class="fas fa-utensils"></i>
                                     </a>
                                 @endcan

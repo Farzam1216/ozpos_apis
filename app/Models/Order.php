@@ -99,12 +99,11 @@
       {
          $OrderItems = [];
          $OrderData = json_decode($this->attributes['order_data']);
-
          foreach ($OrderData->cart as $item) {
             if ($item->category === 'SINGLE')
                array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => $item->menu[0]->name, 'price' => $item->menu[0]->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
             else
-               array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => $item->menu_category->name, 'price' => $item->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
+               array_push($OrderItems, array('id' => null, 'orderId' => $this->attributes['id'], 'item' => null, 'item_name' => "item name", 'price' => $item->total_amount, 'qty' => $item->quantity, 'custimization' => [], 'created_at' => null, 'updated_at' => null));
          }
 
          return $OrderItems;

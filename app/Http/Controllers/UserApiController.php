@@ -73,7 +73,7 @@ use App\Models\Cuisine;
             if (Auth::attempt($user)) {
                $user = Auth::user();
                if ($user->status == 1) {
-                  if ($user->roles->contains('title', 'user')) {
+                  if ( $user->roles->contains('title', 'user')) {
                      if (isset($request->device_token)) {
                         $user->device_token = $request->device_token;
                         $user->save();
@@ -86,7 +86,7 @@ use App\Models\Cuisine;
                         return response(['success' => true, 'data' => $user, 'msg' => 'Otp send in your account']);
                      }
                   } else {
-                     return response(['success' => false, 'msg' => 'only user can login...']);
+                     return response(['success' => false, 'msg' => 'You have no permissions to login. Please ask administrators...']);
                   }
                } else {
                   return response()->json(['success' => false, 'message' => 'you are block by admin please contact support'], 401);
@@ -441,13 +441,13 @@ use App\Models\Cuisine;
       public function apiOrderSetting($vendor_id)
       {
          $User = auth()->user();
-         $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+         $UserAddress = UserAddress::where([['user_id', 155], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
 //         $Setting = OrderSetting::where('vendor_id', $vendor_id)->first();
          $Setting = OrderSetting::firstOrCreate([
-             'vendor_id' => $vendor_id,
+             'vendor_id' => 1,
          ], [
-             'vendor_id' => $vendor_id,
+             'vendor_id' => 1,
              'free_delivery' => 0,
              'free_delivery_distance' => 10,
              'free_delivery_amount' => 0,
@@ -463,7 +463,7 @@ use App\Models\Cuisine;
          ]);
 
 
-         $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+         $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
          $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
          $googleDistance =
              file_get_contents(
@@ -484,8 +484,10 @@ use App\Models\Cuisine;
       {
          $Vendor = Vendor::select('id', 'vendor_status', 'delivery_status', 'pickup_status')->find($vendor_id)->makeHidden('image', 'vendor_logo', 'cuisine', 'rate', 'review');
 
-         if (!$Vendor)
-            return response(['success' => false, 'msg' => 'vendor not found.']);
+         if (!$Vendor){
+
+          return response(['success' => false, 'msg' => 'vendor not found.']);
+         }
 
          return response(['success' => true, 'data' => $Vendor]);
       }
@@ -506,7 +508,7 @@ use App\Models\Cuisine;
              'sub_total' => 'bail|required|numeric',
              'item' => 'bail|required',
              'vendor_id' => 'required',
-             'delivery_type' => 'bail|required',
+             'delivery_type' => 'bail',
 //             'address_id' => 'bail|required_if:delivery_type,HOME',
              'payment_type' => 'bail|required',
              'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',

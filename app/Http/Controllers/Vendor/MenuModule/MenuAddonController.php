@@ -28,9 +28,7 @@
          else
             $MenuAddon = MenuAddon::with('Addon')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id], ['menu_size_id', $menu_size_id]])->get();
 
-
-            // dd($MenuAddon);
-         return view('vendor.menu_module.menu_addon', compact('Vendor', 'MenuAddon', 'menu_id', 'menu_size_id'));
+          return view('vendor.menu_module.menu_addon', compact('Vendor', 'MenuAddon', 'menu_id', 'menu_size_id'));
       }
 
       /**

@@ -78,8 +78,6 @@ class VendorApiController extends Controller
                     if($admin_verify_user == 1)
                     {
                         $otp = mt_rand(1000, 9999);
-                        // $otp = 1234;
-
                         $sms_verification = GeneralSetting::first()->verification_phone;
                         $mail_verification = GeneralSetting::first()->verification_email;
 
@@ -133,13 +131,13 @@ class VendorApiController extends Controller
                         $vendor = Vendor::where('user_id',$user->id)->first();
                         $user['vendor_own_driver'] = $vendor->vendor_own_driver;
 
-                        return response(['success' => true ,'data' => $user, 'msg' => 'Otp send in your account']);
+                        return response(['success' => true ,'data' => $user, 'message' => 'Otp send in your account']);
                     }
                 }
             }
             else
             {
-                return response(['success' => false , 'msg' => 'only vendor can login...']);
+                return response(['success' => false , 'message' => 'You have no permissions to login. Please ask administrators...'], 401);
             }
         }
         else
@@ -251,7 +249,7 @@ class VendorApiController extends Controller
         if($user['is_verified'] == 1)
         {
             $user['token'] =  $user->createToken('mealup')->accessToken;
-            return response()->json(['success' => true , 'data' => $user , 'msg' => 'account created successfully..!!'], 200);
+            return response()->json(['success' => true , 'data' => $user , 'message' => 'account created successfully..!!'], 200);
         }
         else
         {
@@ -310,10 +308,10 @@ class VendorApiController extends Controller
                         Log::error($th);
                     }
                 }
-                return response(['success' => true ,'data' => $user, 'msg' => 'your account created successfully please verify your account']);
+                return response(['success' => true ,'data' => $user, 'message' => 'your account created successfully please verify your account']);
             }
             $user['token'] =  $user->createToken('mealup')->accessToken;
-            return response()->json(['success' => true , 'data' => $user , 'msg' => 'account created successfully..!!'], 200);
+            return response()->json(['success' => true , 'data' => $user , 'message' => 'account created successfully..!!'], 200);
         }
     }
 
@@ -332,16 +330,16 @@ class VendorApiController extends Controller
                 $user->is_verified = 1;
                 $user->save();
                 $user['token'] = $user->createToken('mealup')->accessToken;
-                return response(['success' => true ,'data' => $user ,'msg' => 'SuccessFully verify your account...!!']);
+                return response(['success' => true ,'data' => $user ,'message' => 'SuccessFully verify your account...!!']);
             }
             else
             {
-                return response(['success' => false , 'msg' => 'Something went wrong otp does not match..!']);
+                return response(['success' => false , 'message' => 'Something went wrong otp does not match..!']);
             }
         }
         else
         {
-            return response(['success' => false , 'msg' => 'Oops...user not found..!!']);
+            return response(['success' => false , 'message' => 'Oops...user not found..!!']);
         }
     }
 
@@ -372,7 +370,7 @@ class VendorApiController extends Controller
             {
                 Log::error($th);
             }
-            return response(['success' => true ,'data' => $user ,'msg' => 'your password send into your email']);
+            return response(['success' => true ,'data' => $user ,'message' => 'your password send into your email']);
         }
         else
         {
@@ -1504,56 +1502,7 @@ class VendorApiController extends Controller
 
             app('App\Http\Controllers\NotificationController')->process('customer', 'change_status', 'Order Status Updated', [ $user->id, $user->device_token, $user->email ], $user->name, $order->order_id, $order->time, $order->order_status);
 
-//            $status_change = NotificationTemplate::where('title','change status')->first();
-//            $mail_content = $status_change->mail_content;
-//            $notification_content = $status_change->notification_content;
-//            $detail['user_name'] = $user->name;
-//            $detail['order_id'] = $order->order_id;
-//            $detail['date'] = $order->date;
-//            $detail['order_status'] = $order->order_status;
-//            $detail['company_name'] = GeneralSetting::find(1)->business_name;
-//            $data = ["{user_name}","{order_id}","{date}","{order_status}","{company_name}"];
-//
-//            $message1 = str_replace($data, $detail, $notification_content);
-//            $mail = str_replace($data, $detail, $mail_content);
-//            if(GeneralSetting::find(1)->customer_notification == 1)
-//            {
-//                if($user->device_token != null)
-//                {
-//                    try {
-//                        Config::set('onesignal.app_id', env('customer_app_id'));
-//                        Config::set('onesignal.rest_api_key', env('customer_auth_key'));
-//                        Config::set('onesignal.user_auth_key', env('customer_api_key'));
-//                        OneSignal::sendNotificationToUser(
-//                            $message1,
-//                            $user->device_token,
-//                            $url = null,
-//                            $data = null,
-//                            $buttons = null,
-//                            $schedule = null,
-//                            GeneralSetting::find(1)->business_name
-//                        );
-//                    } catch (\Throwable $th) {
-//                        Log::error($th);
-//                    }
-//                }
-//            }
-//
-//            if (GeneralSetting::find(1)->customer_mail == 1)
-//            {
-//                try {
-//                    Mail::to($user->email_id)->send(new StatusChange($mail));
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//
-//            $notification = array();
-//            $notification['user_id'] = $user->id;
-//            $notification['user_type'] = 'user';
-//            $notification['title'] = $status;
-//            $notification['message'] = $message1;
-//            Notification::create($notification);
+
 
             if($order->delivery_type == 'SHOP')
             {

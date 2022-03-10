@@ -41,7 +41,7 @@ class Menu extends Model
 
   protected $table = 'menu';
 
-  protected $fillable = ['vendor_id', 'name', 'image', 'description', 'price', 'display_price', 'display_discount_price'];
+  protected $fillable = ['vendor_id', 'name', 'image', 'description', 'price', 'display_price', 'display_discount_price','dining_price','status'];
 
   protected $casts = [
     'price' => 'decimal:2',

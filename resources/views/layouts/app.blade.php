@@ -233,7 +233,7 @@ span.vendorColor {
       }
   </script>
   <script>
-      @php($admin_order_notification=\App\Models\BusinessSetting::where([['vendor_id',$vendor->id],['key','1']])->first())
+      {{-- @php($admin_order_notification=\App\Models\BusinessSetting::where([['vendor_id',$vendor->id],['key','1']])->first())
 
       @if($admin_order_notification)
       setInterval(function () {
@@ -254,7 +254,7 @@ span.vendorColor {
       function check_order() {
           location.href = '{{route('vendor.order.list')}}';
       }
-      @endif
+      @endif --}}
   </script>
 </body>
 

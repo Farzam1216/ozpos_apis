@@ -74,6 +74,7 @@
               <th>SR.</th>
               <th>Name</th>
               <th>Price</th>
+              <th>Dining Price</th>
               <th>Action</th>
             </tr>
             </thead>
@@ -87,6 +88,7 @@
                 <td>{{ $idx+1 }}</td>
                 <td>{{ $item->Addon->name ?? ''}}</td>
                 <td>{{ $currency_symbol ?? ''}} {{ $item->price ?? ''}}</td>
+                <td>$ {{ $item->addon_dining_price ?? '-'}}</td>
                 <td>
                   <button type="button" onclick="updateData('vendor/menu_addon',{{$item->id}})" class="btn btn-primary" data-toggle="modal" data-target="#edit_modal">
                     <i class="fas fa-pencil-alt"></i>
@@ -143,6 +145,14 @@
               @enderror
             </div>
 
+            <div class="form-group">
+              <label class="form-control-label">Addon Dining Price<span class="text-danger">&nbsp;*</span></label>
+              <input class="form-control @error('addon_dining_price') is-invalid @enderror" name="addon_dining_price" type="text" placeholder="{{ $title }} Dining Price" required value="{{ old('price') }}">
+              @error('price')
+              <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+              @enderror
+            </div>
+
             <hr class="my-3">
 
             <div class="modal-footer">
@@ -187,6 +197,14 @@
             <div class="form-group">
               <label class="form-control-label">Price<span class="text-danger">&nbsp;*</span></label>
               <input class="populate form-control @error('price') is-invalid @enderror" name="price" type="text" placeholder="{{ $title }} Price" required value="{{ old('price') }}">
+              @error('price')
+              <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
+              @enderror
+            </div>
+
+            <div class="form-group">
+              <label class="form-control-label">Dining Price<span class="text-danger">&nbsp;*</span></label>
+              <input class="populate form-control @error('price') is-invalid @enderror" name="addon_dining_price" type="text" placeholder="{{ $title }} Dining Price" required value="{{ old('price') }}">
               @error('price')
               <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span>
               @enderror

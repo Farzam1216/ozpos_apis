@@ -12,10 +12,9 @@
       public function getIsAddressSelected()
       {
          $UserAddress = UserAddress::where([['user_id', auth()->user()->id], ['selected', 1]])->first();
-
-         if($UserAddress === null)
-            return response(['success' => false, 'data' => null]);
-
+         if($UserAddress === null){
+           return response(['success' => false, 'data' => null]);
+         }
          return response(['success' => true, 'data' => $UserAddress]);
       }
       public function getAddress()
