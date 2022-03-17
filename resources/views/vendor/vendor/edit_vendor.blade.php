@@ -259,6 +259,21 @@
                                   <label for="tax">{{__('Map Api Key')}}<span class="text-danger">&nbsp;*</span></label>
                                   <input type="text"  name="map_api_key" value="{{ $vendor->map_api_key }}" placeholder="{{__('map api key')}}" class="form-control">
                                   </div>
+
+                                  <div class="col-md-6 mb-3">
+                                    <label for="Dining">{{__('Vendor Dining status')}}</label>
+                                    <select name="resturant_dining_status" class="form-control">
+                                      <option value="1" @if( $vendor->resturant_dining_status == 1) selected @endif>Active</option>
+                                      <option value="0" @if( $vendor->resturant_dining_status == 0) selected @endif>InActive</option>
+                                    </select>
+                                  </div>
+
+                                  <div class="col-md-6 mb-3">
+                                    <label for="tax">{{__('Total Table Numbers')}}<span class="text-danger">&nbsp;*</span></label>
+                                    <input type="number"  name="total_tables_number" value="{{ $vendor->total_tables_number }}" placeholder="Enter Total Table Numbers" class="form-control">
+                                  </div>
+
+
                             </div>
                             <div class="row" style="    margin-bottom: 10px;">
                               <div class="col-md-6">

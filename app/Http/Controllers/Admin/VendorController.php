@@ -68,7 +68,6 @@ class VendorController extends Controller
     */
     public function store(Request $request)
     {
-      // dd($request->all());
         $data = $request->all();
         $request->validate([
             'name' => 'required',

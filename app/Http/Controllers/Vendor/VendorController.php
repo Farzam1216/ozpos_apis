@@ -92,7 +92,7 @@ class VendorController extends Controller
      */
     public function update(Request $request, $id)
     {
-      // dd($request);
+      // dd($request->all());
         $vendor = Vendor::find($id);
         $request->validate([
             'name' => 'required',
@@ -143,6 +143,10 @@ class VendorController extends Controller
         } else {
             $data['status'] = 0;
         }
+
+        $data['resturant_dining_status'] = $request->resturant_dining_status;
+
+
         $vendor->update($data);
         return redirect('vendor/vendor_home')->with('msg','Vendor Profile Update successfully..!');
     }

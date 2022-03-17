@@ -8,7 +8,8 @@ use App\Mail\Verification;
    use App\Mail\VendorOrder;
    use App\Mail\DriverOrder;
    use App\Models\Banner;
-   use App\Models\BusinessSetting;
+use App\Models\booktable;
+use App\Models\BusinessSetting;
    use App\Models\Cuisine;
    use App\Models\DeliveryPerson;
    use App\Models\HalfNHalfMenu;
@@ -172,14 +173,29 @@ class PosApiController extends Controller
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', 155], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
+         $bookTable = booktable::where('vendor_id',$vendor_id)->get();
+         $notBookedTable = [];
+         $bookedTable = [];
+
+         for($i = 1; $i<=$Vendor->total_tables_number; $i++){
+           $notBookedTable[] = $i;
+         }
+
+         foreach($bookTable as $table)
+         {
+          $bookedTable[] = $table->booked_table_number;
+         }
+
+         $remainigTable = array_diff($notBookedTable, $bookedTable);
+
          $Setting = OrderSetting::firstOrCreate([
-             'vendor_id' => 1,
+             'vendor_id' => $vendor_id,
          ], [
-             'vendor_id' => 1,
+             'vendor_id' => $vendor_id,
              'free_delivery' => 0,
              'free_delivery_distance' => 10,
              'free_delivery_amount' => 0,
-             'min_order_value' => '100',
+             'min_order_value' => 200,
              'order_commission' => 0,
              'order_assign_manually' => '0',
              'orderRefresh' => '5',
@@ -207,6 +223,10 @@ class PosApiController extends Controller
             }
          $Setting['tax_type'] = $Vendor->tax_type;
          $Setting['tax'] = $Vendor->tax;
+         $Setting['resturant_dining_status'] = $Vendor->resturant_dining_status;
+         $Setting['total_tables_number'] = $Vendor->total_tables_number;
+         $Setting['notbookedTable'] = array_values($remainigTable);
+         $Setting['bookedTable'] = $bookedTable;
 
          return response(['success' => true, 'data' => $Setting]);
       }
