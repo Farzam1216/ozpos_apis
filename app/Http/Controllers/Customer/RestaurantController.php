@@ -125,7 +125,7 @@ class RestaurantController extends Controller
 
     $page = 1;
     // echo "<pre>" . json_encode ((array) $singleVendor, JSON_PRETTY_PRINT) . "</pre>"; return;
-    // dd($singleVendor);
+    //  dd($singleVendor);
     $user = Auth::user()->id;
     $userAddress = UserAddress::where('user_id', $user)->get();
     $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();

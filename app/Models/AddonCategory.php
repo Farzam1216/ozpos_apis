@@ -35,4 +35,8 @@ class AddonCategory extends Eloquent
     protected $table = 'addon_category';
 
     protected $fillable = ['vendor_id', 'name', 'min', 'max'];
+
+    public function Addon() {
+      return $this->hasMany('App\Models\Addon');
+    }
 }

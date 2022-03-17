@@ -65,6 +65,7 @@
                               </h6>
 
                               @foreach($Menu->MenuAddon()->where('addon_category_id', $GroupMenuAddon->AddonCategory()->get()->first()->id)->get() as $MenuAddonIDX=>$MenuAddon)
+
                                  <div class="custom-control custom-radio border-bottom py-2">
                                     <input type="checkbox" id="SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}-{{ $MenuAddon->id }}" name="" class="custom-control-input SingleMenuCheckbox-{{ $SingleMenu->id }} SingleMenuCheckbox-{{ $SingleMenu->id }}-{{ $GroupMenuAddon->id }}" data-group_menu_addon_id="{{ $GroupMenuAddon->id }}" data-id="{{ $MenuAddon->id }}" data-name="{{ $MenuAddon->Addon()->get()->first()->name ?? ''}}" data-price="{{ $MenuAddon->price }}" data-min="{{ $GroupMenuAddon->AddonCategory()->get()->first()->min }}" data-max="{{ $GroupMenuAddon->AddonCategory()->get()->first()->max }}">
                                     <label class="custom-control-label" for="SingleMenuCheckbox-{{ $SingleMenu->id ?? ''}}-{{ $GroupMenuAddon->id ?? ''}}-{{ $MenuAddon->id ?? ''}}">

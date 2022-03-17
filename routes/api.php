@@ -19,14 +19,23 @@
    });
 
 
-  //  changed feb 2022
-   Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
-
-  //
 
 
    Route::group(['middleware' => ['cors']], function ($router) {
+      // new frontend apis with vue js
+      //  changed feb 2022
+      Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
 
+      // menu addon api for new webpage
+      Route::get('menu_addon/{vendor_id}/{menu_id}', 'UserApiController@apiMenuAddon');
+      // menu sizes apis for new webpage
+      Route::get('menu_size/{vendor_id}/{menu_id}', 'UserApiController@apiMenuSize'); // for single menu
+      Route::get('menu_size_addon/{vendor_id}/{menu_id}/{size_id}', 'UserApiController@apiMenuSizeAddon');
+      // Route::get('single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'UserApiController@apiSingleVendorRetrieveSizes'); // yeh nechy add ha
+      Route::get('menu_size_item_size/{vendor_id}/{item_size_id}', 'UserApiController@getMenuByPickingItemSize'); // for half and half
+      // Route::get('single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'UserApiController@apiSingleVendorRetrieveSize'); yeh nechy add ha
+      Route::get('deals-menu-items/{vendor_id}/{deals_id}', 'UserApiController@deaslMenuItems'); //get deals items
+      // end front end new apis
       /******  kitchen  ********/
       Route::post('kitchen/login', 'kitchenApiController@apiLogin');
       Route::get('kitchen/order/{order_status}/{vendor_id}', 'kitchenApiController@apiOrder');
@@ -47,6 +56,8 @@
       //
       Route::get('pos/single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'PosApiController@apiSingleVendorRetrieveSizes');
       Route::get('pos/single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'PosApiController@apiSingleVendorRetrieveSize');
+      Route::get('pos/promo_code/{vendor_id}', 'UserApiController@apiPromoCode');
+      Route::post('pos/apply_promo_code', 'UserApiController@apiApplyPromoCode');
       /******  POS User  ********/
 
 

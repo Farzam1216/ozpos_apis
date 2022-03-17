@@ -54,4 +54,8 @@
       {
          return $this->belongsTo('App\Models\AddonCategory');
       }
+      public function MenuSize()
+      {
+         return $this->belongsTo('App\Models\MenuSize');
+      }
    }

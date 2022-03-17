@@ -8,9 +8,13 @@
    use App\Mail\VendorOrder;
    use App\Mail\DriverOrder;
    use App\Models\Banner;
-use App\Models\BusinessSetting;
-use App\Models\Cuisine;
-   use App\Models\DeliveryPerson;
+  use App\Models\MenuSize;
+  use App\Models\Cuisine;
+  use App\Models\MenuAddon;
+  use App\Models\BusinessSetting;
+use App\Models\DealsItems;
+use App\Models\DealsMenu;
+use App\Models\DeliveryPerson;
    use App\Models\HalfNHalfMenu;
    use App\Models\ItemCategory;
    use App\Models\ItemSize;
@@ -291,6 +295,41 @@ use App\Models\Cuisine;
          return response(['success' => true, 'data' => $master]);
       }
 
+      public function apiMenuAddon($vendor_id,$menu_id)
+      {
+        $MenuAddon =  MenuAddon::with(['MenuSize.ItemSize','AddonCategory.Addon','Addon.AddonCategory'])
+          ->where('menu_id',$menu_id)
+          ->where('vendor_id',$vendor_id)
+          ->get();
+
+        $master['MenuAddon'] = $MenuAddon;
+        return response(['success' => true, 'data' => $master]);
+      }
+
+      public function apiMenuSize($vendor_id,$menu_id)
+      {
+        $MenuSizes =  MenuSize::with(['ItemSize','GroupMenuAddon.AddonCategory.Addon','GroupMenuAddon.Addon.AddonCategory','MenuAddon.AddonCategory.Addon'])
+          ->where('menu_id',$menu_id)
+          ->where('vendor_id',$vendor_id)
+          ->get();
+
+        $master['MenuSizes'] = $MenuSizes;
+        return response(['success' => true, 'data' => $master]);
+      }
+
+      public function apiMenuSizeAddon($vendor_id,$menu_id,$size_id)
+      {
+        $MenuAddon =  MenuAddon::with(['MenuSize.ItemSize','AddonCategory.Addon','Addon.AddonCategory'])
+          ->where('menu_id',$menu_id)
+          ->where('vendor_id',$vendor_id)
+          ->where('menu_size_id',$size_id)
+          ->get();
+
+        $master['MenuAddon'] = $MenuAddon;
+        return response(['success' => true, 'data' => $master]);
+      }
+
+
       public function apiSimpleVendor($vendor_id)
       {
          $Vendor = Vendor::where('id', $vendor_id)->first();
@@ -331,9 +370,6 @@ use App\Models\Cuisine;
        */
       public function apiSingleVendorRetrieveSize($vendor_id, $item_category_id, $item_size_id)
       {
-
-//         Log::info($item_category_id);
-//         Log::info($item_size_id);
          $data = ItemSize::with([
              'MenuSize.Menu.SingleMenu.SingleMenuItemCategory' => function ($query) use ($item_category_id) {
                 $query->where('item_category_id', $item_category_id);
@@ -346,6 +382,25 @@ use App\Models\Cuisine;
 
          Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
          return response(['success' => true, 'data' => $data]);
+      }
+
+      public function getMenuByPickingItemSize($vendor_id,$item_size_id)
+      {
+        $MenuSizes =  MenuSize::with(['Menu'])
+          ->where('item_size_id',$item_size_id)
+          ->where('vendor_id',$vendor_id)
+          ->get();
+        $master['MenuSizes'] = $MenuSizes;
+        return response(['success' => true, 'data' => $master]);
+      }
+
+      public function deaslMenuItems($vendor_id,$deal_item_id){
+
+        $deals = DealsItems::with('ItemCategory')
+              ->where('vendor_id',$vendor_id)
+              ->where('deals_menu_id',$deal_item_id)
+              ->get();
+        return response(['success' => true, 'data' => $deals]);
       }
 
       public function apiPromoCode($vendor_id)
@@ -1128,192 +1183,6 @@ use App\Models\Cuisine;
             }
          }
       }
-
-//    public function sendVendorOrderNotification($vendor, $order_id)
-//    {
-//        $vendor_notification = GeneralSetting::first()->vendor_notification;
-//        $vendor_mail = GeneralSetting::first()->vendor_mail;
-//        $content = NotificationTemplate::where('title', 'vendor order')->first();
-//        $vendor_user = User::where('id', $vendor->user_id)->first();
-//        if ($vendor->vendor_language == 'spanish') {
-//            $detail['Vendor_name'] = $vendor->name;
-//            $detail['Order_id'] = $order_id;
-//            $detail['User_name'] = auth()->user()->name;
-//            $v = ["{Vendor_name}", "{Order_id}", "{User_name}"];
-//            $notification_content = str_replace($v, $detail, $content->spanish_notification_content);
-//            if ($vendor_notification == 1) {
-//                try {
-//                    Config::set('onesignal.app_id', env('vendor_app_id'));
-//                    Config::set('onesignal.rest_api_key', env('vendor_api_key'));
-//                    Config::set('onesignal.user_auth_key', env('vendor_auth_key'));
-//                    OneSignal::sendNotificationToUser(
-//                        $notification_content,
-//                        $vendor_user->device_token,
-//                        $url = null,
-//                        $data = null,
-//                        $buttons = null,
-//                        $schedule = null,
-//                        GeneralSetting::find(1)->business_name
-//                    );
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//            $p_notification = array();
-//            $p_notification['title'] = 'create order';
-//            $p_notification['user_type'] = 'vendor';
-//            $p_notification['user_id'] = $vendor->id;
-//            $p_notification['message'] = $notification_content;
-//            Notification::create($p_notification);
-//            $mail = str_replace($v, $detail, $content->spanish_mail_content);
-//            if ($vendor_mail == 1) {
-//                try {
-//                    Mail::to($vendor->email_id)->send(new VendorOrder($mail));
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//            return true;
-//        } else {
-//            $detail['Vendor_name'] = $vendor->name;
-//            $detail['Order_id'] = $order_id;
-//            $detail['User_name'] = auth()->user()->name;
-//            $v = ["{Vendor_name}", "{Order_id}", "{User_name}"];
-//            $notification_content = str_replace($v, $detail, $content->notification_content);
-//            if ($vendor_notification == 1) {
-//                try {
-//                    Config::set('onesignal.app_id', env('vendor_app_id'));
-//                    Config::set('onesignal.rest_api_key', env('vendor_api_key'));
-//                    Config::set('onesignal.user_auth_key', env('vendor_auth_key'));
-//                    OneSignal::sendNotificationToUser(
-//                        $notification_content,
-//                        $vendor_user->device_token,
-//                        $url = null,
-//                        $data = null,
-//                        $buttons = null,
-//                        $schedule = null,
-//                        GeneralSetting::find(1)->business_name
-//                    );
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//            $p_notification = array();
-//            $p_notification['title'] = 'create order';
-//            $p_notification['user_type'] = 'vendor';
-//            $p_notification['user_id'] = $vendor->id;
-//            $p_notification['message'] = $notification_content;
-//            Notification::create($p_notification);
-//            $mail = str_replace($v, $detail, $content->mail_content);
-//            if ($vendor_mail == 1) {
-//                try {
-//                    Mail::to($vendor->email_id)->send(new VendorOrder($mail));
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//            return true;
-//        }
-//    }
-//
-//    public function sendUserNotification($user_id, $order_id)
-//    {
-//        $user = auth()->user();
-//        $order = Order::find($order_id);
-//        if ($user->language == 'spanish') {
-//            $status_change = NotificationTemplate::where('title', 'book order')->first();
-//            $mail_content = $status_change->spanish_mail_content;
-//            $notification_content = $status_change->spanish_notification_content;
-//            $detail['user_name'] = $user->name;
-//            $detail['order_id'] = $order->order_id;
-//            $detail['date'] = $order->date;
-//            $detail['order_status'] = $order->order_status;
-//            $detail['company_name'] = GeneralSetting::find(1)->business_name;
-//            $data = ["{user_name}", "{order_id}", "{date}", "{order_status}", "{company_name}"];
-//
-//            $message1 = str_replace($data, $detail, $notification_content);
-//            $mail = str_replace($data, $detail, $mail_content);
-//            if (GeneralSetting::find(1)->customer_notification == 1) {
-//                if ($user->device_token != null) {
-//                    try {
-//                        Config::set('onesignal.app_id', env('customer_app_id'));
-//                        Config::set('onesignal.rest_api_key', env('customer_auth_key'));
-//                        Config::set('onesignal.user_auth_key', env('customer_api_key'));
-//                        OneSignal::sendNotificationToUser(
-//                            $message1,
-//                            $user->device_token,
-//                            $url = null,
-//                            $data = null,
-//                            $buttons = null,
-//                            $schedule = null,
-//                            GeneralSetting::find(1)->business_name
-//                        );
-//                    } catch (\Throwable $th) {
-//                        Log::error($th);
-//                    }
-//                }
-//            }
-//            $notification = array();
-//            $notification['user_id'] = $user->id;
-//            $notification['user_type'] = 'user';
-//            $notification['title'] = 'book order';
-//            $notification['message'] = $message1;
-//            Notification::create($notification);
-//
-//            if (GeneralSetting::find(1)->customer_mail == 1) {
-//                try {
-//                    Mail::to($user->email_id)->send(new StatusChange($mail));
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//        } else {
-//            $status_change = NotificationTemplate::where('title', 'book order')->first();
-//            $mail_content = $status_change->mail_content;
-//            $notification_content = $status_change->notification_content;
-//            $detail['user_name'] = $user->name;
-//            $detail['app_name'] = GeneralSetting::find(1)->business_name;
-//            $data = ["{user_name}", "{app_name}"];
-//
-//            $message1 = str_replace($data, $detail, $notification_content);
-//            $mail = str_replace($data, $detail, $mail_content);
-//            if (GeneralSetting::find(1)->customer_notification == 1) {
-//                if ($user->device_token != null) {
-//                    try {
-//                        Config::set('onesignal.app_id', env('customer_app_id'));
-//                        Config::set('onesignal.rest_api_key', env('customer_auth_key'));
-//                        Config::set('onesignal.user_auth_key', env('customer_api_key'));
-//                        OneSignal::sendNotificationToUser(
-//                            $message1,
-//                            $user->device_token,
-//                            $url = null,
-//                            $data = null,
-//                            $buttons = null,
-//                            $schedule = null,
-//                            GeneralSetting::find(1)->business_name
-//                        );
-//                    } catch (\Throwable $th) {
-//                        Log::error($th);
-//                    }
-//                }
-//            }
-//            $notification = array();
-//            $notification['user_id'] = $user->id;
-//            $notification['user_type'] = 'user';
-//            $notification['title'] = 'book order';
-//            $notification['message'] = $message1;
-//            Notification::create($notification);
-//
-//            if (GeneralSetting::find(1)->customer_mail == 1) {
-//                try {
-//                    Mail::to($user->email_id)->send(new StatusChange($mail));
-//                } catch (\Throwable $th) {
-//                    Log::error($th);
-//                }
-//            }
-//        }
-//        return true;
-//    }
 
       public function apiUserBalance()
       {
