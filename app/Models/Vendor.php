@@ -159,6 +159,9 @@ class Vendor extends Model
 //        }
 //        return $query->whereIn('id', []);
     }
+    public function table() {
+      return $this->hasMany('App\Models\vendorTable');
+    }
     public function booktable() {
       return $this->hasMany('App\Models\booktable');
     }

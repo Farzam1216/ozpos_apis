@@ -466,6 +466,12 @@ class VendorSettingController extends Controller
     return view('vendor.vendor.printer_setting', compact('vendor'));
   }
 
+    public function payment_setting($vendor_id)
+    {
+        $PaymentSetting = PaymentSetting::where('vendor_id',$vendor_id)->first();
+        return view('admin.setting.payment_setting',compact('PaymentSetting'));
+    }
+
   public function update_printer_setting(Request $request)
   {
     $request->validate([

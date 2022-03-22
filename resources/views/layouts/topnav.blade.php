@@ -168,6 +168,9 @@
                     <a href="{{ url('vendor/order_setting') }}" class="dropdown-item has-icon">
                         <i class="fas fa-sort"></i> Order Settings
                     </a>
+                    <a href="{{ url('vendor/payment_setting/'.$vendor->id) }}" class="dropdown-item has-icon">
+                      <i class="fas fa-credit-card"></i> {{ __('Payment Setting') }}
+                    </a>
                     <a href="{{ url('vendor/slider') }}" class="dropdown-item has-icon">
                         <i class="fas fa-list"></i> Slider
                     </a>

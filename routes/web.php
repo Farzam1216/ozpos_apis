@@ -193,6 +193,7 @@ use App\Http\Controllers\Customer\AddressController;
       Route::get('static_pages', [SettingController::class, 'static_pages']);
 
       Route::get('payment_setting', [SettingController::class, 'payment_setting']);
+      Route::POST('create_payment_setting', [SettingController::class, 'create_payment_setting']);
       Route::post('update_stripe_setting', [SettingController::class, 'update_stripe_setting']);
       Route::post('update_version_setting', [SettingController::class, 'update_version_setting']);
 
@@ -277,6 +278,7 @@ use App\Http\Controllers\Customer\AddressController;
    Route::post('admin/admin_forgot_password', [AdminController::class, 'admin_forgot_password']);
    Route::get('vendor/send_otp/{id}', [VendorSettingController::class, 'send_otp']);
    Route::post('vendor/check_otp', [VendorSettingController::class, 'check_otp']);
+   Route::get('vendor/payment_setting/{vendor_id}', [VendorSettingController::class, 'payment_setting']);
 
    Route::middleware(['auth'])->prefix('vendor')->group(function () {
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CustomController;
+use App\Models\booktable;
 use App\Models\Cuisine;
 use App\Models\GeneralSetting;
 use App\Models\Language;
@@ -148,6 +149,27 @@ class VendorController extends Controller
 
 
         $vendor->update($data);
+        if($request->total_tables_number != ""){
+          $booktable = booktable::where('vendor_id',$vendor->id)->get();
+          foreach($booktable as $booktable){
+              if($booktable->booked_table_number > $request->total_tables_number){
+                booktable::where('vendor_id',$vendor->id)->where('booked_table_number',$booktable->booked_table_number)->delete();
+              }
+          }
+          for($i=1; $i<=$request->total_tables_number; $i++){
+                $booktable = booktable::where('vendor_id',$vendor->id)->where('booked_table_number',$i)->first();
+                if($booktable){
+                  continue;
+                }else{
+                  $vendor_booked_table = new booktable;
+                  $vendor_booked_table->vendor_id = $vendor->id;
+                  $vendor_booked_table->booked_table_number = $i;
+                  $vendor_booked_table->status = 0;
+                  $vendor_booked_table->save();
+                }
+          }
+        }
+
         return redirect('vendor/vendor_home')->with('msg','Vendor Profile Update successfully..!');
     }
 

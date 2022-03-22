@@ -11,6 +11,7 @@ use App\Models\GeneralSetting;
 use App\Models\PaymentSetting;
 use App\Models\Timezone;
 use App\Models\User;
+use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -196,8 +197,25 @@ class SettingController extends Controller
 
     public function payment_setting()
     {
+        $vendors = Vendor::all();
         $PaymentSetting = PaymentSetting::first();
-        return view('admin.setting.payment_setting',compact('PaymentSetting'));
+        return view('admin.setting.payment_setting',compact('PaymentSetting','vendors'));
+    }
+
+    public function create_payment_setting(Request $request)
+    {
+      $paymentSetting =  PaymentSetting::where('vendor_id',$request->vendor_id)->first();
+      if($paymentSetting){
+        return redirect()->back()->with('msg','Payment Setting for selected vendor Already Exist..!!');
+      }
+      else{
+        $PaymentSetting = new PaymentSetting();
+        $PaymentSetting->vendor_id = $request->vendor_id;
+        $PaymentSetting->save();
+        return redirect()->back()->with('msg','Payment Setting for new vendor Added successfully..!!');
+      }
+
+
     }
 
     public function update_stripe_setting(Request $request)

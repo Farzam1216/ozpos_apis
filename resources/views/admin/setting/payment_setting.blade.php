@@ -76,7 +76,44 @@
                 </div>
             </div>
         </div>
+          @foreach (Auth::User()->roles as $role)
+            @php
+              $roles = "";
+              $roles = $role->title;
+            @endphp
+          @endforeach
+        @if($roles == "admin")
+          <div class="card mt-5 stripe_card">
+            <div class="card-header">
+                {{__('Create Payment for Vendors')}}
+            </div>
+            <form action="{{ url('admin/create_payment_setting') }}" method="post">
+            @csrf
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="stripe_key">{{__('Select Vendor')}}</label>
+                            <select required name="vendor_id" id="">
+                              <option value="">Select Vendor </option>
+                              @foreach ($vendors as $vendor)
+                                <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                              @endforeach
+                            </select>
 
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <input type="submit" value="{{__('Create')}}"  class="btn btn-primary float-right">
+                        </div>
+                    </div>
+                </div>
+            </form>
+          </div>
+        @endif
+
+        @if($roles != "admin")
         <div class="card mt-5 stripe_card {{ $PaymentSetting->stripe == 0 ? 'hide' : '' }}">
             <div class="card-header">
                 {{__('Stripe')}}
@@ -196,5 +233,6 @@
                 </div>
             </form>
         </div>
+        @endif
     </section>
 @endsection

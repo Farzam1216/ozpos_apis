@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Verification;
+use App\Models\booktable;
    use App\Mail\ForgotPassword;
    use App\Mail\StatusChange;
    use App\Mail\VendorOrder;
    use App\Mail\DriverOrder;
    use App\Models\Banner;
-use App\Models\booktable;
+use App\Mail\Verification;
+use App\Models\vendorTable;
 use App\Models\BusinessSetting;
    use App\Models\Cuisine;
    use App\Models\DeliveryPerson;
@@ -173,20 +174,10 @@ class PosApiController extends Controller
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', 155], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
+        //  $vendorTable = vendorTable::where('vendor_id',$vendor_id)->with('booktables')->first();
          $bookTable = booktable::where('vendor_id',$vendor_id)->get();
-         $notBookedTable = [];
-         $bookedTable = [];
-
-         for($i = 1; $i<=$Vendor->total_tables_number; $i++){
-           $notBookedTable[] = $i;
-         }
-
-         foreach($bookTable as $table)
-         {
-          $bookedTable[] = $table->booked_table_number;
-         }
-
-         $remainigTable = array_diff($notBookedTable, $bookedTable);
+        //  $notBookedTable = [];
+        //  $bookedTable = [];
 
          $Setting = OrderSetting::firstOrCreate([
              'vendor_id' => $vendor_id,
@@ -209,24 +200,26 @@ class PosApiController extends Controller
 
          $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
          $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
-         $googleDistance =
-             file_get_contents(
-                 $googleUrl,
-             );
-        //  \Log::critical($googleDistance);
-         $googleDistance = json_decode($googleDistance);
-            if(isset($googleDistance->rows[0]->elements[0]->distance->value)){
-              $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value : 'no route found';
-            }
-            else{
-              $Setting['distance'] = 1.1;
-            }
+          //  $googleDistance =
+        //      file_get_contents(
+        //          $googleUrl,
+        //      );
+        // //  \Log::critical($googleDistance);
+        //  $googleDistance = json_decode($googleDistance);
+        //     if(isset($googleDistance->rows[0]->elements[0]->distance->value)){
+        //       $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value : 'no route found';
+        //     }
+        //     else{
+        //       $Setting['distance'] = 1.1;
+        //     }
+         $Setting['distance'] = 1.1;
          $Setting['tax_type'] = $Vendor->tax_type;
          $Setting['tax'] = $Vendor->tax;
          $Setting['resturant_dining_status'] = $Vendor->resturant_dining_status;
          $Setting['total_tables_number'] = $Vendor->total_tables_number;
-         $Setting['notbookedTable'] = array_values($remainigTable);
-         $Setting['bookedTable'] = $bookedTable;
+        //  $Setting['vendor_tables'] = $vendorTable;
+        //  $Setting['notbookedTable'] = array_values($remainigTable);
+         $Setting['bookedTable'] = $bookTable;
 
          return response(['success' => true, 'data' => $Setting]);
       }
@@ -266,8 +259,8 @@ class PosApiController extends Controller
            'vendor_id' => 'required',
            'delivery_type' => 'bail|required',
 //             'address_id' => 'bail|required_if:delivery_type,HOME',
-           'payment_type' => 'bail|required',
-           'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
+        //   'payment_type' => 'bail|required',
+        //   'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
           // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
 //             'tax' => 'required',
        ]);
@@ -278,53 +271,42 @@ class PosApiController extends Controller
        $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
        $bookData['address_id'] = 32;
 
-      //  Log::info('$bookData[\'delivery_date\']');
-      //  Log::info($bookData['delivery_date']);
-      //  Log::info('$bookData[\'delivery_time\']');
-      //  Log::info($bookData['delivery_time']);
-
        if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
        {
           $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
           $bookData['delivery_time'] = Carbon::createFromFormat('g:i A', $bookData['delivery_time'])->format('H:i:s');
-          // Log::info('$bookData[\'delivery_date\']');
-          // Log::info($bookData['delivery_date']);
-          // Log::info('$bookData[\'delivery_time\']');
-          // Log::info($bookData['delivery_time']);
+
           $dateTime = $bookData['delivery_date'] .' '.$bookData['delivery_time'];
-          // Log::info('$dateTime');
-          // Log::info($dateTime);
           $bookData['delivery_time'] = $dateTime;
-          // Log::info('$bookData[\'delivery_time\']');
-          // Log::info($bookData['delivery_time']);
        }
 
        $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
 
        $vendorUser = User::find($vendor->user_id);
-      //  Log::info($vendorUser);
-      //  $customer = auth()->user();
        $customer = User::find($vendor->user_id);
-
-       if ($vendor->vendor_status == 0)
-          return response(['success' => false, 'data' => "Vendor is offline."]);
-       if ($bookData['delivery_type'] == 'TAKEAWAY' && $vendor->delivery_status == 0)
-          return response(['success' => false, 'data' => "Vendor delivery status is offline."]);
-       if ($bookData['delivery_type'] == 'DELIVERY' && $vendor->pickup_status == 0)
-          return response(['success' => false, 'data' => "Vendor pickup status is offline."]);
-
        if ($bookData['payment_type'] == 'STRIPE') {
           $paymentSetting = PaymentSetting::find(1);
           $stripe_sk = $paymentSetting->stripe_secret_key;
           $currency = GeneralSetting::find(1)->currency;
           $stripe = new \Stripe\StripeClient($stripe_sk);
-          $charge = $stripe->charges->create(
+          $token =  $stripe->tokens->create([
+              'card' => [
+                'number' => $bookData['card_number'],
+                'exp_month' => $bookData['expiry_month'],
+                'exp_year' => $bookData['expiry_year'],
+                'cvc' => $bookData['cvv'],
+              ],
+            ]);
+            $charge = $stripe->charges->create(
               [
                   "amount" => $bookData['amount'] * 100,
                   "currency" => $currency,
-                  "source" => $request->payment_token,
+                  "source" => $token->id,
+                  "description" => "payment for online food order",
               ]);
+              log::info($charge);
           $bookData['payment_token'] = $charge->id;
+
        }
        if ($bookData['payment_type'] == 'WALLET') {
           $user = auth()->user();
@@ -345,23 +327,51 @@ class PosApiController extends Controller
           $bookData['promocode_price'] = 0;
        }
 
-       $bookData['order_id'] = '#' . rand(100000, 999999);
+       if( isset($bookData['old_order_id'])){
+
+       }
+       else
+       {
+            $bookData['order_id'] = '#' . rand(100000, 999999);
+       }
        $bookData['vendor_id'] = $vendor->id;
        $bookData['order_data'] = $bookData['item'];
        $bookData['delivery_time'] = $bookData['delivery_time'];
-       $order = Order::create($bookData);
+
+       if(isset($bookData['old_order_id']) ){
+
+          $order =Order::find($bookData['old_order_id']);
+
+          $order->order_data =  $bookData['item'];
+          $order->amount =  $bookData['amount'];
+          $order->delivery_type =  $bookData['delivery_type'];
+          $order->delivery_charge = $bookData['delivery_charge'];
+          $order->payment_type =  $bookData['payment_type'];
+          $order->payment_status =  $bookData['payment_status'];
+          $order->order_status =  $bookData['order_status'];
+          $order->promocode_id =  $bookData['promocode_id'];
+          $order->payment_token =  $bookData['payment_token'];
+          $order->promocode_price =  $bookData['promocode_price'];
+          $order->tax =  $bookData['tax'];
+          $order->table_no = $bookData['table_no'];
+          $order->update();
+       }
+       else{
+            $order = Order::create($bookData);
+       }
+
        app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
        $amount = $order->amount;
 
        $tax = array();
        if ($vendor->admin_comission_type == 'percentage') {
           $comm = $amount * $vendor->admin_comission_value;
-          $tax['admin_commission'] = intval($comm / 100);
-          $tax['vendor_amount'] = intval($amount - $tax['admin_commission']);
+          $tax['admin_commission'] = 0;
+          $tax['vendor_amount'] = 1;
        }
        if ($vendor->admin_comission_type == 'amount') {
-          $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
-          $tax['admin_commission'] = $amount - $tax['vendor_amount'];
+          $tax['vendor_amount'] = 0;
+          $tax['admin_commission'] = 0;
        }
 
        $notification = BusinessSetting::where([['vendor_id',$vendor->id],['key','0']])->first();
