@@ -57,7 +57,7 @@ class kitchenApiController extends Controller
         if(Auth::attempt($user))
         {
             $user = Auth::user();
-            if ($user->roles->contains('title', 'kitchen_user'))
+            if ($user->roles->contains('title', 'kitchen_user' && $user->vendor_id == '5'))
             {
                 if (isset($request->device_token)) {
                     $user->device_token = $request->device_token;

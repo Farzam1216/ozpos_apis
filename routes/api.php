@@ -45,19 +45,8 @@
       /****** End kitchen  ********/
 
       /******  POS User  ********/
-
       Route::post('pos/user_login', 'PosApiController@apiUserLogin');
-      Route::get('pos/single_vendor/{vendor_id}', 'PosApiController@apiSingleVendor');
-      // without auth
-      Route::get('pos/order_setting/{vendor_id}', 'PosApiController@apiOrderSetting');
-      Route::get('pos/vendor_status/{vendor_id}', 'PosApiController@apiVendorStatus');
-      Route::post('pos/book_order', 'PosApiController@apiBookOrder');
-      Route::get('pos/show_order', 'PosApiController@apiShowOrder');
-      //
-      Route::get('pos/single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'PosApiController@apiSingleVendorRetrieveSizes');
-      Route::get('pos/single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'PosApiController@apiSingleVendorRetrieveSize');
-      Route::get('pos/promo_code/{vendor_id}', 'UserApiController@apiPromoCode');
-      Route::post('pos/apply_promo_code', 'UserApiController@apiApplyPromoCode');
+      Route::post('pos/user_register', 'UserApiController@apiUserRegister');
       /******  POS User  ********/
 
 
@@ -202,6 +191,22 @@
       //
       /******  User ********/
       Route::middleware('auth:api')->group(function () {
+
+        /******  POS User  ********/
+
+        Route::get('pos/single_vendor/{vendor_id}', 'PosApiController@apiSingleVendor');
+        Route::get('pos/order_setting/{vendor_id}', 'PosApiController@apiOrderSetting');
+        Route::get('pos/vendor_status/{vendor_id}', 'PosApiController@apiVendorStatus');
+        Route::post('pos/book_order', 'PosApiController@apiBookOrder');
+        Route::get('pos/show_order', 'PosApiController@apiShowOrder');
+        Route::post('pos/booked_table_vendor', 'PosApiController@bookedTableVendor');
+
+        Route::get('pos/single_vendor_retrieve_sizes/{vendor_id}/{half_n_half_menu_id}', 'PosApiController@apiSingleVendorRetrieveSizes');
+        Route::get('pos/single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'PosApiController@apiSingleVendorRetrieveSize');
+        Route::get('pos/promo_code/{vendor_id}', 'UserApiController@apiPromoCode');
+        Route::post('pos/apply_promo_code', 'UserApiController@apiApplyPromoCode');
+
+        /****** End POS User  ********/
         //  Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
          Route::get('vendor_status/{vendor_id}', 'UserApiController@apiVendorStatus');
          Route::post('book_order', 'UserApiController@apiBookOrder');

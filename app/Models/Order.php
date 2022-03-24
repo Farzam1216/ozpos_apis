@@ -121,4 +121,9 @@
       {
          return $this->belongsTo(UserAddress::class,'address_id','id');
       }
+
+      public function table(){
+        return $this->belongsTo('App\Models\booktable');
+      }
+
    }

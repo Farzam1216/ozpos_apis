@@ -269,6 +269,10 @@ use App\Http\Controllers\Customer\AddressController;
 
 //Vendor
    Route::get('/vendor/login', [VendorSettingController::class, 'login'])->name('vendor.login');
+   Route::get('/vendor/users', [VendorSettingController::class, 'user']);
+   Route::resources([
+    'vendor/vendoruser' => vendorUserController::class,]);
+  //  Route::resource('vendor/user', Admin\UserController::class);
    Route::post('/vendor/vendor_confirm_login', [VendorSettingController::class, 'vendor_confirm_login']);
    Route::get('vendor/register_vendor', [VendorSettingController::class, 'register_vendor']);
    Route::post('vendor/register', [VendorSettingController::class, 'register']);

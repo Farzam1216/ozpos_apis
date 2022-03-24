@@ -138,7 +138,14 @@
                 </a>
             </li>
             @endcan
-
+            @if(Auth::user()->load('roles')->roles->contains('title', 'vendor'))
+              <li class="{{ $activePage == 'user' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('vendor/vendoruser') }}">
+                    <i class="fas fa-users text-dark"></i>
+                    <span class="nav-link-text">{{__('user')}}</span>
+                </a>
+              </li>
+            @endif
             @can('user_access')
             <li class="{{ $activePage == 'user' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('admin/user') }}">

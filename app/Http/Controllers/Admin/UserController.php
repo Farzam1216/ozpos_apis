@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\GeneralSetting;
-use App\Models\Order;
-use App\Models\PromoCode;
+use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\WalletPayment;
-use Bavix\Wallet\Models\Transaction;
-use Bavix\Wallet\Models\Wallet;
-use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\PromoCode;
 use Illuminate\Http\Request;
+use App\Models\WalletPayment;
+use App\Models\GeneralSetting;
+use Bavix\Wallet\Models\Wallet;
+use App\Http\Controllers\Controller;
+use Bavix\Wallet\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -24,10 +25,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::whereHas('roles', function($q)
-        {
-            $q->where('title','!=','vendor');
-        })->get();
+        foreach(Auth::user()->roles as $role){
+          if($role->title == 'vendor')
+          {
+            $users = User::whereHas('roles', function($q)
+            {
+                $q->where('title','!=','admin')->where('title','!=','vendor');
+            })->get();
+          }
+          else{
+            $users = User::whereHas('roles', function($q)
+            {
+                $q->where('title','!=','vendor');
+            })->get();
+
+          }
+        }
+
         return view('admin.user.user',compact('users'));
     }
 

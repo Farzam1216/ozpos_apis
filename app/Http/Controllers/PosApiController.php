@@ -81,7 +81,7 @@ class PosApiController extends Controller
           if (Auth::attempt($user)) {
              $user = Auth::user();
              if ($user->status == 1) {
-                if ( $user->roles->contains('title', 'pos_user')) {
+                if ( $user->roles->contains('title', 'pos_user') && $user->vendor_id == '5') {
                    if (isset($request->device_token)) {
                       $user->device_token = $request->device_token;
                       $user->save();
@@ -139,6 +139,41 @@ class PosApiController extends Controller
        }
     }
 
+    public function apiUserRegister(Request $request)
+      {
+         $request->validate([
+             'name' => 'bail|required',
+             'email_id' => 'bail|required|unique:users',
+             'password' => 'bail|min:6',
+             'phone' => 'bail|required|numeric|digits_between:6,12',
+             'phone_code' => 'required'
+         ]);
+         $admin_verify_user = GeneralSetting::find(1)->verification;
+         $veri = $admin_verify_user == 1 ? 0 : 1;
+
+         $data = $request->all();
+         $data['password'] = Hash::make($data['password']);
+         $data['status'] = 1;
+         $data['image'] = 'noimage.png';
+         $data['is_verified'] = $veri;
+         $data['phone_code'] = $request->phone_code;
+         $data['language'] = $request->language;
+         $user = User::create($data);
+         $role_id = Role::where('title', 'pos_user')->first();
+         $user->roles()->sync($role_id);
+
+         if ($user['is_verified'] == 1) {
+            $user['token'] = $user->createToken('mealUp')->accessToken;
+            return response()->json(['success' => true, 'data' => $user, 'msg' => 'account created successfully..!!'], 200);
+         } else {
+            $admin_verify_user = GeneralSetting::find(1)->verification;
+            if ($admin_verify_user == 1) {
+               $this->sendNotification($user);
+               return response(['success' => true, 'data' => $user, 'msg' => 'your account created successfully please verify your account']);
+            }
+         }
+      }
+
     public function apiSingleVendor($vendor_id)
       {
          $master = array();
@@ -172,12 +207,13 @@ class PosApiController extends Controller
       public function apiOrderSetting($vendor_id)
       {
          $User = auth()->user();
-         $UserAddress = UserAddress::where([['user_id', 155], ['selected', 1]])->first();
+         $UserAddress = UserAddress::where([['user_id', auth()->user()->id], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
         //  $vendorTable = vendorTable::where('vendor_id',$vendor_id)->with('booktables')->first();
-         $bookTable = booktable::where('vendor_id',$vendor_id)->get();
+         $bookTable = booktable::where('vendor_id',$vendor_id)->orderBy('booked_table_number')->get();
         //  $notBookedTable = [];
         //  $bookedTable = [];
+
 
          $Setting = OrderSetting::firstOrCreate([
              'vendor_id' => $vendor_id,
@@ -198,8 +234,8 @@ class PosApiController extends Controller
          ]);
 
 
-         $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
-         $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
+        //  $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
+        //  $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
           //  $googleDistance =
         //      file_get_contents(
         //          $googleUrl,
@@ -314,7 +350,7 @@ class PosApiController extends Controller
              return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
           }
        }
-       $bookData['user_id'] = 155;
+       $bookData['user_id'] = auth::user()->id;
 
        $PromoCode = PromoCode::find($bookData['promocode_id']);
        if ($PromoCode) {
@@ -359,7 +395,11 @@ class PosApiController extends Controller
        else{
             $order = Order::create($bookData);
        }
-
+       if($bookData['table_no']){
+          $bookorder = booktable::where('vendor_id',$vendor->id)->where('booked_table_number',$bookData['table_no'])->first();
+          $bookorder->status = 1;
+          $bookorder->save();
+       }
        app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
        $amount = $order->amount;
 
@@ -404,7 +444,7 @@ class PosApiController extends Controller
     public function apiShowOrder()
     {
       app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
-      $orders = Order::where('user_id', 155)->orderBy('id', 'DESC')->get();
+      $orders = Order::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
        foreach ($orders as $order) {
           if ($order->delivery_person_id != null) {
              $delivery_person = DeliveryPerson::find($order->delivery_person_id);
@@ -450,6 +490,19 @@ class PosApiController extends Controller
 
        Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
        return response(['success' => true, 'data' => $data]);
+    }
+
+    public function bookedTableVendor(Request $request){
+      $order  = Order::where('vendor_id',$request->vendor_id)->where('table_no',$request->booked_table_number)->with('table')->first();
+
+      if($order){
+        $data['order_id'] = $order->id;
+        $data['order_data'] =$order->order_data;
+        return response(['success' => true, 'data' => $data]);
+      }
+      else{
+        return response(['success' => false, 'msg' => "Order not found."]);
+      }
     }
 
     public function apiPromoCode($vendor_id)
