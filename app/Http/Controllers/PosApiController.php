@@ -94,7 +94,7 @@ class PosApiController extends Controller
                       return response(['success' => true, 'data' => $user, 'msg' => 'Otp send in your account']);
                    }
                 } else {
-                   return response(['success' => false, 'msg' => 'You have no permissions to login. Please ask administrators...']);
+                   return response(['success' => false, 'msg' => 'You have no permissions to login. Please ask administrators...'], 401);
                 }
              } else {
                 return response()->json(['success' => false, 'message' => 'you are block by admin please contact support'], 401);
@@ -320,36 +320,22 @@ class PosApiController extends Controller
 
        $vendorUser = User::find($vendor->user_id);
        $customer = User::find($vendor->user_id);
-       if ($bookData['payment_type'] == 'STRIPE') {
-          $paymentSetting = PaymentSetting::find(1);
-          $stripe_sk = $paymentSetting->stripe_secret_key;
-          $currency = GeneralSetting::find(1)->currency;
-          $stripe = new \Stripe\StripeClient($stripe_sk);
-          $token =  $stripe->tokens->create([
-              'card' => [
-                'number' => $bookData['card_number'],
-                'exp_month' => $bookData['expiry_month'],
-                'exp_year' => $bookData['expiry_year'],
-                'cvc' => $bookData['cvv'],
-              ],
-            ]);
-            $charge = $stripe->charges->create(
-              [
-                  "amount" => $bookData['amount'] * 100,
-                  "currency" => $currency,
-                  "source" => $token->id,
-                  "description" => "payment for online food order",
-              ]);
-              log::info($charge);
-          $bookData['payment_token'] = $charge->id;
-
-       }
-       if ($bookData['payment_type'] == 'WALLET') {
+       if ($bookData['payment_type'] != 'INCOMPLETE ORDER' && $bookData['delivery_type'] == 'DINING') {
           $user = auth()->user();
-          if ($bookData['amount'] > $user->balance) {
-             return response(['success' => false, 'data' => "You Don't Have Sufficient Wallet Balance."]);
-          }
+          $bookedTables = booktable::where('booked_table_number', $bookData['table_no'])->where('vendor_id', $vendor->id)->first();
+          $bookedTables->status = 0;
+          $bookedTables->update();
+          $bookData['order_status'] = 'COMPLETE';
        }
+       elseif($bookData['table_no']){
+        $bookorder = booktable::where('vendor_id',$vendor->id)->where('booked_table_number',$bookData['table_no'])->first();
+        $bookorder->status = 1;
+        $bookorder->save();
+        $bookData['payment_status'] = 'IN COMPLETE';
+      }
+      else{
+        $bookData['table_no'] = '';
+      }
        $bookData['user_id'] = auth::user()->id;
 
        $PromoCode = PromoCode::find($bookData['promocode_id']);
@@ -386,7 +372,7 @@ class PosApiController extends Controller
           $order->payment_status =  $bookData['payment_status'];
           $order->order_status =  $bookData['order_status'];
           $order->promocode_id =  $bookData['promocode_id'];
-          $order->payment_token =  $bookData['payment_token'];
+          // $order->payment_token =  $bookData['payment_token'];
           $order->promocode_price =  $bookData['promocode_price'];
           $order->tax =  $bookData['tax'];
           $order->table_no = $bookData['table_no'];
@@ -395,11 +381,7 @@ class PosApiController extends Controller
        else{
             $order = Order::create($bookData);
        }
-       if($bookData['table_no']){
-          $bookorder = booktable::where('vendor_id',$vendor->id)->where('booked_table_number',$bookData['table_no'])->first();
-          $bookorder->status = 1;
-          $bookorder->save();
-       }
+
        app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
        $amount = $order->amount;
 
@@ -443,8 +425,8 @@ class PosApiController extends Controller
      */
     public function apiShowOrder()
     {
-      app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
-      $orders = Order::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+      // app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+      $orders = Order::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
        foreach ($orders as $order) {
           if ($order->delivery_person_id != null) {
              $delivery_person = DeliveryPerson::find($order->delivery_person_id);
@@ -468,16 +450,14 @@ class PosApiController extends Controller
            'MenuSize.GroupMenuAddon.AddonCategory',
            'MenuSize.MenuAddon.Addon.AddonCategory',
        ])->where('vendor_id', $vendor_id)->get();
-
-//         Log::info(json_encode(['success' => true, 'data' => $data], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
        return response(['success' => true, 'data' => $data]);
     }
 
     public function apiSingleVendorRetrieveSize($vendor_id, $item_category_id, $item_size_id)
     {
 
-//         Log::info($item_category_id);
-//         Log::info($item_size_id);
+        Log::info($item_category_id);
+        Log::info($item_size_id);
        $data = ItemSize::with([
            'MenuSize.Menu.SingleMenu.SingleMenuItemCategory' => function ($query) use ($item_category_id) {
               $query->where('item_category_id', $item_category_id);

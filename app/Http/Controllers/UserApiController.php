@@ -12,9 +12,11 @@
   use App\Models\Cuisine;
   use App\Models\MenuAddon;
   use App\Models\BusinessSetting;
-use App\Models\DealsItems;
+use App\Models\cart;
 use App\Models\DealsMenu;
+use App\Models\DealsItems;
 use App\Models\DeliveryPerson;
+use Illuminate\Support\Facades\Session;
    use App\Models\HalfNHalfMenu;
    use App\Models\ItemCategory;
    use App\Models\ItemSize;
@@ -59,6 +61,135 @@ use App\Models\DeliveryPerson;
 
    class UserApiController extends Controller
    {
+      public function addToCart(Request $request)
+      {
+
+        if($request->addon_id){
+           $addonString = $request->addon_id;
+           for($i=0; $i < count($addonString); $i++){
+              if( $addonString[$i] != null)
+              {
+                 if($i != 0){
+                     $value[] = $i;
+                 }
+              }
+           }
+        }
+         $addonPrice = 0;
+         if(isset($value)){
+           $addon_id = implode(",",$value);
+
+           for($i=0; $i<count($value); $i++){
+
+               $menuAddon = MenuAddon::where('vendor_id',$request->vendor_id)->where('menu_id',$request->menu_id)->where('addon_id',$value[$i])->first();
+               if($menuAddon){
+                  $addonPrice = $addonPrice + $menuAddon->price;
+               }
+           }
+         }
+        $price = 0;
+        if($request->size_id)
+        {
+          $menuSize = MenuSize::where('vendor_id',$request->vendor_id)->where('menu_id',$request->menu_id)->where('id',$request->size_id)->first();
+          if($menuSize)
+          {
+            if($menuSize->display_discount_price){
+              $price = $menuSize->display_discount_price;
+              $menuPrice = $menuSize->display_discount_price;
+            }
+            else{
+              $price = $menuSize->display_price;
+              $menuPrice = $menuSize->display_price;
+            }
+          }
+        }
+        else{
+          $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
+
+            if($menu->display_discount_price){
+              $price = $menu->display_discount_price;
+              $menuPrice = $menu->display_discount_price;
+            }
+            else{
+              $price = $menu->display_price;
+              $menuPrice = $menu->display_price;
+            }
+        }
+        $price =  $price + $addonPrice;
+        $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
+
+
+        if($request->session_id){
+          $cart = new cart();
+          $cart->vendor_id = $request->vendor_id;
+          $cart->session_id = $request->session_id;
+          $cart->menu_id = $request->menu_id;
+          $cart->menu_name = $menu->name;
+          $cart->unit_price = $menuPrice;
+          // $cart->single_menu_id = $request->single_menu_id;
+          // $cart->half_menu_id = $request->half_menu_id;
+          // $cart->deal_menu_id = $request->deal_menu_id;
+          $cart->size_id = $request->size_id;
+          if(isset($value)){
+            $cart->addon_id = $addon_id;
+          }
+          $cart->quantity = $request->quantity;
+          $cart->price = $price * $request->quantity;
+          $cart->save();
+        }
+        else{
+          $cart = new cart();
+          $cart->session_id = session()->getId();
+          $cart->vendor_id = $request->vendor_id;
+          $cart->menu_id = $request->menu_id;
+          $cart->menu_name = $menu->name;
+          $cart->unit_price = $menuPrice;
+          // $cart->single_menu_id = $request->single_menu_id;
+          // $cart->half_menu_id = $request->half_menu_id;
+          // $cart->deal_menu_id = $request->deal_menu_id;
+          $cart->size_id = $request->size_id;
+          if(isset($value)){
+            $cart->addon_id = $addon_id;
+          }
+          $cart->quantity = $request->quantity;
+          $cart->price = $price * $request->quantity;
+          $cart->save();
+        }
+        $data['cart'] = $cart;
+        $data['session_id'] = $cart->session_id;
+        return response(['success' => true, 'data' => $data]);
+
+      }
+
+      public function getCartData($vendor_id,$session_id)
+      {
+        $cart = cart::where('vendor_id',$vendor_id)->where('session_id',$session_id)->get();
+        $data['cart'] = $cart;
+        return response(['success' => true, 'data' => $data]);
+      }
+
+      public function addQuantity($cart_id){
+          $cart = cart::find($cart_id);
+          $cart->quantity = $cart->quantity +1;
+          $cart->price = $cart->quantity * $cart->unit_price;
+          $cart->save();
+          $data['cart'] = $cart;
+          return response(['success' => true, 'data' => $data]);
+      }
+
+      public function minusQuantity($cart_id){
+        $cart = cart::find($cart_id);
+        if($cart->quantity > 1 ){
+          $cart->quantity = $cart->quantity - 1;
+          $quantity = $cart->quantity;
+          $cart->price = $quantity * $cart->unit_price;
+          $cart->save();
+        }
+
+        $data['cart'] = $cart;
+        return response(['success' => true, 'data' => $data]);
+      }
+
       public function apiUserLogin(Request $request)
       {
         log::info($request);

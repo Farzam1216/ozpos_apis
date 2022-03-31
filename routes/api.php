@@ -23,6 +23,11 @@
 
    Route::group(['middleware' => ['cors']], function ($router) {
       // new frontend apis with vue js
+      Route::post('addToCart', 'UserApiController@addToCart');
+      Route::get('getCartData/{vendor_id}/{session_id}', 'UserApiController@getCartData');
+      Route::get('addQuantity/{cart_id}', 'UserApiController@addQuantity');
+      Route::get('minusQuantity/{cart_id}', 'UserApiController@minusQuantity');
+
       //  changed feb 2022
       Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
 
@@ -48,7 +53,6 @@
       Route::post('pos/user_login', 'PosApiController@apiUserLogin');
       Route::post('pos/user_register', 'UserApiController@apiUserRegister');
       /******  POS User  ********/
-
 
       /******  Vendor ********/
       Route::post('vendor/login', 'VendorApiController@apiLogin');
@@ -205,6 +209,7 @@
         Route::get('pos/single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'PosApiController@apiSingleVendorRetrieveSize');
         Route::get('pos/promo_code/{vendor_id}', 'UserApiController@apiPromoCode');
         Route::post('pos/apply_promo_code', 'UserApiController@apiApplyPromoCode');
+        Route::post('pos/cancel_order', 'UserApiController@apiCancelOrder');
 
         /****** End POS User  ********/
         //  Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
