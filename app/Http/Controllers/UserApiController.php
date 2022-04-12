@@ -88,9 +88,41 @@ use Illuminate\Support\Facades\Session;
            }
          }
         $price = 0;
-        if($request->size_id)
+        $menuPrice = 0;
+        if($request->half_and_half_id){
+          $menuSize = MenuSize::where('vendor_id',$request->vendor_id)->where('menu_id',$request->first_half_id)->first();
+
+          if($menuSize)
+          {
+            if($menuSize->display_discount_price){
+              $firstprice = $menuSize->display_discount_price / 2;
+              $firstmenuPrice = $menuSize->display_discount_price / 2;
+            }
+            else{
+              $firstprice = $menuSize->display_price / 2;
+              $firstmenuPrice = $menuSize->display_price / 2;
+            }
+          }
+          $menuSize = MenuSize::where('vendor_id',$request->vendor_id)->where('menu_id',$request->second_half_id)->first();
+
+          if($menuSize)
+          {
+            if($menuSize->display_discount_price){
+              $secondprice = $menuSize->display_discount_price / 2;
+              $secondmenuPrice = $menuSize->display_discount_price / 2;
+            }
+            else{
+              $secondprice = $menuSize->display_price / 2;
+              $secondmenuPrice = $menuSize->display_price / 2;
+            }
+          }
+          $price = $firstprice + $secondprice;
+          $menuPrice = $firstmenuPrice + $secondmenuPrice;
+        }
+        elseif($request->size_id)
         {
           $menuSize = MenuSize::where('vendor_id',$request->vendor_id)->where('menu_id',$request->menu_id)->where('id',$request->size_id)->first();
+
           if($menuSize)
           {
             if($menuSize->display_discount_price){
@@ -104,8 +136,7 @@ use Illuminate\Support\Facades\Session;
           }
         }
         else{
-          $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
-
+            $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
             if($menu->display_discount_price){
               $price = $menu->display_discount_price;
               $menuPrice = $menu->display_discount_price;
@@ -115,8 +146,14 @@ use Illuminate\Support\Facades\Session;
               $menuPrice = $menu->display_price;
             }
         }
+
         $price =  $price + $addonPrice;
-        $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
+        if($request->half_and_half_id){
+          $menu = HalfNHalfMenu::where('id',$request->half_and_half_id)->where('vendor_id',$request->vendor_id)->first();
+        }
+        else{
+          $menu = menu::where('id',$request->menu_id)->where('vendor_id',$request->vendor_id)->first();
+        }
 
 
         if($request->session_id){
@@ -127,9 +164,11 @@ use Illuminate\Support\Facades\Session;
           $cart->menu_name = $menu->name;
           $cart->unit_price = $menuPrice;
           // $cart->single_menu_id = $request->single_menu_id;
-          // $cart->half_menu_id = $request->half_menu_id;
+          $cart->half_menu_id = $request->half_and_half_id;
           // $cart->deal_menu_id = $request->deal_menu_id;
           $cart->size_id = $request->size_id;
+          $cart->firstHalf = $request->first_half_id;
+          $cart->secondHalf = $request->second_half_id;
           if(isset($value)){
             $cart->addon_id = $addon_id;
           }
@@ -145,9 +184,11 @@ use Illuminate\Support\Facades\Session;
           $cart->menu_name = $menu->name;
           $cart->unit_price = $menuPrice;
           // $cart->single_menu_id = $request->single_menu_id;
-          // $cart->half_menu_id = $request->half_menu_id;
+          $cart->half_menu_id = $request->half_and_half_id;
           // $cart->deal_menu_id = $request->deal_menu_id;
           $cart->size_id = $request->size_id;
+          $cart->firstHalf = $request->first_half_id;
+          $cart->secondHalf = $request->second_half_id;
           if(isset($value)){
             $cart->addon_id = $addon_id;
           }
@@ -517,7 +558,7 @@ use Illuminate\Support\Facades\Session;
 
       public function getMenuByPickingItemSize($vendor_id,$item_size_id)
       {
-        $MenuSizes =  MenuSize::with(['Menu'])
+        $MenuSizes =  MenuSize::with(['Menu.MenuAddon.Addon'])
           ->where('item_size_id',$item_size_id)
           ->where('vendor_id',$vendor_id)
           ->get();
@@ -649,17 +690,21 @@ use Illuminate\Support\Facades\Session;
          ]);
 
 
-         $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
-         $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
-         $googleDistance =
-             file_get_contents(
-                 $googleUrl,
-             );
-         \Log::critical($googleDistance);
-         $googleDistance = json_decode($googleDistance);
-
-         $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 'no route found';
-//         $Setting['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+         //  $googleApiKey = 'AIzaSyCfl4ZvZl3ptxZDO_4D8J4F0T_yqzzIVes';
+        //  $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $Vendor->lat . ',' . $Vendor->lang . '"&key=' . $googleApiKey . '';
+          //  $googleDistance =
+        //      file_get_contents(
+        //          $googleUrl,
+        //      );
+        // //  \Log::critical($googleDistance);
+        //  $googleDistance = json_decode($googleDistance);
+        //     if(isset($googleDistance->rows[0]->elements[0]->distance->value)){
+        //       $Setting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value : 'no route found';
+        //     }
+        //     else{
+        //       $Setting['distance'] = 1.1;
+        //     }
+         $Setting['distance'] = 1.1;
          $Setting['tax_type'] = $Vendor->tax_type;
          $Setting['tax'] = $Vendor->tax;
 

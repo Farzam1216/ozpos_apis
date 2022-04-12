@@ -23,10 +23,10 @@
 
    Route::group(['middleware' => ['cors']], function ($router) {
       // new frontend apis with vue js
-      Route::post('addToCart', 'UserApiController@addToCart');
-      Route::get('getCartData/{vendor_id}/{session_id}', 'UserApiController@getCartData');
-      Route::get('addQuantity/{cart_id}', 'UserApiController@addQuantity');
-      Route::get('minusQuantity/{cart_id}', 'UserApiController@minusQuantity');
+      Route::post('/addToCart', 'UserApiController@addToCart');
+      Route::get('/getCartData/{vendor_id}/{session_id}', 'UserApiController@getCartData');
+      Route::get('/addQuantity/{cart_id}', 'UserApiController@addQuantity');
+      Route::get('/minusQuantity/{cart_id}', 'UserApiController@minusQuantity');
 
       //  changed feb 2022
       Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
