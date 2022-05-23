@@ -94,7 +94,7 @@ class PosApiController extends Controller
                       return response(['success' => true, 'data' => $user, 'msg' => 'Otp send in your account']);
                    }
                 } else {
-                   return response(['success' => false, 'msg' => 'You have no permissions to login. Please ask administrators...'], 401);
+                   return response(['success' => false, 'message' => 'You have no permissions to login. Please ask administrators...'], 401);
                 }
              } else {
                 return response()->json(['success' => false, 'message' => 'you are block by admin please contact support'], 401);
@@ -303,9 +303,10 @@ class PosApiController extends Controller
 
 
        $bookData = $request->all();
+
        $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
        $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
-       $bookData['address_id'] = 32;
+      //  $bookData['address_id'] = 32;
 
        if($bookData['delivery_date'] != null && $bookData['delivery_time'] != null)
        {
@@ -320,6 +321,11 @@ class PosApiController extends Controller
 
        $vendorUser = User::find($vendor->user_id);
        $customer = User::find($vendor->user_id);
+       Log::info($bookData);
+       Log::info($customer);
+      //  $UserAddress = UserAddress::where('user_id',$customer->id)->first();
+      //  Log::info($UserAddress);
+      //  $bookData['address_id'] =  $UserAddress->id;
        if ($bookData['payment_type'] != 'INCOMPLETE ORDER' && $bookData['delivery_type'] == 'DINING') {
           $user = auth()->user();
           $bookedTables = booktable::where('booked_table_number', $bookData['table_no'])->where('vendor_id', $vendor->id)->first();

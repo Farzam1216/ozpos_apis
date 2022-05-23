@@ -12,6 +12,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
+   use Illuminate\Support\Facades\Log;
 
    class MenuController extends Controller
    {
@@ -74,6 +75,12 @@
             $data['price'] = null;
          }
 
+         if(isset($data['dining_price'])){
+            $data['dining_price'] = $data['dining_price'];
+         }
+         else{
+          $data['dining_price'] = null;
+         }
 
          ////////// image \\\\\\\\\\
          if(isset($request->image))
@@ -156,6 +163,13 @@
          } else {
             $data['price'] = null;
          }
+
+         if(isset($data['dining_price'])){
+          $data['dining_price'] = $data['dining_price'];
+          }
+          else{
+            $data['dining_price'] = null;
+          }
 
 
          ////////// image \\\\\\\\\\

@@ -11,6 +11,7 @@
    use App\Models\Vendor;
    use Grimzy\LaravelMysqlSpatial\Types\Point;
    use Illuminate\Http\Request;
+   use Log;
 
    class HomeController extends Controller
    {
@@ -24,9 +25,13 @@
       {
          $User = auth()->user();
          $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
+         log::info($UserAddress);
 
          $Point = new Point($UserAddress->lat, $UserAddress->lang);
-         $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->first();
+         log::info($Point);
+         $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->get();
+         log::info('delivery zone');
+         log::info($DeliveryZoneNew);
          if (!$DeliveryZoneNew)
             return response(['success' => false, 'data' => []]);
 
@@ -36,10 +41,7 @@
          foreach ($vendors as $vendor) {
             $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
             $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
-            $googleDistance =
-                file_get_contents(
-                    $googleUrl,
-                );
+            $googleDistance = file_get_contents( $googleUrl );
             $googleDistance = json_decode($googleDistance);
 
             $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';

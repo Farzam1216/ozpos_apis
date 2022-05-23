@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
-   
+
    use App\Http\Controllers\CustomController;
    use App\Models\MenuSize;
    use DB;
@@ -13,7 +13,7 @@
    use App\Http\Controllers\Controller;
    use App\Models\Menu;
    use App\Models\Vendor;
-   
+
    class MenuSizeController extends Controller
    {
       /**
@@ -28,7 +28,7 @@
          $MenuSize = MenuSize::with('ItemSize')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id]])->get();
          return response(['success' => true, 'data' => $MenuSize]);
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -38,7 +38,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -53,19 +53,19 @@
              'display_price' => 'bail|required|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-         
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_id'] = $menu_id;
-         
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -75,12 +75,18 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+         if(isset($data['size_dining_price'])){
+          $data['size_dining_price'] = $data['size_dining_price'];
+          }
+          else{
+            $data['size_dining_price'] = null;
+          }
+
          MenuSize::create($data);
          return response(['success' => true, 'msg' => 'Menu Size created.']);
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -89,9 +95,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -104,7 +110,7 @@
          $MenuSize = MenuSize::with('ItemSize')->find($menu_size_id);
          return response(['success' => true, 'data' => $MenuSize]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -120,13 +126,13 @@
              'display_price' => 'bail|required|numeric|between:0,999999.99',
              'display_discount_price' => 'nullable|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $data = $request->all();
-         
-         
+
+
          ////////// price \\\\\\\\\\
          if (isset($data['display_price'])) {
             if (isset($data['display_discount_price']))
@@ -136,12 +142,18 @@
          } else {
             $data['price'] = null;
          }
-         
-         
+
+         if(isset($data['size_dining_price'])){
+          $data['size_dining_price'] = $data['size_dining_price'];
+          }
+          else{
+            $data['size_dining_price'] = null;
+          }
+
          $MenuSize->update($data);
          return response(['success' => true, 'msg' => 'Menu Size updated.']);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

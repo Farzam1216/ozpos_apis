@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Api\Vendor\MenuModule;
-   
+
    use App\Models\Addon;
    use App\Models\MenuAddon;
    use Illuminate\Http\Request;
@@ -11,7 +11,7 @@
    use Illuminate\View\View;
    use App\Http\Controllers\Controller;
    use App\Models\Vendor;
-   
+
    class MenuAddonController extends Controller
    {
       /**
@@ -26,7 +26,7 @@
          $MenuAddon = MenuAddon::with('Addon')->where([['vendor_id', $Vendor->id], ['menu_id', $menu_id]])->get();
          return response(['success' => true, 'data' => $MenuAddon]);
       }
-      
+
       /**
        * Show the form for creating a new resource.
        *
@@ -36,7 +36,7 @@
       {
          //
       }
-      
+
       /**
        * Store a newly created resource in storage.
        *
@@ -50,26 +50,33 @@
              'addon_id' => 'bail|required',
              'price' => 'bail|required|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $Vendor = Vendor::where('user_id', auth()->user()->id)->first();
-         
+
          if (!$Vendor)
             return response(['success' => false, 'msg' => 'Vendor not found.']);
-         
+
          $data = $request->all();
          $data['vendor_id'] = $Vendor->id;
          $data['menu_id'] = $menu_id;
-         
+
          $Addon = Addon::find($data['addon_id']);
          $data['addon_category_id'] = $Addon->addon_category_id;
-         
+
+         if(isset($data['addon_dining_price'])){
+          $data['addon_dining_price'] = $data['addon_dining_price'];
+          }
+          else{
+            $data['addon_dining_price'] = null;
+          }
+
          MenuAddon::create($data);
          return response(['success' => true, 'msg' => 'Menu Addon created.']);
       }
-      
+
       /**
        * Display the specified resource.
        *
@@ -78,9 +85,9 @@
        */
       public function show(Request $request): void
       {
-      
+
       }
-      
+
       /**
        * Show the form for editing the specified resource.
        *
@@ -93,7 +100,7 @@
          $MenuAddon = MenuAddon::with('Addon')->find($menu_addon_id);
          return response(['success' => true, 'data' => $MenuAddon]);
       }
-      
+
       /**
        * Update the specified resource in storage.
        *
@@ -108,19 +115,24 @@
              'addon_id' => 'bail|required',
              'price' => 'bail|required|numeric|between:0,999999.99',
          ]);
-         
+
          if ($validator->fails())
             return response(['success' => false, 'msg' => $validator->messages()->first()]);
-         
+
          $data = $request->all();
-         
+
          $Addon = Addon::find($data['addon_id']);
          $data['addon_category_id'] = $Addon->addon_category_id;
-         
+         if(isset($data['addon_dining_price'])){
+          $data['addon_dining_price'] = $data['addon_dining_price'];
+          }
+          else{
+            $data['addon_dining_price'] = null;
+          }
          $MenuAddon->update($data);
          return response(['success' => true, 'msg' => 'Menu Addon updated.']);
       }
-      
+
       /**
        * Remove the specified resource from storage.
        *

@@ -25,8 +25,11 @@
       // new frontend apis with vue js
       Route::post('/addToCart', 'UserApiController@addToCart');
       Route::get('/getCartData/{vendor_id}/{session_id}', 'UserApiController@getCartData');
+      Route::get('/cartData/{cart_id}', 'UserApiController@getCartDataCheckout');
       Route::get('/addQuantity/{cart_id}', 'UserApiController@addQuantity');
       Route::get('/minusQuantity/{cart_id}', 'UserApiController@minusQuantity');
+      Route::post('/user_address', 'UserApiController@userAddress');
+      Route::get('/get-user-address/{id}', 'UserApiController@getUserAddress');
 
       //  changed feb 2022
       Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
@@ -40,6 +43,7 @@
       Route::get('menu_size_item_size/{vendor_id}/{item_size_id}', 'UserApiController@getMenuByPickingItemSize'); // for half and half
       // Route::get('single_vendor_retrieve_size/{vendor_id}/{item_category_id}/{item_size_id}', 'UserApiController@apiSingleVendorRetrieveSize'); yeh nechy add ha
       Route::get('deals-menu-items/{vendor_id}/{deals_id}', 'UserApiController@deaslMenuItems'); //get deals items
+      Route::get('deals-items/{vendor_id}/{deals_id}', 'UserApiController@deaslItems'); //get deals items
       // end front end new apis
       /******  kitchen  ********/
       Route::post('kitchen/login', 'kitchenApiController@apiLogin');
@@ -191,9 +195,11 @@
 
       });
 // controller ma static kiya h auth hta ka
-      Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
+      // Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
       //
       /******  User ********/
+
+      Route::post('book_order_vuejs', 'UserApiController@apiBookOrderVuejs');
       Route::middleware('auth:api')->group(function () {
 
         /******  POS User  ********/
@@ -212,7 +218,7 @@
         Route::post('pos/cancel_order', 'UserApiController@apiCancelOrder');
 
         /****** End POS User  ********/
-        //  Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
+         Route::get('order_setting/{vendor_id}', 'UserApiController@apiOrderSetting');
          Route::get('vendor_status/{vendor_id}', 'UserApiController@apiVendorStatus');
          Route::post('book_order', 'UserApiController@apiBookOrder');
          Route::get('show_order', 'UserApiController@apiShowOrder');
@@ -233,7 +239,7 @@
          Route::post('add_balance', 'UserApiController@apiUserAddBalance');
          Route::post('user_change_password', 'UserApiController@apiChangePassword');
 
-
+         Route::get('single_resturant_near_by/{id}','UserApiController@getNearBy');
          //////////////////////////////////////////////       General      //////////////////////////////////////////////
 
 
