@@ -15,7 +15,7 @@
                 <img src="{{ url('/frontend/img/logo.png')}}" width="190" height="23" alt="">
             </div>
             <a href="#" class="open_close" id="close_in"><i class="icon_close"></i></a>
-            <ul>
+            {{--  <ul>
                 <li><a href="{{ route('customer.home.index')}}">Home</a></li>
                 <li><a href="{{ route('customer.restaurant.index')}}">Restaurants</a></li>
                 <li><a href="about.html">About us</a></li>
@@ -36,7 +36,7 @@
                     @endif
                 </li>
                 <!-- <li><a href="#0">Purchase this template</a></li> -->
-            </ul>
+            </ul>  --}}
         </div><!-- End main-menu -->
         </nav>
     </div><!-- End row -->

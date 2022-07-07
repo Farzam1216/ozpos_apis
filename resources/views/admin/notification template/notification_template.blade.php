@@ -31,10 +31,10 @@
             <div class="card-body">
                 <div class="row">
                     @php
-                        if (session::has('locale')) 
+                        if (session::has('locale'))
                         {
                             $lang = session()->get('locale');
-                            if ($lang == 'spanish') 
+                            if ($lang == 'spanish')
                             {
                                 $item = App\Models\NotificationTemplate::where('title','book order')->first();
                                 $item->mail_content = $item->spanish_mail_content;
@@ -42,7 +42,7 @@
                             }
                             else
                             {
-                                $item = App\Models\NotificationTemplate::where('title','book order')->first();    
+                                $item = App\Models\NotificationTemplate::where('title','book order')->first();
                             }
                         }
                         else
@@ -56,8 +56,11 @@
                                 <ul class="nav nav-pills nav-pills-rose nav-pills-icons flex-column" role="tablist">
                                     @foreach ($data as $value)
                                         <li class="nav-item">
-                                            <a class="nav-link mt-1 w-100 h-100 {{ $loop->iteration == 1 ? 'active show' : '' }}" onclick="notificationTemplateEdit({{ $value->id }})" data-toggle="tab" href="#link110" role="tablist">{{ $value->title }}</a>
+                                            <a class="nav-link mt-1 w-100 h-100 {{ $loop->iteration == 1 ? 'active show' : '' }}" onclick="notificationTemplateEdit({{ $value->id }}) , getStatus()" data-toggle="tab" href="#link110" role="tablist">{{ $value->title }}</a>
                                         </li>
+                                        @php
+                                        $status = App\Models\NotificationTemplate::where('id',$value->id)->where('vendor_id',$value->vendor_id)->first();
+                                        @endphp
                                     @endforeach
                                 </ul>
                             </div>
@@ -67,6 +70,7 @@
                                         <form method="post"  action="{{ 'notification_template/'.$item->id }}" class="edit_notification_template_form">
                                             @csrf
                                             @method('PUT')
+                                            {{--  @dump($status)  --}}
                                             <div class="row">
                                                 <div class="col">
                                                     <h4 id="heading">{{ $item->title }}</h4>
@@ -123,6 +127,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                      <label for="{{__('verification_phone')}}">{{__('Status')}}</label><br>
+                                                      <label class="switch">
+                                                          <input type="checkbox" @if($item->status == 1) checked @endif  name="status" >
+                                                          <div class="slider"></div>
+                                                      </label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="row">
                                                 <div class="col">
@@ -146,3 +161,15 @@
 </section>
 
 @endsection
+<script>
+  function getStatus() {
+    $.ajax({
+        type:'POST',
+        url:'/getNotificationStatus',
+        data:{_token:'<?php echo csrf_token() ?>', id:2},
+        success:function(data){
+          console.log(data);
+       }
+     });
+  }
+</script>

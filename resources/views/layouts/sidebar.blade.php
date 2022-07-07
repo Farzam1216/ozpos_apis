@@ -83,11 +83,11 @@
 
                 @if(Auth::user()->load('roles')->roles->contains('title', 'vendor'))
                     @if (Session::get('vendor_driver') == 1)
-                    <li class="{{ $activePage == 'delivery_zone' ? 'active' : '' }}">
+                    {{--  <li class="{{ $activePage == 'delivery_zone' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('vendor/deliveryZone') }}">
                             <i class="fas fa-users text-success"></i><span>{{__('Delivery zone')}}</span>
                         </a>
-                    </li>
+                    </li>  --}}
                     <li class="{{ $activePage == 'delivery_zone' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('vendor/deliveryZoneNew') }}">
                             <i class="fas fa-users text-success"></i><span>{{__('Delivery zone new')}}</span>
@@ -154,7 +154,25 @@
                 </a>
             </li>
             @endcan
+            <li class="{{ $activePage == 'qrcode' ? 'active' : '' }}">
+              <a class="nav-link" href="{{ url('vendor/qrcode') }}">
+                  <i class="fas fa-qrcode text-dark"></i>
+                  <span class="nav-link-text">{{__('qr code')}}</span>
+              </a>
+            </li>
+            <li class="{{ $activePage == 'twillio' ? 'active' : '' }}">
+              <a class="nav-link" href="{{ url('vendor/twillio') }}">
+                <i class="fa-mobile"></i>
+                  <span class="nav-link-text">{{__('Twillio')}}</span>
+              </a>
+            </li>
 
+            <li class="{{ $activePage == 'notification_template' ? 'active' : '' }}">
+              <a class="nav-link" href="{{ url('notification_template') }}">
+                  <i class="fas fa-address-card text-danger"></i>
+                  <span class="nav-link-text">{{__('Notification Template')}}</span>
+              </a>
+            </li>
             @can('faq_access')
             <li class="{{ $activePage == 'faq' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('admin/faq') }}">
@@ -164,14 +182,6 @@
             </li>
             @endcan
 
-            @can('notification_template_access')
-                <li class="{{ $activePage == 'notification_template' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('admin/notification_template') }}">
-                        <i class="fas fa-address-card text-danger"></i>
-                        <span class="nav-link-text">{{__('Notification Template')}}</span>
-                    </a>
-                </li>
-            @endcan
 
             @can('banner_access')
                 <li class="{{ $activePage == 'banner' ? 'active' : '' }}">
@@ -263,12 +273,12 @@
             @endcan
 
             @can('vendor_menu_access')
-            <li class="{{ $activePage == 'vendor_menu' ? 'active' : '' }}">
+            {{--  <li class="{{ $activePage == 'vendor_menu' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('vendor/vendor_menu/') }}">
                     <i class="fas fa-bars  "></i>
                     <span>{{__('Menu Category')}}</span>
                 </a>
-            </li>
+            </li>  --}}
 
 
             <li class="dropdown {{ $activePage == 'vendor_item_category' ? 'active' : ''}} || {{ $activePage == 'vendor_item_size' ? 'active' : ''}} || {{ $activePage == 'vendor_addons' ? 'active' : ''}} || {{ $activePage == 'vendor_menu' ? 'active' : ''}} || {{ $activePage == 'vendor_menu_category' ? 'active' : ''}}">

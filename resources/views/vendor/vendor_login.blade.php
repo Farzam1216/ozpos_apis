@@ -100,6 +100,9 @@
                             {{__("Don't have an account?")}}
                             <a href="{{ url('vendor/register_vendor') }}">{{__('Register')}}</a>
                         </div>
+                        <div class="form-group text-center">
+                          <a href="{{ url('admin') }}">{{__('Admin Login')}}</a>
+                      </div>
                     </div>
                 </div>
             </div>

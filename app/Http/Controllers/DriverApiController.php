@@ -399,7 +399,6 @@
                    ->orWhere('order_status', 'READY TO PICKUP');
             })->orderBy('id', 'desc')->get();
 
-            Log::info($driver);
             Log::info($orders);
             return response(['success' => true, 'data' => $orders]);
          }
@@ -566,63 +565,97 @@
          }
 
          /* Notification Start */
-         if ($reqData['order_status'] != 'CANCEL') {
-            $user = User::find($order->user_id);
-            $status_change = NotificationTemplate::where('title', 'change status')->first();
-            if ($user->language != 'spanish') {
-               $mail_content = $status_change->mail_content;
-               $notification_content = $status_change->notification_content;
-            } else {
-               $mail_content = $status_change->spanish_mail_content;
-               $notification_content = $status_change->spanish_notification_content;
-            }
-            $detail['user_name'] = $user->name;
-            $detail['order_id'] = $order->order_id;
-            $detail['date'] = $order->date;
-            $detail['order_status'] = $order->order_status;
-            $detail['company_name'] = GeneralSetting::find(1)->business_name;
-            $data = ["{user_name}", "{order_id}", "{date}", "{order_status}", "{company_name}"];
+        //  if ($reqData['order_status'] != 'CANCEL') {
+        //     $user = User::find($order->user_id);
+        //     $status_change = NotificationTemplate::where('title', 'change status')->first();
+        //     if ($user->language != 'spanish') {
+        //        $mail_content = $status_change->mail_content;
+        //        $notification_content = $status_change->notification_content;
+        //     } else {
+        //        $mail_content = $status_change->spanish_mail_content;
+        //        $notification_content = $status_change->spanish_notification_content;
+        //     }
+        //     $detail['user_name'] = $user->name;
+        //     $detail['order_id'] = $order->order_id;
+        //     $detail['date'] = $order->date;
+        //     $detail['order_status'] = $order->order_status;
+        //     $detail['company_name'] = GeneralSetting::find(1)->business_name;
+        //     $data = ["{user_name}", "{order_id}", "{date}", "{order_status}", "{company_name}"];
 
-            $message1 = str_replace($data, $detail, $notification_content);
-            $mail = str_replace($data, $detail, $mail_content);
-            if (GeneralSetting::find(1)->customer_notification == 1) {
-               if ($user->device_token != null) {
-                  try {
-                     Config::set('onesignal.app_id', env('user_app_id'));
-                     Config::set('onesignal.rest_api_key', env('user_auth_key'));
-                     Config::set('onesignal.user_auth_key', env('user_api_key'));
-                     OneSignal::sendNotificationToUser(
-                         $message1,
-                         $user->device_token,
-                         $url = null,
-                         $data = null,
-                         $buttons = null,
-                         $schedule = null,
-                         GeneralSetting::find(1)->business_name
-                     );
-                  } catch (\Throwable $th) {
-                     Log::error($th);
-                  }
-               }
+        //     $message1 = str_replace($data, $detail, $notification_content);
+        //     $mail = str_replace($data, $detail, $mail_content);
+        //     if (GeneralSetting::find(1)->customer_notification == 1) {
+        //        if ($user->device_token != null) {
+        //           try {
+        //              Config::set('onesignal.app_id', env('user_app_id'));
+        //              Config::set('onesignal.rest_api_key', env('user_auth_key'));
+        //              Config::set('onesignal.user_auth_key', env('user_api_key'));
+        //              OneSignal::sendNotificationToUser(
+        //                  $message1,
+        //                  $user->device_token,
+        //                  $url = null,
+        //                  $data = null,
+        //                  $buttons = null,
+        //                  $schedule = null,
+        //                  GeneralSetting::find(1)->business_name
+        //              );
+        //           } catch (\Throwable $th) {
+        //              Log::error($th);
+        //           }
+        //        }
 
-               try {
-                  Mail::to($user->email_id)->send(new StatusChange($mail));
-               } catch (\Throwable $th) {
-                  Log::error($th);
-               }
-            }
-            $notification = array();
-            $notification['user_id'] = $user->id;
-            $notification['user_type'] = 'user';
-            $notification['title'] = $reqData['order_status'];
-            $notification['message'] = $message1;
-            Notification::create($notification);
-         }
+        //        try {
+        //           Mail::to($user->email_id)->send(new StatusChange($mail));
+        //        } catch (\Throwable $th) {
+        //           Log::error($th);
+        //        }
+        //     }
+        //     $notification = array();
+        //     $notification['user_id'] = $user->id;
+        //     $notification['user_type'] = 'user';
+        //     $notification['title'] = $reqData['order_status'];
+        //     $notification['message'] = $message1;
+        //     Notification::create($notification);
+        //  }
          /* Notification End */
-
+         log::info('checking notification');
          $order = Order::find($reqData['order_id']);
+         $userorder = Order::find($reqData['order_id']);
          $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
          $order = $order->id;
+
+                     $user = User::find($userorder->user_id);
+                     $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+                     $firebaseToken = $user->device_token;
+                     $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+                     $data = [
+                         "registration_ids" =>array($firebaseToken),
+                         "notification" => [
+                             "title" => "Vendor Order",
+                             "body" => "Dear ".$user->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$userorder->order_id." is picked up by our driver",
+                         ],
+                     ];
+
+
+                     $dataString = json_encode($data);
+
+                     $headers = [
+                         'Authorization: key=' . $SERVER_API_KEY,
+                         'Content-Type: application/json',
+                     ];
+
+                     $ch = curl_init();
+
+                     curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                     curl_setopt($ch, CURLOPT_POST, true);
+                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                     curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                     set_time_limit(0);
+                     $responseFinal = curl_exec($ch);
+
 
          return response(['success' => true, 'data' => $order, 'msg' => 'status changed']);
       }

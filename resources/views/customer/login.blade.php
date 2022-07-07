@@ -37,9 +37,15 @@
                       <input type="password" placeholder="Enter Password" name="password" class="form-control" id="exampleInputPassword1">
                   </div>
                   <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
-                  {{-- <div class="py-2">
-                      <button class="btn btn-lg btn-facebook btn-block"><i class="feather-facebook"></i> Connect with Facebook</button>
-                  </div> --}}
+                  <div class="py-2">
+                      <a class="btn btn-lg btn-facebook btn-block" href="{{ url('auth/facebook') }}"><i class="feather-facebook"></i> Connect with Facebook</a>
+                  </div>
+                  <div class="py-2">
+                    <a class="btn btn-lg btn-secondary btn-block" href="{{ url('auth/google') }}"><i class="fas fa-google" aria-hidden="true"></i> Connect with Google</a>
+                    {{--  <a class="btn btn-lg btn-facebook btn-block" href="{{ url('auth/google') }}">
+                      <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" style="margin-left: 3em;">
+                    </a>  --}}
+                  </div>
               </form>
               {{-- <a href="forgot_password.html" class="text-decoration-none">
                   <p class="text-center">Forgot your password?</p>

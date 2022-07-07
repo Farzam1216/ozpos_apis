@@ -30,11 +30,13 @@
    use App\Http\Controllers\Admin\ReportController;
    use App\Http\Controllers\UserApiController;
    use App\Http\Controllers\Admin\TaxController;
-use App\Http\Controllers\BusinessSettingController;
-use App\Http\Controllers\Customer\AddressController;
+  use App\Http\Controllers\BusinessSettingController;
+  use App\Http\Controllers\Customer\AddressController;
    use App\Http\Controllers\Customer\CustomerController;
    use App\Http\Controllers\multiDeleteController;
-
+   use App\Http\Controllers\QrController;
+   use App\Http\Controllers\facebookSocialite;
+   use App\Http\Controllers\GoogleSocialiteController;
    /*
    |--------------------------------------------------------------------------
    | Web Routes
@@ -58,7 +60,7 @@ use App\Http\Controllers\Customer\AddressController;
    Auth::routes();
 
    Route::get('/', function () {
-      return redirect('customer/login');
+      return redirect('vendor/login');
    });
    Route::get('/admin', [AdminController::class, 'showLogin']);
    Route::get('/import', [AdminController::class, 'import'])->name('import');
@@ -69,7 +71,9 @@ use App\Http\Controllers\Customer\AddressController;
    Route::post('confirm_login', [AdminController::class, 'confirm_login']);
    Route::get('admin/forgot_password', [AdminController::class, 'forgot_password']);
    Route::post('admin/admin_forgot_password', [AdminController::class, 'admin_forgot_password']);
-
+   Route::get('/qrcode', [QrController::class, 'index']);
+   Route::resources([ 'notification_template' => Admin\NotificationTemplateController::class, ]);
+   Route::post('getNotificationStatus', [Admin\NotificationTemplateController::class, 'getStatus']);
 //Admin
    Route::middleware(['auth'])->prefix('admin')->group(function () {
       Route::get('orderChart', [HomeController::class, 'orderChart']);
@@ -268,10 +272,12 @@ use App\Http\Controllers\Customer\AddressController;
    });
 
 //Vendor
+   Route::get('vendor/qrcode', [QrController::class, 'index']);
+   Route::get('/vendor/twillio', 'vendorUserController@twilioIndex');
+   Route::post('/vendor/save_twillio', 'vendorUserController@twilioStore');
    Route::get('/vendor/login', [VendorSettingController::class, 'login'])->name('vendor.login');
    Route::get('/vendor/users', [VendorSettingController::class, 'user']);
-   Route::resources([
-    'vendor/vendoruser' => vendorUserController::class,]);
+   Route::resource('vendor/vendoruser' , vendorUserController::class);
   //  Route::resource('vendor/user', Admin\UserController::class);
    Route::post('/vendor/vendor_confirm_login', [VendorSettingController::class, 'vendor_confirm_login']);
    Route::get('vendor/register_vendor', [VendorSettingController::class, 'register_vendor']);
@@ -705,3 +711,7 @@ use App\Http\Controllers\Customer\AddressController;
 
    // });
    //  });
+   Route::get('auth/google', [App\Http\Controllers\GoogleSocialiteController::class, 'redirectToGoogle']);
+   Route::get('auth/google/callback', [App\Http\Controllers\GoogleSocialiteController::class, 'handleGoogleCallback']);
+   Route::get('auth/facebook', [App\Http\Controllers\facebookSocialite::class, 'redirectToFacebook']);
+   Route::get('auth/facebook/callback', [facebookSocialite::class, 'handleFacebookCallback']);

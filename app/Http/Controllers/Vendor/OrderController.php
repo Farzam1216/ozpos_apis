@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Mail\StatusChange;
 use App\Http\Controllers\Controller;
 use App\Mail\DriverOrder;
+use App\Models\booktable;
 use App\Models\GeneralSetting;
 use App\Models\Menu;
 use App\Models\NotificationTemplate;
@@ -37,6 +38,7 @@ use OneSignal;
 use charlieuki\ReceiptPrinter\ReceiptPrinter as ReceiptPrinter;
 use Log;
 use Auth;
+use Twilio\Rest\Client;
 
 class OrderController extends Controller
 {
@@ -271,6 +273,13 @@ class OrderController extends Controller
 
     public function change_status(Request $request)
     {
+
+
+
+
+
+
+
         $status = strtoupper($request->status);
         $order = Order::find($request->id);
         $vendor = Vendor::where('id',$order->vendor_id)->first();
@@ -282,12 +291,16 @@ class OrderController extends Controller
             $start_time = Carbon::now(env('timezone'))->format('h:i a');
             $order->order_start_time = $start_time;
             $order->save();
+            $orderMessage = "Dear " .$user->name. " Your Order is APPROVED by " . $vendor->name.". Thank you for your order.";
+
         }
         if ($request->status == 'COMPLETE' || $request->status == 'complete')
         {
+            $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is COMPLETED. Thank you for your order.";
             $order->order_end_time = Carbon::now(env('timezone'))->format('h:i a');
             $order->payment_status = 1;
             $order->save();
+            $orderMessage = "Your Order is Completed.";
             $settle = array();
             $settle['vendor_id'] = $order->vendor_id;
             $settle['order_id'] = $order->id;
@@ -467,6 +480,54 @@ class OrderController extends Controller
                 }
             }
         }
+
+
+
+
+
+        if ($request->status == 'PREPARING FOOD' || $request->status == 'PREPARING FOOD')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is Completed. Thank you for your order.";
+        }
+
+        if ($request->status == 'DELIVERED' || $request->status == 'DELIVERED')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is DELIVERED. Thank you for your order.";
+        }
+
+        if ($request->status == 'READY TO PICKUP' || $request->status == 'READY TO PICKUP')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is  READY TO PICKUP.";
+        }
+
+        if ($request->status == 'CANCEL' || $request->status == 'CANCEL')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is Cancelled.";
+        }
+
+        if ($request->status == 'REJECT' || $request->status == 'REJECT')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is Rejected. Please try again.";
+        }
+
+        if ($request->status == 'PICKUP' || $request->status == 'PICKUP')
+        {
+          $orderMessage = "Dear " .$user->name. " Your Order from " . $vendor->name." is picked by our driver.";
+        }
+
+        if($request->status == ""){
+          $orderMessage = "Status is Empty";
+        }
+
+        $sid = 'AC9363af62dba13b5fe613cd6a8855e2ed';
+        $token = '1306f9abf8f0379db9f3731a043bc633';
+        // 923360010088
+        $client = new Client($sid, $token);
+                $client->messages->create('+923185405672', [
+                    'from' => '+19207862796',
+                    'body' => $orderMessage]);
+
+
         $notification = array();
         $notification['user_id'] = $user->id;
         $notification['user_type'] = 'user';
@@ -496,6 +557,15 @@ class OrderController extends Controller
                 Settle::create($settle);
             }
         }
+        if($request->status == 'COMPLETE' || $request->status == 'CANCEL'){
+          $order = order::find($request->id);
+          $bookedTables = booktable::where('vendor_id',$order->vendor_id)->where('booked_table_number',$order->table_no)->first();
+          if($bookedTables){
+            $bookedTables->status = 0;
+            $bookedTables->save();
+          }
+        }
+        $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
         return response(['success' => true, 'data' => ['status' => $status , 'order_id' => $order->id]]);
     }
 

@@ -41,9 +41,11 @@ class RestaurantController extends Controller
 
     $User = auth()->user();
     $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
-
+    if (!$UserAddress)
+    return view('customer/restaurant/restaurants', compact('userAddress', 'selectedAddress','vendors'));
     $Point = new Point($UserAddress->lat, $UserAddress->lang);
     // dd($Point);
+
     $DeliveryZoneNew = DeliveryZoneNew::select('vendor_id')->contains('coordinates', $Point)->get();
 
       if (!$DeliveryZoneNew)

@@ -92,7 +92,7 @@ class Vendor extends Model
 
     protected $table = 'vendor';
 
-    protected $fillable = ['name','vendor_own_driver','vendor_language','image','vendor_logo','user_id','email_id','password','contact','cuisine_id','address','lat','lang','map_address','min_order_amount','for_two_person','avg_delivery_time','license_number','admin_comission_type','admin_comission_value','vendor_type','time_slot','tax_type','tax','delivery_type_timeSlot','status','isExplorer','isTop','connector_type','connector_descriptor','connector_port','map_api_key', 'vendor_status', 'delivery_status', 'pickup_status','close_time','start_time','resturant_dining_status','total_tables_number'];
+    protected $fillable = ['name','vendor_own_driver','vendor_language','image','vendor_logo','user_id','email_id','password','contact','cuisine_id','address','lat','lang','map_address','min_order_amount','for_two_person','avg_delivery_time','license_number','admin_comission_type','admin_comission_value','vendor_type','time_slot','tax_type','tax','delivery_type_timeSlot','status','isExplorer','isTop','connector_type','connector_descriptor','connector_port','map_api_key', 'vendor_status', 'delivery_status', 'pickup_status','close_time','start_time','resturant_dining_status','total_tables_number','otp'];
 
     protected $appends = ['image','cuisine','vendor_logo','rate','review'];
 

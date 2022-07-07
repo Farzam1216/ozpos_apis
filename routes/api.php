@@ -2,7 +2,9 @@
 
    use Illuminate\Http\Request;
    use Illuminate\Support\Facades\Route;
-
+   use App\Http\Controllers;
+   use App\Http\Controllers\facebookSocialite;
+   use App\Http\Controllers\GoogleSocialiteController;
    /*
    |--------------------------------------------------------------------------
    | API Routes
@@ -14,6 +16,14 @@
    |
    */
 
+  Route::group(['middleware' => ['web']], function () {
+    // your routes here
+      Route::get('auth/google', 'UserApiController@redirectToGoogle');
+      Route::get('auth/google/callback', 'UserApiController@handleGoogleCallback');
+      Route::get('auth/facebook', 'UserApiController@redirectToFacebook');
+      Route::get('auth/facebook/callback', 'UserApiController@handleFacebookCallback');
+  });
+
    Route::middleware('auth:api')->get('/user', function (Request $request) {
       return $request->user();
    });
@@ -23,6 +33,10 @@
 
    Route::group(['middleware' => ['cors']], function ($router) {
       // new frontend apis with vue js
+
+
+      Route::post('/sms', 'UserApiController@sms');
+      Route::post('/social', 'UserApiController@social');
       Route::post('/addToCart', 'UserApiController@addToCart');
       Route::get('/getCartData/{vendor_id}/{session_id}', 'UserApiController@getCartData');
       Route::get('/cartData/{cart_id}', 'UserApiController@getCartDataCheckout');
@@ -30,6 +44,7 @@
       Route::get('/minusQuantity/{cart_id}', 'UserApiController@minusQuantity');
       Route::post('/user_address', 'UserApiController@userAddress');
       Route::get('/get-user-address/{id}', 'UserApiController@getUserAddress');
+      Route::get('/get-driver-address/{lat}/{lang}', 'UserApiController@getdriverAddress');
 
       //  changed feb 2022
       Route::get('single_vendor/{vendor_id}', 'UserApiController@apiSingleVendor');
@@ -200,8 +215,14 @@
       /******  User ********/
 
       Route::post('book_order_vuejs', 'UserApiController@apiBookOrderVuejs');
+      Route::get('my-orders/{id}', 'UserApiController@apiShowOrderVuejs');
+      Route::get('track-order/{order_id}', 'UserApiController@trackOrderVuejs');
+      Route::get('get-order/{order_id}', 'UserApiController@getOrderVueJS');
+      // pos user
+      Route::get('pos/table/{vendor_id}', 'PosApiController@apiTableSetting');
       Route::middleware('auth:api')->group(function () {
-
+        Route::get('check_phone', 'UserApiController@phone');
+        Route::post('update_phone', 'UserApiController@updatePhone');
         /******  POS User  ********/
 
         Route::get('pos/single_vendor/{vendor_id}', 'PosApiController@apiSingleVendor');

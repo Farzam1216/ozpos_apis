@@ -145,6 +145,12 @@ class VendorController extends Controller
             $data['status'] = 0;
         }
 
+      if (isset($data['otp'])) {
+        $data['otp'] = 1;
+      } else {
+          $data['otp'] = 0;
+      }
+
         $data['resturant_dining_status'] = $request->resturant_dining_status;
 
 

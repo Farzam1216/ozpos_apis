@@ -1402,15 +1402,10 @@ class VendorApiController extends Controller
         $status = strtoupper($request->status);
         $order = Order::find($request->id);
         if ($order) {
-
-
             /* Start - Abdullah */
             if ($request->status == 'PRINT' || $request->status == 'print')
                 return $this->print_thermal($order->id);
             /* End - Abdullah */
-
-
-
             $vendor = Vendor::where('id',$order->vendor_id)->first();
             $order->order_status = $status;
             $order->save();
@@ -1526,10 +1521,43 @@ class VendorApiController extends Controller
                     Settle::create($settle);
                 }
             }
+            $order = Order::find($request->id);
+            $vendor = Vendor::find($order->vendor_id);
+            $user = User::find($order->user_id);
+            $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+            $firebaseToken = $user->device_token;
+            $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+            $data = [
+                "registration_ids" =>array($firebaseToken),
+                "notification" => [
+                    "title" => "Change Status",
+                    "body" => "Dear ".$user->name." We Would Like To Inform You That Your Order ".$order->order_id." On ".$order->date." Is Successfully ".$order->order_status." from ".$vendor->name,
+                ],
+            ];
 
 
-            $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+            $dataString = json_encode($data);
 
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+            set_time_limit(0);
+            $responseFinal = curl_exec($ch);
+
+
+            $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $status);
+            // log::info($firebaseQuery);
             return response(['success' => true, 'data' => 'status updated']);
         }
         else{
@@ -1639,31 +1667,81 @@ class VendorApiController extends Controller
         $notification_content = str_replace($h, $detail, $content->notification_content);
         if ($driver_notification == 1)
         {
-            Config::set('onesignal.app_id', env('driver_app_id'));
-            Config::set('onesignal.rest_api_key', env('driver_api_key'));
-            Config::set('onesignal.user_auth_key', env('driver_auth_key'));
-            try
-            {
-                OneSignal::sendNotificationToUser(
-                    $notification_content,
-                    $driver->device_token,
-                    $url = null,
-                    $data = null,
-                    $buttons = null,
-                    $schedule = null,
-                    GeneralSetting::find(1)->business_name
-                );
-            } catch (\Throwable $th)
-            {
-                Log::error($th);
-            }
+
+            $order = Order::find($request->order_id);
+            $user = User::find($order->user_id);
+
+            //  user notification
+
+            $firebaseToken = $user->device_token;
+            $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+            $data = [
+                "registration_ids" =>array($firebaseToken),
+                "notification" => [
+                    "title" => "Delivery Person Order",
+                    "body" => "Dear ".$user->name." We Would Like To Inform You That Your Order ".$order->order_id." On ".$order->date." Is Successfully picked by our driver name ".$detail['drive_name']." from ".$detail['vendor_name'],
+                ]
+            ];
+
+
+            $dataString = json_encode($data);
+
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+            set_time_limit(0);
+            $responseFinal = curl_exec($ch);
+            log::info($responseFinal);
+            log::info($detail['address']);
+            // $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+            $firebaseToken = $driver->device_token;
+            $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+            $data = [
+                "registration_ids" =>array($firebaseToken),
+                "notification" => [
+                    "title" => "Delivery Person Order",
+                    "body" => "Dear ".$detail['drive_name']." Recently Booked Order Near ".$detail['address']." From ".$detail['vendor_name'],
+                ]
+            ];
+
+
+            $dataString = json_encode($data);
+
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+            set_time_limit(0);
+            $responseFinal = curl_exec($ch);
+            // driver notification
+            log::info($responseFinal);
+
+
+
+
         }
-        $p_notification = array();
-        $p_notification['title'] = 'create order';
-        $p_notification['user_type'] = 'driver';
-        $p_notification['user_id'] = $driver->id;
-        $p_notification['message'] = $notification_content;
-        Notification::create($p_notification);
+
 
         if ($driver_mail == 1) {
             $mail_content = str_replace($h, $detail, $content->mail_content);
@@ -1674,7 +1752,7 @@ class VendorApiController extends Controller
                 Log::error($th);
             }
         }
-         $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+        //  $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
         return response(['success' => true]);
     }
 

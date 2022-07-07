@@ -204,9 +204,17 @@ class PosApiController extends Controller
          return response(['success' => true, 'data' => $master]);
       }
 
+      public function apiTableSetting($vendor_id)
+      {
+         $bookTable = booktable::where('vendor_id',$vendor_id)->orderBy('booked_table_number')->get();
+         $Setting['bookedTable'] = $bookTable;
+         return response(['success' => true, 'data' => $Setting]);
+      }
+
       public function apiOrderSetting($vendor_id)
       {
          $User = auth()->user();
+         Log::info($User);
          $UserAddress = UserAddress::where([['user_id', auth()->user()->id], ['selected', 1]])->first();
          $Vendor = Vendor::find($vendor_id);
         //  $vendorTable = vendorTable::where('vendor_id',$vendor_id)->with('booktables')->first();
@@ -256,7 +264,8 @@ class PosApiController extends Controller
         //  $Setting['vendor_tables'] = $vendorTable;
         //  $Setting['notbookedTable'] = array_values($remainigTable);
          $Setting['bookedTable'] = $bookTable;
-
+          Log::info("message");
+          Log::info($Setting);
          return response(['success' => true, 'data' => $Setting]);
       }
 
@@ -433,6 +442,8 @@ class PosApiController extends Controller
     {
       // app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
       $orders = Order::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
+      log::info('orders data ');
+       log::info($orders);
        foreach ($orders as $order) {
           if ($order->delivery_person_id != null) {
              $delivery_person = DeliveryPerson::find($order->delivery_person_id);
@@ -443,6 +454,7 @@ class PosApiController extends Controller
              ];
           }
        }
+
        return response(['success' => true, 'data' => $orders]);
     }
 

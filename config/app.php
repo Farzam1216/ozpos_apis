@@ -164,6 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Craftsys\Msg91\Msg91LaravelServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -182,7 +183,8 @@ return [
 
         /* Start - Abdullah */
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
-        Kreait\Laravel\Firebase\ServiceProvider::class
+        Kreait\Laravel\Firebase\ServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 //        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         /* End - Abdullah */
     ],
@@ -237,6 +239,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
         /* Start - Abdullah */
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,

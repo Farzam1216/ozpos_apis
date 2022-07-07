@@ -155,8 +155,9 @@
                                 @php
                                     use Illuminate\Support\Str;
                                 @endphp
-
-                                {{ Str::limit($selectedAddress->type, 20) }}
+                                @isset($selectedAddress)
+                                  {{ Str::limit($selectedAddress->type, 20) }}
+                                @endisset
 
                             </div>
                         </a>

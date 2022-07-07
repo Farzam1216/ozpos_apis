@@ -11,11 +11,12 @@ use Illuminate\Http\Request;
 use App\Models\WalletPayment;
 use App\Models\GeneralSetting;
 use Bavix\Wallet\Models\Wallet;
-use App\Http\Controllers\Controller;
+// use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Bavix\Wallet\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\TwilioModel;
 
 class vendorUserController extends Controller
 {
@@ -222,4 +223,64 @@ class vendorUserController extends Controller
       WalletPayment::create($transction);
       return redirect()->back();
   }
+
+  public function twilioIndex(Request $request)
+  {
+        $vendor = Vendor::where('user_id',Auth::user()->id)->first();
+        $twillio = TwilioModel::where('vendor_id' , $vendor->id)->first();
+        return view('vendor.vendor_twillo.index',compact('twillio'));
+  }
+
+  public function twilioStore(Request $request)
+  {
+        $data = $request->all();
+        $vendor = Vendor::where('user_id',Auth::user()->id)->first();
+        $twillio = TwilioModel::where('vendor_id' , $vendor->id)->first();
+        if (isset($data['vendorstatus'])) {
+          $data['vendorstatus'] = 1;
+        } else {
+          $data['vendorstatus'] = 0;
+        }
+
+        if (isset($data['email'])) {
+          $data['email'] = 1;
+        } else {
+            $data['email'] = 0;
+        }
+
+        if (isset($data['sms'])) {
+          $data['sms'] = 1;
+        } else {
+            $data['sms'] = 0;
+        }
+        if($twillio){
+
+            $twillio->vendor_id = $vendor->id;
+            $twillio->sid= $request->sid;
+            $twillio->token = $request->token;
+            $twillio->number = $request->number;
+            $twillio->adminstatus = $request->adminstatus;
+            $twillio->vendorstatus = $data['vendorstatus'];
+            $twillio->email = $data['email'];
+            $twillio->sms =  $data['sms'];
+
+
+
+              $twillio->save();
+        }
+        else{
+            $twillio = new TwilioModel();
+            $twillio->vendor_id = $vendor->id;
+            $twillio->sid= $request->sid;
+            $twillio->token = $request->token;
+            $twillio->number = $request->number;
+            $twillio->adminstatus = $request->adminstatus;
+            $twillio->vendorstatus = $data['vendorstatus'];
+            $twillio->email = $data['email'];
+            $twillio->sms =  $data['sms'];
+            $twillio->save();
+        }
+        return redirect()->back();
+  }
+
 }

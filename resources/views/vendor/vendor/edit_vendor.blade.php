@@ -290,15 +290,25 @@
                             </div>
 
 
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label for="{{__('status')}}">{{__('Status')}}</label><br>
-                                                                <label class="switch">
-                                                                    <input type="checkbox" name="status" {{ $vendor->status == 1 ? 'checked' : '' }}>
-                                                                    <div class="slider"></div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="{{__('status')}}">{{__('Status')}}</label><br>
+                                    <label class="switch">
+                                        <input type="checkbox" name="status" {{ $vendor->status == 1 ? 'checked' : '' }}>
+                                        <div class="slider"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-md-12">
+                                  <label for="{{__('status')}}">{{__('Otp')}}</label><br>
+                                  <label class="switch">
+                                      <input type="checkbox" name="otp" {{ $vendor->otp == 1 ? 'checked' : '' }}>
+                                      <div class="slider"></div>
+                                  </label>
+                              </div>
+                            </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary" type="submit">{{__('Update Vendor')}}</button>
                             </div>

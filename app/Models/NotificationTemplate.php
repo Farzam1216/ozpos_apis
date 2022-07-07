@@ -37,5 +37,5 @@ class NotificationTemplate extends Model
 
     protected $table = 'notification_template';
 
-    protected $fillable = ['subject','title','notification_content','spanish_notification_content','spanish_mail_content','mail_content'];
+    protected $fillable = ['vendor_id','subject','title','notification_content','spanish_notification_content','spanish_mail_content','mail_content','status'];
 }

@@ -106,7 +106,12 @@ class User extends Authenticatable implements Wallet
         'micr_code',
         'account_number',
         'provider_type',
-        'provider_token'
+        'provider_token',
+        'social_id',
+        'social_type',
+        'facebook_id',
+        'google_id',
+        'device_token',
     ];
 
     /**
@@ -115,8 +120,10 @@ class User extends Authenticatable implements Wallet
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+      'password',
+      'remember_token',
+      'two_factor_recovery_codes',
+      'two_factor_secret',
     ];
 
     /**

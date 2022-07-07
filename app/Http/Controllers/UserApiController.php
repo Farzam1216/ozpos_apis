@@ -60,9 +60,109 @@ use Arr;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Log;
 use App\Models\DeliveryZoneNew;
+use App\Models\booktable;
+use App\Models\TwilioModel;
+use Laravel\Socialite\Facades\Socialite;
+use Exception;
 
 class UserApiController extends Controller
 {
+
+  public function redirectToGoogle()
+  {
+    // dd(Socialite::driver('google')->redirect());
+      return Socialite::driver('google')->redirect();
+  }
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function handleGoogleCallback()
+  {
+      try {
+
+          $user = Socialite::driver('google')->stateless()->user();
+          if(!$user->email){
+            $user->email = $user->id.'@gmail.com';
+          }
+          $finduser = User::where('google_id', $user->id)->orWhere('email_id', $user->email)->first();
+          if($finduser){
+
+              Auth::login($finduser);
+              return redirect()->intended('customer/restaurants');
+
+          }else{
+            $admin_verify_user = GeneralSetting::find(1)->verification;
+            $veri = $admin_verify_user == 1 ? 0 : 1;
+              $newUser = User::create([
+                  'name' => $user->name,
+                  'email_id' => $user->email,
+                  'google_id'=> $user->id,
+                  'image' => $user->avatar,
+                  'password' => encrypt('12345678'),
+                  'is_verified' => 0,
+                  'status' => 1
+              ]);
+              $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+              $newUser->roles()->sync($role_id);
+              Auth::login($newUser);
+
+              return redirect()->intended('customer/restaurants');
+          }
+
+      } catch (Exception $e) {
+          log::info($e->getMessage());
+      }
+  }
+
+  public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function handleFacebookCallback()
+    {
+      try {
+
+        $user = Socialite::driver('facebook')->stateless()->user();
+        if(!$user->email){
+          $user->email = $user->id.'@gmail.com';
+        }
+        $finduser = User::where('facebook_id', $user->id)->orWhere('email_id', $user->email)->first();
+        if($finduser){
+            Auth::login($finduser);
+            return redirect()->intended('customer/restaurants');
+        }else{
+          $admin_verify_user = GeneralSetting::find(1)->verification;
+          $veri = $admin_verify_user == 1 ? 0 : 1;
+            $newUser = User::create([
+                'name' => $user->name,
+                'email_id' => $user->email,
+                'facebook_id'=> $user->id,
+                'image' => $user->avatar,
+                'password' => encrypt('12345678'),
+                'is_verified' => 0,
+                'status' => 1
+            ]);
+            $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+            $newUser->roles()->sync($role_id);
+            Auth::login($newUser);
+
+            return redirect()->intended('customer/restaurants');
+        }
+
+    } catch (Exception $e) {
+        log::info($e->getMessage());
+    }
+    }
+
   public function getNearBy($vendor_id)
   {
      $User = auth()->user();
@@ -103,8 +203,8 @@ class UserApiController extends Controller
 
     $address  = new UserAddress();
     $address->user_id = $request->userID;
-    $address->lat = 33.6497;
-    $address->lang = 33.55464;
+    $address->lat = $request->lat;
+    $address->lang = $request->lang;
     $address->address = $request->address;
     $address->type = $request->type;
     $address->save();
@@ -202,7 +302,13 @@ class UserApiController extends Controller
 
 
     if ($request->session_id) {
-      $cart = new cart();
+      $alreadyAdded = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
+      if($alreadyAdded){
+          $cart = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
+      }
+      else{
+        $cart = new cart();
+      }
       $cart->vendor_id = $request->vendor_id;
       $cart->session_id = $request->session_id;
       $cart->menu_id = $request->menu_id;
@@ -217,8 +323,14 @@ class UserApiController extends Controller
       if (isset($value)) {
         $cart->addon_id = $addon_id;
       }
-      $cart->quantity = $request->quantity;
-      $cart->price = $price * $request->quantity;
+      if($alreadyAdded){
+        $cart->quantity =$cart->quantity + $request->quantity;
+        $cart->price = $price * $cart->quantity;
+      }
+      else{
+        $cart->quantity = $request->quantity;
+        $cart->price = $price * $request->quantity;
+      }
       $cart->save();
     } else {
       $cart = new cart();
@@ -273,12 +385,19 @@ class UserApiController extends Controller
   public function minusQuantity($cart_id)
   {
     $cart = cart::find($cart_id);
+
+    if($cart->quantity==1){
+      $cart->delete();
+    }
+
     if ($cart->quantity > 1) {
       $cart->quantity = $cart->quantity - 1;
       $quantity = $cart->quantity;
       $cart->price = $quantity * $cart->unit_price;
       $cart->save();
     }
+
+
 
     $data['cart'] = $cart;
     return response(['success' => true, 'data' => $data]);
@@ -382,7 +501,6 @@ class UserApiController extends Controller
     $user = User::create($data);
     $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
     $user->roles()->sync($role_id);
-
     if ($user['is_verified'] == 1) {
       $user['token'] = $user->createToken('mealUp')->accessToken;
       return response()->json(['success' => true, 'data' => $user, 'msg' => 'account created successfully..!!'], 200);
@@ -442,6 +560,9 @@ class UserApiController extends Controller
       'where' => 'bail|required'
     ]);
     $user = User::where('email_id', $request->email_id)->first();
+    log::info('data');
+    log::info($user);
+    log::info($request->all());
     if ($user) {
       if ($request->where == 'register') {
         $this->sendNotification($user);
@@ -515,8 +636,9 @@ class UserApiController extends Controller
       ])
       ->where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
       ->get();
-
+      $bookTable = booktable::where('vendor_id',$vendor_id)->where('status',0)->orderBy('booked_table_number')->get();
     $master['MenuCategory'] = $MenuCategory;
+    $master['tables'] = $bookTable;
     return response(['success' => true, 'data' => $master]);
   }
 
@@ -727,6 +849,49 @@ class UserApiController extends Controller
     return response(['success' => true, 'data' => $setting]);
   }
 
+  public function phone(Request $request)
+  {
+
+    $user  = Auth::user();
+    log::info($user);
+    if($user->phone == null){
+      $status = 0;
+    }
+    else{
+      $status = 1;
+    }
+    log::info($status);
+    return response(['success' => true, 'data' => $status]);
+  }
+
+  public function updatePhone(Request $request)
+  {
+
+    $checkVendorId = $request->vendor_id;
+    if($checkVendorId == 0){
+       $setting  = User::where('id',$checkVendorId)->first();
+       $otp_status = GeneralSetting::find(1)->verification;
+    }
+    else{
+      $vendor = Vendor::where('id',$request->vendor_id)->first();
+      $otp_status = $vendor->otp;
+      if($vendor->otp == null){
+        $otp_status=0;
+      }
+    }
+    log::info('otp status');
+    log::info( $otp_status);
+    $user  = Auth::user();
+    $user->phone = $request->phone;
+    $user->phone_code = $request->phone_code;
+    $user->update();
+
+    $user['otp_status'] = $otp_status;
+
+
+    return response(['success' => true, 'data' => $user]);
+  }
+
   public function apiOrderSetting($vendor_id)
   {
     $User = auth()->user();
@@ -815,33 +980,33 @@ class UserApiController extends Controller
     $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
     //  $bookData['address_id'] = 32;
 
-    Log::info('$bookData[\'delivery_date\']');
-    Log::info($bookData['delivery_date']);
-    Log::info('$bookData[\'delivery_time\']');
-    Log::info($bookData['delivery_time']);
+    // Log::info('$bookData[\'delivery_date\']');
+    // Log::info($bookData['delivery_date']);
+    // Log::info('$bookData[\'delivery_time\']');
+    // Log::info($bookData['delivery_time']);
 
     if ($bookData['delivery_date'] != null && $bookData['delivery_time'] != null) {
       $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
       $bookData['delivery_time'] = Carbon::createFromFormat('g:i A', $bookData['delivery_time'])->format('H:i:s');
-      Log::info('$bookData[\'delivery_date\']');
-      Log::info($bookData['delivery_date']);
-      Log::info('$bookData[\'delivery_time\']');
-      Log::info($bookData['delivery_time']);
+      // Log::info('$bookData[\'delivery_date\']');
+      // Log::info($bookData['delivery_date']);
+      // Log::info('$bookData[\'delivery_time\']');
+      // Log::info($bookData['delivery_time']);
       $dateTime = $bookData['delivery_date'] . ' ' . $bookData['delivery_time'];
       Log::info('$dateTime');
-      Log::info($dateTime);
+      // Log::info($dateTime);
       //            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
       $bookData['delivery_time'] = $dateTime;
-      Log::info('$bookData[\'delivery_time\']');
-      Log::info($bookData['delivery_time']);
+      // Log::info('$bookData[\'delivery_time\']');
+      // Log::info($bookData['delivery_time']);
     }
 
     $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
     $vendorUser = User::find($vendor->user_id);
     $customer = auth()->user();
-    log::info($customer);
+    // log::info($customer);
     $UserAddress = UserAddress::where('user_id', auth()->user()->id)->first();
-    log::info($UserAddress);
+    // log::info($UserAddress);
     $bookData['address_id'] = $UserAddress->id;
     if ($vendor->vendor_status == 0)
       return response(['success' => false, 'data' => "Vendor is offline."]);
@@ -931,8 +1096,55 @@ class UserApiController extends Controller
       $notification->save();
     }
     $order->update($tax);
+    $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+    $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
+    log::info('data');
+    log::info($notificationVendor);
+      if($notificationVendor->status == 1){
+        $sid = $twiillio->sid;
+        $token = $twiillio->token;
+        $customer_phone = '+'.$customer->phone;
+        // 923360010088
+        $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
+        $client = new Client($sid, $token);
+        $client->messages->create($customer_phone, [
+            'from' => $twiillio->number,
+            'body' => $orderMessage]);
+      }
+                $user = User::find($vendor->user_id);
+                $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+                $firebaseToken = $user->device_token;
+                $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
 
-    $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+                $data = [
+                    "registration_ids" =>array($firebaseToken),
+                    "notification" => [
+                        "title" => "Vendor Order",
+                        "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
+                    ],
+                ];
+
+
+                $dataString = json_encode($data);
+
+                $headers = [
+                    'Authorization: key=' . $SERVER_API_KEY,
+                    'Content-Type: application/json',
+                ];
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                set_time_limit(0);
+                $responseFinal = curl_exec($ch);
+
+
+
 
     //         if ($order->payment_type == 'FLUTTERWAVE') {
     //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
@@ -942,49 +1154,61 @@ class UserApiController extends Controller
   }
 
   // vue js frontend
+  public function sms(Request $request)
+  {
+
+    $receiverNumber = "03185405672";
+    $message = "This is testing";
+
+    $sid = 'AC9363af62dba13b5fe613cd6a8855e2ed';
+    $token = '1306f9abf8f0379db9f3731a043bc633';
+    // 923360010088
+    $orderMessage = "Hi Farzam Ali.Thankyou for ordering your food from Lahori Resturant.Your Order Placed Successfully.";
+    $client = new Client($sid, $token);
+            $client->messages->create('+923185405672', [
+                'from' => '+19207862796',
+                'body' => $orderMessage]);
+
+
+
+
+  }
   public function apiBookOrderVuejs(Request $request)
   {
-    Log::info($request);
-    // $validation = $request->validate([
-    //   'date' => 'bail|required',
-    //   'time' => 'bail|required',
-    //   'amount' => 'bail|required|numeric',
-    //   'sub_total' => 'bail|required|numeric',
-    //   'item' => 'bail|required',
-    //   'vendor_id' => 'required',
-    //   'delivery_type' => 'bail',
-    //   'payment_type' => 'bail|required',
-    //   'payment_token' => 'bail|required_if:payment_type,STRIPE,RAZOR,PAYPAl',
-    // ]);
 
     $bookData = $request->all();
+
+    if(isset($request->user_name)){
+      $bookData['user_name'] = $request->user_name;
+    }
+
+    if(isset($request->mobile)){
+      $bookData['mobile'] = $request->mobile;
+    }
+
+    if(isset($request->tableNumber)){
+      $bookData['table_no'] = $request->tableNumber;
+      $bookedTables = booktable::where('vendor_id',$bookData['vendor_id'])->where('booked_table_number',$request->tableNumber)->first();
+      $bookedTables->status = 1;
+      $bookedTables->save();
+    }
+
     $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
     $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
-    //  $bookData['address_id'] = 32;
 
-    // if ($bookData['delivery_date'] != null && $bookData['delivery_time'] != null) {
-    //   $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
-    //   $bookData['delivery_time'] = Carbon::createFromFormat('g:i A', $bookData['delivery_time'])->format('H:i:s');
-    //   Log::info('$bookData[\'delivery_date\']');
-    //   Log::info($bookData['delivery_date']);
-    //   Log::info('$bookData[\'delivery_time\']');
-    //   Log::info($bookData['delivery_time']);
-    //   $dateTime = $bookData['delivery_date'] . ' ' . $bookData['delivery_time'];
-    //   Log::info('$dateTime');
-    //   Log::info($dateTime);
-    //   //            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
-    //   $bookData['delivery_time'] = $dateTime;
-    //   Log::info('$bookData[\'delivery_time\']');
-    //   Log::info($bookData['delivery_time']);
-    // }
-
+    log::info($bookData);
     $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
+    log::info($vendor);
     $vendorUser = User::find($vendor->user_id);
     $customer = User::find($request->user_id);
-    log::info($customer);
+    log::info($customer->name);
     $UserAddress = UserAddress::where('user_id', $request->user_id)->first();
     log::info($UserAddress);
-    $bookData['address_id'] = $UserAddress->id;
+    if(!isset( $bookData['address_id'])){
+      $bookData['address_id']= 51;
+    }else{
+      $bookData['address_id'] = $UserAddress->id;
+    }
     if ($vendor->vendor_status == 0)
       return response(['success' => false, 'data' => "Vendor is offline."]);
     if ($bookData['delivery_type'] == 'TAKEAWAY' && $vendor->delivery_status == 0)
@@ -1065,7 +1289,14 @@ class UserApiController extends Controller
       $notification->save();
     }
     $order->update($tax);
-
+    // $sid = 'AC9363af62dba13b5fe613cd6a8855e2ed';
+    // $token = '1306f9abf8f0379db9f3731a043bc633';
+    // // 923360010088
+    // $orderMessage = "Hi ". $customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
+    // $client = new Client($sid, $token);
+    //         $client->messages->create('+923185405672', [
+    //             'from' => '+19207862796',
+    //             'body' => $orderMessage]);
     $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
 
     //         if ($order->payment_type == 'FLUTTERWAVE') {
@@ -1092,13 +1323,109 @@ class UserApiController extends Controller
         ];
       }
     }
+
     \Log::info("apiShowOrder()");
+    log::info($orders);
     \Log::info(response(['success' => true, 'data' => $orders]));
     //  return;
     return response(['success' => true, 'data' => $orders]);
   }
 
-  public function apiVendor(Request $request)
+  public function apiShowOrderVuejs($user_id)
+  {
+    app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+    // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+    $orders = Order::where('user_id', $user_id)->orderBy('id', 'DESC')->get();
+    foreach ($orders as $order) {
+      if ($order->delivery_person_id != null) {
+        $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+        $order->delivery_person = [
+          'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+          'image' => $delivery_person->image,
+          'contact' => $delivery_person->contact,
+        ];
+      }
+    }
+
+    \Log::info("apiShowOrder()");
+    log::info($orders);
+    \Log::info(response(['success' => true, 'data' => $orders]));
+    //  return;
+    return response(['success' => true, 'data' => $orders]);
+  }
+
+  public function trackOrderVuejs($order_id)
+      {
+         $order = Order::select('id', 'amount', 'vendor_id', 'order_status', 'delivery_person_id', 'delivery_charge', 'date', 'time', 'address_id')->where([['id', $order_id]])->first();
+         // dd($order);
+         $trackData = array();
+         $trackData['userLat'] = UserAddress::find($order->address_id)->lat;
+         $trackData['userLang'] = UserAddress::find($order->address_id)->lang;
+         $trackData['vendorLat'] = Vendor::find($order->vendor_id)->lat;
+         $trackData['vendorLang'] = Vendor::find($order->vendor_id)->lang;
+         $trackData['driverLat'] = DeliveryPerson::find($order->delivery_person_id)->lat;
+         $trackData['driverLang'] = DeliveryPerson::find($order->delivery_person_id)->lang;
+         $trackData['driverID'] = $order->delivery_person_id;
+         $trackData['orderID'] = $order_id;
+
+        //  $user = Auth::user()->id;
+         $userAddress = UserAddress::where('user_id', $order->user_id)->get();
+         $selectedAddress = UserAddress::where(['user_id' => $order->user_id, 'selected' => 1])->first();
+
+        //  $data[$trackData] = $trackData;
+        //  $data[$userAddress] = $userAddress;
+        //  $data[$selectedAddress] = $selectedAddress;
+        //  $data[$order] = $order;
+         return response(['success' => true, 'trackData' => $trackData]);
+        //  return view('customer/track', compact('order', 'trackData', 'userAddress', 'selectedAddress'));
+      }
+
+      public function getdriverAddress($driverLat,$driverLang)
+      {
+        $geocode = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$driverLat,$driverLang&sensor=false&key=AIzaSyBqh1mQPnqMSiOUlr-1_3p11XyOsPWRYHI";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $geocode);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $output = json_decode($response);
+        $dataarray = get_object_vars($output);
+        if ($dataarray['status'] != 'ZERO_RESULTS' && $dataarray['status'] != 'INVALID_REQUEST') {
+            if (isset($dataarray['results'][0]->formatted_address)) {
+
+                $driveraddress = $dataarray['results'][0]->formatted_address;
+
+            } else {
+                $driveraddress = 'Not Found';
+
+            }
+        }
+        return response(['success' => true, 'data' => $driveraddress]);
+      }
+
+      public function getOrderVueJS($order_id)
+      {
+         app('App\Http\Controllers\Vendor\VendorSettingController')->cancel_max_order();
+         // app('App\Http\Controllers\DriverApiController')->cancel_max_order();
+         $order = Order::find($order_id);
+
+         if ($order->delivery_person_id != null) {
+            $delivery_person = DeliveryPerson::find($order->delivery_person_id);
+            $order->delivery_person = [
+                'name' => $delivery_person->first_name . ' ' . $delivery_person->last_name,
+                'image' => $delivery_person->image,
+                'contact' => $delivery_person->contact,
+            ];
+         }
+
+         return json_encode($order);
+      }
+
+    public function apiVendor(Request $request)
   {
     return Vendor::get();
     $vendors = Vendor::where('status', 1)->orderBy('id', 'DESC')->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
@@ -1501,7 +1828,8 @@ class UserApiController extends Controller
         }
         if ($sms_verification == 1) {
           try {
-            $phone = $user->phone_code . $user->phone;
+            $plus = '+';
+            $phone =  $plus . $user->phone;
             $message1 = str_replace($data, $detail, $msg_content);
             $client = new Client($sid, $token);
             $client->messages->create(
@@ -1539,7 +1867,8 @@ class UserApiController extends Controller
         }
         if ($sms_verification == 1) {
           try {
-            $phone = $user->phone_code . $user->phone;
+            $plus = '+';
+            $phone =  $plus . $user->phone;
             $message1 = str_replace($data, $detail, $msg_content);
             $client = new Client($sid, $token);
             $client->messages->create(
@@ -1634,4 +1963,43 @@ class UserApiController extends Controller
       }
     }
   }
+
+
+  public function social(Request $request)
+  {
+    log::info('device toekn');
+    log::info($request->device_token);
+    if(!$request->email){
+      $request->email = $request->id.'@gmail.com';
+    }
+     $finduser = User::where('google_id', $request->id)->orWhere('email_id', $request->email)->first();
+      if($finduser){
+          Auth::login($finduser);
+          $finduser->device_token = $request->device_token;
+          $finduser->update();
+          $finduser['token'] = $finduser->createToken('mealUp')->accessToken;
+          log::info($finduser);
+          return response()->json(['success' => true, 'data' => $finduser], 200);
+      }else{
+        $admin_verify_user = GeneralSetting::find(1)->verification;
+        $veri = $admin_verify_user == 1 ? 0 : 1;
+          $newUser = User::create([
+              'name' => $request->name,
+              'email_id' => $request->email,
+              'google_id'=> $request->id,
+              'image' => $request->image,
+              'password' => encrypt('12345678'),
+              'is_verified' => 1,
+              'status' => 1,
+              'device_token' =>$request->device_token,
+          ]);
+          $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+          $newUser->roles()->sync($role_id);
+          Auth::login($newUser);
+          $newUser['token'] = $newUser->createToken('mealUp')->accessToken;
+          log::info($newUser);
+          return response()->json(['success' => true, 'data' => $newUser], 200);
+      }
+  }
+
 }

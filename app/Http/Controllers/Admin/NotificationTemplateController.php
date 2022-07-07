@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificationTemplate;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationTemplateController extends Controller
 {
@@ -16,13 +18,14 @@ class NotificationTemplateController extends Controller
      */
     public function index()
     {
+        $vendor = Vendor::where('user_id',Auth::user()->id)->first();
         if (session()->has('locale'))
         {
             $lang = session()->get('locale');
-            if ($lang == "spanish") 
+            if ($lang == "spanish")
             {
-                $data = NotificationTemplate::all();
-                foreach ($data as $value) 
+                $data = NotificationTemplate::where('role','admin')->get();
+                foreach ($data as $value)
                 {
                     $value->notification_content = $value->spanish_notification_content;
                     $value->mail_content = $value->spanish_mail_content;
@@ -30,14 +33,15 @@ class NotificationTemplateController extends Controller
             }
             else
             {
-                $data = NotificationTemplate::all();
+                $data =  NotificationTemplate::where('role','admin')->get();
             }
         }
         else
         {
-            $data = NotificationTemplate::all();
+            $data =NotificationTemplate::all();
         }
-        return view('admin.notification template.notification_template',compact('data'));
+        $vendor_id =$vendor->id;
+        return view('admin.notification template.notification_template',compact('data','vendor_id'));
     }
 
     /**
@@ -81,16 +85,16 @@ class NotificationTemplateController extends Controller
      */
     public function edit(NotificationTemplate $notificationTemplate)
     {
-        if (session()->has('locale')) 
-        {
-            $lang = session()->get('locale');
-            if ($lang == "spanish") 
-            {
-                $notificationTemplate->notification_content = $notificationTemplate->spanish_notification_content;
-                $notificationTemplate->mail_content = $notificationTemplate->spanish_mail_content;
-            }
-        }
-        return response(['success' => true,'data' => $notificationTemplate]);
+      $vendor = Vendor::where('user_id',Auth::user()->id)->first();
+      $check = NotificationTemplate::where('vendor_id',$vendor->id)->where('title',$notificationTemplate['title'])->where('role',null)->first();
+      if($check){
+        $notificationTemplate = $check;
+      }
+      return response(['success' => true,'data' => $notificationTemplate]);
+    }
+
+    public function getStatus(Request $request){
+      return response(['success' => true,'data' => $request->all()]);
     }
 
     /**
@@ -102,26 +106,25 @@ class NotificationTemplateController extends Controller
      */
     public function update(Request $request, NotificationTemplate $notificationTemplate)
     {
+        $vendor = Vendor::where('user_id',Auth::user()->id)->first();
         $data = $request->all();
-        if (session()->has('locale')) 
+        if (isset($data['status'])) {
+          $data['status'] = 1;
+        } else {
+          $data['status'] = 0;
+        }
+        $data['vendor_id']  = $vendor->id;
+        $check = NotificationTemplate::where('vendor_id',$vendor->id)->where('title',$request->title)->where('role',null)->first();
+        // dd($check);
+        if($check)
         {
-            $lang = session()->get('locale');
-            if ($lang == "spanish") 
-            {
-                $notificationTemplate->spanish_notification_content = $data['notification_content'];
-                $notificationTemplate->spanish_mail_content = $data['mail_content'];
-                $notificationTemplate->save();
-            }
-            else
-            {
-                $notificationTemplate->update($data);
-            }
+          $check->update($data);
         }
         else
         {
-            $notificationTemplate->update($data);
+          NotificationTemplate::create($data);
         }
-        return redirect('admin/notification_template')->with('msg','notification template updated successfully..!!');
+        return redirect('/notification_template')->with('msg','notification template updated successfully..!!');
     }
 
     /**
