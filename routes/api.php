@@ -34,7 +34,7 @@
    Route::group(['middleware' => ['cors']], function ($router) {
       // new frontend apis with vue js
 
-
+      Route::post('/address-check','UserApiController@checkAddress');
       Route::post('/sms', 'UserApiController@sms');
       Route::post('/social', 'UserApiController@social');
       Route::post('/addToCart', 'UserApiController@addToCart');

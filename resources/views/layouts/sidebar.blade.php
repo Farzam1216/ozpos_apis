@@ -154,6 +154,7 @@
                 </a>
             </li>
             @endcan
+            @if(Auth::user()->load('roles')->roles->contains('title', 'vendor'))
             <li class="{{ $activePage == 'qrcode' ? 'active' : '' }}">
               <a class="nav-link" href="{{ url('vendor/qrcode') }}">
                   <i class="fas fa-qrcode text-dark"></i>
@@ -173,6 +174,7 @@
                   <span class="nav-link-text">{{__('Notification Template')}}</span>
               </a>
             </li>
+            @endif
             @can('faq_access')
             <li class="{{ $activePage == 'faq' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('admin/faq') }}">

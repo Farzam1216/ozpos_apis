@@ -68,6 +68,46 @@ use Exception;
 class UserApiController extends Controller
 {
 
+  public function checkAddress(Request $request){
+
+
+         $Point = new Point($request->lat, $request->lang);
+         Log::info("ponit");
+         log::info($Point);
+         $DeliveryZoneNew = DeliveryZoneNew::where('vendor_id',$request->vendor_id)->contains('coordinates', $Point)->get();
+         log::info('delivery zone');
+         log::info($DeliveryZoneNew);
+         log::info(count($DeliveryZoneNew));
+         if (count($DeliveryZoneNew) == 0){
+          return response(['success' => false, 'data' => 'Not a valid Address']);
+         }
+         else{
+          return response(['success' => true, 'data' => 'Valid Address']);
+         }
+
+        //  $radius = GeneralSetting::first()->radius;
+         // $vendors = Vendor::where('status', 1)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+        //  $vendors = Vendor::where('status', 1)->whereIn('id', $DeliveryZoneNew)->get(['id', 'image', 'name', 'lat', 'lang', 'cuisine_id', 'vendor_type'])->makeHidden(['vendor_logo']);
+        //  foreach ($vendors as $vendor) {
+        //     $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
+        //     $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
+        //     $googleDistance = file_get_contents( $googleUrl );
+        //     $googleDistance = json_decode($googleDistance);
+
+        //     $vendor['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->text : 'no route found';
+        //     $vendor['duration'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->duration->text : 'no route found';
+
+        //     if (auth('api')->user() != null) {
+        //        $user = auth('api')->user();
+        //        $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
+        //     } else {
+        //        $vendor['like'] = false;
+        //     }
+        //  }
+        //  \Log::critical($vendors);
+        //  return response(['success' => true, 'data' => $vendors]);
+  }
+
   public function redirectToGoogle()
   {
     // dd(Socialite::driver('google')->redirect());
@@ -221,139 +261,171 @@ class UserApiController extends Controller
   public function addToCart(Request $request)
   {
 
-    if ($request->addon_id) {
-      $addonString = $request->addon_id;
-      for ($i = 0; $i < count($addonString); $i++) {
-        if ($addonString[$i] != null) {
-          if ($i != 0) {
-            $value[] = $i;
+      if(!$request->menu_id){
+        $cart = Cart::where('session_id',$request->session_id)->get();
+        foreach($cart as $cart){
+          $cart = Cart::find($cart->id);
+          $cart->textAddress = $request->textAddress;
+          $cart->lat = $request->lat;
+          $cart->lang = $request->lang;
+          $cart->save();
+        }
+      }
+      else{
+          if ($request->addon_id) {
+            $addonString = $request->addon_id;
+            for ($i = 0; $i < count($addonString); $i++) {
+              if ($addonString[$i] != null) {
+                if ($i != 0) {
+                  $value[] = $i;
+                }
+              }
+            }
           }
-        }
-      }
-    }
-    $addonPrice = 0;
-    if (isset($value)) {
-      $addon_id = implode(",", $value);
+          $addonPrice = 0;
+          if (isset($value)) {
+            $addon_id = implode(",", $value);
 
-      for ($i = 0; $i < count($value); $i++) {
+            for ($i = 0; $i < count($value); $i++) {
 
-        $menuAddon = MenuAddon::where('vendor_id', $request->vendor_id)->where('menu_id', $request->menu_id)->where('addon_id', $value[$i])->first();
-        if ($menuAddon) {
-          $addonPrice = $addonPrice + $menuAddon->price;
-        }
-      }
-    }
-    $price = 0;
-    $menuPrice = 0;
-    if ($request->half_and_half_id) {
-      $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->first_half_id)->first();
+              $menuAddon = MenuAddon::where('vendor_id', $request->vendor_id)->where('menu_id', $request->menu_id)->where('addon_id', $value[$i])->first();
+              if ($menuAddon) {
+                $addonPrice = $addonPrice + $menuAddon->price;
+              }
+            }
+          }
+          $price = 0;
+          $menuPrice = 0;
+          if ($request->half_and_half_id) {
+            $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->first_half_id)->first();
 
-      if ($menuSize) {
-        if ($menuSize->display_discount_price) {
-          $firstprice = $menuSize->display_discount_price / 2;
-          $firstmenuPrice = $menuSize->display_discount_price / 2;
-        } else {
-          $firstprice = $menuSize->display_price / 2;
-          $firstmenuPrice = $menuSize->display_price / 2;
-        }
-      }
-      $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->second_half_id)->first();
+            if ($menuSize) {
+              if ($menuSize->display_discount_price) {
+                $firstprice = $menuSize->display_discount_price / 2;
+                $firstmenuPrice = $menuSize->display_discount_price / 2;
+              } else {
+                $firstprice = $menuSize->display_price / 2;
+                $firstmenuPrice = $menuSize->display_price / 2;
+              }
+            }
+            $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->second_half_id)->first();
 
-      if ($menuSize) {
-        if ($menuSize->display_discount_price) {
-          $secondprice = $menuSize->display_discount_price / 2;
-          $secondmenuPrice = $menuSize->display_discount_price / 2;
-        } else {
-          $secondprice = $menuSize->display_price / 2;
-          $secondmenuPrice = $menuSize->display_price / 2;
-        }
-      }
-      $price = $firstprice + $secondprice;
-      $menuPrice = $firstmenuPrice + $secondmenuPrice;
-    } elseif ($request->size_id) {
-      $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->menu_id)->where('id', $request->size_id)->first();
+            if ($menuSize) {
+              if ($menuSize->display_discount_price) {
+                $secondprice = $menuSize->display_discount_price / 2;
+                $secondmenuPrice = $menuSize->display_discount_price / 2;
+              } else {
+                $secondprice = $menuSize->display_price / 2;
+                $secondmenuPrice = $menuSize->display_price / 2;
+              }
+            }
+            $price = $firstprice + $secondprice;
+            $menuPrice = $firstmenuPrice + $secondmenuPrice;
+          } elseif ($request->size_id) {
+            $menuSize = MenuSize::where('vendor_id', $request->vendor_id)->where('menu_id', $request->menu_id)->where('id', $request->size_id)->first();
 
-      if ($menuSize) {
-        if ($menuSize->display_discount_price) {
-          $price = $menuSize->display_discount_price;
-          $menuPrice = $menuSize->display_discount_price;
-        } else {
-          $price = $menuSize->display_price;
-          $menuPrice = $menuSize->display_price;
-        }
-      }
-    } else {
-      $menu = menu::where('id', $request->menu_id)->where('vendor_id', $request->vendor_id)->first();
-      if ($menu->display_discount_price) {
-        $price = $menu->display_discount_price;
-        $menuPrice = $menu->display_discount_price;
-      } else {
-        $price = $menu->display_price;
-        $menuPrice = $menu->display_price;
-      }
-    }
+            if ($menuSize) {
+              if ($menuSize->display_discount_price) {
+                $price = $menuSize->display_discount_price;
+                $menuPrice = $menuSize->display_discount_price;
+              } else {
+                $price = $menuSize->display_price;
+                $menuPrice = $menuSize->display_price;
+              }
+            }
+          } else {
+            $menu = menu::where('id', $request->menu_id)->where('vendor_id', $request->vendor_id)->first();
+            if ($menu->display_discount_price) {
+              $price = $menu->display_discount_price;
+              $menuPrice = $menu->display_discount_price;
+            } else {
+              $price = $menu->display_price;
+              $menuPrice = $menu->display_price;
+            }
+          }
 
-    $price =  $price + $addonPrice;
-    if ($request->half_and_half_id) {
-      $menu = HalfNHalfMenu::where('id', $request->half_and_half_id)->where('vendor_id', $request->vendor_id)->first();
-    } else {
-      $menu = menu::where('id', $request->menu_id)->where('vendor_id', $request->vendor_id)->first();
-    }
+          $price =  $price + $addonPrice;
+          if ($request->half_and_half_id) {
+            $menu = HalfNHalfMenu::where('id', $request->half_and_half_id)->where('vendor_id', $request->vendor_id)->first();
+          } else {
+            $menu = menu::where('id', $request->menu_id)->where('vendor_id', $request->vendor_id)->first();
+          }
 
 
-    if ($request->session_id) {
-      $alreadyAdded = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
-      if($alreadyAdded){
-          $cart = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
+          if ($request->session_id) {
+            $alreadyAdded = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
+            if($alreadyAdded){
+                $cart = Cart::where('session_id',$request->session_id)->where('menu_id',$request->menu_id)->first();
+            }
+            else{
+              $cart = new cart();
+            }
+
+
+            $cart->textAddress = $request->textAddress;
+            $cart->lat = $request->lat;
+            $cart->lang = $request->lang;
+
+
+            $cart->vendor_id = $request->vendor_id;
+            $cart->session_id = $request->session_id;
+            $cart->menu_id = $request->menu_id;
+            $cart->menu_name = $menu->name;
+            $cart->unit_price = $menuPrice;
+            // $cart->single_menu_id = $request->single_menu_id;
+            $cart->half_menu_id = $request->half_and_half_id;
+            // $cart->deal_menu_id = $request->deal_menu_id;
+            $cart->size_id = $request->size_id;
+            $cart->firstHalf = $request->first_half_id;
+            $cart->secondHalf = $request->second_half_id;
+            if (isset($value)) {
+              $cart->addon_id = $addon_id;
+            }
+            if($alreadyAdded){
+              $cart->quantity =$cart->quantity + $request->quantity;
+              $cart->price = $price * $cart->quantity;
+            }
+            else{
+              $cart->quantity = $request->quantity;
+              $cart->price = $price * $request->quantity;
+            }
+            $cart->save();
+          }
+          else {
+            $cart = new cart();
+            $cart->textAddress = $request->textAddress;
+            $cart->lat = $request->lat;
+            $cart->lang = $request->lang;
+            $cart->session_id = session()->getId();
+            $cart->vendor_id = $request->vendor_id;
+            $cart->menu_id = $request->menu_id;
+            $cart->menu_name = $menu->name;
+            $cart->unit_price = $menuPrice;
+            // $cart->single_menu_id = $request->single_menu_id;
+            $cart->half_menu_id = $request->half_and_half_id;
+            // $cart->deal_menu_id = $request->deal_menu_id;
+            $cart->size_id = $request->size_id;
+            $cart->firstHalf = $request->first_half_id;
+            $cart->secondHalf = $request->second_half_id;
+            if (isset($value)) {
+              $cart->addon_id = $addon_id;
+            }
+            $cart->quantity = $request->quantity;
+            $cart->price = $price * $request->quantity;
+            $cart->save();
+          }
+          $data['cart'] = $cart;
+
       }
-      else{
-        $cart = new cart();
-      }
-      $cart->vendor_id = $request->vendor_id;
-      $cart->session_id = $request->session_id;
-      $cart->menu_id = $request->menu_id;
-      $cart->menu_name = $menu->name;
-      $cart->unit_price = $menuPrice;
-      // $cart->single_menu_id = $request->single_menu_id;
-      $cart->half_menu_id = $request->half_and_half_id;
-      // $cart->deal_menu_id = $request->deal_menu_id;
-      $cart->size_id = $request->size_id;
-      $cart->firstHalf = $request->first_half_id;
-      $cart->secondHalf = $request->second_half_id;
-      if (isset($value)) {
-        $cart->addon_id = $addon_id;
-      }
-      if($alreadyAdded){
-        $cart->quantity =$cart->quantity + $request->quantity;
-        $cart->price = $price * $cart->quantity;
-      }
-      else{
-        $cart->quantity = $request->quantity;
-        $cart->price = $price * $request->quantity;
-      }
-      $cart->save();
-    } else {
-      $cart = new cart();
-      $cart->session_id = session()->getId();
-      $cart->vendor_id = $request->vendor_id;
-      $cart->menu_id = $request->menu_id;
-      $cart->menu_name = $menu->name;
-      $cart->unit_price = $menuPrice;
-      // $cart->single_menu_id = $request->single_menu_id;
-      $cart->half_menu_id = $request->half_and_half_id;
-      // $cart->deal_menu_id = $request->deal_menu_id;
-      $cart->size_id = $request->size_id;
-      $cart->firstHalf = $request->first_half_id;
-      $cart->secondHalf = $request->second_half_id;
-      if (isset($value)) {
-        $cart->addon_id = $addon_id;
-      }
-      $cart->quantity = $request->quantity;
-      $cart->price = $price * $request->quantity;
-      $cart->save();
-    }
-    $data['cart'] = $cart;
-    $data['session_id'] = $cart->session_id;
+
+
+
+
+
+
+
+
+         $data['session_id'] = $cart->session_id;
     return response(['success' => true, 'data' => $data]);
   }
 
@@ -555,26 +627,44 @@ class UserApiController extends Controller
 
   public function apiSendOtp(Request $request)
   {
+    log::info('send otp api call');
     $request->validate([
       'email_id' => 'bail|required',
       'where' => 'bail|required'
     ]);
     $user = User::where('email_id', $request->email_id)->first();
-    log::info('data');
-    log::info($user);
-    log::info($request->all());
-    if ($user) {
+    $otp = mt_rand(1000, 9999);
+    $user->otp = $otp;
+    $user->update();
+
+    // if ($user) {
       if ($request->where == 'register') {
-        $this->sendNotification($user);
+        // $this->sendNotification($user);
+        $notificationVendor = NotificationTemplate::where('vendor_id',$request->vendor_id)->where('title','verification')->first();
+        $twiillio = TwilioModel::where('vendor_id',$request->vendor_id)->first();
+
+          if($notificationVendor && $notificationVendor->status == 1){
+            $sid = $twiillio->sid;
+            $token = $twiillio->token;
+            $customer_phone = '+'.$user->phone;
+            // 923360010088 dear {user_name} your otp is {otp}
+            $orderMessage = "Dear " .$user->name." your otp is " .$user->otp;
+            $client = new Client($sid, $token);
+            $client->messages->create($customer_phone, [
+                'from' => $twiillio->number,
+                'body' => $orderMessage]);
+                log::info('otp sent');
+          }
       }
       if ($request->where == 'forgot_password') {
-        $this->ForgotPassword($user);
+        // $this->ForgotPassword($user);
       }
-      $user->makeHidden('otp');
+      // $user->makeHidden('otp');
       return response(['success' => true, 'data' => $user]);
-    } else {
-      return response(['success' => false, 'msg' => __('User Not Found.')]);
-    }
+    // }
+    //  else {
+    //   return response(['success' => false, 'msg' => __('User Not Found.')]);
+    // }
   }
 
   public function apiCancelOrder(Request $request)
@@ -874,9 +964,13 @@ class UserApiController extends Controller
     }
     else{
       $vendor = Vendor::where('id',$request->vendor_id)->first();
+      log::info($vendor);
       $otp_status = $vendor->otp;
-      if($vendor->otp == null){
+      if($vendor->otp == null  || $vendor->otp == '0'){
         $otp_status=0;
+      }
+      else{
+        $otp_status=1;
       }
     }
     log::info('otp status');
@@ -993,7 +1087,7 @@ class UserApiController extends Controller
       // Log::info('$bookData[\'delivery_time\']');
       // Log::info($bookData['delivery_time']);
       $dateTime = $bookData['delivery_date'] . ' ' . $bookData['delivery_time'];
-      Log::info('$dateTime');
+      // Log::info('$dateTime');
       // Log::info($dateTime);
       //            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
       $bookData['delivery_time'] = $dateTime;
@@ -1096,55 +1190,70 @@ class UserApiController extends Controller
       $notification->save();
     }
     $order->update($tax);
-    $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
-    $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
-    log::info('data');
-    log::info($notificationVendor);
-      if($notificationVendor->status == 1){
-        $sid = $twiillio->sid;
-        $token = $twiillio->token;
-        $customer_phone = '+'.$customer->phone;
-        // 923360010088
-        $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
-        $client = new Client($sid, $token);
-        $client->messages->create($customer_phone, [
-            'from' => $twiillio->number,
-            'body' => $orderMessage]);
-      }
-                $user = User::find($vendor->user_id);
-                $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
-                $firebaseToken = $user->device_token;
-                $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
 
-                $data = [
-                    "registration_ids" =>array($firebaseToken),
-                    "notification" => [
-                        "title" => "Vendor Order",
-                        "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
-                    ],
-                ];
+    // log::info(' notification data');
+              $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+              $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
 
+                if($notificationVendor && $notificationVendor->status == 1){
+                      $sid = $twiillio->sid;
+                      $token = $twiillio->token;
+                      $customer_phone = '+'.$customer->phone;
+                      // 923360010088
+                      $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
+                      $client = new Client($sid, $token);
 
-                $dataString = json_encode($data);
+                      try {
+                        $client->messages->create($customer_phone, [
+                          'from' => $twiillio->number,
+                          'body' => $orderMessage]);
 
-                $headers = [
-                    'Authorization: key=' . $SERVER_API_KEY,
-                    'Content-Type: application/json',
-                ];
+                    } catch (Exception $e) {
+                      log::info('exception twillio');
+                      // log::info($e);
+                      // log::info($e->getMessage());
+                        // die( $e->getCode() . ' : ' . $e->getMessage() );
+                    }
 
-                $ch = curl_init();
+                }
 
-                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-                set_time_limit(0);
-                $responseFinal = curl_exec($ch);
+              $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','vendor order')->first();
+              if($notificationVendor && $notificationVendor->status == 1){
+
+                  $user = User::find($vendor->user_id);
+                  $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+                  $firebaseToken = $user->device_token;
+                  $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+                  $data = [
+                      "registration_ids" =>array($firebaseToken),
+                      "notification" => [
+                          "title" => "Vendor Order",
+                          "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
+                      ],
+                  ];
 
 
+                  $dataString = json_encode($data);
 
+
+                  $headers = [
+                      'Authorization: key=' . $SERVER_API_KEY,
+                      'Content-Type: application/json',
+                  ];
+
+                  $ch = curl_init();
+
+                  curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                  curl_setopt($ch, CURLOPT_POST, true);
+                  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                  curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                  set_time_limit(0);
+                  $responseFinal = curl_exec($ch);
+
+              }
 
     //         if ($order->payment_type == 'FLUTTERWAVE') {
     //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
@@ -1298,12 +1407,72 @@ class UserApiController extends Controller
     //             'from' => '+19207862796',
     //             'body' => $orderMessage]);
     $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
+      // log::info(' notification data');
+      $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+      $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
 
-    //         if ($order->payment_type == 'FLUTTERWAVE') {
-    //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
-    //         } else {
+        if($notificationVendor && $notificationVendor->status == 1){
+              $sid = $twiillio->sid;
+              $token = $twiillio->token;
+              $customer_phone = '+'.$customer->phone;
+              // 923360010088
+              $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
+              $client = new Client($sid, $token);
+
+              try {
+                $client->messages->create($customer_phone, [
+                  'from' => $twiillio->number,
+                  'body' => $orderMessage]);
+
+            } catch (Exception $e) {
+              log::info('exception twillio');
+              // log::info($e);
+              // log::info($e->getMessage());
+                // die( $e->getCode() . ' : ' . $e->getMessage() );
+            }
+
+        }
+
+      $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','vendor order')->first();
+      if($notificationVendor && $notificationVendor->status == 1){
+
+          $user = User::find($vendor->user_id);
+          $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+          $firebaseToken = $user->device_token;
+          $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+          $data = [
+              "registration_ids" =>array($firebaseToken),
+              "notification" => [
+                  "title" => "Vendor Order",
+                  "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
+              ],
+          ];
+
+
+          $dataString = json_encode($data);
+
+
+          $headers = [
+              'Authorization: key=' . $SERVER_API_KEY,
+              'Content-Type: application/json',
+          ];
+
+          $ch = curl_init();
+
+          curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+          set_time_limit(0);
+          $responseFinal = curl_exec($ch);
+
+      }
+
     return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
-    //         }
+
   }
 
   //
@@ -1989,7 +2158,7 @@ class UserApiController extends Controller
               'google_id'=> $request->id,
               'image' => $request->image,
               'password' => encrypt('12345678'),
-              'is_verified' => 1,
+              'is_verified' => 0,
               'status' => 1,
               'device_token' =>$request->device_token,
           ]);

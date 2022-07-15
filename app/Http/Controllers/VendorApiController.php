@@ -1524,40 +1524,44 @@ class VendorApiController extends Controller
             $order = Order::find($request->id);
             $vendor = Vendor::find($order->vendor_id);
             $user = User::find($order->user_id);
-            $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
-            $firebaseToken = $user->device_token;
-            $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+            $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','change status')->first();
+            if($notificationVendor && $notificationVendor->status == 1){
 
-            $data = [
-                "registration_ids" =>array($firebaseToken),
-                "notification" => [
-                    "title" => "Change Status",
-                    "body" => "Dear ".$user->name." We Would Like To Inform You That Your Order ".$order->order_id." On ".$order->date." Is Successfully ".$order->order_status." from ".$vendor->name,
-                ],
-            ];
+              $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+              $firebaseToken = $user->device_token;
+              $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
 
-
-            $dataString = json_encode($data);
-
-            $headers = [
-                'Authorization: key=' . $SERVER_API_KEY,
-                'Content-Type: application/json',
-            ];
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-            set_time_limit(0);
-            $responseFinal = curl_exec($ch);
+              $data = [
+                  "registration_ids" =>array($firebaseToken),
+                  "notification" => [
+                      "title" => "Change Status",
+                      "body" => "Dear ".$user->name." We Would Like To Inform You That Your Order ".$order->order_id." On ".$order->date." Is Successfully ".$order->order_status." from ".$vendor->name,
+                  ],
+              ];
 
 
-            $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $status);
+              $dataString = json_encode($data);
+
+              $headers = [
+                  'Authorization: key=' . $SERVER_API_KEY,
+                  'Content-Type: application/json',
+              ];
+
+              $ch = curl_init();
+
+              curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+              curl_setopt($ch, CURLOPT_POST, true);
+              curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+              set_time_limit(0);
+              $responseFinal = curl_exec($ch);
+
+
+              $firebaseQuery =  app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $status);
             // log::info($firebaseQuery);
+            }
             return response(['success' => true, 'data' => 'status updated']);
         }
         else{
