@@ -56,7 +56,7 @@
                                 <ul class="nav nav-pills nav-pills-rose nav-pills-icons flex-column" role="tablist">
                                     @foreach ($data as $value)
                                         <li class="nav-item">
-                                            <a class="nav-link mt-1 w-100 h-100 {{ $loop->iteration == 1 ? 'active show' : '' }}" onclick="notificationTemplateEdit({{ $value->id }}) , getStatus()" data-toggle="tab" href="#link110" role="tablist">{{ $value->title }}</a>
+                                            <a class="nav-link mt-1 w-100 h-100 {{ $loop->iteration == 1 ? 'active show' : '' }}" onclick="notificationTemplateEdit({{ $value->id }}) , getStatus({{ $value->id }})" data-toggle="tab" href="#link110" role="tablist">{{ $value->title }}</a>
                                         </li>
                                         @php
                                         $status = App\Models\NotificationTemplate::where('id',$value->id)->where('vendor_id',$value->vendor_id)->first();
@@ -127,12 +127,23 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            {{--  @isset($notificationTemplate)
+
+                                            @dump($notificationTemplate)
+                                            @endisset  --}}
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="form-group">
+                                                    <div id="statusCheck" class="form-group">
                                                       <label for="{{__('verification_phone')}}">{{__('Status')}}</label><br>
                                                       <label class="switch">
-                                                          <input type="checkbox" @if($item->status == 1) checked @endif  name="status" >
+                                                          <input type="checkbox"
+                                                          @if(isset($statusChecks) && $statusChecks == 1)
+                                                            checked
+                                                            @else
+                                                              @if ($statusCheck == 1)
+                                                                  checked
+                                                              @endif
+                                                          @endif  name="status" >
                                                           <div class="slider"></div>
                                                       </label>
                                                     </div>
@@ -162,13 +173,24 @@
 
 @endsection
 <script>
-  function getStatus() {
+  function getStatus(id) {
     $.ajax({
-        type:'POST',
+        type:'post',
         url:'/getNotificationStatus',
-        data:{_token:'<?php echo csrf_token() ?>', id:2},
+        data:{_token:'<?php echo csrf_token() ?>', id:id},
         success:function(data){
-          console.log(data);
+          console.log(data.statusChecks);
+          if(data.statusChecks == 1){
+            var status ='checked';
+          }
+          else{
+            var status = '';
+          }
+          $("#statusCheck").empty();
+          var txt1 = "<label >Status</label><br>";
+          var text2 = '<label class="switch"><input type="checkbox" '+status+'  name="status" ><div class="slider"></div></label>';
+          $("#statusCheck").append(txt1, text2);
+
        }
      });
   }

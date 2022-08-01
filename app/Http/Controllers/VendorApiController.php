@@ -1355,7 +1355,7 @@ class VendorApiController extends Controller
         return response(['success' => true , 'data' => $vendor]);
     }
 
-    public function apiUpdateProfile(Request $request){
+    public function (Request $request){
 
         $vendor = Vendor::where('user_id',auth()->user()->id)->first();
         $request->validate([

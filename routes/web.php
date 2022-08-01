@@ -1,5 +1,6 @@
 <?php
 
+   use App\Http\Controllers\Admin\NotificationTemplateController;
    use Illuminate\Support\Facades\Route;
    use App\Http\Controllers\Admin\HomeController;
    use App\Http\Controllers\Admin\AdminController;
@@ -73,7 +74,7 @@
    Route::post('admin/admin_forgot_password', [AdminController::class, 'admin_forgot_password']);
    Route::get('/qrcode', [QrController::class, 'index']);
    Route::resources([ 'notification_template' => Admin\NotificationTemplateController::class, ]);
-   Route::post('getNotificationStatus', [Admin\NotificationTemplateController::class, 'getStatus']);
+   Route::post('/getNotificationStatus', [NotificationTemplateController::class, 'getStatus']);
 //Admin
    Route::middleware(['auth'])->prefix('admin')->group(function () {
       Route::get('orderChart', [HomeController::class, 'orderChart']);

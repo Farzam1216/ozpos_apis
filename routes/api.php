@@ -33,7 +33,10 @@
 
    Route::group(['middleware' => ['cors']], function ($router) {
       // new frontend apis with vue js
-
+      Route::post('user_register_vuejs', 'UserApiController@apiUserRegisterVueJs');
+      Route::post('apply_promo_code_vuejs', 'UserApiController@apiPromoCodeVuejs');
+      Route::post('userInfo', 'UserApiController@apiUserVuejs');
+      Route::post('user-Info', 'UserApiController@apiUserVuejs');
       Route::post('/address-check','UserApiController@checkAddress');
       Route::post('/sms', 'UserApiController@sms');
       Route::post('/social', 'UserApiController@social');
@@ -218,6 +221,7 @@
       Route::get('my-orders/{id}', 'UserApiController@apiShowOrderVuejs');
       Route::get('track-order/{order_id}', 'UserApiController@trackOrderVuejs');
       Route::get('get-order/{order_id}', 'UserApiController@getOrderVueJS');
+
       // pos user
       Route::get('pos/table/{vendor_id}', 'PosApiController@apiTableSetting');
       Route::middleware('auth:api')->group(function () {

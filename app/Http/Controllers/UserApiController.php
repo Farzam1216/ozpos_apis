@@ -2,68 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Verification;
-use App\Mail\ForgotPassword;
-use App\Mail\StatusChange;
-use App\Mail\VendorOrder;
-use App\Mail\DriverOrder;
-use App\Models\Banner;
-use App\Models\MenuSize;
-use App\Models\Cuisine;
-use App\Models\MenuAddon;
-use App\Models\BusinessSetting;
-use App\Models\cart;
-use App\Models\DealsMenu;
-use App\Models\DealsItems;
-use App\Models\DeliveryPerson;
-use Illuminate\Support\Facades\Session;
-use App\Models\HalfNHalfMenu;
-use App\Models\ItemCategory;
-use App\Models\ItemSize;
-use App\Models\MenuCategory;
-use App\Models\WalletPayment;
-use App\Models\DeliveryZoneArea;
-use App\Models\Faq;
-use App\Models\Feedback;
-use App\Models\GeneralSetting;
-use App\Models\Menu;
-use App\Models\Notification;
-use App\Models\NotificationTemplate;
-use App\Models\Order;
-use App\Models\OrderChild;
-use App\Models\OrderSetting;
-use App\Models\PaymentSetting;
-use App\Models\PromoCode;
-use App\Models\Review;
-use App\Models\Refund;
-use App\Models\Role;
-use App\Models\Submenu;
-use App\Models\SubmenuCusomizationType;
-use App\Models\User;
-use App\Models\UserAddress;
-use App\Models\Vendor;
-use App\Models\VendorDiscount;
-use App\Models\WorkingHours;
-use App\Models\Tax;
-use Carbon\Carbon;
-use Config;
 use DB;
+use Arr;
+use Log;
+use Mail;
+use Config;
+use Exception;
+use OneSignal;
+use Carbon\Carbon;
+use Stripe\Stripe;
+use App\Models\Faq;
+use App\Models\Tax;
+use App\Models\cart;
+use App\Models\Menu;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Banner;
+use App\Models\Refund;
+use App\Models\Review;
+use App\Models\Vendor;
+use App\Models\Cuisine;
+use App\Models\Submenu;
+use Twilio\Rest\Client;
+use App\Models\Feedback;
+use App\Models\ItemSize;
+use App\Models\MenuSize;
+use App\Mail\DriverOrder;
+use App\Mail\VendorOrder;
+use App\Models\booktable;
+use App\Models\DealsMenu;
+use App\Models\MenuAddon;
+use App\Models\PromoCode;
+use App\Mail\StatusChange;
+use App\Mail\Verification;
+use App\Models\DealsItems;
+use App\Models\OrderChild;
+use App\Models\TwilioModel;
+use App\Models\UserAddress;
+use App\Mail\ForgotPassword;
+use App\Models\ItemCategory;
+use App\Models\MenuCategory;
+use App\Models\Notification;
+use App\Models\OrderSetting;
+use App\Models\WorkingHours;
 use Illuminate\Http\Request;
+use App\Models\HalfNHalfMenu;
+use App\Models\WalletPayment;
+use App\Models\DeliveryPerson;
+use App\Models\GeneralSetting;
+use App\Models\PaymentSetting;
+use App\Models\VendorDiscount;
+use App\Models\BusinessSetting;
+use App\Models\DeliveryZoneNew;
+use App\Models\DeliveryZoneArea;
+use App\Models\NotificationTemplate;
+use Bavix\Wallet\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Mail;
-use OneSignal;
-use Stripe\Stripe;
-use Twilio\Rest\Client;
-use Bavix\Wallet\Models\Transaction;
-use Arr;
-use Grimzy\LaravelMysqlSpatial\Types\Point;
-use Log;
-use App\Models\DeliveryZoneNew;
-use App\Models\booktable;
-use App\Models\TwilioModel;
+use App\Models\SubmenuCusomizationType;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use Exception;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
+use Illuminate\Support\Facades\Validator;
 
 class UserApiController extends Controller
 {
@@ -241,7 +242,10 @@ class UserApiController extends Controller
   }
   public function userAddress(Request $request){
 
-    $address  = new UserAddress();
+    $address = UserAddress::where('lat',$request->lat)->where('lat',$request->lang)->first();
+    if(!$address){
+      $address  = new UserAddress();
+    }
     $address->user_id = $request->userID;
     $address->lat = $request->lat;
     $address->lang = $request->lang;
@@ -551,6 +555,47 @@ class UserApiController extends Controller
     }
   }
 
+
+  public function apiUserRegisterVueJs(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'name' => 'bail|required',
+      'email' => 'bail|required|unique:users',
+      'password' => 'bail|min:6',
+      'phone' => 'bail|required|numeric|digits_between:6,12',
+      'phone_code' => 'required',
+  ]);
+
+
+    if ($validator->fails()) {
+      return response(['success' => false, 'data' => $validator->errors()]);
+     }
+
+    $admin_verify_user = GeneralSetting::find(1)->verification;
+    $veri = $admin_verify_user == 1 ? 0 : 1;
+
+    $data = $request->all();
+    $data['password'] = Hash::make($data['password']);
+    $data['status'] = 1;
+    $data['image'] = 'noimage.png';
+    $data['is_verified'] = $veri;
+    $data['phone_code'] = $request->phone_code;
+    $data['language'] = $request->language;
+    $user = User::create($data);
+    $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
+    $user->roles()->sync($role_id);
+    if ($user['is_verified'] == 1) {
+      $user['token'] = $user->createToken('mealUp')->accessToken;
+      return response()->json(['success' => true, 'data' => $user, 'msg' => 'account created successfully..!!'], 200);
+    } else {
+      $admin_verify_user = GeneralSetting::find(1)->verification;
+      if ($admin_verify_user == 1) {
+        $this->sendNotification($user);
+        return response(['success' => true, 'data' => $user, 'msg' => 'your account created successfully please verify your account']);
+      }
+    }
+  }
+
   public function apiUserRegister(Request $request)
   {
     $request->validate([
@@ -849,6 +894,68 @@ class UserApiController extends Controller
     return response(['success' => true, 'data' => $deals]);
   }
 
+  public function apiPromoCodeVuejs(Request $request){
+      $promo = PromoCode::where('promo_code',$request->promo)->where('vendor_id',$request->vendor_id)->first();
+      // $request->validate([
+      //   'date' => 'required',
+      //   'amount' => 'required',
+      //   'delivery_type' => 'required',
+      //   'promocode_id' => 'required',
+      // ]);
+        if(!$promo){
+          return response(['success' => false, 'data' => 'Coupon is not valid for this user..!!']);
+        }
+        $dates = date('Y-m-d');
+      $data = $request->all();
+
+      $currency = GeneralSetting::first()->currency_symbol;
+      $promoCode = PromoCode::find($promo->id);
+
+      $users = explode(',', $promoCode->customer_id);
+      if (($key = array_search($request->userID, $users)) !== false) {
+        $exploded_date = explode(' - ', $promoCode->start_end_date);
+
+        $currentDate = $dates;
+        // $test['asd'] = $exploded_date[0];
+        // $test['asdd'] = $exploded_date[1];
+        // $test['asde'] = $currentDate;
+        // return response(['success' => false, 'data' => $test]);
+        if (($currentDate >= $exploded_date[0]) && ($currentDate <= $exploded_date[1])) {
+          if ($promoCode->min_order_amount < $data['amount']) {
+            if ($promoCode->coupen_type == 'both') {
+              if ($promoCode->count_max_count < $promoCode->max_count && $promoCode->count_max_order < $promoCode->max_order && $promoCode->count_max_user < $promoCode->max_user) {
+                $promo = PromoCode::where('id', $promoCode->id)->first(['id', 'image', 'isFlat', 'flatDiscount', 'discount', 'discountType']);
+                Log::critical($promo);
+                return response(['success' => true, 'data' => $promo]);
+              } else {
+                return response(['success' => false, 'data' => 'This Coupon is expire..!!']);
+              }
+            } else {
+              if ($promoCode->coupen_type == $data['delivery_type']) {
+                if ($promoCode->count_max_count < $promoCode->max_count && $promoCode->count_max_order < $promoCode->max_order && $promoCode->count_max_user < $promoCode->max_user) {
+                  $promo = PromoCode::where('id', $promoCode->id)->first(['id', 'image', 'isFlat', 'flatDiscount', 'discount', 'discountType']);
+                  Log::critical($promo);
+                  return response(['success' => true, 'data' => $promo]);
+                } else {
+                  return response(['success' => false, 'data' => 'This Coupon is expire..!!']);
+                }
+              } else {
+                return response(['success' => false, 'data' => 'This Coupon is not valid for ' . $data['delivery_type']]);
+              }
+            }
+          } else {
+            return response(['success' => false, 'data' => 'This Coupon not valid for less than ' . $currency . $promoCode->min_order_amount . ' amount']);
+          }
+        } else {
+          return response(['success' => false, 'data' => 'Coupon is expire..!!']);
+        }
+      } else {
+        return response(['success' => false, 'data' => 'Coupon is not valid for this user..!!']);
+      }
+
+
+    }
+
   public function apiPromoCode($vendor_id)
   {
     $promo = PromoCode::where('status', 1);
@@ -1066,41 +1173,22 @@ class UserApiController extends Controller
       // 'delivery_charge' => 'bail|required_if:delivery_type,HOME',
       //             'tax' => 'required',
     ]);
-    //         \Log::critical($request);
-    //         return;
+
 
     $bookData = $request->all();
     $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
     $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
-    //  $bookData['address_id'] = 32;
-
-    // Log::info('$bookData[\'delivery_date\']');
-    // Log::info($bookData['delivery_date']);
-    // Log::info('$bookData[\'delivery_time\']');
-    // Log::info($bookData['delivery_time']);
-
     if ($bookData['delivery_date'] != null && $bookData['delivery_time'] != null) {
       $bookData['delivery_date'] = Carbon::createFromFormat('Y-m-d H:i:s.u', $bookData['delivery_date'])->format('Y-m-d');
       $bookData['delivery_time'] = Carbon::createFromFormat('g:i A', $bookData['delivery_time'])->format('H:i:s');
-      // Log::info('$bookData[\'delivery_date\']');
-      // Log::info($bookData['delivery_date']);
-      // Log::info('$bookData[\'delivery_time\']');
-      // Log::info($bookData['delivery_time']);
       $dateTime = $bookData['delivery_date'] . ' ' . $bookData['delivery_time'];
-      // Log::info('$dateTime');
-      // Log::info($dateTime);
-      //            $bookData['delivery_time'] = Carbon::parse($dateTime)->timestamp;
       $bookData['delivery_time'] = $dateTime;
-      // Log::info('$bookData[\'delivery_time\']');
-      // Log::info($bookData['delivery_time']);
     }
 
     $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
     $vendorUser = User::find($vendor->user_id);
     $customer = auth()->user();
-    // log::info($customer);
     $UserAddress = UserAddress::where('user_id', auth()->user()->id)->first();
-    // log::info($UserAddress);
     $bookData['address_id'] = $UserAddress->id;
     if ($vendor->vendor_status == 0)
       return response(['success' => false, 'data' => "Vendor is offline."]);
@@ -1147,26 +1235,8 @@ class UserApiController extends Controller
     $bookData['order_data'] = $bookData['item'];
     $bookData['delivery_time'] = $bookData['delivery_time'];
     $order = Order::create($bookData);
-    //         if ($bookData['payment_type'] == 'WALLET') {
-    //            $user->withdraw($bookData['amount'], [$order->id]);
-    //         }
-    //         $bookData['item'] = json_decode($bookData['item'], true);
-    //         foreach ($bookData['item'] as $child_item) {
-    //            $order_child = array();
-    //            $order_child['order_id'] = $order->id;
-    //            $order_child['item'] = $child_item['id'];
-    //            $order_child['price'] = $child_item['price'];
-    //            $order_child['qty'] = $child_item['qty'];
-    //            if (isset($child_item['custimization'])) {
-    //               $order_child['custimization'] = $child_item['custimization'];
-    //            }
-    //            OrderChild::create($order_child);
-    //         }
-    //        $this->sendVendorOrderNotification($vendor,$order->id);
-    //        $this->sendUserNotification($bookData['user_id'],$order->id);
     app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
     $amount = $order->amount;
-
     $tax = array();
     if ($vendor->admin_comission_type == 'percentage') {
       $comm = $amount * $vendor->admin_comission_value;
@@ -1190,12 +1260,10 @@ class UserApiController extends Controller
       $notification->save();
     }
     $order->update($tax);
-
-    // log::info(' notification data');
               $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
               $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
 
-                if($notificationVendor && $notificationVendor->status == 1){
+                if($twiillio && $twiillio->vendorstatus == 1){
                       $sid = $twiillio->sid;
                       $token = $twiillio->token;
                       $customer_phone = '+'.$customer->phone;
@@ -1254,12 +1322,7 @@ class UserApiController extends Controller
                   $responseFinal = curl_exec($ch);
 
               }
-
-    //         if ($order->payment_type == 'FLUTTERWAVE') {
-    //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
-    //         } else {
     return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
-    //         }
   }
 
   // vue js frontend
@@ -1282,42 +1345,112 @@ class UserApiController extends Controller
 
 
   }
+
+  public function apiUserVuejs(Request $request)
+  {
+
+      $user = User::find($request->user_id);
+      return response(['success' => true, 'data' =>  $user]);
+  }
+
+
   public function apiBookOrderVuejs(Request $request)
   {
 
-    $bookData = $request->all();
+    $cartData = Cart::where('session_id',$request->session_id)->get();
+    foreach ($cartData as $key => $cart) {
+      $obj =  [
+        'vendor'=> $request->vendor_id,
+        'id' => $cart->id,
+        'name' => $cart->menu_name,
+        'summary'=>[
+            'category' => 'SINGLE',
+            'menu' => [
+                'id' => $cart->menu_id,
+                'name' => $cart->menu_name,
+                'images' => $cart->image,
+                'price' => $cart->price,
+                'addons' => [
 
+                ],
+            ],
+            'size' => null,
+            'total_price' => $cart->price,
+        ],
+        "price"=> $cart->price,
+        "quantity"=>$cart->quantity,
+        "image"=> $cart->image,
+    ];
+
+      $dummy[$key] = (object) $obj;
+
+    }
+    $finalData = [];
+    $cart = array();
+    $menu = array();
+    $addons = array();
+    $size = array();
+    $finalData['vendor_id'] = $request->vendor_id;
+    $finalData['cart'] = [];
+    // array_push($finalData,['vendor_id'=>$vendor->id]);
+    $idx = -1;
+    foreach ($dummy as $key => $item) {
+      $summary = $item->summary;
+      $idx++;
+      $finalData['cart'][$idx] = [
+          'category' => $summary['category'],
+          'total_amount' => $item->price,
+          'menu_category' => "null",
+          'quantity' => $item->quantity,
+          'menu' => []
+      ];
+      $idx2 = -1;
+      foreach ($summary['menu'] as $key2 => $value) {
+
+         if($value === null)
+            continue;
+         // dd($value);
+         $idx2++;
+         $finalData['cart'][$idx]['menu'][$idx2] = [
+             'id' => $summary['menu']['id'],
+             'name' => $summary['menu']['name'],
+             'image' => $summary['menu']['images'],
+             'total_amount' => $summary['menu']['price'],
+             'addons' => []
+         ];
+
+        //  $idx3 = -1;
+        //  foreach ($value->addons as $addo) {
+        //     $idx3++;
+        //     $finalData['cart'][$idx]['menu'][$idx2]['addons'][$idx3] = [
+        //         'id' => $addo->id,
+        //         'name' => $addo->name,
+        //         'price' => $addo->price,
+        //     ];
+        //  }
+      }
+
+   }
+    $bookData = $request->all();
+    $bookData['order_data'] = json_encode($finalData);
     if(isset($request->user_name)){
       $bookData['user_name'] = $request->user_name;
     }
-
     if(isset($request->mobile)){
       $bookData['mobile'] = $request->mobile;
     }
-
     if(isset($request->tableNumber)){
       $bookData['table_no'] = $request->tableNumber;
       $bookedTables = booktable::where('vendor_id',$bookData['vendor_id'])->where('booked_table_number',$request->tableNumber)->first();
       $bookedTables->status = 1;
       $bookedTables->save();
     }
-
     $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
     $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
-
-    log::info($bookData);
     $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
-    log::info($vendor);
     $vendorUser = User::find($vendor->user_id);
     $customer = User::find($request->user_id);
-    log::info($customer->name);
     $UserAddress = UserAddress::where('user_id', $request->user_id)->first();
-    log::info($UserAddress);
-    if(!isset( $bookData['address_id'])){
-      $bookData['address_id']= 51;
-    }else{
-      $bookData['address_id'] = $UserAddress->id;
-    }
     if ($vendor->vendor_status == 0)
       return response(['success' => false, 'data' => "Vendor is offline."]);
     if ($bookData['delivery_type'] == 'TAKEAWAY' && $vendor->delivery_status == 0)
@@ -1327,10 +1460,9 @@ class UserApiController extends Controller
 
     if ($bookData['payment_type'] == 'STRIPE') {
       $paymentSetting = PaymentSetting::find(1);
-      log::info('payment setting');
-      log::info( $paymentSetting);
+
       $stripe_sk = $paymentSetting->stripe_secret_key;
-      log::info( $stripe_sk);
+
       // $currency = GeneralSetting::find(1)->currency;
       // log::info( $currency);
       $stripe = new \Stripe\StripeClient($stripe_sk);
@@ -1342,7 +1474,6 @@ class UserApiController extends Controller
           'cvc' => $request->cvv,
         ],
       ]);
-      log::info($payment_token->id);
       $charge = $stripe->charges->create(
         [
           "amount" => $bookData['amount'] * 100,
@@ -1364,17 +1495,12 @@ class UserApiController extends Controller
       $bookData['promocode_id'] = null;
       $bookData['promocode_price'] = 0;
     }
-
     $bookData['order_id'] = '#' . rand(100000, 999999);
     $bookData['vendor_id'] = $vendor->id;
     $bookData['order_status'] = "PENDING";
-    log::info($bookData);
-    // $bookData['order_data'] = $bookData['item'];
-    // $bookData['delivery_time'] = $bookData['delivery_time'];
     $order = Order::create($bookData);
     app('App\Http\Controllers\NotificationController')->process('vendor', 'order', 'New Order', [$vendorUser->id, $vendorUser->device_token, $vendorUser->email], $vendorUser->name, $order->order_id, $customer->name, $order->time);
     $amount = $order->amount;
-
     $tax = array();
     if ($vendor->admin_comission_type == 'percentage') {
       $comm = $amount * $vendor->admin_comission_value;
@@ -1385,7 +1511,6 @@ class UserApiController extends Controller
       $tax['vendor_amount'] = $amount - $vendor->admin_comission_value;
       $tax['admin_commission'] = $amount - $tax['vendor_amount'];
     }
-
     $notification = BusinessSetting::where([['vendor_id', $vendor->id], ['key', '0']])->first();
     if ($notification) {
       $notification->vendor_id = $vendor->id;
@@ -1398,27 +1523,19 @@ class UserApiController extends Controller
       $notification->save();
     }
     $order->update($tax);
-    // $sid = 'AC9363af62dba13b5fe613cd6a8855e2ed';
-    // $token = '1306f9abf8f0379db9f3731a043bc633';
-    // // 923360010088
-    // $orderMessage = "Hi ". $customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
-    // $client = new Client($sid, $token);
-    //         $client->messages->create('+923185405672', [
-    //             'from' => '+19207862796',
-    //             'body' => $orderMessage]);
     $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
       // log::info(' notification data');
       $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+      // dd($notificationVendor);
+
       $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
 
         if($notificationVendor && $notificationVendor->status == 1){
               $sid = $twiillio->sid;
               $token = $twiillio->token;
               $customer_phone = '+'.$customer->phone;
-              // 923360010088
               $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
               $client = new Client($sid, $token);
-
               try {
                 $client->messages->create($customer_phone, [
                   'from' => $twiillio->number,
@@ -1433,43 +1550,69 @@ class UserApiController extends Controller
 
         }
 
-      $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','vendor order')->first();
-      if($notificationVendor && $notificationVendor->status == 1){
+        $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+        $twiillio = TwilioModel::where('vendor_id',$vendor->id)->first();
 
-          $user = User::find($vendor->user_id);
-          $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
-          $firebaseToken = $user->device_token;
-          $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+          if($twiillio && $twiillio->vendorstatus == 1){
+                $sid = $twiillio->sid;
+                $token = $twiillio->token;
+                $customer_phone = '+'.$customer->phone;
+                // 923360010088
+                $orderMessage = "Hi " .$customer->name.".Thank you for ordering your food from " .$vendor->name.".Your Order Placed Successfully.";
+                $client = new Client($sid, $token);
 
-          $data = [
-              "registration_ids" =>array($firebaseToken),
-              "notification" => [
-                  "title" => "Vendor Order",
-                  "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
-              ],
-          ];
+                try {
+                  $client->messages->create($customer_phone, [
+                    'from' => $twiillio->number,
+                    'body' => $orderMessage]);
+
+              } catch (Exception $e) {
+                log::info('exception twillio');
+                // log::info($e);
+                // log::info($e->getMessage());
+                  // die( $e->getCode() . ' : ' . $e->getMessage() );
+              }
+
+          }
+
+        $notificationVendor = NotificationTemplate::where('vendor_id',$vendor->id)->where('title','vendor order')->first();
+        if($notificationVendor && $notificationVendor->status == 1){
+
+            $user = User::find($vendor->user_id);
+            $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+            $firebaseToken = $user->device_token;
+            $SERVER_API_KEY = 'AAAAdPCqqHY:APA91bEY5oOf8ISg2hiZQjCx52NgQ-_CS0e47vPpvh3iJ01j9Hlmp2FM1EqmILiulwtG_iHsELhwYICOozQnEMBmul2CrpQ-JYUUsKdoLTlqwQtCFcvrn1lsLvFWq1B8S-ioGXIAoUC_';
+
+            $data = [
+                "registration_ids" =>array($firebaseToken),
+                "notification" => [
+                    "title" => "Vendor Order",
+                    "body" => "Dear ".$vendor->name." We Liked To Inform You That Recently Booked Order. Order Id : ".$order->order_id." , User Name : ".$customer->name,
+                ],
+            ];
 
 
-          $dataString = json_encode($data);
+            $dataString = json_encode($data);
 
 
-          $headers = [
-              'Authorization: key=' . $SERVER_API_KEY,
-              'Content-Type: application/json',
-          ];
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
 
-          $ch = curl_init();
+            $ch = curl_init();
 
-          curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-          curl_setopt($ch, CURLOPT_POST, true);
-          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-          set_time_limit(0);
-          $responseFinal = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+            set_time_limit(0);
+            $responseFinal = curl_exec($ch);
 
-      }
+        }
+
 
     return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
 
@@ -1525,11 +1668,12 @@ class UserApiController extends Controller
 
   public function trackOrderVuejs($order_id)
       {
-         $order = Order::select('id', 'amount', 'vendor_id', 'order_status', 'delivery_person_id', 'delivery_charge', 'date', 'time', 'address_id')->where([['id', $order_id]])->first();
-         // dd($order);
+         $order = Order::where([['id', $order_id]])->first();
+        //  dd($order);
+         $addressss = UserAddress::find($order->address_id);
          $trackData = array();
-         $trackData['userLat'] = UserAddress::find($order->address_id)->lat;
-         $trackData['userLang'] = UserAddress::find($order->address_id)->lang;
+         $trackData['userLat'] = $addressss->lat;
+         $trackData['userLang'] = $addressss->lang;
          $trackData['vendorLat'] = Vendor::find($order->vendor_id)->lat;
          $trackData['vendorLang'] = Vendor::find($order->vendor_id)->lang;
          $trackData['driverLat'] = DeliveryPerson::find($order->delivery_person_id)->lat;

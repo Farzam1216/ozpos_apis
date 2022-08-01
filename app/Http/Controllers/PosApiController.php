@@ -491,8 +491,9 @@ class PosApiController extends Controller
     }
 
     public function bookedTableVendor(Request $request){
+      Log::info($request->all());
       $order  = Order::where('vendor_id',$request->vendor_id)->where('table_no',$request->booked_table_number)->with('table')->first();
-
+      Log::info($order);
       if($order){
         $data['order_id'] = $order->id;
         $data['order_data'] =$order->order_data;

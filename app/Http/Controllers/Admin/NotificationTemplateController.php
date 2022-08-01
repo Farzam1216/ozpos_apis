@@ -41,7 +41,16 @@ class NotificationTemplateController extends Controller
             $data =NotificationTemplate::all();
         }
         $vendor_id =$vendor->id;
-        return view('admin.notification template.notification_template',compact('data','vendor_id'));
+
+        $check =  NotificationTemplate::where('vendor_id',$vendor->id)->where('title','book order')->first();
+        if($check){
+          $statusCheck = $check->status;
+        }
+        else{
+          $statusCheck = 0;
+        }
+
+        return view('admin.notification template.notification_template',compact('data','vendor_id','statusCheck'));
     }
 
     /**
@@ -88,13 +97,26 @@ class NotificationTemplateController extends Controller
       $vendor = Vendor::where('user_id',Auth::user()->id)->first();
       $check = NotificationTemplate::where('vendor_id',$vendor->id)->where('title',$notificationTemplate['title'])->where('role',null)->first();
       if($check){
-        $notificationTemplate = $check;
+        $status = $check->status;
       }
-      return response(['success' => true,'data' => $notificationTemplate]);
+      else{
+        $status = 0;
+      }
+      return response(['success' => true,'data' => $notificationTemplate,'statusCheck' => $status]);
     }
 
     public function getStatus(Request $request){
-      return response(['success' => true,'data' => $request->all()]);
+
+      $notify = NotificationTemplate::where('id',$request->id)->first();
+      $vendor = Vendor::where('user_id',Auth::user()->id)->first();
+      $check = NotificationTemplate::where('vendor_id',$vendor->id)->where('title',$notify->title)->first();
+      if($check){
+        $status = $check->status;
+      }
+      else{
+        $status = 0;
+      }
+      return response(['success' => true,'statusChecks' => $status]);
     }
 
     /**
@@ -115,7 +137,6 @@ class NotificationTemplateController extends Controller
         }
         $data['vendor_id']  = $vendor->id;
         $check = NotificationTemplate::where('vendor_id',$vendor->id)->where('title',$request->title)->where('role',null)->first();
-        // dd($check);
         if($check)
         {
           $check->update($data);

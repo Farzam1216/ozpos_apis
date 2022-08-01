@@ -1,7 +1,7 @@
 <?php
-   
+
    namespace App\Http\Controllers\Customer;
-   
+
    use App\Http\Controllers\Controller;
    use App\Models\BusinessSetting;
    use App\Models\GeneralSetting;
@@ -25,7 +25,7 @@
    use Illuminate\Support\Facades\Hash;
    use Session;
    use Stripe\Coupon;
-   
+
    class CustomerController extends Controller
    {
       public function index()
@@ -33,14 +33,14 @@
          $topRest = $this->topRest();
          return view('customer/home', compact('topRest'));
       }
-      
-      
+
+
       public function login()
       {
          if (Auth::check()) {
             if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
                $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
-               
+
                return redirect($url);
             } else {
                return redirect()->route('restaurant.index');
@@ -49,7 +49,7 @@
             return view('customer/login');
          }
       }
-      
+
       // public function restaurantLogin($id)
       // {
       //    // dd($id);
@@ -60,32 +60,32 @@
       //       return view('customer/restaurant/login', compact('vendor'));
       //    }
       // }
-      
-      
+
+
       public function loginVerify(Request $request)
       {
          $request->validate([
              'email_id' => 'bail|required|email',
              'password' => 'bail|required',
          ]);
-         
+
          // dd($request->all());
          if (Auth::attempt(['email_id' => request('email_id'), 'password' => request('password')])) {
             $user = Auth::user()->load('roles');
-            
+
             // if($user->is_verified == 1)
             // {
-            
+
             if ($user->roles->contains('title', 'user')) {
-               
+
                $customer = User::where('id', auth()->user()->id)->first();
-               
+
                if ($customer->status == 1) {
                   if ($user->roles->contains('title', 'user')) {
                      $userAddress = UserAddress::where('user_id', auth()->user()->id)->where('selected', 1)->first();
                      // dd($user);
                      if ($userAddress) {
-                        
+
                         Toastr::success('You have set location already exist!');
                         // return redirect()->route('customer.restaurant.index',$customer->id);
                         // return redirect()->route('restaurant.index');
@@ -103,11 +103,11 @@
                         } else {
                            return redirect()->route('customer.delivery.location.index');
                         }
-                        
+
                         // Session::put('vendor_driver', 0);
                      }
-                     
-                     
+
+
                      // return back();
                   } else {
                      Toastr::error('Invalid Email Or Password.');
@@ -137,8 +137,8 @@
             Toastr::error('Invalid Email Or Password.');
             return redirect()->back()->withErrors('Invalid Email Or Password.')->withInput();
          }
-         
-         
+
+
          // $request->validate([
          //     'email_id' => 'bail|required|email',
          //     'password' => 'bail|required',
@@ -158,23 +158,23 @@
          // }
          // return redirect()->back()->withErrors('this credential does not match our record')->withInput();
       }
-      
+
       public function signup()
       {
          return view('customer/signup');
       }
-      
+
       public function restaurantSignup($id)
       {
          $vendor = Vendor::find($id);
          return view('customer/signup', compact('vendor'));
       }
-      
-      
+
+
       public function signUpVerify(Request $request)
       {
          // dd($request->all());
-         
+
          $request->validate([
              'name' => 'bail|required',
              'email_id' => 'bail|required|email|unique:users',
@@ -182,10 +182,10 @@
              'phone' => 'bail|required|numeric|digits_between:6,12',
              'phone_code' => 'required'
          ]);
-         
-         
+
+
          $admin_verify_user = GeneralSetting::find(1)->verification;
-         
+
          $veri = $admin_verify_user == 1 ? 0 : 1;
          // dd($veri);
          $data = $request->all();
@@ -198,7 +198,7 @@
          $user = User::create($data);
          $role_id = Role::where('title', 'user')->orWhere('title', 'User')->first();
          $user->roles()->sync($role_id);
-         
+
          if ($user['is_verified'] == 1) {
             // $user['token'] = $user->createToken('mealUp')->accessToken;
             if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
@@ -209,7 +209,7 @@
             } else {
                Toastr::success('Successfully signed up.');
                return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
-               
+
             }
          } else {
             $admin_verify_user = GeneralSetting::find(1)->verification;
@@ -223,21 +223,21 @@
                } else {
                   Toastr::success('Your account created successfully please verify your account.');
                   // return redirect()->back()->with('success', 'Successfully signed up.')->withInput();
-                  
+
                   return redirect()->back()->with('success', 'Your account created successfully please verify your account.')->withInput();
                }
             }
          }
       }
-      
+
       public function deliveryLocation()
       {
          Toastr::warning('Please Select Your Location on the Map!');
          Toastr::success('Successfully Logged in!');
-         
+
          return view('customer.map-select');
       }
-      
+
       public function storeDeliveryLocation(Request $request)
       {
          $request->validate([
@@ -249,7 +249,7 @@
          $input = $request->all();
          $address = new UserAddress;
          $address->create($input);
-         
+
          session(['delivery_location' => array('lat' => $input['lat'], 'lang' => $input['lang'])]);
          if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             Toastr::success('Delivery Zone added successfully!');
@@ -259,11 +259,11 @@
          } else {
             Toastr::success('Delivery Zone added successfully!');
             return redirect()->route('restaurant.index');
-            
+
          }
       }
-      
-      
+
+
       public function applyTax()
       {
          //  dd($request->all());
@@ -275,7 +275,7 @@
             $User = auth()->user();
             $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
             $orderSettting = OrderSetting::where('vendor_id', $vendor->id)->first();
-            
+
             $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
             $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
             $googleDistance =
@@ -284,31 +284,31 @@
                 );
             \Log::critical($googleDistance);
             $googleDistance = json_decode($googleDistance);
-            
+
             $orderSettting['distance'] = 0;
             if ($googleDistance->status == "OK" && isset($googleDistance->rows[0]) && isset($googleDistance->rows[0]->elements[0]) && isset($googleDistance->rows[0]->elements[0]->distance))
                $orderSettting['distance'] = $googleDistance->rows[0]->elements[0]->distance->value / 1000;
-            
-            
+
+
             $taxtype = $vendor->tax_type;
             $tax = $vendor->tax;
             return response()->json(['tax' => $tax, 'taxtype' => $taxtype, 'orderSettting' => $orderSettting]);
          }
       }
-      
+
       public function applySingleTax($id)
       {
          //  dd($request->all());
          // $user = Auth::user()->id;
          //    dd($user);
          $vendor = Vendor::find($id);
-         
+
          //  dd($vendor);
          if ($vendor) {
             $User = auth()->user();
             $UserAddress = UserAddress::where([['user_id', $User->id], ['selected', 1]])->first();
             $orderSettting = OrderSetting::where('vendor_id', $vendor->id)->first();
-            
+
             $googleApiKey = 'AIzaSyCDcZlGMIvPlbwuDgQzlEkdhjVQVPnne4c';
             $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&destinations="' . $UserAddress->lat . ',' . $UserAddress->lang . '"&origins="' . $vendor->lat . ',' . $vendor->lang . '"&key=' . $googleApiKey . '';
             $googleDistance =
@@ -316,23 +316,23 @@
                     $googleUrl,
                 );
             $googleDistance = json_decode($googleDistance);
-            
+
             $orderSettting['distance'] = ($googleDistance->status == "OK") ? $googleDistance->rows[0]->elements[0]->distance->value / 1000 : 0;
-            
-            
+
+
             $taxtype = $vendor->tax_type;
             $tax = $vendor->tax;
             return response()->json(['tax' => $tax, 'taxtype' => $taxtype, 'orderSettting' => $orderSettting]);
          }
       }
-      
+
       public function applyCoupon(Request $request)
       {
          //  dd($request->all());
-         
+
          $coupon = PromoCode::where('promo_code', $request->coupon)->first();
          if ($coupon) {
-            
+
             $discountType = $coupon->discountType;
             $discount = $coupon->discount;
             return response()->json(['discountType' => $discountType, 'discount' => $discount, 'coupon_id' => $coupon->id]);
@@ -340,11 +340,11 @@
             dd('error');
          }
       }
-      
+
       public function applySingleCoupon(Request $request, $id)
       {
          //  dd($request->all());
-         
+
          $coupon = PromoCode::where('promo_code', $request->coupon)->first();
          if ($coupon) {
             $discountType = $coupon->discountType;
@@ -354,15 +354,17 @@
             dd('error');
          }
       }
-      
+
       ////// checkout /////
-      
-      
+
+
       public function checkout(Request $request)
       {
-         
-         //  dd($request->all());
-         
+
+
+          // $data = json_decode($request->product);
+          // $data = rawurldecode($data);
+          // dd($data,$request->all());
          Session::put([
              'vendorID' => $request->vendorId,
              'total' => $request->total,
@@ -373,7 +375,7 @@
              'coupon_id' => $request->coupon_id,
              'product' => $request->product
          ]);
-         
+// dd(Session::get('product'));
 //         \Log::critical('$request->product');
          \Log::critical("Session::get('product')");
          \Log::critical(Session::get('product'));
@@ -384,22 +386,21 @@
          \Log::critical(rawurldecode($request->product));
          \Log::critical('json_decode(rawurldecode($request->product))');
          \Log::critical(json_decode(rawurldecode($request->product)));
-         
-         
+
+
          $data = json_decode(rawurldecode($request->product));
-         // dd($data);
          $vendor = Vendor::find($request->vendorId);
          // dd($request->vendorId);
          $user = Auth::user()->id;
          $userAddress = UserAddress::where('user_id', $user)->get();
          $selectedAddress = UserAddress::where(['user_id' => $user, 'selected' => 1])->first();
-         
+
          // $setting = GeneralSetting::first();
          // $start_time = carbon::now()->format('h:i a');
          // $currentTime = date("H:i", strtotime($start_time));
-         
+
          // $current_day = carbon::today()->format('l');
-         
+
          // $timePeriod = WorkingHours::where([['vendor_id', $vendor->id], ['type', 'delivery_time'],['day_index',$current_day],['status',1]])->first();
          $timeSlot = array();
          if (isset($vendor)) {
@@ -420,18 +421,17 @@
             $timeSlot = "false";
          }
          // dd($data);
-         
+
          return view('customer.checkout', compact('user', 'userAddress', 'selectedAddress', 'vendor'
              , 'data', 'timeSlot'));
       }
-      
-      
+
+
       //// payment/////////////
       public function bookOrder(Request $request)
       {
-         // dd($request->all());
-         
-         
+
+
          $validation = $request->validate([
             //  'date' => 'bail|required',
             //  'time' => 'bail|required',
@@ -448,22 +448,22 @@
          ]);
          //\Log::critical($request);
          //return;
-         
+
          // foreach($data as )
-         
+
          $bookData = $request->all();
          $bookData['date'] = Carbon::now()->format('Y-m-d');
          $bookData['time'] = Carbon::now()->format('g:i A');
          //  $bookData['time'] = Carbon::now()->format('g:i A');
          //  dd($time);
-         
+
          $bookData['amount'] = (float)number_format((float)$bookData['amount'], 2, '.', '');
          $bookData['sub_total'] = (float)number_format((float)$bookData['sub_total'], 2, '.', '');
          $bookData['order_status'] = "PENDING";
          $vendor = Vendor::where('id', $bookData['vendor_id'])->first();
          $vendorUser = User::find($vendor->user_id);
          $customer = auth()->user();
-         
+
          if ($bookData['payment_type'] == 'STRIPE') {
             $paymentSetting = PaymentSetting::find(1);
             $stripe_sk = $paymentSetting->stripe_secret_key;
@@ -486,7 +486,7 @@
             }
          }
          $bookData['user_id'] = auth()->user()->id;
-         
+
          $PromoCode = PromoCode::find($bookData['promocode_id']);
          if ($PromoCode) {
             $PromoCode->count_max_user = $PromoCode->count_max_user + 1;
@@ -497,11 +497,14 @@
             $bookData['promocode_id'] = null;
             $bookData['promocode_price'] = 0;
          }
-   
+
          $data = Session::get('product');
+
+
          $data = rawurldecode($data);
+
          $data = json_decode($data);
-   
+
          \Log::critical('$daiterm');
          \Log::critical($data);
 //         \Log::critical($daiterm);
@@ -547,7 +550,7 @@
                    'addons' => []
                   //'deals_items' => $value->deals_items
                ];
-               
+
                $idx3 = -1;
                foreach ($value->addons as $addo) {
                   $idx3++;
@@ -556,14 +559,14 @@
                       'name' => $addo->name,
                       'price' => $addo->price,
                      //  'deals_items' => $value->deals_items
-                  
+
                   ];
-                  
-                  
+
+
                   // dd($addo->id);
                }
             }
-            
+
             // if($request->deliveryTime = "DELIVERY")
             // {
             //   $bookData['delivery_time'] = '';
@@ -575,7 +578,7 @@
             //       $finalData['size'] = [
             //         'id'=> $siz->id,
             //         'size_name'=>$siz->name,
-            
+
             //     ];
             //     }
             //   }
@@ -585,15 +588,16 @@
             //   }
             //
             // dd();
-            
+
          }
          // }
          // dd(json_encode($finalData));
+         dd($finalData,json_encode($finalData));
          $order_data = json_encode($finalData);
          $bookData['order_id'] = '#' . rand(100000, 999999);
          $bookData['vendor_id'] = $vendor->id;
          $bookData['order_data'] = $order_data;
-         
+
          $notification = BusinessSetting::where([['vendor_id', $vendor->id], ['key', '0']])->first();
          if ($notification) {
             $notification->vendor_id = $vendor->id;
@@ -606,7 +610,7 @@
             $notification->save();
          }
          $order = Order::create($bookData);
-         
+
          //         if ($bookData['payment_type'] == 'WALLET') {
          //            $user->withdraw($bookData['amount'], [$order->id]);
          //         }
@@ -637,23 +641,23 @@
          //            $tax['admin_commission'] = $amount - $tax['vendor_amount'];
          //         }
          //         $order->update($tax);
-         
+
          //         $firebaseQuery = app('App\Http\Controllers\FirebaseController')->setOrder($order->user_id, $order->id, $order->order_status);
-         
+
          //         if ($order->payment_type == 'FLUTTERWAVE') {
          //            return response(['success' => true, 'url' => url('FlutterWavepayment/' . $order->id), 'data' => "order booked successfully wait for confirmation"]);
          //         } else {
-         
+
          return response(['success' => true, 'data' => "order booked successfully wait for confirmation"]);
          //         }
       }
-      
+
       // public function completeBookOrder()
       // {
       //    dd('successfull');
       // }
-      
-      
+
+
       /////////// Profile /////////////
       public function profile()
       {
@@ -662,7 +666,7 @@
          $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
          return view('customer.profile', compact('user', 'userAddress', 'selectedAddress'));
       }
-      
+
       public function singleProfile($id)
       {
          $vendor_id = $id;
@@ -674,7 +678,7 @@
          $selectedAddress = UserAddress::where(['user_id' => $user->id, 'selected' => 1])->first();
          return view('customer.profile', compact('user', 'userAddress', 'selectedAddress', 'rest', 'singleVendor'));
       }
-      
+
       public function profileUpdate(Request $request, $id)
       {
          //dd($id);
@@ -684,7 +688,7 @@
              'phone' => $request->phone,
              'email' => $request->name
          ]);
-         
+
          if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
             Toastr::success('Successfuly Updated your profile!');
@@ -694,7 +698,7 @@
             return redirect()->back();
          }
       }
-      
+
       public function singleProfileUpdate(Request $request, $ids, $id)
       {
          //  dd($id);
@@ -704,7 +708,7 @@
              'phone' => $request->phone,
              'email' => $request->name
          ]);
-         
+
          if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
             Toastr::success('Successfuly Updated your profile!');
@@ -714,7 +718,7 @@
             return redirect()->back();
          }
       }
-      
+
       public function passwordChange(Request $request, $id)
       {
          $request->validate([
@@ -722,13 +726,13 @@
              'new_password' => ['required'],
              'new_confirm_password' => ['same:new_password'],
          ]);
-         
+
          User::find($id)->update(['password' => Hash::make($request->new_password)]);
          Toastr::success('Successfuly Changed the Password!');
          //  dd('Successfuly Changed the Password!');
          return back();
       }
-      
+
       public function singlePasswordChange(Request $request, $vendor_id, $user_id)
       {
          $request->validate([
@@ -736,19 +740,19 @@
              'new_password' => ['required'],
              'new_confirm_password' => ['same:new_password'],
          ]);
-         
+
          User::find($user_id)->update(['password' => Hash::make($request->new_password)]);
          Toastr::success('Successfuly Changed the Password!');
          //  dd('Successfuly Changed the Password!');
          if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
-            
+
             return redirect($url . '/user-profile');
          } else {
             return redirect()->back();
          }
       }
-      
+
       public function topRest(/* Request $request */)
       {
          $vendors = Vendor::where([['isTop', '1'], ['status', 1]])->orderBy('id', 'DESC')->get()->makeHidden(['vendor_logo']);
@@ -780,7 +784,7 @@
             } else {
                $vendor['distance'] = '?';
             }
-            
+
             if (auth('api')->user() != null) {
                $user = auth('api')->user();
                $vendor['like'] = in_array($vendor->id, explode(',', $user->faviroute));
@@ -790,14 +794,14 @@
          }
          return $vendors;
       }
-      
-      
+
+
       public function logout()
       {
-         
+
          if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_X_FORWARDED_HOST'];
-            
+
             Session::flush();
             Auth::logout();
             // dd($url.'/login');
@@ -808,8 +812,8 @@
             return redirect()->route('customer.login');
          }
       }
-      
-      
+
+
       public function getRest($id)
       {
          $vendor = Vendor::where('id', $id)->first();
@@ -846,17 +850,17 @@
          // }
          return $vendor;
       }
-      
-      
+
+
       public function singleVendor($vendor_id)
       {
          $master = array();
-         
+
          $master['vendor'] = Vendor::where([['id', $vendor_id], ['status', 1]])->first(['id', 'image', 'tax', 'name', 'map_address', 'for_two_person', 'vendor_type', 'cuisine_id'])->makeHidden(['vendor_logo']);
          if ($master['vendor']->tax == null) {
             $master['vendor']->tax = strval(5);
          }
-         
+
          //        $MenuCategory =
          //            MenuCategory::where([['menu_category.vendor_id', $vendor_id], ['menu_category.status', 1]])
          //                ->join('single_menu', 'menu_category.id', '=', 'single_menu.menu_category_id')
@@ -963,7 +967,7 @@
          //            }
          //            $pvalue['period_list'] = $parr;
          //        }
-         
+
          return $master;
       }
    }
